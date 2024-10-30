@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -20,6 +19,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { jobPosts } from "@/constants/data";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
@@ -154,7 +170,9 @@ const JobPost = ({
         </div>
       </div>
       <div className="inline-flex items-end  text-white mt-auto">
-        <p className="font-extrabold text-[60px]">{applications}</p>
+        <p className="font-extrabold text-[60px]">
+          {jobPost.candidates.length}
+        </p>
         <p className="text-gray-500 mb-4 ml-2">applications</p>
       </div>
     </div>
@@ -220,44 +238,34 @@ const Candidates = ({ job, filterCandidate }: any) => {
         <TableBody>
           {filteredCandidates.map((candidate, index) => (
             <TableRow key={index}>
+              <CandidateDetail index={index} candidate={candidate} />
               <TableCell
-                className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
-                } flex items-center`}
-              >
-                <UserCircle2 size={20} className="mr-2" /> {candidate.name}
-              </TableCell>
-              <TableCell
-                className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
-                }`}
+                className={`${index < 5 ? "font-bold " : "font-light"}`}
               >
                 {candidate.fitScore}
               </TableCell>
               <TableCell
-                className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
-                }  `}
+                className={`${index < 5 ? "font-bold " : "font-light"}  `}
               >
                 {candidate.experience}
               </TableCell>
               <TableCell
                 className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
+                  index < 5 ? "font-bold " : "font-light"
                 } text-right `}
               >
                 {candidate.skillMatch}%
               </TableCell>
               <TableCell
                 className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
+                  index < 5 ? "font-bold " : "font-light"
                 } text-right `}
               >
                 10 hours ago
               </TableCell>
               <TableCell
                 className={`${
-                  index < 5 ? "font-bold text-green-400" : "font-light"
+                  index < 5 ? "font-bold " : "font-light"
                 } text-right `}
               >
                 Resume.pdf
@@ -267,6 +275,92 @@ const Candidates = ({ job, filterCandidate }: any) => {
         </TableBody>
       </Table>
     </div>
+  );
+};
+
+const CandidateDetail = ({ index, candidate }: any) => {
+  const [stage, setStage] = useState("resume");
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <TableCell
+          className={`${index < 5 ? "font-bold " : "font-light"} flex`}
+        >
+          <UserCircle2 size={20} className="mr-2" /> {candidate.name}
+        </TableCell>
+      </DialogTrigger>
+      <DialogContent className="bg-white">
+        <DialogHeader>
+          <DialogTitle className="border-b pb-6">Candidate Summary</DialogTitle>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="cursor-pointer">
+                <BreadcrumbLink onClick={() => setStage("resume")}>
+                  Resume
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem className="cursor-pointer">
+                <BreadcrumbLink onClick={() => setStage("cover")}>
+                  Cover Letter
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </DialogHeader>
+
+        {stage === "resume" ? (
+          <div className="flex flex-col">
+            <h1 className="text-base font-semibold">Summary </h1>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi rem
+              cum odio nam necessitatibus exercitationem earum accusantium quas
+              reiciendis a incidunt laboriosam distinctio dolore vitae, ipsa
+              molestias suscipit fugit? Unde!
+            </p>
+            <div className="mt-3">
+              <h1 className="text-base font-semibold">Experience </h1>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
+                rem cum odio nam necessitatibus exercitationem earum accusantium
+                quas reiciendis a incidunt laboriosam distinctio dolore vitae,
+                ipsa molestias suscipit fugit? Unde!
+              </p>
+            </div>
+          </div>
+        ) : stage === "cover" ? (
+          <div>
+            <div className="mt-3">
+              <h1 className="text-base font-semibold">Cover Letter </h1>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
+                rem cum odio nam necessitatibus exercitationem earum accusantium
+                quas reiciendis a incidunt laboriosam distinctio dolore vitae,
+                ipsa molestias suscipit fugit? Unde! Lorem ipsum dolor sit amet
+                consectetur adipisicing elit. Voluptatum odit porro accusamus
+                omnis sint, ullam ipsum, fuga sit sunt animi laboriosam odio
+                dolorum. Laboriosam dolore deserunt impedit, corrupti ad
+                adipisci!
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>skills</>
+        )}
+        <Button
+          onClick={() => setStage("cover")}
+          className="bg-black text-white"
+        >
+          Next
+        </Button>
+        <Button
+          onClick={() => setStage("cover")}
+          className="bg-black text-white"
+        >
+          Contact Candidate
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };
 
