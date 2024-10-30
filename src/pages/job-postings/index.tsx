@@ -216,16 +216,44 @@ const Candidates = ({ job, filterCandidate }: any) => {
         <TableBody>
           {filteredCandidates.map((candidate, index) => (
             <TableRow key={index}>
-              <TableCell className="flex items-center">
+              <TableCell
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                } flex items-center`}
+              >
                 <UserCircle2 size={20} className="mr-2" /> {candidate.name}
               </TableCell>
-              <TableCell>{candidate.fitScore}</TableCell>
-              <TableCell>{candidate.experience}</TableCell>
-              <TableCell className="text-right">
+              <TableCell
+                className={`${index < 5 ? "font-bold text-green-400" : "font-light"}`}
+              >
+                {candidate.fitScore}
+              </TableCell>
+              <TableCell
+                className={`${index < 5 ? "font-bold text-green-400" : "font-light"}  `}
+              >
+                {candidate.experience}
+              </TableCell>
+              <TableCell
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                } text-right `}
+              >
                 {candidate.skillMatch}%
               </TableCell>
-              <TableCell className="text-right">10 hours ago</TableCell>
-              <TableCell className="text-right">Resume.pdf</TableCell>
+              <TableCell
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                } text-right `}
+              >
+                10 hours ago
+              </TableCell>
+              <TableCell
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                } text-right `}
+              >
+                Resume.pdf
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
