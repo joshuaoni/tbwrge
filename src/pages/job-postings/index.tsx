@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import FrontEndLogo from "../../../public/images/react.png";
-import ProductDesigner from "../../../public/images/figma-removebg-preview.png";
-import ProjectManager from "../../../public/images/Jira_2-removebg-preview.png";
-import Excel from "../../../public/images/Excel-removebg-preview.png";
-import BackEnd from "../../../public/images/Node_js-removebg-preview.png";
+
 import {
   Table,
   TableBody,
@@ -26,7 +22,7 @@ import { CaretDownIcon } from "@radix-ui/react-icons";
 import { jobPosts } from "@/constants/data";
 
 const JobPostings = () => {
-  const [selectedOpening, setSelectedOpening] = useState();
+  const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
 
   const [filterCandidate, setFilterCandidate] = useState("Fit Score");
@@ -100,7 +96,15 @@ const JobPostings = () => {
         </div>
       </div>
       <div className="flex overflow-x-auto gap-6   w-full ">
-        <Candidates job={selectedOpening} filterCandidate={filterCandidate} />
+        {selectedOpening ? (
+          <Candidates job={selectedOpening} filterCandidate={filterCandidate} />
+        ) : (
+          <div className="flex items-center w-full h-full justify-center ">
+            <p className="font-semibold text-base mt-24">
+              Select an active opening
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -224,12 +228,16 @@ const Candidates = ({ job, filterCandidate }: any) => {
                 <UserCircle2 size={20} className="mr-2" /> {candidate.name}
               </TableCell>
               <TableCell
-                className={`${index < 5 ? "font-bold text-green-400" : "font-light"}`}
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                }`}
               >
                 {candidate.fitScore}
               </TableCell>
               <TableCell
-                className={`${index < 5 ? "font-bold text-green-400" : "font-light"}  `}
+                className={`${
+                  index < 5 ? "font-bold text-green-400" : "font-light"
+                }  `}
               >
                 {candidate.experience}
               </TableCell>
