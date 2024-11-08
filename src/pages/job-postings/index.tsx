@@ -32,9 +32,9 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
 
 const JobPostings = () => {
@@ -310,7 +310,7 @@ const CandidateDetail = ({ index, candidate }: any) => {
         </DialogHeader>
 
         {stage === "resume" ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col min-h-[500px]">
             <h1 className="text-base font-semibold">Summary </h1>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi rem
@@ -329,7 +329,7 @@ const CandidateDetail = ({ index, candidate }: any) => {
             </div>
           </div>
         ) : stage === "cover" ? (
-          <div>
+          <div className="min-h-[500px]">
             <div className="mt-3">
               <h1 className="text-base font-semibold">Cover Letter </h1>
               <p>
@@ -349,13 +349,14 @@ const CandidateDetail = ({ index, candidate }: any) => {
         )}
         <Button
           onClick={() => setStage("cover")}
-          className="bg-black text-white"
+          className="bg-primary text-white"
         >
           Next
         </Button>
         <Button
+          variant="outline"
           onClick={() => setStage("cover")}
-          className="bg-black text-white"
+          className=" bg-white "
         >
           Contact Candidate
         </Button>

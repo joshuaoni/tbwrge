@@ -1,4 +1,5 @@
 import { House, ShoppingBag, User, UserCircle } from "lucide-react";
+import Image from "next/image";
 import {
   useParams,
   usePathname,
@@ -6,6 +7,9 @@ import {
   useSearchParams,
 } from "next/navigation";
 import React from "react";
+import candivetlogo from "../../public/images/candivet-logo.png";
+import JobsDropdown from "./jobs-dropdown";
+import CoverLetterDropDown from "./ui/coverletter-dropdown";
 
 const LeftSideBar = () => {
   const [leftSideItems, setLeftSideItems] = React.useState([
@@ -29,19 +33,36 @@ const LeftSideBar = () => {
     },
   ]);
   return (
-    <div className="fixed left-0 h-screen pt-24 w-[20%] bg-[#e1e1e1]   pl-[32px] pr-[24px]">
-      <div className="flex mb-[36px] items-center">
-        <UserCircle size={40} className="mr-2" />
-        <div className="flex flex-col">
-          <p className="font-bold">David</p>
-          <p className="text-sm font-normal text-[#A4A4A4] ">HR Manager</p>
+    <div className="fixed left-0 h-screen pt-6 w-[20%] bg-[#e1e1e1]   pl-[12px] pr-[12px]">
+      <div className="flex items-center ml-6">
+        <Image src={candivetlogo} alt="" width={50} height={50} />
+        <h1 className="text-2xl font-bold">Candivet</h1>
+      </div>
+      <div className="fixed left-0  overflow-y-scroll h-screen pt-16 w-[20%] bg-[#e1e1e1]   pl-[12px] pr-[12px]">
+        <div className="flex mb-[36px] items-center ml-8">
+          <UserCircle size={40} className="mr-2" />
+          <div className="flex flex-col">
+            <p className="font-bold">David</p>
+            <p className="text-sm font-normal text-[#A4A4A4] ">HR Manager</p>
+          </div>
+        </div>
+        {leftSideItems.map((item) => {
+          return (
+            <LeftSideBarItem
+              key={item.title}
+              item={item}
+              setLeftSideItems={setLeftSideItems}
+            />
+          );
+        })}
+        <div className="flex flex-col ml-8 ">
+          <h1 className="my-4 font-semibold text-[#6D6D6D]">Tools</h1>
+          <div className="space-y-4">
+            <JobsDropdown />
+            <CoverLetterDropDown />
+          </div>
         </div>
       </div>
-      {leftSideItems.map((item) => {
-        return (
-          <LeftSideBarItem item={item} setLeftSideItems={setLeftSideItems} />
-        );
-      })}
     </div>
   );
 };
@@ -65,12 +86,17 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   return (
     <div
       onClick={() => handleClick()}
-      className={`flex items-center transition-all  pl-6 space-x-2 p-2  mb-6  cursor-pointer ${
+      className={`flex relative items-center w-full transition-all py-3  pl-6 space-x-2 p-2  mb-6  cursor-pointer ${
         isActiveRoute
-          ? "bg-white text-primary border-l-2 border-l-primary font-extrabold"
+          ? "bg-primary text-white border-l-2 border-l-primary font-extrabold"
           : " font-semibold"
       }`}
     >
+      <div
+        className={`h-7 w-[5px] ${
+          isActiveRoute ? "bg-white" : "bg-transparent"
+        } absolute -left-[2px] rounded-r`}
+      />
       {item.icon}
       <div className="text-sm">{item.title}</div>
     </div>

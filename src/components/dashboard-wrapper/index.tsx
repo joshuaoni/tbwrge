@@ -7,7 +7,7 @@ const Dashboard = ({ children }: any) => {
     <div className="">
       <DashboardHeader />
       <LeftSideBar />
-      <div className=" ml-80 bg-white h-screen p-4 pt-24">{children}</div>
+      <div className=" ml-[310px] bg-white h-screen p-4 pt-24">{children}</div>
     </div>
   );
 };

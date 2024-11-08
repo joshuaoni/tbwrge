@@ -15,10 +15,10 @@ const DashboardHeader = () => {
           />
         </div>
 
-        <div className=" space-x-4    flex items-center">
+        {/* <div className=" space-x-4    flex items-center">
           <BellDotIcon color="#e1e1e1" />
           <ChatBubbleIcon color="#e1e1e1" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

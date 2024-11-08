@@ -43,7 +43,7 @@ export const jobPosts = [
         fitScore: 2,
       },
       {
-        skills: ["React", "Next JS", "TypeScript"],
+        skills: ["React", "Node", "Javascript"],
         name: "Hamzat Fuad",
         location: "Lagos",
         experience: 5,
