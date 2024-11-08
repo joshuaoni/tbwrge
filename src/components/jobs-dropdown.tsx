@@ -24,22 +24,22 @@ const JobsDropdown = () => {
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
-        <div className="my-4 ml-3 space-y-4">
+        <div className="my-2 ml-3 space-y-4">
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-[16px]">
+            <span className="font-light opacity-35  text-sm">
               Job Post Generator
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-[16px]">
+            <span className="font-light opacity-35  text-sm">
               Job Post Vetting
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-[16px]">
+            <span className="font-light opacity-35  text-sm">
               Job Post Translator
             </span>
           </div>

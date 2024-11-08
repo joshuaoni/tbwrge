@@ -1,26 +1,31 @@
 import React from "react";
-import { ChevronDown, ChevronUp, File, ShoppingBag } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  File,
+  GraduationCap,
+  ShoppingBag,
+} from "lucide-react";
 
-const CoverLetterDropDown = () => {
-  const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
-    React.useState(false);
+const CvDropDown = () => {
+  const [showCvDropDown, setShowCvDropDown] = React.useState(false);
 
   return (
     <>
       <div
-        onClick={() => setShowCoverLetterDropDown(!showCoverLetterDropDown)}
+        onClick={() => setShowCvDropDown(!showCvDropDown)}
         className="flex justify-between cursor-pointer"
       >
         <div className="flex items-center">
-          <File size={20} className="mr-2 text-primary" />
-          <span className="font-medium">Cover Letter</span>
+          <GraduationCap size={20} className="mr-2 text-primary" />
+          <span className="font-medium">CV</span>
         </div>
-        {showCoverLetterDropDown ? <ChevronUp /> : <ChevronDown />}
+        {showCvDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showCoverLetterDropDown
+          showCvDropDown
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
@@ -28,30 +33,28 @@ const CoverLetterDropDown = () => {
         <div className="mt-4 ml-3 space-y-4">
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 text-sm">Summarizer</span>
+            <span className="font-light opacity-35 f text-sm">Summarizer</span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 text-sm">
-              Cover Letter Vetting
-            </span>
+            <span className="font-light opacity-35 f text-sm">CV Vetting</span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
+            <span className="font-light opacity-35 f text-sm">
               CV Matching & Ranking
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
-              Cover Letter Generator
+            <span className="font-light opacity-35 f text-sm">
+              CV Generator
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
-              Cover Letter Translator
+            <span className="font-light opacity-35 f text-sm">
+              CV Translator
             </span>
           </div>
         </div>
@@ -60,4 +63,4 @@ const CoverLetterDropDown = () => {
   );
 };
 
-export default CoverLetterDropDown;
+export default CvDropDown;

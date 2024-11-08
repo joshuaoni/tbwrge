@@ -54,7 +54,7 @@ const index = () => {
               creation, cover letter translation, and more designed to simplify
               your workflow.
             </p>
-            <Button className="bg-white w-[50%] py-6 self-center text-primary font-bold ">
+            <Button className="bg-white w-[50%] text-base py-6 self-center text-primary font-bold ">
               Subscribe for premium
             </Button>
           </div>
@@ -87,9 +87,9 @@ const CreateJob = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="bg-primary flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto">
+        <div className="bg-primary hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto">
           <PlusCircle />
-          <p className="text-sm">Create New Job Post</p>
+          <p className="text-sm font-bold">Create New Job Post</p>
         </div>
       </DialogTrigger>
       <DialogContent className="bg-white">
@@ -97,7 +97,7 @@ const CreateJob = () => {
           <>
             {" "}
             <DialogHeader>
-              <DialogTitle className="border-b pb-6">
+              <DialogTitle className="border-b  pb-6">
                 Create a Job post
               </DialogTitle>
             </DialogHeader>
