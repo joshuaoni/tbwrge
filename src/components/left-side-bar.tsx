@@ -40,6 +40,27 @@ const LeftSideBar = () => {
       active: false,
     },
   ]);
+
+  const [userLeftSideItems, setUserLeftSideItems] = React.useState([
+    {
+      title: "Billings & Subscription",
+      icon: <IdCard />,
+      link: "/billings",
+      active: false,
+    },
+    {
+      title: "Settings",
+      icon: <Settings />,
+      link: "/settings",
+      active: false,
+    },
+    {
+      title: "Logout",
+      icon: <LogOut />,
+      link: "/logout",
+      active: false,
+    },
+  ]);
   return (
     <div className="fixed left-0 h-screen pt-6 w-[20%] bg-[#e1e1e1]   pl-[12px] pr-[12px]">
       <div className="flex items-center ml-6">
@@ -71,23 +92,18 @@ const LeftSideBar = () => {
           </div>
         </div>
         <div className="h-[1px] w-full bg-[#A6CCB8] my-4" />
-        <div className="flex flex-col ml-8 ">
-          <h1 className="my-4 font-semibold text-[#6D6D6D]">User</h1>
+        <div className="flex flex-col ">
+          <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>
           <div className="space-y-6">
-            <div className="flex items-center cursor-pointer">
-              <IdCard size={20} className="mr-2 text-primary" />
-              <span className="font-normal  text-[16px]">
-                Billing & Subscription
-              </span>
-            </div>
-            <div className="flex items-center cursor-pointer">
-              <Settings size={20} className="mr-2 text-primary" />
-              <span className="font-normal  text-[16px]">Settings</span>
-            </div>
-            <div className="flex items-center cursor-pointer">
-              <LogOut size={20} className="mr-2 text-primary" />
-              <span className="font-normal  text-[16px]">Logout</span>
-            </div>
+            {userLeftSideItems.map((item) => {
+              return (
+                <LeftSideBarItem
+                  key={item.title}
+                  item={item}
+                  setLeftSideItems={setUserLeftSideItems}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
