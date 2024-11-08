@@ -13,6 +13,7 @@ import candivetlogo from "../../public/images/candivet-logo.png";
 import JobsDropdown from "./jobs-dropdown";
 import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
+import LogoutModal from "./logout-modal";
 
 const LeftSideBar = () => {
   const router = useRouter();
@@ -99,6 +100,9 @@ const LeftSideBar = () => {
           <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>
           <div className="space-y-6 mb-24">
             {userLeftSideItems.map((item) => {
+              if (item.title === "Logout") {
+                return <LogoutModal />;
+              }
               return (
                 <LeftSideBarItem
                   key={item.title}
