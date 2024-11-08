@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { File, Loader2, PlusCircle, ShoppingBag, User } from "lucide-react";
+import AllActivityDropDown from "@/components/all-activity-dropdown";
 
 const index = () => {
   const [analytics, setAnalytics] = useState([
@@ -60,8 +61,11 @@ const index = () => {
           </div>
         </div>
 
-        <div className="w-full  h-[350px] mt-8 overflow-y-scroll bg-[#F9F9F9] rounded-lg">
-          <h1 className="font-bold p-4 text-lg">Activity Feed</h1>
+        <div className="w-full p-4 h-[350px] mt-8 overflow-y-scroll bg-[#F9F9F9] rounded-lg">
+          <div className="flex items-center justify-between ">
+            <h1 className="font-bold  text-lg">Activity Feed</h1>
+            <AllActivityDropDown />
+          </div>
         </div>
       </div>
     </div>
