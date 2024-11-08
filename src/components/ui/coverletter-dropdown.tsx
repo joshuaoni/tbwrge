@@ -1,10 +1,33 @@
 import React from "react";
 import { ChevronDown, ChevronUp, File, ShoppingBag } from "lucide-react";
-
+import gem from "../../../public/images/gem.png";
+import Image from "next/image";
 const CoverLetterDropDown = () => {
   const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
     React.useState(false);
 
+  const [dropDownItems, setDropDownItems] = React.useState([
+    {
+      title: "Summarizer",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+    {
+      title: "Cover Letter Vetting",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+    {
+      title: "CV Matching & Ranking",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+    {
+      title: "Cover Letter Generator",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+    {
+      title: "Cover Letter Translator",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+  ]);
   return (
     <>
       <div
@@ -25,35 +48,13 @@ const CoverLetterDropDown = () => {
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
-        <div className="mt-4 ml-3 space-y-4">
-          <div className="flex items-center cursor-pointer">
-            <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 text-sm">Summarizer</span>
-          </div>
-          <div className="flex items-center cursor-pointer">
-            <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 text-sm">
-              Cover Letter Vetting
-            </span>
-          </div>
-          <div className="flex items-center cursor-pointer">
-            <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
-              CV Matching & Ranking
-            </span>
-          </div>
-          <div className="flex items-center cursor-pointer">
-            <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
-              Cover Letter Generator
-            </span>
-          </div>
-          <div className="flex items-center cursor-pointer">
-            <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35  text-sm">
-              Cover Letter Translator
-            </span>
-          </div>
+        <div className="mb-2 ml-3 space-y-4">
+          {dropDownItems.map((item, index) => (
+            <div key={index} className="flex items-center">
+              {item.icon}
+              <span className="ml-2 opacity-40">{item.title}</span>
+            </div>
+          ))}
         </div>
       </div>
     </>
