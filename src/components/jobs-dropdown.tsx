@@ -12,7 +12,7 @@ const JobsDropdown = () => {
       >
         <div className="flex items-center">
           <ShoppingBag size={20} className="mr-2 text-primary" />
-          <span className="font-medium">Jobs</span>
+          <span className="font-normal text-[16px]">Jobs</span>
         </div>
         {showJobsDropdown ? <ChevronUp /> : <ChevronDown />}
       </div>
@@ -27,19 +27,19 @@ const JobsDropdown = () => {
         <div className="my-4 ml-3 space-y-4">
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 font-medium text-sm">
+            <span className="font-light opacity-35  text-[16px]">
               Job Post Generator
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 font-medium text-sm">
+            <span className="font-light opacity-35  text-[16px]">
               Job Post Vetting
             </span>
           </div>
           <div className="flex items-center cursor-pointer">
             <ShoppingBag size={20} className="mr-2 text-primary" />
-            <span className="font-light opacity-35 font-medium text-sm">
+            <span className="font-light opacity-35  text-[16px]">
               Job Post Translator
             </span>
           </div>

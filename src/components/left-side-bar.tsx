@@ -1,4 +1,12 @@
-import { House, ShoppingBag, User, UserCircle } from "lucide-react";
+import {
+  House,
+  IdCard,
+  LogOut,
+  Settings,
+  ShoppingBag,
+  User,
+  UserCircle,
+} from "lucide-react";
 import Image from "next/image";
 import {
   useParams,
@@ -62,6 +70,26 @@ const LeftSideBar = () => {
             <CoverLetterDropDown />
           </div>
         </div>
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-4" />
+        <div className="flex flex-col ml-8 ">
+          <h1 className="my-4 font-semibold text-[#6D6D6D]">User</h1>
+          <div className="space-y-6">
+            <div className="flex items-center cursor-pointer">
+              <IdCard size={20} className="mr-2 text-primary" />
+              <span className="font-normal  text-[16px]">
+                Billing & Subscription
+              </span>
+            </div>
+            <div className="flex items-center cursor-pointer">
+              <Settings size={20} className="mr-2 text-primary" />
+              <span className="font-normal  text-[16px]">Settings</span>
+            </div>
+            <div className="flex items-center cursor-pointer">
+              <LogOut size={20} className="mr-2 text-primary" />
+              <span className="font-normal  text-[16px]">Logout</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -88,8 +116,8 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       onClick={() => handleClick()}
       className={`flex relative items-center w-full transition-all py-3  pl-6 space-x-2 p-2  mb-6  cursor-pointer ${
         isActiveRoute
-          ? "bg-primary text-white border-l-2 border-l-primary font-extrabold"
-          : " font-semibold"
+          ? "bg-primary text-white border-l-2 border-l-primary font-bold"
+          : " font-normal"
       }`}
     >
       <div
@@ -98,7 +126,7 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
         } absolute -left-[2px] rounded-r`}
       />
       {item.icon}
-      <div className="text-sm">{item.title}</div>
+      <div className="text-[16px]">{item.title}</div>
     </div>
   );
 };
