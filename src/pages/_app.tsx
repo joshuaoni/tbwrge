@@ -11,9 +11,7 @@ const outfit = Outfit({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={outfit.className}>
-      <DashboardWrapper>
-        <Component {...pageProps} />
-      </DashboardWrapper>
+      <Component {...pageProps} />
     </main>
   );
 }

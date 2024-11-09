@@ -34,6 +34,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import DashboardWrapper from "@/components/dashboard-wrapper";
 
 import { Button } from "@/components/ui/button";
 
@@ -43,7 +44,7 @@ const JobPostings = () => {
 
   const [filterCandidate, setFilterCandidate] = useState("Fit Score");
   return (
-    <div>
+    <DashboardWrapper>
       <div className="flex w-full justify-between items-center  mb-4">
         <h1 className="text-xl font-bold">Current Postings</h1>
         <div>
@@ -122,7 +123,7 @@ const JobPostings = () => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardWrapper>
   );
 };
 

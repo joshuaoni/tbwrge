@@ -21,19 +21,19 @@ const LeftSideBar = () => {
     {
       title: "Dashboard",
       icon: <House />,
-      link: "/dashboard-home",
+      link: "/dashboard",
       active: false,
     },
     {
       title: "Job Posts",
       icon: <ShoppingBag />,
-      link: "/job-postings",
+      link: "/dashboard/job-postings",
       active: false,
     },
     {
       title: "Candidates",
       icon: <UserCircle />,
-      link: "/candidates",
+      link: "/dashboard/candidates",
       active: false,
     },
   ]);
@@ -42,19 +42,19 @@ const LeftSideBar = () => {
     {
       title: "Billings & Subscription",
       icon: <IdCard />,
-      link: "/billings",
+      link: "/dashboard/billings",
       active: false,
     },
     {
       title: "Settings",
       icon: <Settings />,
-      link: "/settings",
+      link: "/dashboard/settings",
       active: false,
     },
     {
       title: "Logout",
       icon: <LogOut />,
-      link: "/logout",
+      link: "/dashboard/logout",
       active: false,
     },
   ]);

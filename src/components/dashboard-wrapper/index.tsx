@@ -1,8 +1,8 @@
-import LeftSideBar from "@/components/left-side-bar";
 import React from "react";
 import DashboardHeader from "../dashboard-header";
+import LeftSideBar from "../left-side-bar";
 
-const Dashboard = ({ children }: any) => {
+const Dashboard = ({ children }: { children: any }) => {
   return (
     <div className="">
       <DashboardHeader />
