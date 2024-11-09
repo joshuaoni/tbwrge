@@ -1,7 +1,12 @@
 import React from "react";
+import LandingHeader from "./landing-header";
 
 const index = () => {
-  return <div>index</div>;
+  return (
+    <div>
+      <LandingHeader />
+    </div>
+  );
 };
 
 export default index;
