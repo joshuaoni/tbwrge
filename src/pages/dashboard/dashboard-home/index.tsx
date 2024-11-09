@@ -72,7 +72,7 @@ const index = () => {
   );
 };
 
-const CreateJob = () => {
+export const CreateJob = () => {
   const [showOverview, setShowOverview] = React.useState(false);
   const [generatingPost, setGeneratingPost] = useState(false);
   const [jobPost, setJobPost] = React.useState({

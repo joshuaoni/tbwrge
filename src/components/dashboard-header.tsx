@@ -2,6 +2,7 @@ import React from "react";
 import { Input } from "./ui/input";
 import { BellDotIcon, Search } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { CreateJob } from "@/pages/dashboard/dashboard-home";
 
 const DashboardHeader = () => {
   return (
@@ -14,6 +15,7 @@ const DashboardHeader = () => {
             className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
           />
         </div>
+        <CreateJob />
 
         {/* <div className=" space-x-4    flex items-center">
           <BellDotIcon color="#e1e1e1" />
