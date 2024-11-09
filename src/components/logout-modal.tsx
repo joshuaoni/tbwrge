@@ -15,7 +15,7 @@ const LogoutModal = () => {
     <Dialog>
       <DialogTrigger>
         <div
-          className={`flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  mb-3  cursor-pointer ${
+          className={`flex relative  w-full items-center  transition-all py-3  pl-6 space-x-2 p-2  mb-3  cursor-pointer ${
             false
               ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"
               : " font-normal"

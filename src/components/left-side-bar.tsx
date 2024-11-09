@@ -98,7 +98,7 @@ const LeftSideBar = () => {
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
           <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>
-          <div className="space-y-6 mb-24">
+          <div className="space-y-6 mb-24 w-full">
             {userLeftSideItems.map((item) => {
               if (item.title === "Logout") {
                 return <LogoutModal />;
