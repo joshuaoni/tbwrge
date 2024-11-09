@@ -30,12 +30,6 @@ const LeftSideBar = () => {
       link: "/dashboard/job-postings",
       active: false,
     },
-    {
-      title: "Candidates",
-      icon: <UserCircle />,
-      link: "/dashboard/candidates",
-      active: false,
-    },
   ]);
 
   const [userLeftSideItems, setUserLeftSideItems] = React.useState([
