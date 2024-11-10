@@ -9,7 +9,6 @@ import {
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
-import candivetlogo from "../../public/images/candivet-logo.png";
 import JobsDropdown from "./jobs-dropdown";
 import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
@@ -53,17 +52,8 @@ const LeftSideBar = () => {
     },
   ]);
   return (
-    <div className="fixed left-0 h-screen pt-6 w-[20%] bg-[#e1e1e1]   pl-[12px] pr-[12px]">
-      <div
-        onClick={() => {
-          router.push("/dashboard-home");
-        }}
-        className="flex items-center ml-6 cursor-pointer"
-      >
-        <Image src={candivetlogo} alt="" width={50} height={50} />
-        <h1 className="text-3xl font-bold">Candivet</h1>
-      </div>
-      <div className="fixed left-0  overflow-y-scroll h-screen pt-16 w-[20%] bg-[#e1e1e1]   pl-[12px] pr-[12px]">
+    <div className=" h-screen pt-6 bg-[#e1e1e1]  ">
+      <div className=" w-full overflow-y-scroll h-screen pt-4  bg-[#e1e1e1]   pl-[12px] pr-[12px]">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
           <div className="flex flex-col">

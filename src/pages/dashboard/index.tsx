@@ -36,19 +36,18 @@ const index = () => {
   ]);
   return (
     <DashboardWrapper>
-      {" "}
-      <div className=" h-full flex flex-col ">
+      <div className=" h-screen flex flex-col ">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold ">Dashboard</h1>
         </div>
-        <div className=" flex-1 ">
-          <div className="flex h-[40%]  mt-8 justify-between items-center">
-            <div className="grid grid-cols-2 gap-6  ">
+        <div className=" md:mt-12  ">
+          <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
+            <div className="grid w-full md:w-[60%] grid-cols-1 md:grid-cols-2 gap-6  ">
               {analytics.map((an) => (
                 <AnalyticInfoCard {...an} />
               ))}
             </div>
-            <div className="w-[420px] h-full  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
+            <div className=" mt-4 md:mt-0 md:w-[420px] h-fit py-6  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
               <h1 className="font-extrabold text-2xl">
                 Find the Perfect Candidate <br /> for the job
               </h1>
@@ -57,18 +56,18 @@ const index = () => {
                 creation, cover letter translation, and more designed to
                 simplify your workflow.
               </p>
-              <Button className="bg-white w-[50%] text-base py-6 self-center text-primary font-bold ">
+              <Button className="bg-white md:w-[50%] text-base py-6 self-center text-primary font-bold ">
                 Subscribe for premium
               </Button>
             </div>
           </div>
-
-          <div className="w-full p-4 h-[350px] mt-8 overflow-y-scroll bg-[#F9F9F9] rounded-lg">
-            <div className="flex items-center justify-between ">
-              <h1 className="font-bold  text-lg">Activity Feed</h1>
-              <AllActivityDropDown />
-            </div>
+        </div>
+        <div className="w-full p-4 md:h-[300px] h-[800px] mt-8 overflow-y-scroll bg-[#F9F9F9] rounded-lg">
+          <div className="flex items-center justify-between ">
+            <h1 className="font-bold text-lg">Activity Feed</h1>
+            <AllActivityDropDown />
           </div>
+          {/* Add activity feed items here */}
         </div>
       </div>
     </DashboardWrapper>
@@ -256,7 +255,7 @@ const AnalyticInfoCard = ({
   icon: any;
 }) => {
   return (
-    <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-80">
+    <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
       <div className="flex items-center space-x-2">
         {icon}
         <span className="text-sm font-light ">{title}</span>
