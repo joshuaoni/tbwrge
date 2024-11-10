@@ -1,11 +1,11 @@
 import React from "react";
-import LandingHeader from "./landing-header";
+import LandingWrapper from "./landing-wrapper";
 
 const index = () => {
   return (
-    <div>
-      <LandingHeader />
-    </div>
+    <LandingWrapper>
+      <h1></h1>
+    </LandingWrapper>
   );
 };
 
