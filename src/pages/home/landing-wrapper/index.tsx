@@ -4,9 +4,9 @@ import LandingFooter from "../landing-footer";
 
 const LandingWrapper = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
+    <div className="flex flex-col h-screen ">
       <LandingHeader />
-      {children}
+      <main className="flex-grow">{children}</main>
       <LandingFooter />
     </div>
   );
