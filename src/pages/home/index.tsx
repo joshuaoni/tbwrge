@@ -13,6 +13,10 @@ import hubspot from "../../../public/images/hubspot.png";
 import AboutUs from "./about-us";
 import Tools from "./tools";
 import RightCandidate from "./right-candidate";
+import PricingPlans from "./pricing-plans";
+import BlogPosts from "../blog-posts";
+import Expertise from "./expertise";
+import Community from "./community";
 const index = () => {
   return (
     <LandingWrapper>
@@ -50,6 +54,10 @@ const index = () => {
         <AboutUs />
         <Tools />
         <RightCandidate />
+        <PricingPlans />
+        <BlogPosts />
+        <Expertise />
+        <Community />
       </div>
     </LandingWrapper>
   );
