@@ -3,6 +3,7 @@ import candivetlogo from "../../../../public/images/candivet-logo.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const LandingHeader = ({
   scrollToSection,
@@ -19,6 +20,7 @@ const LandingHeader = ({
   blogSectionRef: RefObject<HTMLDivElement>;
   CommunitySectionRef: RefObject<HTMLDivElement>;
 }) => {
+  const router = useRouter()
   return (
     <div className="w-full z-20 fixed flex items-center bg-white   top-0 border py-4">
       <div className="flex items-center ml-6 cursor-pointer">
@@ -34,7 +36,12 @@ const LandingHeader = ({
         blogSectionRef={blogSectionRef}
       />
       <div className="ml-auto mr-8">
-        <Button className="border-none outline-none tet-black">Log In</Button>
+        <Button
+          onClick={() => router.push("/home/sign-in")}
+          className="border-none outline-none tet-black"
+        >
+          Log In
+        </Button>
         <Button className="bg-primary text-white">Sign Up</Button>
       </div>
     </div>
