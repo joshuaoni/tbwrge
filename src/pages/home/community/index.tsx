@@ -3,15 +3,18 @@ import CommunityImage from "../../../../public/images/community-image.jpeg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
-const Community = () => {
+const Community = ({ ref }: { ref: React.RefObject<HTMLDivElement> }) => {
   return (
-    <div className="relative flex items-center justify-center h-[400px]">
+    <div
+      ref={ref}
+      className="relative flex items-center justify-center min-h-[400px]"
+    >
       {/* Image Layer */}
       <Image
         src={CommunityImage}
         alt=""
         width={400}
-        height={500}
+        height={800}
         className="w-full h-full object-cover absolute top-0 left-0"
       />
 

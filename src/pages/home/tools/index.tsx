@@ -4,7 +4,7 @@ import CVTools from "../../../../public/images/icons/cv-tools.png";
 import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
 import Image from "next/image";
 
-const Tools = () => {
+const Tools = ({ ref }: { ref: React.RefObject<HTMLDivElement> }) => {
   const tools = [
     {
       icon: JobTools,
@@ -26,7 +26,10 @@ const Tools = () => {
     },
   ];
   return (
-    <div className=" bg-white  flex flex-col  spaec-y-4 items-center ">
+    <div
+      ref={ref}
+      className=" bg-white  flex flex-col  spaec-y-4 items-center "
+    >
       <div className="bg-[#F8F9FF]  flex flex-col w-[80%] my-12 pb-8  space-y-4 mb-12 items-center">
         <h1 className="text-[25px] font-extrabold p-4">
           Our Tools simplifies your vetting process
