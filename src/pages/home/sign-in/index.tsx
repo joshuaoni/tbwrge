@@ -20,23 +20,25 @@ const index = () => {
           onSubmit={handleSubmit}
           className=" w-full flex flex-col mt-4 space-y-4"
         >
-          <div className="flex flex-col space-y-2 ">
-            <label className="text-xs" htmlFor="email">
-              Email Address
-            </label>
-            <Input
-              placeholder="example@email.com"
-              className="w-full bg-[#EDF2F7] py-6 border-none"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label className="text-xs" htmlFor="email">
-              Password
-            </label>
-            <Input
-              placeholder="********"
-              className="w-full bg-[#EDF2F7] py-6 border-none"
-            />
+          <div className="space-y-4 flex flex-col">
+            <div className="flex flex-col space-y-2 ">
+              <label className="text-xs" htmlFor="email">
+                Email Address
+              </label>
+              <Input
+                placeholder="example@email.com"
+                className="w-full bg-[#EDF2F7] py-6 border-none"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label className="text-xs" htmlFor="email">
+                Password
+              </label>
+              <Input
+                placeholder="********"
+                className="w-full bg-[#EDF2F7] py-6 border-none"
+              />
+            </div>
           </div>
           <Button
             variant="default"
