@@ -123,9 +123,13 @@ const NavItem = ({
   link: string;
   ref: RefObject<HTMLDivElement>;
 }) => {
+  const router = useRouter();
   const pathName = usePathname();
   const isActive = link.includes(pathName);
   const onClick = () => {
+    if (link === "/community") {
+      router.push("/community");
+    }
     scrollToSection(ref);
   };
   return (
