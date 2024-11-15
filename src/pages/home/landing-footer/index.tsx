@@ -10,7 +10,7 @@ const LandingFooter = () => {
         <div className="w-full md:w-[70%]">
           <div className=" md:flex md:items-start md:space-x-8">
             <div className="flex flex-col md:flex-row md:space-x-6">
-              <div className="flex justify-between w-full">
+              <div className="flex justify-between space-x-[140px] w-full">
                 <div className="flex flex-col">
                   <h1 className="font-bold ">Product</h1>
                   <div className="flex flex-col space-y-2 mt-3">
@@ -27,10 +27,12 @@ const LandingFooter = () => {
               <div className=" flex justify-between w-full space-x-4 mt-4 md:mt-0">
                 <div className="flex flex-col">
                   <h1 className="font-bold ">Company</h1>
-                  <span className="text-[#C0C1C6] text-sm">About Us</span>
-                  <span className="text-[#C0C1C6] text-sm">Contact</span>
-                  <span className="text-[#C0C1C6] text-sm">Community</span>
-                  <span className="text-[#C0C1C6] text-sm">FAQs</span>
+                  <div className="flex flex-col space-y-2 mt-3">
+                    <span className="text-[#C0C1C6] text-sm">About Us</span>
+                    <span className="text-[#C0C1C6] text-sm">Contact</span>
+                    <span className="text-[#C0C1C6] text-sm">Community</span>
+                    <span className="text-[#C0C1C6] text-sm">FAQs</span>
+                  </div>
                 </div>
                 <div className="flex flex-col">
                   <h1 className="font-bold ">Terms of service</h1>
