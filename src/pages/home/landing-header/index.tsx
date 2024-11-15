@@ -47,7 +47,12 @@ const LandingHeader = ({
           >
             Log In
           </Button>
-          <Button className="bg-primary text-white">Sign Up</Button>
+          <Button
+            onClick={() => router.push("/home/sign-up")}
+            className="bg-primary text-white"
+          >
+            Sign Up
+          </Button>
         </div>
       ) : (
         <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center ml-auto"></div>

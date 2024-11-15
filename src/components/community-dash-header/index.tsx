@@ -24,7 +24,7 @@ const CommunityDashHeader = () => {
           <Users2 fill="black" />
           <div className="border flex   px-2 bg-white items-center rounded-md">
             <Input
-              placeholder="Search for jobs"
+              placeholder="Type here to search"
               className="bg-transparent rounded-md border-none placeholder:text-[#898989] w-[400px]  outline-none focus:outline-none"
             />
             <Search color="#898989" />

@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import OR from "../../../../public/images/OR.png";
 import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
+import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 import { useRouter } from "next/router";
 
 const index = () => {
@@ -11,10 +12,13 @@ const index = () => {
     e.preventDefault();
   };
   const router = useRouter();
+  const [role, setRole] = React.useState("Select Role");
   return (
     <div className="h-screen w-screen bg-darkgreen flex items-center justify-center ">
       <div className="w-[400px] h-fit bg-white rounded-lg flex flex-col items-center p-6">
-        <h1 className="text-2xl font-semibold text-primary">Log In</h1>
+        <h1 className="text-2xl font-semibold text-primary">
+          Create an Account
+        </h1>
         <p className="text-[#4A5568]">
           Welcome to simplified candidate vetting
         </p>
@@ -25,10 +29,19 @@ const index = () => {
           <div className="space-y-4 flex flex-col">
             <div className="flex flex-col space-y-2 ">
               <label className="text-xs" htmlFor="email">
+                Full Name
+              </label>
+              <Input
+                placeholder="John Doe"
+                className="w-full bg-[#EDF2F7] py-6 border-none"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label className="text-xs" htmlFor="email">
                 Email Address
               </label>
               <Input
-                placeholder="example@email.com"
+                placeholder="example@gmail.com"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
             </div>
@@ -41,13 +54,21 @@ const index = () => {
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
             </div>
+            <div className="flex  w-full flex-col space-y-2">
+              <label className="text-xs" htmlFor="email">
+                Role Selection
+              </label>
+              <div className="w-full ">
+                <RoleSelectionDropDown role={role} setRole={setRole} />
+              </div>
+            </div>
           </div>
           <Button
             variant="default"
             className="bg-primary text-white w-full"
             type="submit"
           >
-            Log In
+            CREATE ACCOUNT
           </Button>
           <Image
             src={OR}
@@ -65,16 +86,13 @@ const index = () => {
             <p>Continue with google</p>
           </Button>
           <span className="font-semibold  cursor-pointer self-center text-gray-400 text-sm text-center">
-            Dont have an account ?{" "}
+            Already have an account ?{" "}
             <span
-              onClick={() => router.push("/home/sign-up")}
+              onClick={() => router.push("/home/sign-in")}
               className="text-primary "
             >
-              Register
+              Sign In
             </span>{" "}
-          </span>
-          <span className="font-semibold cursor-pointer  self-center text-gray-400 text-sm text-center">
-            Forgot password{" "}
           </span>
         </form>
       </div>
