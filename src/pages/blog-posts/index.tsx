@@ -6,10 +6,12 @@ import React from "react";
 const BlogPosts = ({ ref }: { ref: React.RefObject<HTMLDivElement> }) => {
   return (
     <div ref={ref} className="h-fit p-12 w-full flex flex-col ">
-      <h1 className="text-2xl font-bold">Blog Posts</h1>
-      <p className="text-sm text-[#2D2D2D] mt-2">
-        Read Up to Date Tips from Professionals
-      </p>
+      <div className="flex flex-col md:ml-[110px] text-center md:text-start">
+        <h1 className="text-2xl font-bold">Blog Posts</h1>
+        <p className="text-sm text-[#2D2D2D] mt-2">
+          Read Up to Date Tips from Professionals
+        </p>
+      </div>
       <div className="w-full flex flex-wrap gap-x-6 gap-y-6 mt-8  items-center justify-center">
         <BlogCard />
         <BlogCard />

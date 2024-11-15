@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const LandingHeader = ({
   scrollToSection,
@@ -20,30 +21,37 @@ const LandingHeader = ({
   blogSectionRef: RefObject<HTMLDivElement>;
   CommunitySectionRef: RefObject<HTMLDivElement>;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
+  const isMobile = useIsMobile();
   return (
-    <div className="w-full z-20 fixed flex items-center bg-white   top-0 border py-4">
-      <div className="flex items-center ml-6 cursor-pointer">
+    <div className="w-full px-4 md:px-0 z-20 fixed flex items-center bg-white   top-0 border py-4">
+      <div className="flex items-center md:ml-[170px] cursor-pointer">
         <Image src={candivetlogo} alt="" width={50} height={50} />
         <h1 className="text-3xl font-bold">Candivet</h1>
       </div>
-      <NavigationHeader
-        CommunitySectionRef={CommunitySectionRef}
-        scrollToSection={scrollToSection}
-        aboutUsSectionRef={aboutUsSectionRef}
-        toolsSectionRef={toolsSectionRef}
-        pricingSectionRef={pricingSectionRef}
-        blogSectionRef={blogSectionRef}
-      />
-      <div className="ml-auto mr-8">
-        <Button
-          onClick={() => router.push("/home/sign-in")}
-          className="border-none outline-none tet-black"
-        >
-          Log In
-        </Button>
-        <Button className="bg-primary text-white">Sign Up</Button>
-      </div>
+      {!isMobile && (
+        <NavigationHeader
+          CommunitySectionRef={CommunitySectionRef}
+          scrollToSection={scrollToSection}
+          aboutUsSectionRef={aboutUsSectionRef}
+          toolsSectionRef={toolsSectionRef}
+          pricingSectionRef={pricingSectionRef}
+          blogSectionRef={blogSectionRef}
+        />
+      )}
+      {!isMobile ? (
+        <div className="ml-auto mr-8">
+          <Button
+            onClick={() => router.push("/home/sign-in")}
+            className="border-none outline-none tet-black"
+          >
+            Log In
+          </Button>
+          <Button className="bg-primary text-white">Sign Up</Button>
+        </div>
+      ) : (
+        <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center ml-auto"></div>
+      )}
     </div>
   );
 };

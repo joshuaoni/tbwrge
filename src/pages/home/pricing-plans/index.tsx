@@ -46,23 +46,20 @@ const PricingPlans = ({ ref }: { ref: React.RefObject<HTMLDivElement> }) => {
     },
   ];
   return (
-    <div
-      ref={ref}
-      className=" bg-white  flex flex-col  spaec-y-4 items-center "
-    >
-      <div className="bg-[#F8F9FF]  flex flex-col w-[80%] my-12 pb-8  space-y-4 mb-12 items-center">
+    <div className=" bg-white  flex flex-col  spaec-y-4 items-center ">
+      <div className="bg-[#F8F9FF]  flex flex-col w-full md:w-[80%] my-12 pb-8  space-y-4 mb-12 items-center">
         <h1 className="text-[25px] font-extrabold p-4">Our Pricing Plans</h1>
         <p className="text-sm text-[#2D2D2D] text-center px-24">
           Choose the Perfect Pricing for your hiring and career goals
         </p>
-        <div className="flex items-center  mt-6 space-x-8 space-4-6">
+        <div className="flex items-center  mt-6 space-x-8 space-4-6 overflow-x-scroll w-[400px] md:w-full">
           {plans.map((plan, index: number) => (
             <div
               className={`flex text-start flex-col ${
                 plan.plan === "Enterprise"
                   ? "bg-primary text-white"
                   : "bg-white text-black"
-              }  space-y-6  min-h-[400px] max-w-[320px] rounded-2xl  justify-center px-4 `}
+              }  space-y-6  min-h-[400px] min-w-[320px] max-w-[320px] rounded-2xl  justify-center px-4 `}
             >
               <span>{plan.plan}</span>
               <span className="text-[50px] font-extrabold">
