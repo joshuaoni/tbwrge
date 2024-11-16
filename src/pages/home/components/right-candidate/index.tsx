@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
-import RocketIcon from "../../../../public/images/rocket.png";
-import RightCandidateWoman from "../../../../public/images/right-candidate-woman.png";
+import RocketIcon from "../../../../../public/images/rocket.png";
+import RightCandidateWoman from "../../../../../public/images/right-candidate-woman.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const RightCandidate = () => {

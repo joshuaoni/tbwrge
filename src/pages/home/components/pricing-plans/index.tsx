@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
-const PricingPlans = ({ ref }: { ref: React.RefObject<HTMLDivElement> }) => {
+const PricingPlans = () => {
   const plans = [
     {
       plan: "Basic",

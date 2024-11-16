@@ -1,5 +1,5 @@
 import React, { RefObject } from "react";
-import candivetlogo from "../../../../public/images/candivet-logo.png";
+import candivetlogo from "../../../../../../public/images/candivet-logo.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -84,17 +84,17 @@ const NavigationHeader = ({
     {
       ref: aboutUsSectionRef,
       title: "About",
-      link: "/about",
+      link: "/home/about",
     },
     {
       ref: toolsSectionRef,
       title: "Tools",
-      link: "/tools",
+      link: "/home/tools",
     },
     {
       ref: pricingSectionRef,
       title: "Pricing",
-      link: "/pricing",
+      link: "/home/pricing",
     },
     {
       ref: blogSectionRef,
@@ -117,25 +117,14 @@ const NavigationHeader = ({
     </div>
   );
 };
-const NavItem = ({
-  scrollToSection,
-  title,
-  ref,
-  link,
-}: {
-  scrollToSection: (sectionRef: RefObject<HTMLDivElement>) => void;
-  title: string;
-  link: string;
-  ref: RefObject<HTMLDivElement>;
-}) => {
+const NavItem = ({ title, link }: any) => {
   const router = useRouter();
   const pathName = usePathname();
-  const isActive = link.includes(pathName);
+  const path = pathName.split("/")[pathName.split("/").length - 1];
+  console.log("path", path, link);
+  const isActive = path === link.split("/")[link.split("/").length - 1];
   const onClick = () => {
-    if (link === "/community") {
-      router.push("/community");
-    }
-    scrollToSection(ref);
+    router.push(link);
   };
   return (
     <span

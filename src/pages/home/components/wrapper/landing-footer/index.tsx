@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import candivetlogo from "../../../../public/images/candivet-logo.png";
+import candivetlogo from "../../../../../../public/images/candivet-logo.png";
 
 const LandingFooter = () => {
   let currentYear = new Date().getFullYear();

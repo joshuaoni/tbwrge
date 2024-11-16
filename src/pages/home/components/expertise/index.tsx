@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import RocketIcon from "../../../../public/images/rocket.png";
-import ExpertiseMan from "../../../../public/images/expertise-man.png";
+import RocketIcon from "../../../../../public/images/rocket.png";
+import ExpertiseMan from "../../../../../public/images/expertise-man.png";
 import ManSuit from "../../../../public/images/man-suit.png";
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";

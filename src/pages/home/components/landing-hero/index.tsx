@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import ManSuit from "../../../../public/images/man-suit.png";
-import RocketIcon from "../../../..//public/images/rocket.png";
+import ManSuit from "../../../../../public/images/man-suit.png";
+import RocketIcon from "../../../../../public/images/rocket.png";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { span } from "framer-motion/client";

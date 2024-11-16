@@ -1,17 +1,17 @@
 import React, { useRef } from "react";
 import LandingHeader from "../landing-header";
 import LandingFooter from "../landing-footer";
-import AboutUs from "../about-us";
-import Tools from "../tools";
-import RightCandidate from "../right-candidate";
-import PricingPlans from "../pricing-plans";
+import AboutUs from "../../about-us";
+import Tools from "../../tools";
+import RightCandidate from "../../right-candidate";
+import PricingPlans from "../../pricing-plans";
 import BlogPosts from "@/pages/blog-posts";
-import Expertise from "../expertise";
-import Community from "../community";
-import { Partners } from "../partners";
-import LandingHeroSection from "../landing-hero";
+import Expertise from "../../expertise";
+import Community from "../../../community";
+import { Partners } from "../../partners";
+import LandingHeroSection from "../../landing-hero";
 
-const LandingWrapper = () => {
+const LandingWrapper = ({ children }: { children: React.ReactNode }) => {
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const toolsSectionRef = useRef<HTMLDivElement>(null);
   const pricingSectionRef = useRef<HTMLDivElement>(null);
@@ -30,17 +30,7 @@ const LandingWrapper = () => {
         CommunitySectionRef={CommunitySectionRef}
         scrollToSection={scrollToSection}
       />
-      <main>
-        <LandingHeroSection />
-        <Partners />
-        <AboutUs ref={aboutSectionRef} />
-        <Tools ref={toolsSectionRef} />
-        <RightCandidate />
-        <PricingPlans ref={pricingSectionRef} />
-        <BlogPosts ref={blogSectionRef} />
-        <Expertise />
-        <Community ref={CommunitySectionRef} />
-      </main>
+      <main>{children}</main>
       <LandingFooter />
     </div>
   );

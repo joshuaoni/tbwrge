@@ -1,11 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
-import AirBnB from "../../../../public/images/airbnb.png";
-import Microsoft from "../../../../public/images/microsoft.png";
-import Google from "../../../../public/images/google.png";
-import Amazon from "../../../../public/images/amazon.png";
-import FedEx from "../../../../public/images/fedex.png";
-import hubspot from "../../../../public/images/hubspot.png";
+import AirBnB from "../../../../../public/images/airbnb.png";
+import Microsoft from "../../../../../public/images/microsoft.png";
+import Google from "../../../../../public/images/google.png";
+import Amazon from "../../../../../public/images/amazon.png";
+import FedEx from "../../../../../public/images/fedex.png";
+import hubspot from "../../../../../public/images/hubspot.png";
 import Image from "next/image";
 
 export const Partners = () => {
