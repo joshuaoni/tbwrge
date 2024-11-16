@@ -5,15 +5,19 @@ import React from "react";
 import OR from "../../../../public/images/OR.png";
 import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import { useRouter } from "next/router";
-
+import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 const index = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   const router = useRouter();
   return (
-    <div className="h-screen w-screen bg-darkgreen flex items-center justify-center ">
-      <div className="w-[400px] h-fit bg-white rounded-lg flex flex-col items-center p-6">
+    <div className="h-screen w-screen bg-darkgreen flex flex-col items-center justify-center ">
+      <div className="flex items-center  cursor-pointer">
+        <Image src={candivetlogowhite} alt="" width={50} height={50} />
+        <h1 className="text-3xl font-bold text-white">Candivet</h1>
+      </div>
+      <div className="w-[400px] h-fit bg-white rounded-lg mt-4 flex flex-col items-center p-6">
         <h1 className="text-2xl font-semibold text-primary">Log In</h1>
         <p className="text-[#4A5568]">
           Welcome to simplified candidate vetting
