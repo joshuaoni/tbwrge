@@ -1,3 +1,4 @@
+import BlogsPagination from "@/components/blogs-pagination";
 import { Button } from "@/components/ui/button";
 import { User2, UserCircle2 } from "lucide-react";
 import Image from "next/image";
@@ -18,6 +19,7 @@ const BlogPosts = () => {
         <BlogCard />
         <BlogCard />
       </div>
+      <BlogsPagination />
 
       <Button className="  self-center mt-8 bg-primary text-white">
         View All Blog Posts

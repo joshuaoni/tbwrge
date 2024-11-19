@@ -1,6 +1,6 @@
 import React from "react";
 import LandingWrapper from "../components/wrapper/landing-wrapper";
-import Community from "../community";
+import Community from "../components/community";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import AboutUs from "../../../../public/images/about-us.png";
@@ -24,7 +24,7 @@ const index = () => {
               candidate vetting processes.
             </p>
             <Button className="flex bg-primary text-white items-center">
-              <p>Join Us</p> <ArrowRight />
+              <p>Join Us</p> <ArrowRight /> 
             </Button>
           </div>
           <div className="w-[50%]">

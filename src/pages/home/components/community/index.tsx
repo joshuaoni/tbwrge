@@ -1,5 +1,5 @@
 import React from "react";
-import CommunityImage from "../../../../public/images/community-image.jpeg";
+import CommunityImage from "../../../../../public/images/community-image.jpeg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 

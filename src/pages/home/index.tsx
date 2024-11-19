@@ -1,5 +1,5 @@
 import BlogPosts from "../blog-posts";
-import Community from "./community";
+import Community from "./components/community";
 import AboutUs from "./components/about-us";
 import Expertise from "./components/expertise";
 import LandingHeroSection from "./components/landing-hero";

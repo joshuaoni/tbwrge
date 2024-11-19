@@ -99,7 +99,7 @@ const NavigationHeader = ({
     {
       ref: blogSectionRef,
       title: "Blog",
-      link: "/blog",
+      link: "/home/blog",
     },
     {
       ref: CommunitySectionRef,

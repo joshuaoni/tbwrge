@@ -7,7 +7,7 @@ import RightCandidate from "../../right-candidate";
 import PricingPlans from "../../pricing-plans";
 import BlogPosts from "@/pages/blog-posts";
 import Expertise from "../../expertise";
-import Community from "../../../community";
+import Community from "../../community";
 import { Partners } from "../../partners";
 import LandingHeroSection from "../../landing-hero";
 

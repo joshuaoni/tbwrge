@@ -1,6 +1,6 @@
 import React from "react";
 import LandingWrapper from "../components/wrapper/landing-wrapper";
-import Community from "../community";
+import Community from "../components/community";
 import ToolsHeaderImage from "../../../../public/images/tools_img.jpeg";
 import Tool1 from "../../../../public/images/tool1.png";
 import Tool2 from "../../../../public/images/tool2.png";
