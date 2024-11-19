@@ -4,30 +4,34 @@ import Image from "next/image";
 import React from "react";
 import OR from "../../../../public/images/OR.png";
 import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
+import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
-import { loginUser } from "@/actions/login-user";
+import { registerUser } from "@/actions/register-user";
 import { useMutation } from "@tanstack/react-query";
+import ChannelsDropDown from "@/components/channels-dropdown";
 import { Loader2 } from "lucide-react";
+import { resetPassword } from "@/actions/reset-password";
 const index = () => {
-  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const signInMutation = useMutation({
+  const [code, setCode] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const resetPasswordMutation = useMutation({
     mutationFn: async () =>
-      await loginUser({
-        email,
-        password,
+      await resetPassword({
+        otp: code,
+        new_password: password,
       }),
-    onSuccess: (res) => {
-      if (res.user != null) {
-        router.push("/dashboard");
-      }
+    onSuccess: () => {
+      router.push("/home/sign-in");
     },
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("logging");
     e.preventDefault();
-    signInMutation.mutate();
+    resetPasswordMutation.mutate();
   };
+
   const router = useRouter();
   return (
     <div className="h-screen w-screen bg-darkgreen flex flex-col items-center justify-center ">
@@ -36,7 +40,9 @@ const index = () => {
         <h1 className="text-3xl font-bold text-white">Candivet</h1>
       </div>
       <div className="w-[400px] h-fit bg-white rounded-lg mt-4 flex flex-col items-center p-6">
-        <h1 className="text-2xl font-semibold text-primary">Log In</h1>
+        <h1 className="text-2xl font-semibold text-primary">
+          Create an Account
+        </h1>
         <p className="text-[#4A5568]">
           Welcome to simplified candidate vetting
         </p>
@@ -47,71 +53,59 @@ const index = () => {
           <div className="space-y-4 flex flex-col">
             <div className="flex flex-col space-y-2 ">
               <label className="text-xs" htmlFor="email">
-                Email Address
+                Enter Code
               </label>
               <Input
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
-                placeholder="example@email.com"
+                value={code}
+                name="code"
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="1234"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
             </div>
             <div className="flex flex-col space-y-2">
               <label className="text-xs" htmlFor="email">
-                Password
+                New Password
               </label>
               <Input
                 value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
+                name="password]"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="********"
+                className="w-full bg-[#EDF2F7] py-6 border-none"
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label className="text-xs" htmlFor="email">
+                Retype Password
+              </label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="********"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
             </div>
           </div>
           <Button
+            disabled={
+              resetPasswordMutation.isPending ||
+              !password ||
+              !code ||
+              !confirmPassword ||
+              password !== confirmPassword
+            }
             variant="default"
             className="bg-primary text-white w-full"
             type="submit"
           >
-            {signInMutation.isPending ? (
+            {resetPasswordMutation.isPending ? (
               <Loader2 className="animate-spin" />
             ) : (
-              "Log In"
+              "RESET PASSWORD"
             )}
           </Button>
-          <Image
-            src={OR}
-            alt=""
-            width={150}
-            height={150}
-            className="self-center my-4"
-          />
-          <Button
-            variant="default"
-            className="bg-white flex items-center text-black w-full"
-            type="submit"
-          >
-            <Image src={GOOGLEICON} alt="" width={25} height={25} />
-            <p>Continue with google</p>
-          </Button>
-          <span className="font-semibold  cursor-pointer self-center text-gray-400 text-sm text-center">
-            Dont have an account ?{" "}
-            <span
-              onClick={() => router.push("/home/sign-up")}
-              className="text-primary "
-            >
-              Register
-            </span>{" "}
-          </span>
-          <span onClick={() => {
-            router.push("/home/forgot-password")
-          }} className="font-semibold cursor-pointer  self-center text-gray-400 text-sm text-center">
-            Forgot password{" "}
-          </span>
         </form>
       </div>
     </div>
