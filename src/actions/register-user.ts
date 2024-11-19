@@ -1,13 +1,13 @@
 "use client";
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
-import { channel } from "diagnostics_channel";
 
 export const registerUser = async ({
   fullName,
   email,
   password,
   role,
+  channel = "others",
 }: {
   fullName: string;
   email: string;
@@ -25,7 +25,7 @@ export const registerUser = async ({
         password,
         name: fullName,
         role: role == "Employer" ? "recruiter" : "candidate",
-        channel: "others",
+        channel,
       },
     };
     const response = await axios(options);

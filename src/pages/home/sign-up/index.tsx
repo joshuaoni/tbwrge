@@ -9,9 +9,11 @@ import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 import { registerUser } from "@/actions/register-user";
 import { useMutation } from "@tanstack/react-query";
+import ChannelsDropDown from "@/components/channels-dropdown";
 const index = () => {
   const [fullName, setFullName] = React.useState("");
   const [role, setRole] = React.useState("Select Role");
+  const [channel, setChannel] = React.useState("Select Channel");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const registerUserMutation = useMutation({
@@ -20,7 +22,6 @@ const index = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log("logging");
     e.preventDefault();
-
     registerUserMutation.mutate();
   };
 
@@ -29,6 +30,7 @@ const index = () => {
     email,
     password,
     role,
+    channel,
   };
   const router = useRouter();
   return (
@@ -86,6 +88,14 @@ const index = () => {
               />
             </div>
             <div className="flex  w-full flex-col space-y-2">
+              <label className="text-xs" htmlFor="email">
+                How did you hear about us? (optional)
+              </label>
+              <div className="w-full ">
+                <ChannelsDropDown channel={channel} setChannel={setChannel} />
+              </div>
+            </div>
+            <div className="flex  w-full  flex-col space-y-2">
               <label className="text-xs" htmlFor="email">
                 Role Selection
               </label>
