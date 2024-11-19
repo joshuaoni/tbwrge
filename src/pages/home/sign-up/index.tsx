@@ -7,12 +7,30 @@ import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
+import { registerUser } from "@/actions/register-user";
+import { useMutation } from "@tanstack/react-query";
 const index = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [fullName, setFullName] = React.useState("");
+  const [role, setRole] = React.useState("Select Role");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const registerUserMutation = useMutation({
+    mutationFn: async () => await registerUser(data),
+  });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("logging");
     e.preventDefault();
+
+    registerUserMutation.mutate();
+  };
+
+  const data = {
+    fullName,
+    email,
+    password,
+    role,
   };
   const router = useRouter();
-  const [role, setRole] = React.useState("Select Role");
   return (
     <div className="h-screen w-screen bg-darkgreen flex flex-col items-center justify-center ">
       <div className="flex items-center  cursor-pointer">
@@ -36,6 +54,9 @@ const index = () => {
                 Full Name
               </label>
               <Input
+                value={fullName}
+                name="fullName"
+                onChange={(e) => setFullName(e.target.value)}
                 placeholder="John Doe"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
@@ -45,6 +66,9 @@ const index = () => {
                 Email Address
               </label>
               <Input
+                value={email}
+                name="email"
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@gmail.com"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
@@ -54,6 +78,9 @@ const index = () => {
                 Password
               </label>
               <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="********"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
@@ -68,6 +95,13 @@ const index = () => {
             </div>
           </div>
           <Button
+            disabled={
+              registerUserMutation.isPending ||
+              !email ||
+              !password ||
+              !fullName ||
+              role === "Select Role"
+            }
             variant="default"
             className="bg-primary text-white w-full"
             type="submit"
