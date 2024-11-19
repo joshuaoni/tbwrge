@@ -25,7 +25,10 @@ const LandingHeader = ({
   const isMobile = useIsMobile();
   return (
     <div className="w-full px-4 md:px-0 z-20 fixed flex items-center bg-white   top-0 border py-4">
-      <div className="flex items-center md:ml-[170px] cursor-pointer">
+      <div
+        onClick={() => router.push("/home")}
+        className="flex items-center md:ml-[170px] cursor-pointer"
+      >
         <Image src={candivetlogo} alt="" width={50} height={50} />
         <h1 className="text-3xl font-bold">Candivet</h1>
       </div>
