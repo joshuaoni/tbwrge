@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 import { useMutation } from "@tanstack/react-query";
 import { verifyEmail } from "@/actions/verifyEmail";
+import { Loader2 } from "lucide-react";
 const index = () => {
   const [code, setCode] = React.useState("");
   const verifyEmailMutation = useMutation({
@@ -63,7 +64,11 @@ const index = () => {
             className="bg-primary text-white w-full"
             type="submit"
           >
-            CREATE ACCOUNT
+            {verifyEmailMutation.isPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "VERIFY EMAIL"
+            )}
           </Button>
           <Image
             src={OR}

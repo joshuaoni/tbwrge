@@ -10,6 +10,7 @@ import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 import { registerUser } from "@/actions/register-user";
 import { useMutation } from "@tanstack/react-query";
 import ChannelsDropDown from "@/components/channels-dropdown";
+import { Loader2 } from "lucide-react";
 const index = () => {
   const [fullName, setFullName] = React.useState("");
   const [role, setRole] = React.useState("Select Role");
@@ -25,7 +26,7 @@ const index = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log("logging");
     e.preventDefault();
-    registerUserMutation.mutate(); 
+    registerUserMutation.mutate();
   };
 
   const data = {
@@ -119,7 +120,11 @@ const index = () => {
             className="bg-primary text-white w-full"
             type="submit"
           >
-            CREATE ACCOUNT
+            {registerUserMutation.isPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "CREATE ACCOUNT"
+            )}
           </Button>
           <Image
             src={OR}

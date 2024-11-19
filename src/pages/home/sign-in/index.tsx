@@ -7,18 +7,26 @@ import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 import { loginUser } from "@/actions/login-user";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 const index = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const signInMutation = useMutation({
+    mutationFn: async () =>
+      await loginUser({
+        email,
+        password,
+      }),
+    onSuccess: (res) => {
+      if (res.user != null) {
+        router.push("/dashboard");
+      }
+    },
+  });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let response = await loginUser({
-      email,
-      password,
-    });
-    if (response.user) {
-      router.push("/dashboard");
-    }
+    signInMutation.mutate();
   };
   const router = useRouter();
   return (
@@ -69,7 +77,11 @@ const index = () => {
             className="bg-primary text-white w-full"
             type="submit"
           >
-            Log In
+            {signInMutation.isPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Log In"
+            )}
           </Button>
           <Image
             src={OR}
