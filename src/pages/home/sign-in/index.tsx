@@ -6,9 +6,19 @@ import OR from "../../../../public/images/OR.png";
 import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
+import { loginUser } from "@/actions/login-user";
 const index = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let response = await loginUser({
+      email,
+      password,
+    });
+    if (response.user) {
+      router.push("/dashboard");
+    }
   };
   const router = useRouter();
   return (
@@ -32,6 +42,10 @@ const index = () => {
                 Email Address
               </label>
               <Input
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
                 placeholder="example@email.com"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
@@ -41,6 +55,10 @@ const index = () => {
                 Password
               </label>
               <Input
+                value={password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
                 placeholder="********"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />

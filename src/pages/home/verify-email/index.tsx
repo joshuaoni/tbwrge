@@ -7,34 +7,22 @@ import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
-import { registerUser } from "@/actions/register-user";
 import { useMutation } from "@tanstack/react-query";
-import ChannelsDropDown from "@/components/channels-dropdown";
+import { verifyEmail } from "@/actions/verifyEmail";
 const index = () => {
-  const [fullName, setFullName] = React.useState("");
-  const [role, setRole] = React.useState("Select Role");
-  const [channel, setChannel] = React.useState("Select Channel");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const registerUserMutation = useMutation({
-    mutationFn: async () => await registerUser(data),
+  const [code, setCode] = React.useState("");
+  const verifyEmailMutation = useMutation({
+    mutationFn: async () => await verifyEmail(code),
     onSuccess: () => {
-      router.push("/home/verify-email");
+      router.push("/home/sign-in");
     },
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log("logging");
     e.preventDefault();
-    registerUserMutation.mutate(); 
+    verifyEmailMutation.mutate();
   };
 
-  const data = {
-    fullName,
-    email,
-    password,
-    role,
-    channel,
-  };
   const router = useRouter();
   return (
     <div className="h-screen w-screen bg-darkgreen flex flex-col items-center justify-center ">
@@ -54,67 +42,23 @@ const index = () => {
           className=" w-full flex flex-col mt-4 space-y-4"
         >
           <div className="space-y-4 flex flex-col">
-            <div className="flex flex-col space-y-2 ">
-              <label className="text-xs" htmlFor="email">
-                Full Name
-              </label>
-              <Input
-                value={fullName}
-                name="fullName"
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="John Doe"
-                className="w-full bg-[#EDF2F7] py-6 border-none"
-              />
-            </div>
             <div className="flex flex-col space-y-2">
               <label className="text-xs" htmlFor="email">
-                Email Address
+                Enter code sent to email
               </label>
               <Input
-                value={email}
+                value={code}
                 name="email"
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@gmail.com"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCode(e.target.value)
+                }
+                placeholder="code"
                 className="w-full bg-[#EDF2F7] py-6 border-none"
               />
-            </div>
-            <div className="flex flex-col space-y-2">
-              <label className="text-xs" htmlFor="email">
-                Password
-              </label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="********"
-                className="w-full bg-[#EDF2F7] py-6 border-none"
-              />
-            </div>
-            <div className="flex  w-full flex-col space-y-2">
-              <label className="text-xs" htmlFor="email">
-                How did you hear about us? (optional)
-              </label>
-              <div className="w-full ">
-                <ChannelsDropDown channel={channel} setChannel={setChannel} />
-              </div>
-            </div>
-            <div className="flex  w-full  flex-col space-y-2">
-              <label className="text-xs" htmlFor="email">
-                Role Selection
-              </label>
-              <div className="w-full ">
-                <RoleSelectionDropDown role={role} setRole={setRole} />
-              </div>
             </div>
           </div>
           <Button
-            disabled={
-              registerUserMutation.isPending ||
-              !email ||
-              !password ||
-              !fullName ||
-              role === "Select Role"
-            }
+            disabled={verifyEmailMutation.isPending || !code}
             variant="default"
             className="bg-primary text-white w-full"
             type="submit"

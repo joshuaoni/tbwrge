@@ -59,7 +59,7 @@ const ChannelsDropDown = ({
             channel === "Twitter" ? "text-white bg-primary" : ""
           } cursor-pointer text-sm `}
         >
-          Instagram
+          Twitter
         </div>
         <div
           onClick={() => {
@@ -70,7 +70,18 @@ const ChannelsDropDown = ({
             channel === "LinkedIn" ? "text-white bg-primary" : ""
           } cursor-pointer text-sm `}
         >
-          Instagram
+          LinkedIn
+        </div>
+        <div
+          onClick={() => {
+            setChannel("Others");
+            setShowDropDown(false);
+          }}
+          className={`p-2 ${
+            channel === "Others" ? "text-white bg-primary" : ""
+          } cursor-pointer text-sm `}
+        >
+          Others
         </div>
       </div>
     </div>

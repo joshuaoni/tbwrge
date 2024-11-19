@@ -2,30 +2,14 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const registerUser = async ({
-  fullName,
-  email,
-  password,
-  role,
-  channel = "others",
-}: {
-  fullName: string;
-  email: string;
-  password: string;
-  role: string;
-  channel?: string;
-}) => {
+export const verifyEmail = async (code: string) => {
   try {
     const options = {
       method: "POST",
-      url: API_CONFIG.REGISTER_USER, // Replace with your API endpoint
+      url: API_CONFIG.VERIFY_EMAIL, // Replace with your API endpoint
       headers: { "Content-Type": "application/json" },
       data: {
-        email,
-        password,
-        name: fullName,
-        role: role == "Employer" ? "recruiter" : "job_seeker",
-        channel: channel.toLocaleLowerCase(),
+        otp: code,
       },
     };
     const response = await axios(options);
