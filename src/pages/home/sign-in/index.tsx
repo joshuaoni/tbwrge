@@ -39,13 +39,13 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
+        addUser(res.user);
         router.push("/dashboard");
       }
     },
   });
 
   const responseMessage = async (response: any) => {
-    console.log(response);
     signInWithGoogleMutation.mutate(response.credential);
   };
   const errorMessage: any = (error: any) => {

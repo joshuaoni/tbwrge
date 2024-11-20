@@ -13,8 +13,8 @@ export const useUserStore = create<IUserStore>()(
   devtools(
     persist(
       (set, get) => ({
-        userData: null, // initial state
-        isLoading: true, // starts as true until persistence is loaded
+        userData: null,
+        isLoading: true,
         addUser: (authenticatedUser: UserResponse) =>
           set((state) => ({ userData: authenticatedUser, isLoading: false })),
         removeUser: () =>
@@ -24,7 +24,6 @@ export const useUserStore = create<IUserStore>()(
         name: "candivet-user-store",
         onRehydrateStorage: () => (state) => {
           if (state?.userData) {
-            // If userData exists in storage, stop the loading
             state.isLoading = false;
           }
         },
