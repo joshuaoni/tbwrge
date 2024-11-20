@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 interface IUserStore {
+  isLoading: boolean;
   userData: UserResponse | null;
   addUser: (userData: UserResponse) => void;
   removeUser: () => void;
@@ -11,13 +12,23 @@ interface IUserStore {
 export const useUserStore = create<IUserStore>()(
   devtools(
     persist(
-      (set) => ({
-        userData: null,
+      (set, get) => ({
+        userData: null, // initial state
+        isLoading: true, // starts as true until persistence is loaded
         addUser: (authenticatedUser: UserResponse) =>
-          set((state) => ({ userData: authenticatedUser })),
-        removeUser: () => set((state) => ({ userData: null })),
+          set((state) => ({ userData: authenticatedUser, isLoading: false })),
+        removeUser: () =>
+          set((state) => ({ userData: null, isLoading: false })),
       }),
-      { name: "user-store" }
+      {
+        name: "candivet-user-store",
+        onRehydrateStorage: () => (state) => {
+          if (state?.userData) {
+            // If userData exists in storage, stop the loading
+            state.isLoading = false;
+          }
+        },
+      }
     )
   )
 );

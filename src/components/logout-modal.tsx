@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { LogOut } from "lucide-react";
 import { Button } from "./ui/button";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const LogoutModal = () => {
+  const { removeUser } = useUserStore();
   return (
     <Dialog>
       <DialogTrigger>
@@ -38,10 +40,7 @@ const LogoutModal = () => {
           Are you sure you want to logout from your account?
         </DialogDescription>
 
-        <Button
-          // onClick={() => setStage("cover")}
-          className="bg-primary text-white"
-        >
+        <Button onClick={() => removeUser()} className="bg-primary text-white">
           Yes, Logout
         </Button>
       </DialogContent>

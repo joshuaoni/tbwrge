@@ -1,22 +1,31 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import DashboardHeader from "../dashboard-header";
 import LeftSideBar from "../left-side-bar";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarMenu,
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
 import Image from "next/image";
 import candivetlogo from "../../../public/images/candivet-logo.png";
 import { useRouter } from "next/router";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const Dashboard = ({ children }: { children: any }) => {
   const router = useRouter();
+  const { userData, isLoading } = useUserStore();
+  useEffect(() => {
+    if (!isLoading) {
+      if (userData === null) {
+        router.push("/home/sign-in");
+      }
+    }
+  }, [userData, isLoading, router]);
   return (
-    <div className="">
+    <div>
       <DashboardHeader />
       <SidebarProvider>
         <Sidebar>
@@ -25,7 +34,7 @@ const Dashboard = ({ children }: { children: any }) => {
               onClick={() => {
                 router.push("/dashboard-home");
               }}
-              className="flex mt-6  items-center ml-6 cursor-pointer"
+              className="flex mt-6 items-center ml-6 cursor-pointer"
             >
               <Image src={candivetlogo} alt="" width={50} height={50} />
               <h1 className="text-3xl font-bold">Candivet</h1>
@@ -36,7 +45,7 @@ const Dashboard = ({ children }: { children: any }) => {
           </SidebarContent>
         </Sidebar>
 
-        <main className="  bg-white w-screen h-screen p-4 pt-24">
+        <main className="bg-white w-screen h-screen p-4 pt-24">
           <SidebarTrigger />
           {children}
         </main>

@@ -10,8 +10,11 @@ import { Button } from "@/components/ui/button";
 import { File, Loader2, PlusCircle, ShoppingBag, User } from "lucide-react";
 import AllActivityDropDown from "@/components/all-activity-dropdown";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const index = () => {
+  const { userData } = useUserStore();
+  console.log("userData", userData);
   const [analytics, setAnalytics] = useState([
     {
       title: "Total Jobs Posts",

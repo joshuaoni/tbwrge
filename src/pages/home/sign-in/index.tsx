@@ -11,12 +11,13 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import { loginUserWithGoogle } from "@/actions/login-with-google";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const Index = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
-
+  const { addUser } = useUserStore();
   const signInMutation = useMutation({
     mutationFn: async () =>
       await loginUser({
@@ -25,6 +26,8 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
+        console.log(res.user);
+        addUser(res.user);
         router.push("/dashboard");
       }
     },
