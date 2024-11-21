@@ -12,6 +12,10 @@ const JobDetail = ({
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const [jobType, setJobType] = useState("Select Job Type");
+  const storedDetails = JSON.parse(
+    localStorage.getItem("job-creation-details") as string
+  );
+
   const [detail, setDetail] = useState<{
     name: string;
     website: string;
@@ -21,18 +25,14 @@ const JobDetail = ({
     logo: any;
     recruiter: string;
   }>({
-    name: "",
-    website: "",
-    description: "",
-    title: "",
-    type: "",
+    name: storedDetails.name,
+    website: storedDetails.website,
+    description: storedDetails.description,
+    title: storedDetails.title,
+    type: storedDetails.type,
     logo: "",
-    recruiter: "",
+    recruiter: storedDetails.recruiter,
   });
-
-  const storedDetails = JSON.parse(
-    localStorage.getItem("job-creation-details") as string
-  );
 
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -103,7 +103,9 @@ const JobDetail = ({
       })
     );
   }, [jobType]);
-
+  useEffect(() => {
+    setJobType(storedDetails.type);
+  }, []);
   return (
     <main className="h-full w-full space-x-6 flex p-4">
       <section className="w-[50%] flex flex-col">
