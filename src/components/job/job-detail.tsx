@@ -6,7 +6,11 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import JobTypeDropDown from "./components/job-type";
 
-const JobDetail = () => {
+const JobDetail = ({
+  setCurrentStep,
+}: {
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const [jobType, setJobType] = useState("Select Job Type");
   const [detail, setDetail] = useState<{
     name: string;
@@ -15,6 +19,7 @@ const JobDetail = () => {
     title: string;
     type: string;
     logo: any;
+    recruiter: string;
   }>({
     name: "",
     website: "",
@@ -22,6 +27,7 @@ const JobDetail = () => {
     title: "",
     type: "",
     logo: "",
+    recruiter: "",
   });
 
   const storedDetails = JSON.parse(
@@ -73,6 +79,15 @@ const JobDetail = () => {
         const { files } = e.target;
         setDetail({ ...detail, logo: files?.[0] });
       }
+    } else if (name === "recruiter") {
+      setDetail({ ...detail, recruiter: value });
+      localStorage.setItem(
+        "job-creation-details",
+        JSON.stringify({
+          ...storedDetails,
+          recruiter: value,
+        })
+      );
     }
   };
   useEffect(() => {
@@ -151,7 +166,11 @@ const JobDetail = () => {
             </div>
           </div>
         </div>
-        <Button className="bg-primary px-8 mt-4 self-end w-fit text-white">
+        <Button
+          onClick={() => setCurrentStep(2)}
+          disabled={Object.values(detail).some((value) => value === "")}
+          className="bg-primary px-8 mt-4 self-end w-fit text-white"
+        >
           Next
         </Button>
       </section>
@@ -165,6 +184,16 @@ const JobDetail = () => {
               value={detail.title}
               onChange={handleInput}
               placeholder="e.g Software Engineer"
+              className="bg-[#EDF2F7] border-none outline-none mt-2"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="Company">Recruiter's Name</label>
+            <Input
+              name="recruiter"
+              onChange={handleInput}
+              placeholder="Recruiter's Name"
+              value={detail.recruiter}
               className="bg-[#EDF2F7] border-none outline-none mt-2"
             />
           </div>

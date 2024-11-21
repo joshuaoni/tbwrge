@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import React from "react";
 import JobDetail from "./job-detail";
+import JobDescription from "./job-description";
 
 const CreateJobFlow = ({
   setStartCreateJobFlow,
@@ -17,7 +18,8 @@ const CreateJobFlow = ({
         />
         <h1 className="text-xl font-bold ">Create Job Post</h1>
       </div>
-      {currentStep === 1 && <JobDetail />}
+      {currentStep === 1 && <JobDetail setCurrentStep={setCurrentStep} />}
+      {currentStep === 2 && <JobDescription setCurrentStep={setCurrentStep} />}
     </div>
   );
 };
