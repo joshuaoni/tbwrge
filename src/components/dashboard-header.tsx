@@ -1,10 +1,14 @@
 import React from "react";
 import { Input } from "./ui/input";
-import { BellDotIcon, Search } from "lucide-react";
+import { BellDotIcon, PlusCircle, Search } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { CreateJob } from "@/pages/dashboard/dashboard-home";
 
-const DashboardHeader = () => {
+const DashboardHeader = ({
+  setStartCreateJobFlow,
+}: {
+  setStartCreateJobFlow: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <div className=" w-full pl-[300px] border-b left-[100px] h-20 bg-white flex items-center px-2 fixed top-0">
       <div className="flex items-center w-[1000px] justify-between ">
@@ -15,7 +19,14 @@ const DashboardHeader = () => {
             className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
           />
         </div>
-        <CreateJob />
+        {/* <CreateJob /> */}
+        <div
+          onClick={() => setStartCreateJobFlow(true)}
+          className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
+        >
+          <PlusCircle />
+          <p className="text-sm font-bold">Create New Job Post</p>
+        </div>
 
         {/* <div className=" space-x-4    flex items-center">
           <BellDotIcon color="#e1e1e1" />

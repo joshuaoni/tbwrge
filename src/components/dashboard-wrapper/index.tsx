@@ -13,10 +13,12 @@ import Image from "next/image";
 import candivetlogo from "../../../public/images/candivet-logo.png";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/hooks/use-user-store";
+import CreateJobFlow from "../job";
 
 const Dashboard = ({ children }: { children: any }) => {
   const router = useRouter();
   const { userData, isLoading } = useUserStore();
+  const [startCreateJobFlow, setStartCreateJobFlow] = React.useState(false);
   useEffect(() => {
     if (!isLoading) {
       if (userData === null) {
@@ -26,7 +28,7 @@ const Dashboard = ({ children }: { children: any }) => {
   }, [userData, isLoading, router]);
   return (
     <div>
-      <DashboardHeader />
+      <DashboardHeader setStartCreateJobFlow={setStartCreateJobFlow} />
       <SidebarProvider>
         <Sidebar>
           <SidebarHeader className="bg-[#e1e1e1]">
@@ -44,11 +46,14 @@ const Dashboard = ({ children }: { children: any }) => {
             <LeftSideBar />
           </SidebarContent>
         </Sidebar>
-
-        <main className="bg-white w-screen h-screen p-4 pt-24">
-          <SidebarTrigger />
-          {children}
-        </main>
+        {!startCreateJobFlow ? (
+          <main className="bg-white w-screen h-screen p-4 pt-24">
+            <SidebarTrigger />
+            {children}
+          </main>
+        ) : (
+          <CreateJobFlow setStartCreateJobFlow={setStartCreateJobFlow} />
+        )}
       </SidebarProvider>
     </div>
   );
