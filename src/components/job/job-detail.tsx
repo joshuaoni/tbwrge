@@ -27,17 +27,7 @@ const JobDetail = () => {
   const storedDetails = JSON.parse(
     localStorage.getItem("job-creation-details") as string
   );
-  function getBase64(file: File) {
-    return new Promise((resolve, reject) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = function () {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-    });
-  }
-  console.log("det", detail);
+
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
