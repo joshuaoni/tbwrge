@@ -1,15 +1,36 @@
-import React from "react";
-import UPLOAD from "../../../public/images/icons/upload.png";
+import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import Image from "next/image";
 import { Button } from "../ui/button";
+import ResidenceDropDown from "../residency-dropdown";
 
 const JobDescription = ({
   setCurrentStep,
 }: {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
+  const [residence, setResidence] = useState("");
+  const [detail, setDetail] = useState({
+    description: "",
+    skills: "",
+    education: "",
+    benefits: "",
+    language: "",
+    residence: "",
+    YOE: "",
+  });
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value, name } = e.target;
+    setDetail({ ...detail, [name]: value });
+  };
+
+  console.log(detail);
+
+  useEffect(() => {
+    setDetail({ ...detail, residence });
+  }, [residence]);
   return (
     <div className="flex flex-col">
       <main className="h-full w-full  space-x-6 flex p-4">
@@ -21,6 +42,9 @@ const JobDescription = ({
                 Job Description & Responsibilities
               </label>
               <Textarea
+                value={detail.description}
+                name="description"
+                onChange={handleInput}
                 placeholder="Job Description & Responsibilities"
                 className="bg-[#EDF2F7] border-none h-60 outline-none mt-2"
               />
@@ -29,25 +53,34 @@ const JobDescription = ({
             <div className="flex flex-col">
               <label htmlFor="Company">Required Skills</label>
               <Textarea
+                value={detail.skills}
+                name="skills"
+                onChange={handleInput}
                 placeholder="e.g Python, Data Analysis"
                 className="bg-[#EDF2F7] border-none outline-none mt-2"
               />
             </div>
           </div>
         </section>
-        <section className=" w-[50%]">
-          <div className="space-y-6 flex flex-col mt-4">
+        <section className=" w-[50%] mt-12 ">
+          <div className="space-y-6 flex  flex-col mt-4">
             <div className="flex flex-col">
               <label htmlFor="Company">Education Requirements</label>
               <Textarea
+                name="education"
+                value={detail.education}
+                onChange={handleInput}
                 placeholder="e.g Bachelor's in computer science"
                 className="bg-[#EDF2F7] border-none outline-none mt-2"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
               <label htmlFor="Company">Additional Benefits</label>
               <Textarea
                 placeholder="e.g Health and dental insurance"
+                value={detail.benefits}
+                name="benefits"
+                onChange={handleInput}
                 className="bg-[#EDF2F7] border-none outline-none mt-2"
               />
             </div>
@@ -55,20 +88,30 @@ const JobDescription = ({
               <label htmlFor="Company">Language</label>
               <Input
                 placeholder="e.g English, French"
+                value={detail.language}
+                name="language"
+                onChange={handleInput}
                 className="bg-[#EDF2F7] border-none outline-none mt-2"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col  ">
               <label htmlFor="Company">Residence</label>
-              <Input
-                placeholder="e.g English, French"
-                className="bg-[#EDF2F7] border-none outline-none mt-2"
-              />
+              <div className=" w-full  top-5 ">
+                <ResidenceDropDown
+                  onSelect={(value) => {
+                    setResidence(value);
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex flex-col">
-              <label htmlFor="Company">Language</label>
+            <div className="flex flex-col ">
+              <label htmlFor="Company">Year Of Experience</label>
               <Input
-                placeholder="e.g English, French"
+                type="number"
+                value={detail.YOE}
+                onChange={handleInput}
+                name="YOE"
+                placeholder=" Year of exp"
                 className="bg-[#EDF2F7] border-none outline-none mt-2"
               />
             </div>
@@ -81,14 +124,14 @@ const JobDescription = ({
           onClick={() => {
             setCurrentStep(1);
           }}
-          className="text-primary border border-primary bg-white"
+          className="text-primary border px-12 border-primary bg-white"
         >
           Back
         </Button>
         <Button
           onClick={() => setCurrentStep(3)}
           variant="default"
-          className="bg-primary text-white"
+          className="bg-primary px-12 text-white"
         >
           Next
         </Button>
