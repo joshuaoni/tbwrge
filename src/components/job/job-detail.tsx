@@ -5,7 +5,7 @@ import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import JobTypeDropDown from "./components/job-type";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 
 const JobDetail = ({
@@ -213,7 +213,7 @@ const JobDetail = ({
               <label htmlFor="Company" className="mb-2">
                 Start Date
               </label>
-              <TimePicker
+              <DatePicker
                 value={detail.startDate}
                 onChange={(date) => {
                   setDetail({ ...detail, startDate: date as Dayjs });
@@ -233,7 +233,7 @@ const JobDetail = ({
               <label htmlFor="Company" className="mb-2">
                 End Date
               </label>
-              <TimePicker
+              <DatePicker
                 value={detail.endDate}
                 onChange={(date) => {
                   setDetail({ ...detail, endDate: date as Dayjs });
