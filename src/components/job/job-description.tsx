@@ -10,26 +10,42 @@ const JobDescription = ({
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const [residence, setResidence] = useState("");
+  const storedDetails = JSON.parse(
+    localStorage.getItem("job-creation-details") as string
+  );
   const [detail, setDetail] = useState({
-    description: "",
-    skills: "",
-    education: "",
-    benefits: "",
-    language: "",
-    residence: "",
-    YOE: "",
+    JobDescription: storedDetails.JobDescription,
+    skills: storedDetails.skills,
+    education: storedDetails.education,
+    benefits: storedDetails.benefits,
+    language: storedDetails.language,
+    residence: storedDetails.residence,
+    YOE: storedDetails.YOE,
   });
+
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value, name } = e.target;
     setDetail({ ...detail, [name]: value });
+    localStorage.setItem(
+      "job-creation-details",
+      JSON.stringify({
+        ...storedDetails,
+        [name]: value,
+      })
+    );
   };
-
-  console.log(detail);
 
   useEffect(() => {
     setDetail({ ...detail, residence });
+    localStorage.setItem(
+      "job-creation-details",
+      JSON.stringify({
+        ...storedDetails,
+        residence,
+      })
+    );
   }, [residence]);
   return (
     <div className="flex flex-col">
@@ -42,8 +58,8 @@ const JobDescription = ({
                 Job Description & Responsibilities
               </label>
               <Textarea
-                value={detail.description}
-                name="description"
+                value={detail.JobDescription}
+                name="JobDescription"
                 onChange={handleInput}
                 placeholder="Job Description & Responsibilities"
                 className="bg-[#EDF2F7] border-none h-60 outline-none mt-2"
