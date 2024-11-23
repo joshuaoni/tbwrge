@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import React from "react";
 import JobDetail from "./job-detail";
 import JobDescription from "./job-description";
+import AdvancedOptions from "./components/advanced-options";
 
 const CreateJobFlow = ({
   setStartCreateJobFlow,
@@ -20,6 +21,7 @@ const CreateJobFlow = ({
       </div>
       {currentStep === 1 && <JobDetail setCurrentStep={setCurrentStep} />}
       {currentStep === 2 && <JobDescription setCurrentStep={setCurrentStep} />}
+      {currentStep === 3 && <AdvancedOptions setCurrentStep={setCurrentStep} />}
     </div>
   );
 };

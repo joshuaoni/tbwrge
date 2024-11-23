@@ -25,13 +25,13 @@ const JobDetail = ({
     logo: any;
     recruiter: string;
   }>({
-    name: storedDetails.name,
-    website: storedDetails.website,
-    description: storedDetails.description,
-    title: storedDetails.title,
-    type: storedDetails.type,
+    name: storedDetails?.name ?? "",
+    website: storedDetails?.website ?? "",
+    description: storedDetails?.description ?? "",
+    title: storedDetails?.title ?? "",
+    type: storedDetails?.type ?? "",
     logo: "",
-    recruiter: storedDetails.recruiter,
+    recruiter: storedDetails?.recruiter ?? "",
   });
 
   const handleInput = (
@@ -104,7 +104,7 @@ const JobDetail = ({
     );
   }, [jobType]);
   useEffect(() => {
-    setJobType(storedDetails.type);
+    setJobType(storedDetails?.type);
   }, []);
   return (
     <main className="h-full w-full space-x-6 flex p-4">
@@ -152,7 +152,7 @@ const JobDetail = ({
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               {detail.logo !== "" ? (
-                <p>{detail.logo.name}</p>
+                <p>{detail.logo?.name}</p>
               ) : (
                 <div className="flex items-center space-x-2">
                   <span className="text-[#87909E] text-sm">Upload Logo</span>
