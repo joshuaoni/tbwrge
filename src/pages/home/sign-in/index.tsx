@@ -27,7 +27,10 @@ const Index = () => {
     onSuccess: (res) => {
       if (res.user != null) {
         console.log(res.user);
-        addUser(res.user);
+        addUser({
+          authenticatedUser: res.user,
+          token: res.access_token,
+        });
         router.push("/dashboard");
       }
     },

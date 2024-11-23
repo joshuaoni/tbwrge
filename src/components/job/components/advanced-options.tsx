@@ -4,14 +4,19 @@ import {
   CheckSquare,
   CheckSquareIcon,
   CirclePlus,
+  Loader2,
   SquareIcon,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const AdvancedOptions = ({
+  handleCreateJob,
   setCurrentStep,
+  isPending,
 }: {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  isPending: boolean;
+  handleCreateJob: () => void;
 }) => {
   const storedDetails = JSON.parse(
     localStorage.getItem("job-creation-details") as string
@@ -29,6 +34,7 @@ const AdvancedOptions = ({
     tags: storedDetails?.tags,
     diversityInclusionSettings:
       storedDetails?.diversityInclusionSettings ?? false,
+    filterSalaryRange: storedDetails?.filterSalaryRange ?? false,
     questions: storedDetails?.questions ?? [],
   });
 
@@ -122,6 +128,40 @@ const AdvancedOptions = ({
                   placeholder="Max"
                   className="bg-[#EDF2F7] w-[120px] py-8 border-none outline-none mt-2"
                 />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <div className="space-y-4 ">
+                <div className="flex items-center space-x-4">
+                  <div
+                    className=""
+                    onClick={() => {
+                      let updatedFilterSalaryRange = !detail.filterSalaryRange;
+                      setDetail((prev) => ({
+                        ...prev,
+                        filterSalaryRange: updatedFilterSalaryRange,
+                      })),
+                        localStorage.setItem(
+                          "job-creation-details",
+                          JSON.stringify({
+                            ...storedDetails,
+                            filterSalaryRange: updatedFilterSalaryRange,
+                          })
+                        );
+                    }}
+                  >
+                    {detail.filterSalaryRange ? (
+                      <CheckSquare />
+                    ) : (
+                      <SquareIcon />
+                    )}
+                  </div>
+
+                  <p className="text-[#87909E]">
+                    Filter out Candidates exceeding Salary Range
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -413,8 +453,24 @@ const AdvancedOptions = ({
         >
           Back
         </Button>
-        <Button variant="default" className="bg-primary px-12 text-white">
-          Generate Job Post
+        <Button
+          disabled={
+            !detail.jobLocation ||
+            !detail.salaryRange.min ||
+            !detail.salaryRange.max ||
+            !detail.applicationRequirements ||
+            !detail.jobVisibility ||
+            !detail.tags
+          }
+          onClick={handleCreateJob}
+          variant="default"
+          className="bg-primary px-12 min-w-[60px] text-white"
+        >
+          {isPending ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            "Generate Job Post"
+          )}
         </Button>
       </div>
     </div>

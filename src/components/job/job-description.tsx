@@ -145,6 +145,7 @@ const JobDescription = ({
           Back
         </Button>
         <Button
+          disabled={Object.values(detail).some((value) => value === "")}
           onClick={() => setCurrentStep(3)}
           variant="default"
           className="bg-primary px-12 text-white"

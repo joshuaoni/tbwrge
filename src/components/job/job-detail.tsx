@@ -10,8 +10,10 @@ import dayjs, { Dayjs } from "dayjs";
 
 const JobDetail = ({
   setCurrentStep,
+  setCompanyLogo,
 }: {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  setCompanyLogo: React.Dispatch<React.SetStateAction<File | undefined>>;
 }) => {
   const [jobType, setJobType] = useState("Select Job Type");
   const storedDetails = JSON.parse(
@@ -84,6 +86,7 @@ const JobDetail = ({
       if (e.target instanceof HTMLInputElement && e.target.type === "file") {
         const { files } = e.target;
         setDetail({ ...detail, logo: files?.[0] });
+        setCompanyLogo(files?.[0] as File);
       }
     } else if (name === "recruiter") {
       setDetail({ ...detail, recruiter: value });

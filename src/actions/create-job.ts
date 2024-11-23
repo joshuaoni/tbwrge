@@ -1,5 +1,6 @@
 "use client";
 import { API_CONFIG } from "@/constants/api_config";
+import { useUserStore } from "@/hooks/use-user-store";
 import axios from "axios";
 
 export const createJob = async ({
@@ -30,11 +31,12 @@ export const createJob = async ({
   tags,
   hide_personal_details_during_screening,
   job_questions,
+  token,
 }: {
   company_website: string;
   company_description: string;
   company_name: string;
-  company_logo: string;
+  company_logo: File | null;
   job_title: string;
   start_date: string;
   end_date: string;
@@ -45,7 +47,7 @@ export const createJob = async ({
   additional_benefits: string;
   languages: string;
   country_of_residence: string;
-  years_of_experience_required: string;
+  years_of_experience_required: number;
   job_location_name: string;
   salary_range_min: number;
   salary_range_max: number;
@@ -58,12 +60,16 @@ export const createJob = async ({
   tags: string;
   hide_personal_details_during_screening: boolean;
   job_questions: string[];
+  token: string;
 }) => {
   try {
     const options = {
       method: "POST",
-      url: API_CONFIG.RESET_PASSWORD, // Replace with your API endpoint
-      headers: { "Content-Type": "application/json" },
+      url: API_CONFIG.CREATE_JOB, // Replace with your API endpoint
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       data: JSON.stringify({
         company_website,
         company_name,
@@ -94,6 +100,7 @@ export const createJob = async ({
         job_questions,
       }),
     };
+
     const response = await axios(options);
     return response.data; // Return only the response data for convenience
   } catch (error: any) {

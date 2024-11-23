@@ -4,8 +4,11 @@ import { devtools, persist } from "zustand/middleware";
 
 interface IUserStore {
   isLoading: boolean;
-  userData: UserResponse | null;
-  addUser: (userData: UserResponse) => void;
+  userData: {
+    user: UserResponse | null;
+    token: string | null;
+  } | null;
+  addUser: ({}: any) => void;
   removeUser: () => void;
 }
 
@@ -13,12 +16,30 @@ export const useUserStore = create<IUserStore>()(
   devtools(
     persist(
       (set, get) => ({
-        userData: null,
+        userData: {
+          user: null,
+          token: null,
+        },
         isLoading: true,
-        addUser: (authenticatedUser: UserResponse) =>
-          set((state) => ({ userData: authenticatedUser, isLoading: false })),
+        addUser: ({
+          authenticatedUser,
+          token,
+        }: {
+          authenticatedUser: UserResponse;
+          token: string;
+        }) =>
+          set((state) => ({
+            userData: {
+              user: authenticatedUser,
+              token,
+            },
+            isLoading: false,
+          })),
         removeUser: () =>
-          set((state) => ({ userData: null, isLoading: false })),
+          set((state) => ({
+            userData: null,
+            isLoading: false,
+          })),
       }),
       {
         name: "candivet-user-store",
