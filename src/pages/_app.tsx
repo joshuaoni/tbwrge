@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-query";
 import { Outfit } from "next/font/google"; // Corrected import path
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const outfit = Outfit({
   subsets: ["latin"], // specify subsets
@@ -23,9 +25,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <GoogleOAuthProvider
         clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
       >
-        <main className={outfit.className}>
-          <Component {...pageProps} />
-        </main>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <main className={outfit.className}>
+            <Component {...pageProps} />
+          </main>
+        </LocalizationProvider>
       </GoogleOAuthProvider>
     </QueryClientProvider>
   );

@@ -5,6 +5,8 @@ import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import JobTypeDropDown from "./components/job-type";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs, { Dayjs } from "dayjs";
 
 const JobDetail = ({
   setCurrentStep,
@@ -24,6 +26,8 @@ const JobDetail = ({
     type: string;
     logo: any;
     recruiter: string;
+    startDate?: Dayjs;
+    endDate?: Dayjs;
   }>({
     name: storedDetails?.name ?? "",
     website: storedDetails?.website ?? "",
@@ -32,6 +36,8 @@ const JobDetail = ({
     type: storedDetails?.type ?? "",
     logo: "",
     recruiter: storedDetails?.recruiter ?? "",
+    startDate: dayjs(storedDetails?.startDate) ?? "",
+    endDate: dayjs(storedDetails?.endDate) ?? "",
   });
 
   const handleInput = (
@@ -199,6 +205,49 @@ const JobDetail = ({
               className="bg-[#EDF2F7] border-none outline-none mt-2"
             />
           </div>
+          <div className="flex space-x-4">
+            <div className="flex flex-col">
+              <label htmlFor="Company" className="mb-2">
+                Start Date
+              </label>
+              <TimePicker
+                value={detail.startDate}
+                onChange={(date) => {
+                  setDetail({ ...detail, startDate: date as Dayjs });
+                  localStorage.setItem(
+                    "job-creation-details",
+                    JSON.stringify({
+                      ...storedDetails,
+                      startDate: date,
+                    })
+                  );
+                }}
+                label="Start Date"
+                className="bg-[#EDF2F7] border-none outline-none rounded-lg"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="Company" className="mb-2">
+                End Date
+              </label>
+              <TimePicker
+                value={detail.endDate}
+                onChange={(date) => {
+                  setDetail({ ...detail, endDate: date as Dayjs });
+                  localStorage.setItem(
+                    "job-creation-details",
+                    JSON.stringify({
+                      ...storedDetails,
+                      endDate: date,
+                    })
+                  );
+                }}
+                label="End Date"
+                className="bg-[#EDF2F7] border-none outline-none rounded-lg"
+              />
+            </div>
+          </div>
+
           <div className="flex flex-col">
             <label htmlFor="Company">Job Type</label>
             <JobTypeDropDown jobType={jobType} setJobType={setJobType} />
