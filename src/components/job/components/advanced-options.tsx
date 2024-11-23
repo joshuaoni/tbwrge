@@ -393,7 +393,7 @@ const AdvancedOptions = ({
                 className="bg-[#D6D6D6] rounded-lg border-none my-4"
               />
               <div className="space-y-3 flex flex-col text-sm font-normal">
-                {detail.questions.map((question, index) => (
+                {detail.questions.map((question: string, index: number) => (
                   <div key={index} className="flex items-center space-x-4">
                     <span>{question} ? </span>
                   </div>
