@@ -6,6 +6,7 @@ import AdvancedOptions from "./components/advanced-options";
 import { useMutation } from "@tanstack/react-query";
 import { createJob } from "@/actions/create-job";
 import { useUserStore } from "@/hooks/use-user-store";
+import ReviewScreen from "./review-screen";
 
 const CreateJobFlow = ({
   setStartCreateJobFlow,
@@ -13,7 +14,8 @@ const CreateJobFlow = ({
   setStartCreateJobFlow: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [currentStep, setCurrentStep] = React.useState(1);
-  const [companyLogo, setCompanyLogo] = React.useState(null);
+  const [companyLogo, setCompanyLogo] = React.useState<any>(null);
+  const [createdJob, setCreatedJob] = React.useState(null);
   const storedDetails = JSON.parse(
     localStorage.getItem("job-creation-details") as string
   );
@@ -36,12 +38,11 @@ const CreateJobFlow = ({
           : "internship";
       console.log(companyLogo);
       const formData = new FormData();
-      formData.append("company_logo", companyLogo);
-      await createJob({
+      let response = await createJob({
         company_website: storedDetails?.website,
         company_description: storedDetails?.description,
         company_name: storedDetails?.name,
-        company_logo: formData,
+        company_logo: "",
         job_title: storedDetails?.title,
         start_date: new Date(storedDetails?.startDate)
           .toISOString()
@@ -54,7 +55,7 @@ const CreateJobFlow = ({
         additional_benefits: storedDetails?.benefits,
         languages: storedDetails?.language,
         country_of_residence: storedDetails?.residence,
-        years_of_experience_required: Number(storedDetails?.YOE),
+        years_of_experience_required: storedDetails?.YOE,
         salary_range_min: Number(storedDetails?.salaryRange.min),
         salary_range_max: Number(storedDetails?.salaryRange.max),
         filter_out_salary_range: storedDetails?.filterSalaryRange,
@@ -72,8 +73,11 @@ const CreateJobFlow = ({
         job_location_name: storedDetails?.JobLocation,
         token: userData?.token as string,
       });
+      console.log("the data is", response);
+      setCreatedJob(response);
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
+      setCurrentStep(4);
       // localStorage.removeItem("job-creation-details");
     },
   });
@@ -103,6 +107,9 @@ const CreateJobFlow = ({
           setCurrentStep={setCurrentStep}
           isPending={isPending}
         />
+      )}
+      {currentStep === 4 && (
+        <ReviewScreen createdJob={createdJob} setCurrentStep={setCurrentStep} />
       )}
     </div>
   );

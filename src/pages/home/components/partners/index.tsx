@@ -26,7 +26,7 @@ export const Partners = () => {
         x: {
           repeat: Infinity,
           repeatType: "loop",
-          duration: 20, // Adjust duration for scroll speed
+          duration: 70, // Adjust duration for scroll speed
           ease: "linear",
         },
       },
