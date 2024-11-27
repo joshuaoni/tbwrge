@@ -36,7 +36,7 @@ export const createJob = async ({
   company_website: string;
   company_description: string;
   company_name: string;
-  company_logo: File | null;
+  company_logo: any;
   job_title: string;
   start_date: string;
   end_date: string;
