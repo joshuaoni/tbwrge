@@ -27,7 +27,11 @@ const JobPostings = () => {
         {currentView != "details" && (
           <>
             <div className="flex flex-row items-center space-x-6">
-              <h1 className="text-xl font-bold">Current Postings</h1>
+              <h1 className="text-xl font-bold">
+                {currentView === "openings"
+                  ? "Current Openings"
+                  : "Closed Jobs"}
+              </h1>
               <Button
                 onClick={() => {
                   setCurrentView(
@@ -61,8 +65,10 @@ const JobPostings = () => {
         )}
       </div>
 
-      <div className="flex overflow-x-auto gap-6 flex-col h-screen overflow-y-scroll   w-full ">
-        {currentView === "openings" && <CurrentOpenings />}
+      <div className="flex overflow-x-auto gap-6 flex-col h-screen overflow-y-scroll w-full ">
+        {currentView === "openings" && (
+          <CurrentOpenings setCurrentView={setCurrentView} />
+        )}
         {currentView === "closed" && <ClosedOpenings />}
         {currentView === "details" && (
           <JobDetails setCurrentView={setCurrentView} />

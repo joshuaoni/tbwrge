@@ -11,11 +11,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { totalmem } from "os";
-const CurrentOpenings = () => {
-  const invoices = [
+const CurrentOpenings = ({
+  setCurrentView,
+}: {
+  setCurrentView: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const jobs = [
     {
       selection: "",
       title: "Front End Developer",
+      id: "4930",
+      totalApplicant: "10",
+      recruiter: "Angel",
+      company: "Candivet.com",
+      endDate: "31/30/2021",
+    },
+    {
+      selection: "",
+      title: "Product Designer",
+      id: "4930",
+      totalApplicant: "10",
+      recruiter: "Angel",
+      company: "Candivet.com",
+      endDate: "31/30/2021",
+    },
+    {
+      selection: "",
+      title: "IOSDeveloper",
       id: "4930",
       totalApplicant: "10",
       recruiter: "Angel",
@@ -55,32 +77,42 @@ const CurrentOpenings = () => {
         ))}
       </div>
 
-      <Table>
+      <Table className="mt-12">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]"></TableHead>
-            <TableHead className="w-[100px]">Job Title</TableHead>
-            <TableHead>Job ID</TableHead>
-            <TableHead>Total Applicants</TableHead>
-            <TableHead>Recruiter</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead className="text-right">End Date</TableHead>
+          <TableRow className="bg-[#D6D6D6] rounded-lg ">
+            <TableHead className="w-[100px] text-[#898989]" />
+            <TableHead className="w-[100px] text-[#898989]">
+              Job Title
+            </TableHead>
+            <TableHead className="text-[#898989]">Job ID</TableHead>
+            <TableHead className="text-[#898989]">Total Applicants</TableHead>
+            <TableHead className="text-[#898989]">Recruiter</TableHead>
+            <TableHead className="text-[#898989]">Company</TableHead>
+            <TableHead className="text-right text-[#898989]">
+              End Date
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.id}>
+          {jobs.map((job) => (
+            <TableRow
+              className="cursor-pointer"
+              onClick={() => {
+                setCurrentView("details");
+              }}
+              key={job.id}
+            >
               <TableCell>
                 <input type="checkbox" />
               </TableCell>
-              <TableCell width={300} className="font-medium">
-                {invoice.title}
+              <TableCell width={200} className="font-medium">
+                {job.title}
               </TableCell>
-              <TableCell>{invoice.id}</TableCell>
-              <TableCell>{invoice.totalApplicant}</TableCell>
-              <TableCell>{invoice.recruiter}</TableCell>
-              <TableCell>{invoice.company}</TableCell>
-              <TableCell className="text-end">{invoice.endDate}</TableCell>
+              <TableCell>{job.id}</TableCell>
+              <TableCell>{job.totalApplicant}</TableCell>
+              <TableCell>{job.recruiter}</TableCell>
+              <TableCell>{job.company}</TableCell>
+              <TableCell className="text-end">{job.endDate}</TableCell>
             </TableRow>
           ))}
         </TableBody>

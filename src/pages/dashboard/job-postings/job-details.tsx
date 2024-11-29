@@ -1,13 +1,64 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { ArrowLeft, CircleEllipsis } from "lucide-react";
-import React from "react";
-
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 const JobDetails = ({
   setCurrentView,
 }: {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const CANDIDATES = [
+    {
+      selection: "",
+      name: "Amiolemen David",
+      id: "4930",
+      fitScore: "10",
+      YOE: "2",
+      keySkills: "89%",
+      date: "31/12/2024",
+      attachments: "Resume.pdf",
+    },
+    {
+      selection: "",
+      name: "Sinatra Frank",
+      id: "4930",
+      fitScore: "10",
+      YOE: "2",
+      keySkills: "89%",
+      date: "31/12/2024",
+      attachments: "Resume.pdf",
+    },
+    {
+      selection: "",
+      name: "Paul Walker",
+      id: "4930",
+      fitScore: "10",
+      YOE: "2",
+      keySkills: "89%",
+      date: "31/12/2024",
+      attachments: "Resume.pdf",
+    },
+    {
+      selection: "",
+      name: "Michael Davies",
+      id: "4930",
+      fitScore: "10",
+      YOE: "2",
+      keySkills: "89%",
+      date: "31/12/2024",
+      attachments: "Resume.pdf",
+    },
+  ];
   return (
     <section>
       <div className="flex items-center justify-between">
@@ -58,6 +109,50 @@ const JobDetails = ({
           Top 5 Candidates
         </Button>
       </div>
+      <Table className="mt-12 bg-[#F0F0F0] p-5 rounded-md">
+        <TableHeader>
+          <TableRow className="bg-[#D6D6D6] rounded-lg ">
+            <TableHead className="w-[100px] text-[#898989]" />
+            <TableHead className="w-[100px] text-[#898989]">
+              CANDIDATE NAME
+            </TableHead>
+            <TableHead className="text-[#898989]"> ID</TableHead>
+            <TableHead className="text-[#898989]">Fit Score</TableHead>
+            <TableHead className="text-[#898989]">YOE</TableHead>
+            <TableHead className="text-[#898989]">Key Skills</TableHead>
+            <TableHead className=" text-[#898989]">APPLICATION DATE</TableHead>
+            <TableHead className="text-right text-[#898989]">
+              ATTACHMENT{" "}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {CANDIDATES.map((candidate) => (
+            <TableRow
+              className="cursor-pointer"
+              onClick={() => {
+                setCurrentView("details");
+              }}
+              key={candidate.id}
+            >
+              <TableCell>
+                <input type="checkbox" />
+              </TableCell>
+              <TableCell width={200} className="font-medium">
+                {candidate.name}
+              </TableCell>
+              <TableCell>{candidate.id}</TableCell>
+              <TableCell>{candidate.fitScore}</TableCell>
+              <TableCell>{candidate.YOE}</TableCell>
+              <TableCell>{candidate.keySkills}</TableCell>
+              <TableCell>{candidate.date}</TableCell>
+              <TableCell className="text-end">
+                {candidate.attachments}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </section>
   );
 };
