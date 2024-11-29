@@ -1,7 +1,29 @@
 import { File, ShoppingBag, User } from "lucide-react";
 import React from "react";
-
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { totalmem } from "os";
 const CurrentOpenings = () => {
+  const invoices = [
+    {
+      selection: "",
+      title: "Front End Developer",
+      id: "4930",
+      totalApplicant: "10",
+      recruiter: "Angel",
+      company: "Candivet.com",
+      endDate: "31/30/2021",
+    },
+  ];
+
   const [stats, setStats] = React.useState([
     {
       title: "Total Job Posts",
@@ -32,6 +54,37 @@ const CurrentOpenings = () => {
           </div>
         ))}
       </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]"></TableHead>
+            <TableHead className="w-[100px]">Job Title</TableHead>
+            <TableHead>Job ID</TableHead>
+            <TableHead>Total Applicants</TableHead>
+            <TableHead>Recruiter</TableHead>
+            <TableHead>Company</TableHead>
+            <TableHead className="text-right">End Date</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice) => (
+            <TableRow key={invoice.id}>
+              <TableCell>
+                <input type="checkbox" />
+              </TableCell>
+              <TableCell width={300} className="font-medium">
+                {invoice.title}
+              </TableCell>
+              <TableCell>{invoice.id}</TableCell>
+              <TableCell>{invoice.totalApplicant}</TableCell>
+              <TableCell>{invoice.recruiter}</TableCell>
+              <TableCell>{invoice.company}</TableCell>
+              <TableCell className="text-end">{invoice.endDate}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </section>
   );
 };
