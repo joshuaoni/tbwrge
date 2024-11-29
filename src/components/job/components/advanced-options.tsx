@@ -6,6 +6,7 @@ import {
   CirclePlus,
   Loader2,
   SquareIcon,
+  Trash,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -434,8 +435,27 @@ const AdvancedOptions = ({
               />
               <div className="space-y-3 flex flex-col text-sm font-normal">
                 {detail.questions.map((question: string, index: number) => (
-                  <div key={index} className="flex items-center space-x-4">
+                  <div key={index} className="flex space-y-4 w-full justify-between items-center space-x-4">
                     <span>{question} ? </span>
+                    <Trash
+                      className="ml-auto cursor-pointer"
+                      onClick={() => {
+                        let updatedQuestions = detail.questions.filter(
+                          (item: any) => item !== question
+                        );
+                        setDetail((prev) => ({
+                          ...prev,
+                          questions: updatedQuestions,
+                        })),
+                          localStorage.setItem(
+                            "job-creation-details",
+                            JSON.stringify({
+                              ...storedDetails,
+                              questions: updatedQuestions,
+                            })
+                          );
+                      }}
+                    />
                   </div>
                 ))}
               </div>

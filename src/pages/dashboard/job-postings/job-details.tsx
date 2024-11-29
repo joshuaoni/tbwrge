@@ -1,13 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { ArrowLeft, CircleEllipsis } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -131,7 +128,7 @@ const JobDetails = ({
             <TableRow
               className="cursor-pointer"
               onClick={() => {
-                setCurrentView("details");
+                setCurrentView("candidatedetail");
               }}
               key={candidate.id}
             >

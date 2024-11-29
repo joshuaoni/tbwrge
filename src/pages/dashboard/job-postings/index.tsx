@@ -24,7 +24,7 @@ const JobPostings = () => {
   return (
     <DashboardWrapper>
       <div className="flex w-full  justify-between items-center  mb-4">
-        {currentView != "details" && (
+        {currentView != "details" && currentView != "candidatedetail" && (
           <>
             <div className="flex flex-row items-center space-x-6">
               <h1 className="text-xl font-bold">
@@ -73,7 +73,9 @@ const JobPostings = () => {
         {currentView === "details" && (
           <JobDetails setCurrentView={setCurrentView} />
         )}
-        {currentView === "candidatedetail" && <CandidateDetail />}
+        {currentView === "candidatedetail" && (
+          <CandidateDetail setCurrentView={setCurrentView} />
+        )}
         {/* {jobPosts.map((jobPost, index) => (
           <JobPost
             jobPost={jobPost}
