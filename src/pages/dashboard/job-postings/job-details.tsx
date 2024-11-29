@@ -99,7 +99,7 @@ const JobDetails = ({
           Rejected Candidates
         </span>
         <span className="text-base cursor-pointer text-[#3F89AC] font-medium ">
-          Screen Candidates
+          Screened Candidates
         </span>
         <span className="flex-1" />
         <Button className="bg-[#F0F0F0] ml-auto text-gray-300 rounded-full">
