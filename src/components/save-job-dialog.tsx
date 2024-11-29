@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { File, LogOut } from "lucide-react";
+import { FacebookIcon, File, LogOut } from "lucide-react";
+import { LinkedInLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 
 const SaveJobDialog = ({ jobReferenceId }: { jobReferenceId: string }) => {
   const handleCopyIframe = () => {
@@ -86,6 +87,15 @@ const SaveJobDialog = ({ jobReferenceId }: { jobReferenceId: string }) => {
         }}
       ></iframe>`}
             </span>
+          </div>
+          <div className="flex items-center">
+            <LinkedInLogoIcon color={"blue"} /> <span>Share to linkedIn</span>
+          </div>
+          <div className="flex items-center">
+            <TwitterLogoIcon /> <span>Share to linkedIn</span>
+          </div>
+          <div className="flex items-center">
+            <FacebookIcon /> <span>Share to linkedIn</span>
           </div>
         </section>
       </DialogContent>

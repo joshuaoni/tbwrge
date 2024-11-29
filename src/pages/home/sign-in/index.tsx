@@ -49,6 +49,7 @@ const Index = () => {
   });
 
   const responseMessage = async (response: any) => {
+    console.log("response", response);
     signInWithGoogleMutation.mutate(response.credential);
   };
   const errorMessage: any = (error: any) => {

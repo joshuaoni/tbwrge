@@ -36,7 +36,7 @@ const CoverLetterDropDown = () => {
       >
         <div className="flex items-center">
           <File size={20} className="mr-2 text-primary" />
-          <span className="font-medium">Cover Letter</span>
+          <span className="font-medium">Cover Letter Tools</span>
         </div>
         {showCoverLetterDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>

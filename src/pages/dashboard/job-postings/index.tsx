@@ -12,15 +12,34 @@ import { jobPosts } from "@/constants/data";
 
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { div } from "framer-motion/client";
+import { ShoppingBag } from "lucide-react";
+import CurrentOpenings from "./current-openings";
+import ClosedOpenings from "./closed-openings";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
+  const [currentView, setCurrentView] = useState("openings");
 
   return (
     <DashboardWrapper>
       <div className="flex w-full justify-between items-center  mb-4">
-        <h1 className="text-xl font-bold">Current Postings</h1>
+        <div className="flex flex-row items-center space-x-6">
+          <h1 className="text-xl font-bold">Current Postings</h1>
+          <Button
+            onClick={() => {
+              setCurrentView(
+                currentView === "openings" ? "closed" : "openings"
+              );
+            }}
+            className="bg-primary text-white"
+          >
+            {currentView === "openings" ? "Closed Jobs" : "Current Openings"}
+          </Button>
+        </div>
+
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -39,14 +58,16 @@ const JobPostings = () => {
       </div>
 
       <div className="flex overflow-x-auto gap-6 flex-col h-screen overflow-y-scroll   w-full ">
-        {jobPosts.map((jobPost, index) => (
+        {currentView === "openings" && <CurrentOpenings />}
+        {currentView === "closed" && <ClosedOpenings />}
+        {/* {jobPosts.map((jobPost, index) => (
           <JobPost
             jobPost={jobPost}
             setSelectedOpening={setSelectedOpening}
             key={index}
             {...jobPost}
           />
-        ))}
+        ))} */}
       </div>
     </DashboardWrapper>
   );

@@ -34,7 +34,7 @@ const JobsDropdown = () => {
       >
         <div className="flex items-center">
           <ShoppingBag size={20} className="mr-2 text-primary" />
-          <span className="font-normal text-[16px]">Jobs</span>
+          <span className="font-normal text-[16px]">Jobs Tools</span>
         </div>
         {showJobsDropdown ? <ChevronUp /> : <ChevronDown />}
       </div>

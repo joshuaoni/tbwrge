@@ -4,7 +4,9 @@ import {
   LogOut,
   Settings,
   ShoppingBag,
+  User,
   UserCircle,
+  Users2,
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -24,9 +26,35 @@ const LeftSideBar = () => {
       active: false,
     },
     {
-      title: "Job Posts",
+      title: "Posted Jobs",
       icon: <ShoppingBag />,
       link: "/dashboard/job-postings",
+      active: false,
+    },
+    {
+      title: "Job Board",
+      icon: <ShoppingBag />,
+      link: "/dashboard/job-board",
+      active: false,
+    },
+  ]);
+  const [extras, setExtras] = React.useState([
+    {
+      title: "Submit An Article",
+      icon: <User />,
+      link: "/dashboard/submit-article",
+      active: false,
+    },
+    {
+      title: "Community",
+      icon: <Users2 />,
+      link: "/dashboard/community",
+      active: false,
+    },
+    {
+      title: "Training",
+      icon: <User />,
+      link: "/dashboard/training",
       active: false,
     },
   ]);
@@ -72,13 +100,30 @@ const LeftSideBar = () => {
         })}
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ml-8 ">
-          <h1 className="my-4 font-semibold text-[#6D6D6D]">Tools</h1>
           <div className="space-y-4">
             <JobsDropdown />
             <CoverLetterDropDown />
             <CvDropDown />
           </div>
         </div>
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+        <div className="flex flex-col ">
+          <div className="space-y-6 mb-4 w-full">
+            {extras.map((item) => {
+              if (item.title === "Logout") {
+                return <LogoutModal />;
+              }
+              return (
+                <LeftSideBarItem
+                  key={item.title}
+                  item={item}
+                  setLeftSideItems={setUserLeftSideItems}
+                />
+              );
+            })}
+          </div>
+        </div>
+
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
           <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>

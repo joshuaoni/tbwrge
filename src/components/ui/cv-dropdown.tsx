@@ -39,7 +39,7 @@ const CvDropDown = () => {
       >
         <div className="flex items-center">
           <GraduationCap size={20} className="mr-2 text-primary" />
-          <span className="font-medium">CV</span>
+          <span className="font-medium">CV Tools</span>
         </div>
         {showCvDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>
