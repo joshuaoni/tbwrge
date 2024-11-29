@@ -13,6 +13,7 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: "#065844",
+        red: "#DB2020",
         darkgreen: "#003A26",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

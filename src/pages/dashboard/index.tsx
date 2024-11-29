@@ -14,7 +14,6 @@ import { useUserStore } from "@/hooks/use-user-store";
 
 const index = () => {
   const { userData } = useUserStore();
-  console.log("userData", userData);
   const [analytics, setAnalytics] = useState([
     {
       title: "Total Jobs Posts",
