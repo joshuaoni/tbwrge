@@ -9,6 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CaretDownIcon } from "@radix-ui/react-icons";
 const JobDetails = ({
   setCurrentView,
 }: {
@@ -59,32 +65,33 @@ const JobDetails = ({
   return (
     <section>
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <ArrowLeft
-            onClick={() => {
-              setCurrentView("openings");
-            }}
-            className="cursor-pointer"
-          />
-          <div className="flex flex-col bg-[#F9F9F9] rounded-lg p-2">
-            <span className="font-semibold">Jr. FrontEnd Engineer</span>
-            <span className="text-xs text-[#8F8F8F]">
-              Spotify, Singapore - 2 Days ago
-            </span>
+        <div className="flex flex-col ">
+          <div className="flex items-center space-x-4">
+            <ArrowLeft
+              onClick={() => {
+                setCurrentView("openings");
+              }}
+              className="cursor-pointer"
+            />
+            <div className="flex flex-col bg-[#F9F9F9] rounded-lg p-2">
+              <span className="font-semibold">Jr. FrontEnd Engineer</span>
+              <span className="text-xs text-[#8F8F8F]">
+                Spotify, Singapore - 2 Days ago
+              </span>
+            </div>
+            <EllipsisPopUp />
           </div>
-          <CircleEllipsis color="#065844" className="ml-4 cursor-pointer" />
         </div>
 
         <div className="border rounded-lg p-3">
           <div className="flex items-center justify-between space-x-12 mb-3">
             <span className="font-semibold text-lg">Tools</span>
-            <Button className="bg-[#F0F0F0] text-gray-300 rounded-full">
-              Top 5 Candidates
-            </Button>
+            <TopCandidatesPopUp />
           </div>
           <div className="">
-            <Button className="bg-primary rounded-2xl text-white">
-              Summarize
+            <Button className="bg-lightgreen rounded-2xl text-white">
+              <span>Summarize</span>
+              <CaretDownIcon />
             </Button>
           </div>
         </div>
@@ -102,11 +109,10 @@ const JobDetails = ({
           Screened Candidates
         </span>
         <span className="flex-1" />
-        <Button className="bg-[#F0F0F0] ml-auto text-gray-300 rounded-full">
-          Top 5 Candidates
-        </Button>
+        <RankPopUp />
       </div>
-      <Table className="mt-12 bg-[#F0F0F0] p-5 rounded-md">
+      <BulkActionsPopUp />
+      <Table className="mt-6 bg-[#F0F0F0] p-5 rounded-md">
         <TableHeader>
           <TableRow className="bg-[#D6D6D6] rounded-lg ">
             <TableHead className="w-[100px] text-[#898989]" />
@@ -154,4 +160,228 @@ const JobDetails = ({
   );
 };
 
+const EllipsisPopUp = () => {
+  const [selectedOption, setSelectedOption] = React.useState("edit_job");
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <CircleEllipsis color="#065844" className="ml-4 cursor-pointer" />
+      </PopoverTrigger>
+      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
+        <div className="flex flex-col  w-fit  bg-white rounded-lg">
+          <span
+            onClick={() => setSelectedOption("edit_job")}
+            className={` ${
+              selectedOption === "edit_job"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm rounded-t-lg`}
+          >
+            Edit job{" "}
+          </span>
+          <span
+            onClick={() => setSelectedOption("copy_job_link")}
+            className={`${
+              selectedOption === "copy_job_link"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Copy Job Link
+          </span>
+          <span
+            onClick={() => setSelectedOption("copy_embed_code")}
+            className={`${
+              selectedOption === "copy_embed_code"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Copy Embed Code
+          </span>
+          <span
+            onClick={() => setSelectedOption("close_job")}
+            className={`${
+              selectedOption === "close_job"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm rounded-b-lg`}
+          >
+            Close Job
+          </span>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+const TopCandidatesPopUp = () => {
+  const [selectedOption, setSelectedOption] = React.useState("top_5");
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button className="bg-[#F0F0F0] ml-auto text-gray-300 rounded-full">
+          <span>Top 5 Candidates</span>
+          <CaretDownIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
+        <div className="flex flex-col  w-fit  bg-white rounded-lg">
+          <span
+            onClick={() => setSelectedOption("top_5")}
+            className={` ${
+              selectedOption === "top_5"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm rounded-t-lg`}
+          >
+            Top 5 Candidates
+          </span>
+          <span
+            onClick={() => setSelectedOption("top_10")}
+            className={`${
+              selectedOption === "top_10"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Top 10 Candidates
+          </span>
+          <span
+            onClick={() => setSelectedOption("top_15")}
+            className={`${
+              selectedOption === "copy_embed_code"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Top 15 Candidates
+          </span>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+const RankPopUp = () => {
+  const [selectedOption, setSelectedOption] = React.useState("fit_Score");
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button className="bg-[#F0F0F0] ml-auto text-gray-300 rounded-full">
+          <span>
+            Rank By{" "}
+            {selectedOption === "fit_Score"
+              ? "Fit Score"
+              : selectedOption === "key_skills"
+              ? "Key Skills"
+              : "Years Of Exp"}{" "}
+          </span>
+          <CaretDownIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
+        <div className="flex flex-col  w-[130px]  bg-white rounded-lg">
+          <span
+            onClick={() => setSelectedOption("fit_Score")}
+            className={` ${
+              selectedOption === "fit_score"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm rounded-t-lg`}
+          >
+            Fit Score
+          </span>
+          <span
+            onClick={() => setSelectedOption("YOE")}
+            className={`${
+              selectedOption === "YOE"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            YOE
+          </span>
+          <span
+            onClick={() => setSelectedOption("key_skills")}
+            className={`${
+              selectedOption === "key_skills"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Key Skills
+          </span>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+const BulkActionsPopUp = () => {
+  const [selectedOption, setSelectedOption] = React.useState(
+    "send_screening_email"
+  );
+  return (
+    <Popover>
+      <PopoverTrigger className="w-fit mt-2">
+        <Button className="bg-[#F0F0F0] flex items-center ml-auto space-x-4 text-gray-300 rounded-full">
+          <span>Bulk Actions</span>
+          <CaretDownIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
+        <div className="flex flex-col  w-fit  bg-white rounded-lg">
+          <span
+            onClick={() => setSelectedOption("fit_Score")}
+            className={` ${
+              selectedOption === "send_screening_email"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm rounded-t-lg`}
+          >
+            Send Screening Email
+          </span>
+          <span
+            onClick={() => setSelectedOption("send_interview_email")}
+            className={`${
+              selectedOption === "send_interview_email"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Send Interview Email
+          </span>
+          <span
+            onClick={() => setSelectedOption("reject_candidate")}
+            className={`${
+              selectedOption === "reject_candidate"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Reject Candidate
+          </span>
+          <span
+            onClick={() => setSelectedOption("send_rejection_mail")}
+            className={`${
+              selectedOption === "send_rejection_mail"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Send Reject Candidate
+          </span>
+          <span
+            onClick={() => setSelectedOption("shortlist_candidates")}
+            className={`${
+              selectedOption === "shortlist_candidates"
+                ? "text-white bg-lightgreen"
+                : "text-[#898989]"
+            } cursor-pointer p-3 text-sm`}
+          >
+            Shortlist Candidates
+          </span>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
 export default JobDetails;

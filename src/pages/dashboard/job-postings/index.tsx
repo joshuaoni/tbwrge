@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ import CandidateDetail from "./candidate-detail";
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
-  const [currentView, setCurrentView] = useState("details");
+  const [currentView, setCurrentView] = useState("openings");
 
   return (
     <DashboardWrapper>
