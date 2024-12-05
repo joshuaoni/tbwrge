@@ -8,12 +8,12 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
 
-const Summarizer = () => {
+const HeadToHead = () => {
   const [file, setFile] = useState<any>(null);
   const [fileSize, setFileSize] = useState("");
   const [value, setValue] = useState("");
   const [prompts, setPrompts] = useState<any>([]);
-  const [translated, setTranslated] = useState("");
+  const [summary, setSummary] = useState("");
   const handleFileChange = (event: any) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -25,13 +25,13 @@ const Summarizer = () => {
   };
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Translator</span>
+      <span className="font-bold text-xl">CV Head to Head</span>
       <section className="flex h-screen space-x-4 ">
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">Document Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
+              Add your documents here, and you can upload up to 2 files max
             </span>
             <div className=" relative w-full px-4 mt-3 justify-between  flex flex-col  items-start rounded-lg">
               <input
@@ -77,29 +77,82 @@ const Summarizer = () => {
                   </div>
                 </div>
 
-                <CircleXIcon color="black" size={14} />
+                <CircleXIcon
+                  onClick={() => {
+                    setFile(null);
+                    setFileSize("");
+                  }}
+                  color="black"
+                  size={14}
+                />
               </div>
             )}
           </div>
 
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+            <div className="flex items-center justify-between">
+              <span className="font-bold">
+                Prompts{" "}
+                <span className="text-sm font-medium">
+                  (Add up to 20 prompts)
+                </span>{" "}
+              </span>
+              <Plus
+                className="cursor-pointer"
+                onClick={() => {
+                  return (
+                    setPrompts((prevState: any) => [...prevState, value]),
+                    setValue("")
+                  );
+                }}
+              />
+            </div>
+            <Input
+              placeholder="Input Prompt"
+              value={value}
+              className="my-3"
+              onChange={(e) => setValue(e.target.value)}
+            />
+
+            <div className="">
+              {prompts.map((prompt: string) => {
+                return (
+                  <div className="flex justify-between my-2">
+                    <span>{prompt}</span>
+                    <Trash
+                      className="cursor-pointer"
+                      onClick={() =>
+                        setPrompts((prevState: string[]) =>
+                          prevState.filter((p: string) => p !== prompt)
+                        )
+                      }
+                      size={20}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex w-full  flex-col">
             <Button
+              disabled={file === null}
               variant={"default"}
               className="self-center bg-lightgreen mt-12 text-white"
             >
-              Translate Cv
+              Generate Report
             </Button>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6 ">
+          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6  ">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Translator</span>
+              <span className="font-bold">CV Summary</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {translated === "" && <div>Upload CV to translate</div>}
+              {summary === "" && <div>Upload Prompts to generate report</div>}
             </div>
           </div>
         </div>
@@ -108,4 +161,4 @@ const Summarizer = () => {
   );
 };
 
-export default Summarizer;
+export default HeadToHead;

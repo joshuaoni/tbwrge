@@ -18,8 +18,8 @@ const CvDropDown = () => {
       icon: <Image src={gem} alt="" width={30} height={30} />,
     },
     {
-      link: "/dashboard/cv-tools/matching-ranking",
-      title: "CV Matching & Ranking",
+      link: "/dashboard/cv-tools/head-to-head",
+      title: "CV Head to Head",
       icon: <Image src={gem} alt="" width={30} height={30} />,
     },
     {
@@ -30,6 +30,11 @@ const CvDropDown = () => {
     {
       link: "/dashboard/cv-tools/translator",
       title: "CV Translator",
+      icon: <Image src={gem} alt="" width={30} height={30} />,
+    },
+    {
+      link: "/dashboard/cv-tools/ranking",
+      title: "CV Ranking",
       icon: <Image src={gem} alt="" width={30} height={30} />,
     },
   ]);

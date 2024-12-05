@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import OrDivider from "../../../../public/images/or-divider.png";
 import { Button } from "@/components/ui/button";
 import { CircleXIcon, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
 
-const Summarizer = () => {
+const Ranking = () => {
   const [file, setFile] = useState<any>(null);
   const [fileSize, setFileSize] = useState("");
   const [value, setValue] = useState("");
   const [prompts, setPrompts] = useState<any>([]);
-  const [translated, setTranslated] = useState("");
+  const [ranking, setRanking] = useState("");
   const handleFileChange = (event: any) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -25,7 +24,7 @@ const Summarizer = () => {
   };
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Translator</span>
+      <span className="font-bold text-xl">CV Ranking</span>
       <section className="flex h-screen space-x-4 ">
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
@@ -77,29 +76,82 @@ const Summarizer = () => {
                   </div>
                 </div>
 
-                <CircleXIcon color="black" size={14} />
+                <CircleXIcon
+                  onClick={() => {
+                    setFile(null);
+                    setFileSize("");
+                  }}
+                  color="black"
+                  size={14}
+                />
               </div>
             )}
           </div>
 
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+            <div className="flex items-center justify-between">
+              <span className="font-bold">
+                Prompts{" "}
+                <span className="text-sm font-medium">
+                  (Add up to 20 prompts)
+                </span>{" "}
+              </span>
+              <Plus
+                className="cursor-pointer"
+                onClick={() => {
+                  return (
+                    setPrompts((prevState: any) => [...prevState, value]),
+                    setValue("")
+                  );
+                }}
+              />
+            </div>
+            <Input
+              placeholder="Input Prompt"
+              value={value}
+              className="my-3"
+              onChange={(e) => setValue(e.target.value)}
+            />
+
+            <div className="">
+              {prompts.map((prompt: string) => {
+                return (
+                  <div className="flex justify-between my-2">
+                    <span>{prompt}</span>
+                    <Trash
+                      className="cursor-pointer"
+                      onClick={() =>
+                        setPrompts((prevState: string[]) =>
+                          prevState.filter((p: string) => p !== prompt)
+                        )
+                      }
+                      size={20}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex w-full  flex-col">
             <Button
+              disabled={file === null}
               variant={"default"}
               className="self-center bg-lightgreen mt-12 text-white"
             >
-              Translate Cv
+              Rank Cv
             </Button>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6 ">
+          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6  ">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Translator</span>
+              <span className="font-bold">CV Ranking</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {translated === "" && <div>Upload CV to translate</div>}
+              {ranking === "" && <div>Upload Document to view CV Ranking</div>}
             </div>
           </div>
         </div>
@@ -108,4 +160,4 @@ const Summarizer = () => {
   );
 };
 
-export default Summarizer;
+export default Ranking;

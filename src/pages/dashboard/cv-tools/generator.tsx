@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import RecordIcon from "../../../../public/images/icons/microphone.png";
 import Image from "next/image";
 import OrDivider from "../../../../public/images/or-divider.png";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,9 @@ import { CircleXIcon, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-const Summarizer = () => {
+const Generator = () => {
   const [file, setFile] = useState<any>(null);
   const [fileSize, setFileSize] = useState("");
   const [value, setValue] = useState("");
@@ -25,77 +27,13 @@ const Summarizer = () => {
   };
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Summarizer</span>
+      <span className="font-bold text-xl">CV Generator</span>
       <section className="flex h-screen space-x-4 ">
         <div className="w-[50%] flex flex-col">
-          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
-            <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
-            </span>
-            <div className=" relative w-full px-4 mt-3 justify-between  flex flex-col  items-start rounded-lg">
-              <input
-                onChange={handleFileChange}
-                name="cv"
-                type="file"
-                accept=".pdf, .doc, .docx, .txt" // Allows PDFs, Word files, text files, and images
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
-                <Image
-                  className="w-fit h-10 object-cover"
-                  src={uploadIcon}
-                  alt=""
-                />
-                <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>{" "}
-                </span>
-                <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
-                </span>
-              </div>
-              <span className="text-textgray mt-3 text-sm">
-                Only support .pdf, .word and .txt
-              </span>
-            </div>
-
-            {file != null && (
-              <div className="flex h-14 w-full  mt-6 px-4 border rounded-lg justify-between  items-center space-x-2">
-                <div className="flex items-start">
-                  <Image
-                    className="w-10 h-10 object-cover"
-                    src={pdfIcon}
-                    alt=""
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm text-black">
-                      {file && file.name}
-                    </span>
-                    <span className="text-sm text-textgray">
-                      {fileSize + "MB"}
-                    </span>
-                  </div>
-                </div>
-
-                <CircleXIcon
-                  onClick={() => {
-                    setFile(null);
-                    setFileSize("");
-                  }}
-                  color="black"
-                  size={14}
-                />
-              </div>
-            )}
-          </div>
-
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
-                <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
-                </span>{" "}
+                Decribe your Education/Professional Background
               </span>
               <Plus
                 className="cursor-pointer"
@@ -107,7 +45,7 @@ const Summarizer = () => {
                 }}
               />
             </div>
-            <Input
+            <Textarea
               placeholder="Input Prompt"
               value={value}
               className="my-3"
@@ -134,13 +72,39 @@ const Summarizer = () => {
             </div>
           </div>
 
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+            <div className="flex items-center justify-between">
+              <span className="font-light text-sm">Record Voicenote </span>
+              <X
+                className="cursor-pointer"
+                onClick={() => {
+                  return (
+                    setPrompts((prevState: any) => [...prevState, value]),
+                    setValue("")
+                  );
+                }}
+              />
+            </div>
+
+            <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
+              <span className="text-xs font-light">Record</span>
+              <Image
+                className="cursor-pointer"
+                src={RecordIcon}
+                alt=""
+                width={15}
+                height={15}
+              />
+            </div>
+          </div>
+
           <div className="flex w-full  flex-col">
             <Button
-              disabled={file === null}
+              disabled={prompts.length === 0}
               variant={"default"}
               className="self-center bg-lightgreen mt-12 text-white"
             >
-              Summarize Cv
+              Generate Cv
             </Button>
           </div>
         </div>
@@ -152,7 +116,7 @@ const Summarizer = () => {
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Upload Document to view CV summary</div>}
+              {summary === "" && <div>Add Prompts to generate CV</div>}
             </div>
           </div>
         </div>
@@ -161,4 +125,4 @@ const Summarizer = () => {
   );
 };
 
-export default Summarizer;
+export default Generator;
