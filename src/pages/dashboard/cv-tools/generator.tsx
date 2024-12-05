@@ -1,29 +1,50 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import RecordIcon from "../../../../public/images/icons/microphone.png";
 import Image from "next/image";
-import OrDivider from "../../../../public/images/or-divider.png";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
+import { Plus, Trash, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 const Generator = () => {
-  const [file, setFile] = useState<any>(null);
-  const [fileSize, setFileSize] = useState("");
   const [value, setValue] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
-  const handleFileChange = (event: any) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      const fileSizeInKB = (selectedFile?.size / 1024).toFixed(2); // Convert to KB
-      const fileSizeInMB = (selectedFile?.size / (1024 * 1024)).toFixed(2); // Convert to MB
-      setFileSize(fileSizeInMB);
+  console.log("audio url", audioUrl);
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const chunks: BlobPart[] = [];
+
+      mediaRecorder.ondataavailable = (event: BlobEvent) => {
+        chunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        setAudioBlob(blob);
+        setAudioUrl(URL.createObjectURL(blob));
+      };
+
+      mediaRecorder.start();
+      mediaRecorderRef.current = mediaRecorder;
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      alert("Microphone access is required to record audio.");
     }
-    setFile(selectedFile);
+  };
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
   };
   return (
     <DashboardWrapper>
@@ -89,6 +110,9 @@ const Generator = () => {
             <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
               <span className="text-xs font-light">Record</span>
               <Image
+                onClick={() => {
+                  isRecording ? handleStopRecording() : handleStartRecording();
+                }}
                 className="cursor-pointer"
                 src={RecordIcon}
                 alt=""
