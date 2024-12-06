@@ -15,7 +15,6 @@ const Generator = () => {
 
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
-  console.log("audio url", audioUrl);
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
