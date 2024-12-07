@@ -2,30 +2,39 @@ import React from "react";
 import { ChevronDown, ChevronUp, File, ShoppingBag } from "lucide-react";
 import gem from "../../../public/images/gem.png";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 const CoverLetterDropDown = () => {
   const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
     React.useState(false);
+  const router = useRouter();
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
+      link: "/dashboard/cover-letter-tools/summarizer",
       title: "Summarizer",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Cover Letter Vetting",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/cover-letter-tools/vetting",
+      title: "Vetting",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "CV Matching & Ranking",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/cover-letter-tools/ranking",
+
+      title: "Ranking",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Cover Letter Generator",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/cover-letter-tools/generator",
+      title: "Generator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Cover Letter Translator",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/cover-letter-tools/translator",
+      title: "Translator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
   ]);
   return (
@@ -40,7 +49,6 @@ const CoverLetterDropDown = () => {
         </div>
         {showCoverLetterDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>
-
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
           showCoverLetterDropDown
@@ -48,13 +56,34 @@ const CoverLetterDropDown = () => {
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
-        <div className="mb-2 ml-3 space-y-4">
-          {dropDownItems.map((item, index) => (
-            <div key={index} className="flex items-center">
-              {item.icon}
-              <span className="ml-2 opacity-40">{item.title}</span>
-            </div>
-          ))}
+        <div className="mb-2 ml-3 space-y-4 cursor-pointer">
+          {dropDownItems.map((item, index) => {
+            const pathName = usePathname();
+            const isActiveRoute = item.link === pathName;
+            return (
+              <div
+                onClick={(e) => {
+                  router.push(item.link), e.stopPropagation();
+                }}
+                key={index}
+                className={`flex relative ${
+                  isActiveRoute
+                    ? "bg-primary  py-3 hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary text-white z-30 font-bold"
+                    : " font-normal"
+                } items-center`}
+              >
+                <div
+                  className={`h-7 w-[5px] ${
+                    isActiveRoute ? "bg-white" : "bg-transparent"
+                  } absolute -left-[2px] rounded-r `}
+                />
+                <div className="flex ml-3 items-center">
+                  {item.icon}
+                  <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

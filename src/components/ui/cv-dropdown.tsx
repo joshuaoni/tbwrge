@@ -71,7 +71,7 @@ const CvDropDown = () => {
                 key={index}
                 className={`flex relative ${
                   isActiveRoute
-                    ? "bg-primary text-white py-3 hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary text-white z-30 font-bold"
+                    ? "bg-primary  py-3 hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary text-white z-30 font-bold"
                     : " font-normal"
                 } items-center`}
               >
