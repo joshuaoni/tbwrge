@@ -36,6 +36,11 @@ const CoverLetterDropDown = () => {
       title: "Translator",
       icon: <Image src={gem} alt="" width={20} height={20} />,
     },
+    {
+      link: "/dashboard/cover-letter-tools/rewriter",
+      title: "Rewriter",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
+    },
   ]);
   return (
     <>

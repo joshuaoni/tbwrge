@@ -6,7 +6,7 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Button } from "@/components/ui/button";
 
-const Summarizer = () => {
+const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [translated, setTranslated] = useState("");
@@ -123,4 +123,4 @@ const Summarizer = () => {
   );
 };
 
-export default Summarizer;
+export default Translator;
