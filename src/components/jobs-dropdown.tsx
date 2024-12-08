@@ -2,28 +2,31 @@ import React from "react";
 import { ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import gem from "../../public/images/gem.png";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 const JobsDropdown = () => {
   const [showJobsDropdown, setShowJobsDropdown] = React.useState(false);
+  const router = useRouter();
   const [dropDownItems, setDropDownItems] = React.useState([
     {
-      title: "Job Posts",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/job-tools/generator",
+      title: "Job Post Generator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Candidates",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/job-tools/vetting",
+      title: "Job Post Vetting",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Jobs",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/job-tools/translator",
+      title: "Job Post Translator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
-      title: "Job Applications",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
-    },
-    {
-      title: "Job Offers",
-      icon: <Image src={gem} alt="" width={30} height={30} />,
+      link: "/dashboard/job-tools/report-generator",
+      title: "Candidate Report Generator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
     },
   ]);
   return (
@@ -46,13 +49,32 @@ const JobsDropdown = () => {
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
-        <div className="mb-2 ml-3 space-y-4">
-          {dropDownItems.map((item, index) => (
-            <div key={index} className="flex items-center">
-              {item.icon}
-              <span className="ml-2 opacity-40">{item.title}</span>
-            </div>
-          ))}
+        <div className="mb-2 ml-3 space-y-4 cursor-pointer">
+          {dropDownItems.map((item, index) => {
+            const pathName = usePathname();
+            const isActiveRoute = item.link === pathName;
+            return (
+              <div
+                onClick={() => router.push(item.link)}
+                key={index}
+                className={`flex relative ${
+                  isActiveRoute
+                    ? "bg-primary  py-3 hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary text-white z-30 font-bold"
+                    : " font-normal"
+                } items-center`}
+              >
+                <div
+                  className={`h-7 w-[5px] ${
+                    isActiveRoute ? "bg-white" : "bg-transparent"
+                  } absolute -left-[2px] rounded-r `}
+                />
+                <div className="flex ml-3 items-center">
+                  {item.icon}
+                  <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
