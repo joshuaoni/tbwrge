@@ -3,6 +3,7 @@ import { Input } from "./ui/input";
 import { BellDotIcon, PlusCircle, Search } from "lucide-react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import { CreateJob } from "@/pages/dashboard/dashboard-home";
+import LanguageSelectorDropDown from "./language-selector-dropdown";
 
 const DashboardHeader = ({
   setStartCreateJobFlow,
@@ -20,18 +21,16 @@ const DashboardHeader = ({
           />
         </div>
         {/* <CreateJob /> */}
-        <div
-          onClick={() => setStartCreateJobFlow(true)}
-          className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
-        >
-          <PlusCircle />
-          <p className="text-sm font-bold">Create New Job Post</p>
+        <div className="flex items-center space-x-4">
+          <LanguageSelectorDropDown />
+          <div
+            onClick={() => setStartCreateJobFlow(true)}
+            className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
+          >
+            <PlusCircle />
+            <p className="text-sm font-bold">Create New Job Post</p>
+          </div>
         </div>
-
-        {/* <div className=" space-x-4    flex items-center">
-          <BellDotIcon color="#e1e1e1" />
-          <ChatBubbleIcon color="#e1e1e1" />
-        </div> */}
       </div>
     </div>
   );
