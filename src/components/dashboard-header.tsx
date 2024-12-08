@@ -1,8 +1,6 @@
 import React from "react";
 import { Input } from "./ui/input";
-import { BellDotIcon, PlusCircle, Search } from "lucide-react";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import { CreateJob } from "@/pages/dashboard/dashboard-home";
+import { PlusCircle, Search } from "lucide-react";
 import LanguageSelectorDropDown from "./language-selector-dropdown";
 
 const DashboardHeader = ({

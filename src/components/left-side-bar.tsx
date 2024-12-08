@@ -48,7 +48,7 @@ const LeftSideBar = () => {
     {
       title: "Community",
       icon: <Users2 />,
-      link: "/dashboard/community",
+      link: "/community",
       active: false,
     },
     {

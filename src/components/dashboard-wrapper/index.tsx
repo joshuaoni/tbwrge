@@ -34,7 +34,7 @@ const Dashboard = ({ children }: { children: any }) => {
           <SidebarHeader className="bg-[#e1e1e1]">
             <div
               onClick={() => {
-                router.push("/dashboard-home");
+                router.push("/dashboard");
               }}
               className="flex mt-6 items-center ml-6 cursor-pointer"
             >

@@ -139,7 +139,7 @@ const JobDetails = ({
               key={candidate.id}
             >
               <TableCell>
-                <input type="checkbox" />
+                <input type="checkbox" onClick={(e) => e.stopPropagation()} />
               </TableCell>
               <TableCell width={200} className="font-medium">
                 {candidate.name}

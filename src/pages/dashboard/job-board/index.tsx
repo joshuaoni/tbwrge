@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import DashboardWrapper from "@/components/dashboard-wrapper";
 
 const index = () => {
   return (
-    <div>index</div>
-  )
-}
+    <DashboardWrapper>
+      <div></div>
+    </DashboardWrapper>
+  );
+};
 
-export default index
+export default index;
