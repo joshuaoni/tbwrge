@@ -3,7 +3,14 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import RecordIcon from "../../../../public/images/icons/microphone.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash, X } from "lucide-react";
+import {
+  EllipsisIcon,
+  EllipsisVerticalIcon,
+  Plus,
+  StopCircleIcon,
+  Trash,
+  X,
+} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 const Generator = () => {
@@ -108,16 +115,30 @@ const Generator = () => {
 
             <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
               <span className="text-xs font-light">Record</span>
-              <Image
-                onClick={() => {
-                  isRecording ? handleStopRecording() : handleStartRecording();
-                }}
-                className="cursor-pointer"
-                src={RecordIcon}
-                alt=""
-                width={15}
-                height={15}
-              />
+              {isRecording ? (
+                <StopCircleIcon
+                  color="red"
+                  onClick={() => {
+                    isRecording
+                      ? handleStopRecording()
+                      : handleStartRecording();
+                  }}
+                  className="animate-pulse cursor-pointer "
+                />
+              ) : (
+                <Image
+                  onClick={() => {
+                    isRecording
+                      ? handleStopRecording()
+                      : handleStartRecording();
+                  }}
+                  className="cursor-pointer"
+                  src={RecordIcon}
+                  alt=""
+                  width={20}
+                  height={20}
+                />
+              )}
             </div>
           </div>
 
