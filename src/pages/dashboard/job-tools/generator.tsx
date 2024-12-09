@@ -12,7 +12,7 @@ const Generator = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-
+  console.log(audioBlob);
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
   const handleStartRecording = async () => {
@@ -52,7 +52,7 @@ const Generator = () => {
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">Decribe Job Post</span>
+              <span className="font-bold">Describe Job Post</span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
