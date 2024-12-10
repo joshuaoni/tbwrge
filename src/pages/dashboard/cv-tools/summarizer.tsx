@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import OrDivider from "../../../../public/images/or-divider.png";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { summarizeCV } from "@/actions/cv-tools/summarize-cv";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { useUserStore } from "@/hooks/use-user-store";
 
 interface UploadedFile {
   file: File;
@@ -16,16 +19,19 @@ interface UploadedFile {
 const Summarizer: React.FC = () => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [value, setValue] = useState<string>("");
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<string[]>([]);
-  const [summary, setSummary] = useState<string>("");
+  const { userData } = useUserStore();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
-    const newFiles: UploadedFile[] = Array.from(event.target.files).map((file) => ({
-      file,
-      size: (file.size / (1024 * 1024)).toFixed(2), // Convert size to MB
-    }));
+    const newFiles: UploadedFile[] = Array.from(event.target.files).map(
+      (file) => ({
+        file,
+        size: (file.size / (1024 * 1024)).toFixed(2), // Convert size to MB
+      })
+    );
 
     if (files.length + newFiles.length > 5) {
       alert("You can only upload up to 5 files.");
@@ -35,10 +41,40 @@ const Summarizer: React.FC = () => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
     event.target.value = ""; // Reset file input
   };
+  const {
+    mutate: summarizeCvMutation,
+    data: summary,
+    isPending,
+  } = useMutation({
+    mutationKey: ["summarizeCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
 
+      const response = await summarizeCV(
+        files[0].file,
+        language,
+        userData?.token
+      );
+      return response;
+    },
+  });
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
+  console.log(summary);
 
   return (
     <DashboardWrapper>
@@ -60,7 +96,11 @@ const Summarizer: React.FC = () => {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
-                <Image className="w-fit h-10 object-cover" src={uploadIcon} alt="Upload Icon" />
+                <Image
+                  className="w-fit h-10 object-cover"
+                  src={uploadIcon}
+                  alt="Upload Icon"
+                />
                 <span>
                   Drag your file(s) or <span className="font-bold">browse</span>
                 </span>
@@ -80,10 +120,18 @@ const Summarizer: React.FC = () => {
                 className="flex h-14 w-full mt-6 px-4 border rounded-lg justify-between items-center space-x-2"
               >
                 <div className="flex items-start">
-                  <Image className="w-10 h-10 object-cover" src={pdfIcon} alt="File Icon" />
+                  <Image
+                    className="w-10 h-10 object-cover"
+                    src={pdfIcon}
+                    alt="File Icon"
+                  />
                   <div className="flex flex-col">
-                    <span className="text-sm text-black">{uploadedFile.file.name}</span>
-                    <span className="text-sm text-textgray">{uploadedFile.size} MB</span>
+                    <span className="text-sm text-black">
+                      {uploadedFile.file.name}
+                    </span>
+                    <span className="text-sm text-textgray">
+                      {uploadedFile.size} MB
+                    </span>
                   </div>
                 </div>
                 <CircleXIcon
@@ -99,8 +147,19 @@ const Summarizer: React.FC = () => {
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts <span className="text-sm font-medium">(Add up to 20 prompts)</span>
+                Prompts{" "}
+                <span className="text-sm font-medium">
+                  (Add up to 20 prompts)
+                </span>
               </span>
+            </div>
+            <div className="border rounded-xl mt-4  h-fit flex items-center pr-4 ">
+              <Input
+                placeholder="Input Prompt"
+                value={value}
+                className="my-3 border-none"
+                onChange={(e) => setValue(e.target.value)}
+              />
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
@@ -109,12 +168,6 @@ const Summarizer: React.FC = () => {
                 }}
               />
             </div>
-            <Input
-              placeholder="Input Prompt"
-              value={value}
-              className="my-3"
-              onChange={(e) => setValue(e.target.value)}
-            />
 
             <div>
               {prompts.map((prompt, index) => (
@@ -134,26 +187,50 @@ const Summarizer: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex w-full flex-col">
-            <Button
-              disabled={files.length === 0}
-              variant="default"
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Summarize CV
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  summarizeCvMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Summarize CV"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Summary Section */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl min-h-[200px] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Summary</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Upload Document to view CV summary</div>}
+              {summary === undefined ? (
+                <div>Upload Document to view CV summary</div>
+              ) : (
+                <span>{summary.summarized_cv}</span>
+              )}
             </div>
           </div>
         </div>

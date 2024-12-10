@@ -1,16 +1,47 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import { CircleXIcon, X } from "lucide-react";
+import { CircleXIcon, Loader2, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { translateCV } from "@/actions/cv-tools/translate-cv";
+import { useUserStore } from "@/hooks/use-user-store";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
-  const [translated, setTranslated] = useState("");
+  const { userData } = useUserStore();
 
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const {
+    mutate: translateCvMutation,
+    data: translated,
+    isPending,
+  } = useMutation({
+    mutationKey: ["summarizeCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+      console.log(files[0]);
+      const response = await translateCV(files[0], language, userData?.token);
+      return response;
+    },
+  });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files).slice(
@@ -94,26 +125,49 @@ const Translator = () => {
           </div>
 
           {/* Translate Button */}
-          <Button
-            disabled={files.length === 0}
-            className="self-center bg-lightgreen mt-12 text-white"
-          >
-            Translate CV
-          </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  translateCvMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Translate CV"
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Right Side */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl min-h-[200px] mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Translator</span>
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated === "" ? (
+              {translated === undefined ? (
                 <div>Upload CV to translate</div>
               ) : (
-                translated
+                translated.translated_cv
               )}
             </div>
           </div>
