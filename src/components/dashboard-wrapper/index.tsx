@@ -29,9 +29,9 @@ const Dashboard = ({ children }: { children: any }) => {
   return (
     <div>
       <DashboardHeader setStartCreateJobFlow={setStartCreateJobFlow} />
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader className="bg-[#e1e1e1]">
+      <SidebarProvider className="">
+        <Sidebar className="bg-[#e1e1e1] z-30">
+          <SidebarHeader className="bg-[#e1e1e1] ">
             <div
               onClick={() => {
                 router.push("/dashboard");

@@ -82,7 +82,7 @@ const Translator = () => {
                 accept=".pdf, .doc, .docx, .txt"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
+              <div className="outline-dotted z-10 flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
                 <Image
                   src={uploadIcon}
                   alt="Upload Icon"
