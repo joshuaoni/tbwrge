@@ -3,18 +3,54 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import RecordIcon from "../../../../public/images/icons/microphone.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { generateCV } from "@/actions/cv-tools/generate-cv";
+import { audio } from "framer-motion/client";
+import { useUserStore } from "@/hooks/use-user-store";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Generator = () => {
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-
+  const { userData } = useUserStore();
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
+  const {
+    mutate: generateCvMutation,
+    data: generatedCv,
+    isPending,
+  } = useMutation({
+    mutationKey: ["generateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+
+      const response = await generateCV(
+        audioBlob,
+        userData?.token as string,
+        prompts
+      );
+      return response;
+    },
+  });
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -68,7 +104,7 @@ const Generator = () => {
             <Textarea
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-white"
               onChange={(e) => setValue(e.target.value)}
             />
 
@@ -135,25 +171,50 @@ const Generator = () => {
             </div>
           </div>
 
-          <div className="flex w-full  flex-col">
-            <Button
-              disabled={prompts.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Generate Cv
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={prompts.length === 0 && audioBlob === null}
+                variant="default"
+                onClick={() => {
+                  generateCvMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Generate CV"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6  ">
+          <div className="rounded-xl shadow-xl h-fit min-w-full w-fit mt-4 p-6  ">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Summary</span>
+              <span className="font-bold">CV Generator</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Add Prompts to generate CV</div>}
+            <div className="flex items-center justify-center  h-full">
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : generatedCv === undefined ? (
+                <div>Your head to head will appear here</div>
+              ) : (
+                JSON.stringify(generatedCv.cv_data)
+              )}
             </div>
           </div>
         </div>

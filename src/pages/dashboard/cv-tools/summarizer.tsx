@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ interface UploadedFile {
 }
 
 const Summarizer: React.FC = () => {
-  const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [files, setFiles] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<string[]>([]);
@@ -43,7 +43,7 @@ const Summarizer: React.FC = () => {
   };
   const {
     mutate: summarizeCvMutation,
-    data: summary,
+    data: summaries,
     isPending,
   } = useMutation({
     mutationKey: ["summarizeCV"],
@@ -64,9 +64,10 @@ const Summarizer: React.FC = () => {
       }
 
       const response = await summarizeCV(
-        files[0].file,
+        files,
         language,
-        userData?.token
+        userData?.token as string,
+        prompts
       );
       return response;
     },
@@ -74,7 +75,7 @@ const Summarizer: React.FC = () => {
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
-  console.log(summary);
+  console.log(summaries);
 
   return (
     <DashboardWrapper>
@@ -226,10 +227,14 @@ const Summarizer: React.FC = () => {
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === undefined ? (
-                <div>Upload Document to view CV summary</div>
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : summaries === undefined ? (
+                <div>Your summary will appear here</div>
               ) : (
-                <span>{summary.summarized_cv}</span>
+                summaries?.map((summary: { summarized_cv: string }) => (
+                  <span>{summary.summarized_cv}</span>
+                ))
               )}
             </div>
           </div>

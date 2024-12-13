@@ -10,4 +10,8 @@ export const API_CONFIG = {
   CREATE_JOB: `${MAIN_URL}/job/create-job/`,
   SUMMARIZE_CV: `${MAIN_URL}/cv/summarize-cv/`,
   TRANSLATE_CV: `${MAIN_URL}/cv/translate-cv/`,
+  VET_CV: `${MAIN_URL}/cv/vetting-cv/`,
+  HEAD_TO_HEAD: `${MAIN_URL}/cv/head-to-head/`,
+  GENERATE_CV: `${MAIN_URL}/cv/generate-cv/`,
+  RANK_CV: `${MAIN_URL}/cv/rank-cv/`,
 };

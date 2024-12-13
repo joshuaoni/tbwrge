@@ -2,18 +2,57 @@ import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import { rankCV } from "@/actions/cv-tools/rank-cv";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Ranking = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [value, setValue] = useState("");
   const [prompts, setPrompts] = useState<string[]>([]);
+  const [jobDescription, setJobDescription] = useState("");
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [ranking, setRanking] = useState("");
+  const { userData } = useUserStore();
+  const {
+    mutate: vetCvMutation,
+    data: rankings,
+    isPending,
+  } = useMutation({
+    mutationKey: ["rankingCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
 
+      const response = await rankCV(
+        files,
+        language,
+        userData?.token as string,
+        prompts,
+        jobDescription
+      );
+      return response;
+    },
+  });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || files.length >= 5) return;
 
@@ -95,6 +134,15 @@ const Ranking = () => {
               </div>
             ))}
           </div>
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Post Job Ad</span>
+            <Textarea
+              placeholder="Input Job Description"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="my-3 bg-white border"
+            />
+          </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
@@ -137,25 +185,50 @@ const Ranking = () => {
             </div>
           </div>
 
-          <div className="flex w-full flex-col">
-            <Button
-              disabled={files.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Rank CV
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  vetCvMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? <Loader2 className="animate-spin" /> : "Rank CV"}
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Ranking</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {ranking === "" && <div>Upload Document to view CV Ranking</div>}
+            <div className="flex items-center justify-center h-fit">
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : rankings === undefined ? (
+                <div>Your vet will appear here</div>
+              ) : (
+                <div className="w-fit  h-fit overflow-y-scroll ">
+                  {rankings?.map((ranks: any) => (
+                    <span>{JSON.stringify(ranks.metrics)}</span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -3,9 +3,14 @@ import { API_CONFIG } from "@/constants/api_config";
 import { useUserStore } from "@/hooks/use-user-store";
 import axios from "axios";
 
-export const translateCV = async (cv: File, language: string, token: any) => {
+export const translateCV = async (cv: File[], language: string, token: any) => {
   let formData = new FormData();
-  formData.append("cv", cv);
+  if (cv) {
+    for (let i = 0; i < cv.length; i++) {
+      const file = cv[i];
+      formData.append("cv_files", file);
+    }
+  }
   formData.append("language", language);
 
   try {

@@ -2,20 +2,23 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const summarizeCV = async (
+export const headToHead = async (
   cv: any[],
   language: string,
   token: string,
-  prompts: string[]
+  prompts: string[],
+  jobDescription: string
 ) => {
+  console.log(cv, language, token, prompts);
   const formData = new FormData();
   if (cv) {
     for (let i = 0; i < cv.length; i++) {
-      const file = cv[i].file;
-      formData.append("cv", file);
+      const file = cv[i];
+      formData.append("uploaded_files", file);
     }
   }
   formData.append("language", language);
+  formData.append("job_description", jobDescription);
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
@@ -25,7 +28,7 @@ export const summarizeCV = async (
   try {
     const response = await axios({
       method: "POST",
-      url: API_CONFIG.SUMMARIZE_CV,
+      url: API_CONFIG.HEAD_TO_HEAD,
       headers: {
         Authorization: `Bearer ${token}`,
       },

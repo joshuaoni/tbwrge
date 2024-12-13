@@ -21,7 +21,7 @@ const Translator = () => {
     data: translated,
     isPending,
   } = useMutation({
-    mutationKey: ["summarizeCV"],
+    mutationKey: ["translateCV"],
     mutationFn: async () => {
       let language: string = "en";
       if (selectedLanguage === "English") {
@@ -37,8 +37,7 @@ const Translator = () => {
       } else if (selectedLanguage === "Portugese") {
         language = "pt";
       }
-      console.log(files[0]);
-      const response = await translateCV(files[0], language, userData?.token);
+      const response = await translateCV(files, language, userData?.token);
       return response;
     },
   });
@@ -72,56 +71,69 @@ const Translator = () => {
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">Document Upload</span>
             <span className="font-light text-xs">
-              Add your documents here (up to 5 files)
+              Add your documents here, and you can upload up to 5 files max
             </span>
-            <div className="relative w-full px-4 mt-3 flex flex-col items-start">
+            <div className="relative w-full px-4 mt-3 flex flex-col items-start rounded-lg">
               <input
-                multiple
                 onChange={handleFileChange}
+                name="cv"
                 type="file"
+                multiple
                 accept=".pdf, .doc, .docx, .txt"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <div className="outline-dotted z-10 flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
+              <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
                 <Image
+                  className="w-fit h-10 object-cover"
                   src={uploadIcon}
                   alt="Upload Icon"
-                  className="w-10 h-10"
                 />
                 <span>
                   Drag your file(s) or <span className="font-bold">browse</span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB per file is allowed
+                  Max 10MB files are allowed
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .word, and .txt files
+                Only supports .pdf, .doc, .docx, and .txt
               </span>
             </div>
 
-            {/* Uploaded Files */}
-            {files.map((file, index) => (
-              <div
-                key={index}
-                className="flex h-14 w-full mt-6 px-4 border rounded-lg justify-between items-center"
-              >
-                <div className="flex items-start">
-                  <Image src={pdfIcon} alt="File Icon" className="w-10 h-10" />
-                  <div className="flex flex-col ml-2">
-                    <span className="text-sm text-black">{file.name}</span>
-                    <span className="text-sm text-textgray">
-                      {fileSizes[index]} MB
-                    </span>
-                  </div>
-                </div>
-                <CircleXIcon
-                  onClick={() => removeFile(index)}
-                  className="cursor-pointer"
-                  size={18}
-                />
+            {files.length > 0 && (
+              <div className="mt-6 space-y-2">
+                {files.map((file, index) => {
+                  const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                  return (
+                    <div
+                      key={index}
+                      className="flex h-14 w-full px-4 border rounded-lg justify-between items-center space-x-2"
+                    >
+                      <div className="flex items-start">
+                        <Image
+                          className="w-10 h-10 object-cover"
+                          src={pdfIcon}
+                          alt="File Icon"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm text-black">
+                            {file.name}
+                          </span>
+                          <span className="text-sm text-textgray">
+                            {fileSizeInMB} MB
+                          </span>
+                        </div>
+                      </div>
+                      <CircleXIcon
+                        onClick={() => removeFile(index)}
+                        color="black"
+                        size={14}
+                      />
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+            )}
           </div>
 
           {/* Translate Button */}
@@ -164,10 +176,16 @@ const Translator = () => {
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated === undefined ? (
-                <div>Upload CV to translate</div>
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : translated === undefined ? (
+                <div>Your head to head will appear here</div>
               ) : (
-                translated.translated_cv
+                <div className="w-fit  h-[400px] overflow-y-scroll">
+                  {translated.map((tran: any) =>
+                    JSON.stringify(tran.translated_cv)
+                  )}
+                </div>
               )}
             </div>
           </div>
