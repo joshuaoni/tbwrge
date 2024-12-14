@@ -2,15 +2,22 @@ import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import { vetCoverLetter } from "@/actions/cover-letter-tools/vet-cover-letter";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const { userData } = useUserStore();
   const [summary, setSummary] = useState("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +31,38 @@ const Vetting = () => {
       }
     }
   };
+  const {
+    mutate: vetClMutation,
+    data: vets,
+    isPending,
+  } = useMutation({
+    mutationKey: ["vetCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
 
+      const response = await vetCoverLetter(
+        files,
+        language,
+        userData?.token as string,
+        prompts,
+        jobDescription
+      );
+      return response;
+    },
+  });
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
@@ -144,25 +182,56 @@ const Vetting = () => {
             </div>
           </div>
 
-          <div className="flex w-full flex-col">
-            <Button
-              disabled={files.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Vet Cover Letter
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  vetClMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Vet Cover Letter"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Summary</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Add Prompts to vet Cover Letter</div>}
+              <div className="flex items-center justify-center flex-1 h-full">
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : vets === undefined ? (
+                  <div>Your vet will appear here</div>
+                ) : (
+                  <div className="flex flex-col h-full">
+                    {vets.metrics.map((vet: any) => {
+                      return JSON.stringify(vet);
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import { CircleXIcon, X } from "lucide-react";
+import { CircleXIcon, Loader2, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { translateCoverLetter } from "@/actions/cover-letter-tools/translate-cover-letter";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
-  const [translated, setTranslated] = useState("");
-
+  const { userData } = useUserStore();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files).slice(
@@ -30,6 +33,36 @@ const Translator = () => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
     setFileSizes((prev) => prev.filter((_, i) => i !== index));
   };
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const {
+    mutate: translateCoverLetterMutation,
+    data: translated,
+    isPending,
+  } = useMutation({
+    mutationKey: ["translateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+      const response = await translateCoverLetter(
+        files,
+        language,
+        userData?.token
+      );
+      return response;
+    },
+  });
 
   return (
     <DashboardWrapper>
@@ -94,26 +127,55 @@ const Translator = () => {
           </div>
 
           {/* Translate Button */}
-          <Button
-            disabled={files.length === 0}
-            className="self-center bg-lightgreen mt-12 text-white"
-          >
-            Translate Cover Letter
-          </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  translateCoverLetterMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Translate Cover Letter"
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Right Side */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Translator</span>
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated === "" ? (
-                <div>Upload Cover Letter to translate</div>
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : translated === undefined ? (
+                <div>Your head to head will appear here</div>
               ) : (
-                translated
+                <div className="w-fit  h-[400px] overflow-y-scroll">
+                  {translated.map((tran: any) =>
+                    JSON.stringify(tran.translated_cv)
+                  )}
+                </div>
               )}
             </div>
           </div>

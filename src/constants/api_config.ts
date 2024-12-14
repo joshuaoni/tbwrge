@@ -14,4 +14,9 @@ export const API_CONFIG = {
   HEAD_TO_HEAD: `${MAIN_URL}/cv/head-to-head/`,
   GENERATE_CV: `${MAIN_URL}/cv/generate-cv/`,
   RANK_CV: `${MAIN_URL}/cv/rank-cv/`,
+  SUMMARIZE_COVER_LETTER: `${MAIN_URL}/cl/summarize-cl/`,
+  VET_COVER_LETTER: `${MAIN_URL}/cl/vett-cl/`,
+  RANK_COVER_LETTER: `${MAIN_URL}/cl/rank-cl/`,
+  GENERATE_COVER_LETTER: `${MAIN_URL}/cl/generate-cl/`,
+  REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
 };

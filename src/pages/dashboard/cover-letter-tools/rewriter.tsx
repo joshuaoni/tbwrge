@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { rewriteCoverLetter } from "@/actions/cover-letter-tools/rewrite-cover-letter";
+import { useUserStore } from "@/hooks/use-user-store";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const ReWriter = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
   const [summary, setSummary] = useState("");
-
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const { userData } = useUserStore();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles) {
@@ -25,6 +30,36 @@ const ReWriter = () => {
       }
     }
   };
+  const {
+    mutate: rewriteCoverLetterMutation,
+    data: rewrite,
+    isPending,
+  } = useMutation({
+    mutationKey: ["translateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+      const response = await rewriteCoverLetter(
+        files,
+        language,
+        prompts,
+        userData?.token
+      );
+      return response;
+    },
+  });
 
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -121,7 +156,7 @@ const ReWriter = () => {
             <Textarea
               placeholder="Input Job Ad"
               value={value}
-              className="my-3"
+              className="my-3 bg-white"
               onChange={(e) => setValue(e.target.value)}
             />
             <div>
@@ -140,26 +175,49 @@ const ReWriter = () => {
             </div>
           </div>
 
-          <div className="flex w-full flex-col">
-            <Button
-              disabled={files.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Rewrite
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  rewriteCoverLetterMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Generate Report"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Rewriter</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && (
-                <div>Add Prompts to rewriter Cover Letter</div>
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : rewrite === undefined ? (
+                <div>Your head to head will appear here</div>
+              ) : (
+                JSON.stringify(rewrite)
               )}
             </div>
           </div>
