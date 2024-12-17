@@ -28,6 +28,7 @@ const Generator = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [jobDescription, setJobDescription] = useState("");
   const { userData } = useUserStore();
   const [files, setFiles] = useState<any>([]);
   const [prompts, setPrompts] = useState<any>([]);
@@ -58,7 +59,8 @@ const Generator = () => {
         audioBlob,
         userData?.token as string,
         prompts,
-        language
+        language,
+        jobDescription
       );
       return response;
     },
@@ -179,6 +181,15 @@ const Generator = () => {
                 />
               </div>
             ))}
+          </div>
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Post Job Ad</span>
+            <Textarea
+              placeholder="Input Job Description"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="my-3 bg-white border"
+            />
           </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">

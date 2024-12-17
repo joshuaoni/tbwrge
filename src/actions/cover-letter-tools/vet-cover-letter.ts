@@ -1,6 +1,6 @@
 "use client";
 import { API_CONFIG } from "@/constants/api_config";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 
 export const vetCoverLetter = async (
   cv: any[],
@@ -14,10 +14,11 @@ export const vetCoverLetter = async (
   if (cv) {
     for (let i = 0; i < cv.length; i++) {
       const file = cv[i];
-      formData.append("file", file);
+      formData.append("files", file);
     }
   }
   formData.append("language", language);
+  formData.append("job_ad", jobDescription);
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((prompt: any) => {

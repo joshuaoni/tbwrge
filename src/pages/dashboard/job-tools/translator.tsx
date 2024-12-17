@@ -1,17 +1,52 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import { CircleXIcon, Plus, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import { translateJob } from "@/actions/job-tools/translator";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
-  const [translated, setTranslated] = useState("");
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [value, setValue] = useState("");
+  const { userData } = useUserStore();
+  const {
+    mutate: translateJobMutation,
+    data: translated,
+    isPending,
+  } = useMutation({
+    mutationKey: ["translateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+      const response = await translateJob(
+        files,
+        value,
+        language,
+        userData?.token
+      );
+      return response;
+    },
+  });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files).slice(
@@ -100,32 +135,53 @@ const Translator = () => {
             <Textarea
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-white"
               onChange={(e) => setValue(e.target.value)}
             />
           </div>
 
           {/* Translate Button */}
-          <Button
-            disabled={files.length === 0}
-            className="self-center bg-lightgreen mt-12 text-white"
-          >
-            Translate Job
-          </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={value.length === 0}
+                variant="default"
+                onClick={() => {
+                  translateJobMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Generate Job "
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Right Side */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Translator</span>
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated === "" ? (
-                <div>Upload document to translate job</div>
-              ) : (
-                translated
+              {translated?.map((tran: any) =>
+                JSON.stringify(tran.translated_cv)
               )}
             </div>
           </div>

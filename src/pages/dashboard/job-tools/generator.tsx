@@ -3,8 +3,12 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import RecordIcon from "../../../../public/images/icons/microphone.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import { generateJob } from "@/actions/job-tools/generator";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -12,9 +16,11 @@ const Generator = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  console.log(audioBlob);
+  const [files, setFiles] = useState<File[]>([]);
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
+  const { userData } = useUserStore();
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -39,6 +45,37 @@ const Generator = () => {
       alert("Microphone access is required to record audio.");
     }
   };
+  const {
+    mutate: generateJobMutation,
+    data: generatedJob,
+    isPending,
+  } = useMutation({
+    mutationKey: ["generateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+
+      const response = await generateJob(
+        audioBlob,
+        userData?.token,
+        prompts,
+        language
+      );
+      return response;
+    },
+  });
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
@@ -66,7 +103,7 @@ const Generator = () => {
             <Textarea
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-white"
               onChange={(e) => setValue(e.target.value)}
             />
 
@@ -133,14 +170,34 @@ const Generator = () => {
             </div>
           </div>
 
-          <div className="flex w-full  flex-col">
-            <Button
-              disabled={prompts.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Generate Job Post
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={prompts.length === 0}
+                variant="default"
+                onClick={() => {
+                  generateJobMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Generate Job "
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 

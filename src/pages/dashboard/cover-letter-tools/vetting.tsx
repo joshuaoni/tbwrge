@@ -10,6 +10,7 @@ import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/hooks/use-user-store";
 import { vetCoverLetter } from "@/actions/cover-letter-tools/vet-cover-letter";
+import { Textarea } from "@/components/ui/textarea";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -139,6 +140,15 @@ const Vetting = () => {
               </div>
             )}
           </div>
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Post Job Ad</span>
+            <Textarea
+              placeholder="Input Job Description"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="my-3 bg-white border"
+            />
+          </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
@@ -215,7 +225,7 @@ const Vetting = () => {
         <div className="w-[50%]">
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Cover Letter Summary</span>
+              <span className="font-bold">Cover Letter Vet</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
@@ -226,8 +236,8 @@ const Vetting = () => {
                   <div>Your vet will appear here</div>
                 ) : (
                   <div className="flex flex-col h-full">
-                    {vets.metrics.map((vet: any) => {
-                      return JSON.stringify(vet);
+                    {vets.map((vet: any) => {
+                      return JSON.stringify(vet.metrics);
                     })}
                   </div>
                 )}

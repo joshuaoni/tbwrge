@@ -2,17 +2,53 @@ import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { useUserStore } from "@/hooks/use-user-store";
+import { vetJob } from "@/actions/job-tools/vet-job";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
+  const [selectedLanguage, setSelectedValue] = useState<string>("");
+  const { userData } = useUserStore();
   const [summary, setSummary] = useState("");
+  const {
+    mutate: vetJobMutation,
+    data: vets,
+    isPending,
+  } = useMutation({
+    mutationKey: ["vetCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
 
+      const response = await vetJob(
+        files,
+        language,
+        userData?.token as string,
+        prompts
+      );
+      return response;
+    },
+  });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles) {
@@ -143,26 +179,55 @@ const Vetting = () => {
               ))}
             </div>
           </div>
-
-          <div className="flex w-full flex-col">
-            <Button
-              disabled={files.length === 0}
-              variant={"default"}
-              className="self-center bg-lightgreen mt-12 text-white"
-            >
-              Vet Job Post
-            </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0}
+                variant="default"
+                onClick={() => {
+                  vetJobMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Vet Job Post"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job post Vetting</span>
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Add Prompts to vet Job post</div>}
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : vets === undefined ? (
+                <div>Your vet will appear here</div>
+              ) : (
+                <div className="flex flex-col h-full">
+                  {vets.map((vet: any) => {
+                    return JSON.stringify(vet.metrics);
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

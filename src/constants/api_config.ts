@@ -19,4 +19,7 @@ export const API_CONFIG = {
   RANK_COVER_LETTER: `${MAIN_URL}/cl/rank-cl/`,
   GENERATE_COVER_LETTER: `${MAIN_URL}/cl/generate-cl/`,
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
+  GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
+  VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
+  GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
 };

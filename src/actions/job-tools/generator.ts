@@ -2,36 +2,29 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const generateCoverLetter = async (
-  files: any,
-  audio: any,
-  token: string,
-  prompts: string[],
-  language: string,
-  jobDescription: string
+export const generateJob = async (
+  audioBlob: any,
+  token: any,
+  prompts: any,
+  language: string
 ) => {
   const formData = new FormData();
-  if (files) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i].file;
-      formData.append("cv", file);
-    }
+
+  if (audioBlob) {
+    formData.append("file", audioBlob);
   }
-  if (audio) {
-    formData.append("audio", audio);
-  }
-  formData.append("job_ad", jobDescription);
+
   formData.append("language", language);
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
-      formData.append("additional_prompts", tag);
+      formData.append("text", tag);
     });
   }
   try {
     const response = await axios({
       method: "POST",
-      url: API_CONFIG.GENERATE_COVER_LETTER,
+      url: API_CONFIG.GENERATE_JOB,
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,19 +1,55 @@
 import React, { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
-import { CircleXIcon, Plus, Trash, X } from "lucide-react";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { generateCandidateReport } from "@/actions/job-tools/candidate-rep-gen";
+import { useUserStore } from "@/hooks/use-user-store";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 const Generator = () => {
   const [files, setFiles] = useState<any[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
   const [fileSizes, setFileSizes] = useState<string[]>([]);
+  const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [translated, setTranslated] = useState("");
+  const { userData } = useUserStore();
+  const {
+    mutate: generateReportMutation,
+    data: report,
+    isPending,
+  } = useMutation({
+    mutationKey: ["generateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
 
+      const response = await generateCandidateReport(
+        files,
+        prompts,
+        language,
+        userData?.token as string
+      );
+      return response;
+    },
+  });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files).slice(
@@ -137,27 +173,47 @@ const Generator = () => {
           </div>
 
           {/* Translate Button */}
-          <Button
-            disabled={files.length === 0}
-            className="self-center bg-lightgreen mt-12 text-white"
-          >
-            Generate Report
-          </Button>
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                {" "}
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={prompts.length === 0}
+                variant="default"
+                onClick={() => {
+                  generateReportMutation();
+                }}
+                className="self-center bg-lightgreen min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Generate Report "
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Right Side */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Candidate report Generator</span>
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated === "" ? (
-                <div>Upload document to generate report</div>
-              ) : (
-                translated
-              )}
+              {report.length > 0 &&
+                report.map((rep: any) => JSON.stringify(rep))}
             </div>
           </div>
         </div>
