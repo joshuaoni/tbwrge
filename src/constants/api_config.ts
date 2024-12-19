@@ -22,4 +22,6 @@ export const API_CONFIG = {
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
+  GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
 };

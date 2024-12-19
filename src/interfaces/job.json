@@ -1,0 +1,16 @@
+{
+  "total_job_posts": 22,
+  "qualified_candidates": 0,
+  "rejected_candidates": 0,
+  "total_applications": 0,
+  "open_jobs": {
+      "total_count": 22,
+      "qualified_applicants": 0,
+      "total_applications": 0
+  },
+  "closed_jobs": {
+      "total_count": 0,
+      "qualified_applicants": 0,
+      "total_applications": 0
+  }
+}

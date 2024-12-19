@@ -1,68 +1,72 @@
 import { File, ShoppingBag, User } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { totalmem } from "os";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { useUserStore } from "@/hooks/use-user-store";
+import { IJob } from "@/interfaces/job";
 const CurrentOpenings = ({
   setCurrentView,
 }: {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const jobs = [
-    {
-      selection: "",
-      title: "Front End Developer",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
+  const { userData } = useUserStore();
+  const { data: jobs, error } = useQuery({
+    queryKey: ["job-openings"],
+    queryFn: async () => {
+      const response = await getJobOpenings({
+        status: "open",
+        token: userData?.token,
+      });
+      console.log("the current openings is", response);
+      return response;
     },
-    {
-      selection: "",
-      title: "Product Designer",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
-    },
-    {
-      selection: "",
-      title: "IOSDeveloper",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
-    },
-  ];
-
+  });
   const [stats, setStats] = React.useState([
     {
       title: "Total Job Posts",
-      value: 12,
+      value: 0,
       icon: <ShoppingBag />,
     },
     {
       title: "Qualified Applicants",
-      value: 12,
+      value: 0,
       icon: <User />,
     },
     {
       title: "Total Applicants",
-      value: 300,
+      value: 0,
       icon: <File />,
     },
   ]);
+  useEffect(() => {
+    setStats((stat) => [
+      {
+        title: "Total Job Posts",
+        value: jobs?.length,
+        icon: <ShoppingBag />,
+      },
+      {
+        title: "Qualified Applicants",
+        value: 12,
+        icon: <User />,
+      },
+      {
+        title: "Total Applicants",
+        value: jobs?.reduce((acc: number, job: IJob) => {
+          return acc + job.total_applicants;
+        }, 0),
+        icon: <File />,
+      },
+    ]);
+  }, [jobs]);
   return (
     <section>
       <div className="flex items-center space-x-8">
@@ -94,7 +98,7 @@ const CurrentOpenings = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {jobs.map((job) => (
+          {jobs?.map((job: IJob) => (
             <TableRow
               className="cursor-pointer"
               onClick={() => {
@@ -103,16 +107,18 @@ const CurrentOpenings = ({
               key={job.id}
             >
               <TableCell>
-                <input type="checkbox" />
+                <input type="checkbox" onClick={(e) => e.stopPropagation()} />
               </TableCell>
               <TableCell width={200} className="font-medium">
-                {job.title}
+                {job.job_title}
               </TableCell>
               <TableCell>{job.id}</TableCell>
-              <TableCell>{job.totalApplicant}</TableCell>
-              <TableCell>{job.recruiter}</TableCell>
-              <TableCell>{job.company}</TableCell>
-              <TableCell className="text-end">{job.endDate}</TableCell>
+              <TableCell>{job.total_applicants}</TableCell>
+              <TableCell>
+                {job.user.role == "recruiter" && job.user.name}
+              </TableCell>
+              <TableCell>{job.company_name}</TableCell>
+              <TableCell className="text-end">{job.end_date as any}</TableCell>
             </TableRow>
           ))}
         </TableBody>

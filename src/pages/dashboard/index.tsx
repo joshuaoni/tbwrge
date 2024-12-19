@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +11,27 @@ import { File, Loader2, PlusCircle, ShoppingBag, User } from "lucide-react";
 import AllActivityDropDown from "@/components/all-activity-dropdown";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useUserStore } from "@/hooks/use-user-store";
+import { useQuery } from "@tanstack/react-query";
+import { getDashboardStats } from "@/actions/get-dashboard-stats";
 
 const index = () => {
   const { userData } = useUserStore();
-  const [analytics, setAnalytics] = useState([
+  const { data, error } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const response = await getDashboardStats({
+        token: userData?.token,
+      });
+      return response;
+    },
+  });
+  const [analytics, setAnalytics] = useState<
+    {
+      title: string;
+      value: number;
+      icon: any;
+    }[]
+  >([
     {
       title: "Total Jobs Posts",
       value: 12,
@@ -36,6 +53,31 @@ const index = () => {
       value: 2107,
     },
   ]);
+  useEffect(() => {
+    setAnalytics([
+      {
+        title: "Total Jobs Posts",
+        value: data?.total_job_posts,
+        icon: <ShoppingBag className="w-6 h-6 text-primary" />,
+      },
+      {
+        title: "Qualified Applicants",
+        value: data?.qualified_candidates,
+        icon: <User className="w-6 h-6 text-primary" />,
+      },
+      {
+        title: "Rejected Candidates",
+        value: data?.rejected_candidates,
+        icon: <User className="w-6 h-6 text-primary" />,
+      },
+      {
+        title: "Total Applications",
+        icon: <File className="w-6 h-6 text-primary" />,
+        value: data?.total_applications,
+      },
+    ]);
+  }, [data]);
+
   return (
     <DashboardWrapper>
       <div className=" h-screen flex flex-col ">
