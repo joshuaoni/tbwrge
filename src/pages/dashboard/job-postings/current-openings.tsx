@@ -12,12 +12,26 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getJobOpenings } from "@/actions/get-current-jobs";
 import { useUserStore } from "@/hooks/use-user-store";
 import { IJob } from "@/interfaces/job";
+import { BulkActionsJobsPopUp } from "@/components/ui/bulk-actions-jobs";
+import { getDashboardStats } from "@/actions/get-dashboard-stats";
 const CurrentOpenings = ({
   setCurrentView,
+  setSelectedJob,
 }: {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedJob: React.Dispatch<React.SetStateAction<any>>;
 }) => {
   const { userData } = useUserStore();
+  const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
+  const { data } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const response = await getDashboardStats({
+        token: userData?.token,
+      });
+      return response;
+    },
+  });
   const { data: jobs, error } = useQuery({
     queryKey: ["job-openings"],
     queryFn: async () => {
@@ -25,7 +39,6 @@ const CurrentOpenings = ({
         status: "open",
         token: userData?.token,
       });
-      console.log("the current openings is", response);
       return response;
     },
   });
@@ -47,26 +60,24 @@ const CurrentOpenings = ({
     },
   ]);
   useEffect(() => {
-    setStats((stat) => [
+    setStats(() => [
       {
         title: "Total Job Posts",
-        value: jobs?.length,
+        value: data?.total_job_posts,
         icon: <ShoppingBag />,
       },
       {
         title: "Qualified Applicants",
-        value: 12,
+        value: data?.qualified_candidates,
         icon: <User />,
       },
       {
         title: "Total Applicants",
-        value: jobs?.reduce((acc: number, job: IJob) => {
-          return acc + job.total_applicants;
-        }, 0),
+        value: data?.total_applications,
         icon: <File />,
       },
     ]);
-  }, [jobs]);
+  }, [data]);
   return (
     <section>
       <div className="flex items-center space-x-8">
@@ -80,8 +91,8 @@ const CurrentOpenings = ({
           </div>
         ))}
       </div>
-
-      <Table className="mt-12">
+      <BulkActionsJobsPopUp jobIds={selectedJobs.map((job) => job.id)} />
+      <Table className="mt-2">
         <TableHeader>
           <TableRow className="bg-[#D6D6D6] rounded-lg ">
             <TableHead className="w-[100px] text-[#898989]" />
@@ -102,12 +113,18 @@ const CurrentOpenings = ({
             <TableRow
               className="cursor-pointer"
               onClick={() => {
-                setCurrentView("details");
+                setCurrentView("details"), setSelectedJob(job);
               }}
               key={job.id}
             >
               <TableCell>
-                <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(),
+                      setSelectedJobs([...selectedJobs, job]);
+                  }}
+                />
               </TableCell>
               <TableCell width={200} className="font-medium">
                 {job.job_title}

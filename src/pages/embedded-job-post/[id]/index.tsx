@@ -1,6 +1,10 @@
+import { getJobDetail } from "@/actions/get-job-detail";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import { IJob } from "@/interfaces/job";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -8,33 +12,21 @@ import React, { useEffect, useState } from "react";
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
-  let createdJob = {
-    company_name: "Company Name",
-    company_description: "Company Description",
-    company_website: "Company Website",
-    job_title: "Job Title",
-    job_type: "Job Type",
-    job_description: "Job Description",
-    educational_requirements: "Educational Requirements",
-    required_skills: "Required Skills",
-    job_location_name: "Job Location",
-    salary_range_min: "Salary Range Min",
-    salary_range_max: "Salary Range Max",
-    additional_benefits: "Additional Benefits",
-    end_date: "2022-12-12",
-    reference: id,
-    questions: [
-      {
-        text: "Question 1",
-      },
-      {
-        text: "Question 2",
-      },
-      {
-        text: "Question 3",
-      },
-    ],
-  };
+  const [jobDetails, setJobDetails] = useState<IJob>();
+
+  const { userData } = useUserStore();
+  const { data } = useQuery({
+    queryKey: ["job", id],
+    queryFn: async () => {
+      const response = await getJobDetail({
+        job_id: id as string,
+        token: userData?.token,
+      });
+      setJobDetails(response);
+      return response;
+    },
+  });
+  console.log("the job details is", jobDetails);
   const [detail, setDetail] = useState<any>({
     fullname: "",
     email: "",
@@ -50,30 +42,35 @@ const index = () => {
     voicenote: null,
   });
   useEffect(() => {
-    createdJob.questions.map((question) => {
+    jobDetails?.questions.map((question) => {
       setDetail({ ...detail, [question.text]: "" });
     });
   }, []);
-  const [information, setInformation] = React.useState([
+  const [information, setInformation] = React.useState<
+    {
+      title: string;
+      value: any;
+    }[]
+  >([
     {
       title: "Job title",
-      value: createdJob.job_title,
+      value: "",
     },
     {
       title: "Job type",
-      value: createdJob.job_type,
+      value: "",
     },
     {
       title: "Job Description",
-      value: createdJob.job_description,
+      value: "",
     },
     {
       title: "Educational Requirements",
-      value: createdJob.educational_requirements,
+      value: "",
     },
     {
       title: "Required Skills",
-      value: createdJob.required_skills,
+      value: "",
     },
     {
       title: "Experience",
@@ -81,29 +78,80 @@ const index = () => {
     },
     {
       title: "Location  ",
-      value: createdJob.job_location_name,
+      value: "",
     },
     {
       title: "Salary Range",
-      value:
-        createdJob.salary_range_min +
-        "-" +
-        createdJob.salary_range_max +
-        " per year",
+      value: "" + "-" + "" + " per year",
     },
     {
       title: "Benefits",
-      value: createdJob.additional_benefits,
+      value: "",
     },
     {
       title: "Job ID",
-      value: createdJob.reference,
+      value: "",
     },
     {
       title: "Job Expiry",
-      value: format(new Date(createdJob.end_date), "dd/MM/yyyy"),
+      value: "",
     },
   ]);
+  useEffect(() => {
+    setInformation([
+      {
+        title: "Job title",
+        value: jobDetails?.job_title,
+      },
+      {
+        title: "Job type",
+        value: jobDetails?.job_type,
+      },
+      {
+        title: "Job Description",
+        value: jobDetails?.job_description,
+      },
+      {
+        title: "Educational Requirements",
+        value: jobDetails?.required_skills,
+      },
+      {
+        title: "Required Skills",
+        value: jobDetails?.required_skills,
+      },
+      {
+        title: "Experience",
+        value: jobDetails?.years_of_experience_required,
+      },
+      {
+        title: "Location  ",
+        value: jobDetails?.job_location_name,
+      },
+      {
+        title: "Salary Range",
+        value:
+          jobDetails?.salary_range_min +
+          "-" +
+          jobDetails?.salary_range_max +
+          " per year",
+      },
+      {
+        title: "Benefits",
+        value: jobDetails?.additional_benefits,
+      },
+      {
+        title: "Job ID",
+        value: jobDetails?.reference,
+      },
+      {
+        title: "Job Expiry",
+        value:
+          jobDetails?.end_date != undefined &&
+          format(new Date(jobDetails?.end_date as any), "dd/MM/yyyy"),
+      },
+    ]);
+  }, [jobDetails]);
+
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -136,7 +184,7 @@ const index = () => {
         setDetail({ ...detail, voicenote: e?.target?.files?.[0] as any });
       }
     } else if (
-      createdJob.questions.some((question) => question.text === name)
+      jobDetails?.questions.some((question) => question.text === name)
     ) {
       setDetail({ ...detail, [name]: value });
     }
@@ -145,15 +193,15 @@ const index = () => {
     <main className="flex flex-col md:flex-row overflow-y-auto md:space-x-12 h-screen p-4 md:p-24">
       <section className="h-full md:w-[60%] md:overflow-y-auto">
         <div className="flex items-center justify-between">
-          <span>{createdJob.company_name}</span>
+          <span>{jobDetails?.company_name}</span>
           <div className="w-20 h-20 rounded-full bg-gray-300"></div>
         </div>
         <div className="flex items-start my-4 justify-between">
           <span className="text-left  max-w-[50%]">
-            {createdJob.company_description}
+            {jobDetails?.company_description}
           </span>
 
-          <span>{createdJob.company_website}</span>
+          <span>{jobDetails?.company_website}</span>
         </div>
 
         <div className="flex items-center justify-between my-8 ">
@@ -327,7 +375,7 @@ const index = () => {
               )}
             </div>
           </div>
-          {createdJob.questions.map((question) => (
+          {jobDetails?.questions.map((question) => (
             <div className="flex flex-col space-y-3">
               <label>{question.text} </label>
               <div>

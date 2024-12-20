@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CircleEllipsis } from "lucide-react";
 import {
@@ -15,53 +15,81 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import { BulkActionsCandidatesPopUp } from "@/components/bulk-actions-candidates";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getJobApplications } from "@/actions/fetch-applications";
+import { useUserStore } from "@/hooks/use-user-store";
+import { ICandidate } from "@/interfaces/candidate";
 const JobDetails = ({
   setCurrentView,
+  selectedJob,
 }: {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
+  selectedJob: any;
 }) => {
-  const CANDIDATES = [
-    {
-      selection: "",
-      name: "Amiolemen David",
-      id: "4930",
-      fitScore: "10",
-      YOE: "2",
-      keySkills: "89%",
-      date: "31/12/2024",
-      attachments: "Resume.pdf",
+  // const CANDIDATES = [
+  //   {
+  //     selection: "",
+  //     name: "Amiolemen David",
+  //     id: "4930",
+  //     fitScore: "10",
+  //     YOE: "2",
+  //     keySkills: "89%",
+  //     date: "31/12/2024",
+  //     attachments: "Resume.pdf",
+  //   },
+  //   {
+  //     selection: "",
+  //     name: "Sinatra Frank",
+  //     id: "4930",
+  //     fitScore: "10",
+  //     YOE: "2",
+  //     keySkills: "89%",
+  //     date: "31/12/2024",
+  //     attachments: "Resume.pdf",
+  //   },
+  //   {
+  //     selection: "",
+  //     name: "Paul Walker",
+  //     id: "4930",
+  //     fitScore: "10",
+  //     YOE: "2",
+  //     keySkills: "89%",
+  //     date: "31/12/2024",
+  //     attachments: "Resume.pdf",
+  //   },
+  //   {
+  //     selection: "",
+  //     name: "Michael Davies",
+  //     id: "4930",
+  //     fitScore: "10",
+  //     YOE: "2",
+  //     keySkills: "89%",
+  //     date: "31/12/2024",
+  //     attachments: "Resume.pdf",
+  //   },
+  // ];
+  const { userData } = useUserStore();
+  const [applicants, setApplicants] = React.useState<ICandidate[]>([]);
+  const [selectedApplications, setSelectedApplications] = React.useState<
+    ICandidate[]
+  >([]);
+  const { mutate } = useMutation({
+    mutationKey: ["job-details"],
+    mutationFn: async (status: string) => {
+      const response = await getJobApplications({
+        job_id: selectedJob.id,
+        token: userData?.token,
+        status,
+      });
+      setApplicants(response);
+      return response;
     },
-    {
-      selection: "",
-      name: "Sinatra Frank",
-      id: "4930",
-      fitScore: "10",
-      YOE: "2",
-      keySkills: "89%",
-      date: "31/12/2024",
-      attachments: "Resume.pdf",
-    },
-    {
-      selection: "",
-      name: "Paul Walker",
-      id: "4930",
-      fitScore: "10",
-      YOE: "2",
-      keySkills: "89%",
-      date: "31/12/2024",
-      attachments: "Resume.pdf",
-    },
-    {
-      selection: "",
-      name: "Michael Davies",
-      id: "4930",
-      fitScore: "10",
-      YOE: "2",
-      keySkills: "89%",
-      date: "31/12/2024",
-      attachments: "Resume.pdf",
-    },
-  ];
+  });
+  useEffect(() => {
+    mutate("all");
+  }, []);
+
   return (
     <section>
       <div className="flex items-center justify-between">
@@ -99,19 +127,36 @@ const JobDetails = ({
 
       <div className="flex w-full mt-4 items-center space-x-16">
         <span className="text-2xl font-semibold ">All Candidates</span>
-        <span className="text-base cursor-pointer text-green-800 font-medium ">
+        <span
+          onClick={() => {
+            mutate("shortlisted");
+          }}
+          className="text-base cursor-pointer text-green-800 font-medium "
+        >
           Shortlisted Candidates
         </span>
-        <span className="text-base cursor-pointer text-red font-medium ">
+        <span
+          onClick={() => {
+            mutate("rejected");
+          }}
+          className="text-base cursor-pointer text-red font-medium "
+        >
           Rejected Candidates
         </span>
-        <span className="text-base cursor-pointer text-[#3F89AC] font-medium ">
+        <span
+          onClick={() => {
+            mutate("screened");
+          }}
+          className="text-base cursor-pointer text-[#3F89AC] font-medium "
+        >
           Screened Candidates
         </span>
         <span className="flex-1" />
         <RankPopUp />
       </div>
-      <BulkActionsPopUp />
+      <BulkActionsCandidatesPopUp
+        applicationIds={selectedApplications.map((app) => app.id)}
+      />
       <Table className="mt-6 bg-[#F0F0F0] p-5 rounded-md">
         <TableHeader>
           <TableRow className="bg-[#D6D6D6] rounded-lg ">
@@ -119,7 +164,7 @@ const JobDetails = ({
             <TableHead className="w-[100px] text-[#898989]">
               CANDIDATE NAME
             </TableHead>
-            <TableHead className="text-[#898989]"> ID</TableHead>
+            <TableHead className="text-[#898989]">ID</TableHead>
             <TableHead className="text-[#898989]">Fit Score</TableHead>
             <TableHead className="text-[#898989]">YOE</TableHead>
             <TableHead className="text-[#898989]">Key Skills</TableHead>
@@ -130,7 +175,7 @@ const JobDetails = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {CANDIDATES.map((candidate) => (
+          {applicants?.map((candidate) => (
             <TableRow
               className="cursor-pointer"
               onClick={() => {
@@ -139,19 +184,26 @@ const JobDetails = ({
               key={candidate.id}
             >
               <TableCell>
-                <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedApplications([
+                      ...selectedApplications,
+                      candidate,
+                    ]);
+                  }}
+                />
               </TableCell>
               <TableCell width={200} className="font-medium">
-                {candidate.name}
+                {candidate.applicant.name}
               </TableCell>
               <TableCell>{candidate.id}</TableCell>
-              <TableCell>{candidate.fitScore}</TableCell>
-              <TableCell>{candidate.YOE}</TableCell>
-              <TableCell>{candidate.keySkills}</TableCell>
-              <TableCell>{candidate.date}</TableCell>
-              <TableCell className="text-end">
-                {candidate.attachments}
-              </TableCell>
+              <TableCell>{candidate.fit_score}</TableCell>
+              <TableCell>{candidate.years_of_experience}</TableCell>
+              <TableCell>{candidate.key_skills}</TableCell>
+              <TableCell>{candidate.created_at as any}</TableCell>
+              <TableCell className="text-end">{candidate.cv}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -315,73 +367,5 @@ const RankPopUp = () => {
     </Popover>
   );
 };
-const BulkActionsPopUp = () => {
-  const [selectedOption, setSelectedOption] = React.useState(
-    "send_screening_email"
-  );
-  return (
-    <Popover>
-      <PopoverTrigger className="w-fit mt-2">
-        <Button className="bg-[#F0F0F0] flex items-center ml-auto space-x-4 text-gray-300 rounded-full">
-          <span>Bulk Actions</span>
-          <CaretDownIcon />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
-        <div className="flex flex-col  w-fit  bg-white rounded-lg">
-          <span
-            onClick={() => setSelectedOption("fit_Score")}
-            className={` ${
-              selectedOption === "send_screening_email"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm rounded-t-lg`}
-          >
-            Send Screening Email
-          </span>
-          <span
-            onClick={() => setSelectedOption("send_interview_email")}
-            className={`${
-              selectedOption === "send_interview_email"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Send Interview Email
-          </span>
-          <span
-            onClick={() => setSelectedOption("reject_candidate")}
-            className={`${
-              selectedOption === "reject_candidate"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Reject Candidate
-          </span>
-          <span
-            onClick={() => setSelectedOption("send_rejection_mail")}
-            className={`${
-              selectedOption === "send_rejection_mail"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Send Reject Candidate
-          </span>
-          <span
-            onClick={() => setSelectedOption("shortlist_candidates")}
-            className={`${
-              selectedOption === "shortlist_candidates"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Shortlist Candidates
-          </span>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
+
 export default JobDetails;

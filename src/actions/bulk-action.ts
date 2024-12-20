@@ -2,24 +2,26 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const getJobOpenings = async ({
+export const bulkAction = async ({
+  jobIds,
   status,
   token,
 }: {
+  jobIds: string[];
   status: string;
   token: any;
 }) => {
   try {
     const options = {
-      method: "GET",
-      url: API_CONFIG.GET_JOB_OPENINGS, // Replace with your API endpoint
+      method: "PUT",
+      url: API_CONFIG.BULK_ACTION, // Replace with your API endpoint
       headers: {
         "Content-Type": "application/json",
-
         Authorization: `Bearer ${token}`,
       },
       data: JSON.stringify({
-        status,
+        job_ids: jobIds,
+        status: String(status),
       }),
     };
     const response = await axios(options);

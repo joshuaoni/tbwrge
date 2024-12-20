@@ -20,7 +20,7 @@ const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
   const [currentView, setCurrentView] = useState("openings");
-
+  const [selectedJob, setSelectedJob] = useState(null);
   return (
     <DashboardWrapper>
       <div className="flex w-full  justify-between items-center  mb-4">
@@ -67,11 +67,17 @@ const JobPostings = () => {
 
       <div className="flex overflow-x-auto gap-6 flex-col h-screen overflow-y-scroll w-full ">
         {currentView === "openings" && (
-          <CurrentOpenings setCurrentView={setCurrentView} />
+          <CurrentOpenings
+            setCurrentView={setCurrentView}
+            setSelectedJob={setSelectedJob}
+          />
         )}
         {currentView === "closed" && <ClosedOpenings />}
         {currentView === "details" && (
-          <JobDetails setCurrentView={setCurrentView} />
+          <JobDetails
+            selectedJob={selectedJob}
+            setCurrentView={setCurrentView}
+          />
         )}
         {currentView === "candidatedetail" && (
           <CandidateDetail setCurrentView={setCurrentView} />

@@ -1,5 +1,5 @@
-import { ShoppingBag } from "lucide-react";
-import React from "react";
+import { File, ShoppingBag, User } from "lucide-react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,62 +10,86 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { useUserStore } from "@/hooks/use-user-store";
+import { IJob } from "@/interfaces/job";
+import { BulkActionsJobsPopUp } from "@/components/ui/bulk-actions-jobs";
+import { getDashboardStats } from "@/actions/get-dashboard-stats";
 
 const ClosedOpenings = () => {
-  const jobs = [
+  const { userData } = useUserStore();
+  const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
+  const { data: jobs, error } = useQuery({
+    queryKey: ["job-closed"],
+    queryFn: async () => {
+      const response = await getJobOpenings({
+        status: "close",
+        token: userData?.token,
+      });
+      console.log("the closed openings is", response);
+      return response;
+    },
+  });
+  const { data } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const response = await getDashboardStats({
+        token: userData?.token,
+      });
+      return response;
+    },
+  });
+  const [stats, setStats] = React.useState([
     {
-      selection: "",
-      title: "Front End Developer",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
+      title: "Total Job Posts",
+      value: 0,
+      icon: <ShoppingBag />,
     },
     {
-      selection: "",
-      title: "Product Designer",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
+      title: "Qualified Applicants",
+      value: 0,
+      icon: <User />,
     },
     {
-      selection: "",
-      title: "IOSDeveloper",
-      id: "4930",
-      totalApplicant: "10",
-      recruiter: "Angel",
-      company: "Candivet.com",
-      endDate: "31/30/2021",
+      title: "Total Applicants",
+      value: 0,
+      icon: <File />,
     },
-  ];
+  ]);
+  useEffect(() => {
+    setStats(() => [
+      {
+        title: "Total Job Posts",
+        value: data?.total_job_posts,
+        icon: <ShoppingBag />,
+      },
+      {
+        title: "Qualified Applicants",
+        value: data?.qualified_candidates,
+        icon: <User />,
+      },
+      {
+        title: "Total Applicants",
+        value: data?.total_applications,
+        icon: <File />,
+      },
+    ]);
+  }, [data]);
   return (
-    <section className="opacity-40">
+    <section className="">
       <div className="flex items-center space-x-8">
-        <div className="shadow-md rounded-2xl  justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
-          <div className="flex items-center space-x-2">
-            <ShoppingBag />
-            <span className="text-sm font-light ">Total Job Posts</span>
+        {stats.map((stat, index) => (
+          <div className="shadow-md rounded-2xl  justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
+            <div className="flex items-center space-x-2">
+              {stat.icon}
+              <span className="text-sm font-light ">{stat.title}</span>
+            </div>
+            <h1 className="text-2xl font-bold mt-4">{stat.value}</h1>
           </div>
-          <h1 className="text-2xl font-bold mt-4">{12}</h1>
-        </div>
-        <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
-          <div className="flex items-center space-x-2">
-            <ShoppingBag />
-            <span className="text-sm font-light ">Qualified Applicants</span>
-          </div>
-          <h1 className="text-2xl font-bold mt-4">{12}</h1>
-        </div>
-        <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
-          <div className="flex items-center space-x-2">
-            <ShoppingBag />
-            <span className="text-sm font-light ">Total Applicants</span>
-          </div>
-          <h1 className="text-2xl font-bold mt-4">{12}</h1>
-        </div>
+        ))}
       </div>
+      <BulkActionsJobsPopUp jobIds={selectedJobs.map((job) => job.id)} />
       <Table className="mt-12">
         <TableHeader>
           <TableRow className="bg-[#D6D6D6] rounded-lg">
@@ -83,19 +107,27 @@ const ClosedOpenings = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {jobs.map((job) => (
+          {jobs?.map((job: IJob) => (
             <TableRow key={job.id}>
               <TableCell>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation(),
+                      setSelectedJobs([...selectedJobs, job]);
+                  }}
+                />
               </TableCell>
               <TableCell width={200} className="font-medium">
-                {job.title}
+                {job.job_title}
               </TableCell>
               <TableCell>{job.id}</TableCell>
-              <TableCell>{job.totalApplicant}</TableCell>
-              <TableCell>{job.recruiter}</TableCell>
-              <TableCell>{job.company}</TableCell>
-              <TableCell className="text-end">{job.endDate}</TableCell>
+              <TableCell>{job.total_applicants}</TableCell>
+              <TableCell>
+                {job.user.role === "recruiter" && job.user.name}
+              </TableCell>
+              <TableCell>{job.company_name}</TableCell>
+              <TableCell className="text-end">{job.end_date as any}</TableCell>
             </TableRow>
           ))}
         </TableBody>

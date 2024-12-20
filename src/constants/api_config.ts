@@ -24,4 +24,7 @@ export const API_CONFIG = {
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
+  BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
+  JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
+  JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
 };

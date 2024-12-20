@@ -1,16 +1,43 @@
-{
-  "total_job_posts": 22,
-  "qualified_candidates": 0,
-  "rejected_candidates": 0,
-  "total_applications": 0,
-  "open_jobs": {
-      "total_count": 22,
-      "qualified_applicants": 0,
-      "total_applications": 0
-  },
-  "closed_jobs": {
-      "total_count": 0,
-      "qualified_applicants": 0,
-      "total_applications": 0
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "reference": "string",
+    "created_at": "2024-12-20T00:12:00.655Z",
+    "updated_at": "2024-12-20T00:12:00.655Z",
+    "fit_score": 0,
+    "years_of_experience": 0,
+    "key_skills": 0,
+    "experience": "string",
+    "skills": "string",
+    "cv": "string",
+    "cover_letter": "string",
+    "voicenote": "string",
+    "applicant": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "reference": "string",
+      "created_at": "2024-12-20T00:12:00.655Z",
+      "updated_at": "2024-12-20T00:12:00.655Z",
+      "name": "string",
+      "email": "string",
+      "phone": "string",
+      "nationality": "string",
+      "country_of_residence": "string"
+    },
+    "application_answers": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "reference": "string",
+        "created_at": "2024-12-20T00:12:00.655Z",
+        "updated_at": "2024-12-20T00:12:00.655Z",
+        "question": {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "reference": "string",
+          "created_at": "2024-12-20T00:12:00.655Z",
+          "updated_at": "2024-12-20T00:12:00.655Z",
+          "text": "string"
+        },
+        "text": "string"
+      }
+    ]
   }
-}
+]

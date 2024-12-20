@@ -2,25 +2,22 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const getJobOpenings = async ({
-  status,
+export const getJobDetail = async ({
+  job_id,
   token,
 }: {
-  status: string;
+  job_id: string;
   token: any;
 }) => {
   try {
     const options = {
       method: "GET",
-      url: API_CONFIG.GET_JOB_OPENINGS, // Replace with your API endpoint
+      url: API_CONFIG.JOB_DETAIL + job_id + "/",
       headers: {
         "Content-Type": "application/json",
 
         Authorization: `Bearer ${token}`,
       },
-      data: JSON.stringify({
-        status,
-      }),
     };
     const response = await axios(options);
     return response.data; // Return only the response data for convenience
