@@ -17,7 +17,7 @@ export const BulkActionsJobsPopUp = ({ jobIds }: { jobIds: string[] }) => {
     mutationKey: ["bulk-action"],
     mutationFn: async () => {
       const response = await bulkAction({
-        status: selectedOption,
+        status: selectedOption === "close" ? "closed" : "open",
         jobIds,
         token: userData?.token,
       });

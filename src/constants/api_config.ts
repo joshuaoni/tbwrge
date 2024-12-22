@@ -27,4 +27,5 @@ export const API_CONFIG = {
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
+  SUBMIT_JOB_APPLICATION: `${MAIN_URL}/job/submit-application/`,
 };

@@ -1,4 +1,5 @@
 import { getJobDetail } from "@/actions/get-job-detail";
+import { submitJobApplication } from "@/actions/submit-job-application";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,7 +27,6 @@ const index = () => {
       return response;
     },
   });
-  console.log("the job details is", jobDetails);
   const [detail, setDetail] = useState<any>({
     fullname: "",
     email: "",
@@ -37,7 +37,7 @@ const index = () => {
     skills: "",
     startDate: "",
     endDate: "",
-    cv: "",
+    cv: null,
     coverletter: null,
     voicenote: null,
   });
@@ -151,6 +151,25 @@ const index = () => {
       },
     ]);
   }, [jobDetails]);
+  const handleSubmitJobApplication = async () => {
+    const response = await submitJobApplication({
+      job_id: id,
+      email: detail.email,
+      name: detail.fullname,
+      phone: detail.phonenumber,
+      nationality: detail.nationality,
+      country_of_residence: detail.residence,
+      experience: detail.experience,
+      skills: detail.skills,
+      cv: detail.cv,
+      cover_letter: detail.coverletter,
+      voicenote: detail.voicenote,
+      answers: jobDetails?.questions.map(
+        (question: any) => detail[question.text]
+      ),
+      token: userData?.token,
+    });
+  };
 
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -319,7 +338,7 @@ const index = () => {
                 onChange={handleInput}
                 name="cv"
                 type="file"
-                accept="image/*"
+                accept="file/*"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               {detail.cv !== null ? (
@@ -340,7 +359,7 @@ const index = () => {
                 onChange={handleInput}
                 name="coverletter"
                 type="file"
-                accept="image/*"
+                accept="file/*"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               {detail.coverletter !== null ? (
@@ -390,7 +409,12 @@ const index = () => {
               </div>
             </div>
           ))}
-          <Button className="bg-primary w-40 self-center text-white">
+          <Button
+            onClick={() => {
+              handleSubmitJobApplication();
+            }}
+            className="bg-primary w-40 self-center text-white"
+          >
             Submit Application
           </Button>
         </section>
