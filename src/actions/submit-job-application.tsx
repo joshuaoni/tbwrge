@@ -28,29 +28,19 @@ export const submitJobApplication = async ({
   formData.append("cv", cv);
   formData.append("cover_letter", cover_letter);
   formData.append("voicenote", voicenote);
-  formData.append("answers", answers);
+  for (let i = 0; i < answers.length; i++) {
+    formData.append("answers[]", answers[i]);
+  }
 
   try {
     const options = {
       method: "POST",
-      url: API_CONFIG.SUBMIT_JOB_APPLICATION + job_id, // Replace with your API endpoint
+      url: API_CONFIG.SUBMIT_JOB_APPLICATION + job_id + "/", // Replace with your API endpoint
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-      data: JSON.stringify({
-        name,
-        email,
-        phone,
-        nationality,
-        country_of_residence,
-        experience,
-        skills,
-        cv,
-        cover_letter,
-        voicenote,
-        answers,
-      }),
+      data: formData,
     };
     const response = await axios(options);
     return response.data; // Return only the response data for convenience

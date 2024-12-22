@@ -7,14 +7,20 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { IJob } from "@/interfaces/job";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { StopCircleIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import RecordIcon from "../../../../public/images/icons/microphone.png";
 
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
   const [jobDetails, setJobDetails] = useState<IJob>();
-
+  const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+  const [isRecording, setIsRecording] = React.useState(false);
+  const [audioBlob, setAudioBlob] = React.useState<Blob | null>(null);
+  const [audioUrl, setAudioUrl] = React.useState<string | null>(null);
   const { userData } = useUserStore();
   const { data } = useQuery({
     queryKey: ["job", id],
@@ -151,6 +157,36 @@ const index = () => {
       },
     ]);
   }, [jobDetails]);
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      const chunks: BlobPart[] = [];
+
+      mediaRecorder.ondataavailable = (event: BlobEvent) => {
+        chunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        setAudioBlob(blob);
+        setAudioUrl(URL.createObjectURL(blob));
+      };
+
+      mediaRecorder.start();
+      mediaRecorderRef.current = mediaRecorder;
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      alert("Microphone access is required to record audio.");
+    }
+  };
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
   const handleSubmitJobApplication = async () => {
     const response = await submitJobApplication({
       job_id: id,
@@ -163,7 +199,7 @@ const index = () => {
       skills: detail.skills,
       cv: detail.cv,
       cover_letter: detail.coverletter,
-      voicenote: detail.voicenote,
+      voicenote: audioUrl,
       answers: jobDetails?.questions.map(
         (question: any) => detail[question.text]
       ),
@@ -332,6 +368,18 @@ const index = () => {
             </div>
           </div>
           <div className="flex flex-col space-y-3">
+            <label>Relevant Experience </label>
+            <div>
+              <Textarea
+                value={detail.experience}
+                onChange={handleInput}
+                name="experience"
+                placeholder="Highlight your skills and experience"
+                className="bg-[#EDF2F7]"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col space-y-3">
             <label>Upload CV </label>
             <div className="bg-[#EDF2F7] relative flex cursor-pointer items-center pl-4  h-12 rounded-md border-none outline-none mt-2">
               <input
@@ -375,22 +423,31 @@ const index = () => {
           </div>
           <div className="flex flex-col space-y-3">
             <label>Upload Voice Note(optional) </label>
-            <div className="bg-[#EDF2F7] relative flex cursor-pointer items-center pl-4  h-12 rounded-md border-none outline-none mt-2">
-              <input
-                onChange={handleInput}
-                name="voicenote"
-                type="file"
-                accept="image/*"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              {detail.voicenote !== null ? (
-                <p>{detail.voicenote?.name}</p>
+            <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
+              <span className="text-xs font-light">Record</span>
+              {isRecording ? (
+                <StopCircleIcon
+                  color="red"
+                  onClick={() => {
+                    isRecording
+                      ? handleStopRecording()
+                      : handleStartRecording();
+                  }}
+                  className="animate-pulse cursor-pointer "
+                />
               ) : (
-                <div className="flex items-center space-x-2">
-                  <span className="h-fit w-fit border-2 border-black p-[2px] text-xs">
-                    Choose File
-                  </span>
-                </div>
+                <Image
+                  onClick={() => {
+                    isRecording
+                      ? handleStopRecording()
+                      : handleStartRecording();
+                  }}
+                  className="cursor-pointer"
+                  src={RecordIcon}
+                  alt=""
+                  width={20}
+                  height={20}
+                />
               )}
             </div>
           </div>
