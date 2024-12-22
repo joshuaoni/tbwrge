@@ -199,7 +199,7 @@ const index = () => {
       skills: detail.skills,
       cv: detail.cv,
       cover_letter: detail.coverletter,
-      voicenote: audioUrl,
+      voicenote: audioBlob,
       answers: jobDetails?.questions.map(
         (question: any) => detail[question.text]
       ),
