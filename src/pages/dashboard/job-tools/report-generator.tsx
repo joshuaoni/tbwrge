@@ -212,7 +212,7 @@ const Generator = () => {
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {report.length > 0 &&
+              {report?.length > 0 &&
                 report.map((rep: any) => JSON.stringify(rep))}
             </div>
           </div>

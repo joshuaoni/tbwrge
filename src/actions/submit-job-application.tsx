@@ -27,11 +27,10 @@ export const submitJobApplication = async ({
   formData.append("skills", skills);
   formData.append("cv", cv);
   formData.append("cover_letter", cover_letter);
-  formData.append("voicenote", voicenote, "audio.webm");
+  // formData.append("voicenote", voicenote, "audio.webm");
   for (let i = 0; i < answers.length; i++) {
     formData.append("answers[]", answers[i]);
   }
-
   console.log("voicenote", voicenote);
   try {
     const options = {
