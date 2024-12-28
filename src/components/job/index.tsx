@@ -26,7 +26,7 @@ const CreateJobFlow = ({
     data,
     isPending,
   } = useMutation({
-    mutationKey: ["createJob"],
+    mutationKey: ["create-job"],
     mutationFn: async () => {
       let jobType =
         storedDetails?.type === "Full Time"
@@ -79,6 +79,9 @@ const CreateJobFlow = ({
     onSuccess: (data: any) => {
       setCurrentStep(4);
       // localStorage.removeItem("job-creation-details");
+    },
+    onError: (error) => {
+      console.log("the error is", error);
     },
   });
   const handleCreateJob = async () => {

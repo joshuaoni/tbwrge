@@ -435,7 +435,10 @@ const AdvancedOptions = ({
               />
               <div className="space-y-3 flex flex-col text-sm font-normal">
                 {detail.questions.map((question: string, index: number) => (
-                  <div key={index} className="flex space-y-4 w-full justify-between items-center space-x-4">
+                  <div
+                    key={index}
+                    className="flex space-y-4 w-full justify-between items-center space-x-4"
+                  >
                     <span>{question} ? </span>
                     <Trash
                       className="ml-auto cursor-pointer"
