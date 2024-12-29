@@ -1,17 +1,10 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import DashboardWrapper from "../components/dashboard-wrapper";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { Outfit } from "next/font/google"; // Corrected import path
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { AppProps } from "next/app";
+import { Outfit } from "next/font/google"; // Corrected import path
 
 const outfit = Outfit({
   subsets: ["latin"], // specify subsets
