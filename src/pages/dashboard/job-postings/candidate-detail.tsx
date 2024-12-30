@@ -30,7 +30,6 @@ const CandidateDetail = ({
         applicationId,
       }),
   });
-
   return (
     <div>
       <div className="flex justify-between">
@@ -41,7 +40,9 @@ const CandidateDetail = ({
               setCurrentView("details");
             }}
           />
-          <span className="text-2xl font-semibold">Babalola Emmanuel</span>
+          <span className="text-2xl font-semibold">
+            {getApplicationItemQuery?.data?.applicant.name}
+          </span>
         </div>
         <div className="ml-auto space-x-6">
           <span className="text-[#2D62A8]  cursor-pointer text-sm">
