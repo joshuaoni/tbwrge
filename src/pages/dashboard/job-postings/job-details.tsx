@@ -1,6 +1,11 @@
-import React, { use, useEffect, useState } from "react";
+import { getJobApplications } from "@/actions/fetch-applications";
+import { BulkActionsCandidatesPopUp } from "@/components/bulk-actions-candidates";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CircleEllipsis } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -9,23 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CaretDownIcon } from "@radix-ui/react-icons";
-import { BulkActionsCandidatesPopUp } from "@/components/bulk-actions-candidates";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getJobApplications } from "@/actions/fetch-applications";
 import { useUserStore } from "@/hooks/use-user-store";
 import { ICandidate } from "@/interfaces/candidate";
+import { CaretDownIcon } from "@radix-ui/react-icons";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowLeft, CircleEllipsis } from "lucide-react";
+import React, { useEffect } from "react";
 const JobDetails = ({
   setCurrentView,
   selectedJob,
+  setApplicationId,
 }: {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   selectedJob: any;
+  setApplicationId: (val: string) => void;
 }) => {
   // const CANDIDATES = [
   //   {
@@ -180,6 +182,7 @@ const JobDetails = ({
               className="cursor-pointer"
               onClick={() => {
                 setCurrentView("candidatedetail");
+                setApplicationId(candidate.id);
               }}
               key={candidate.id}
             >

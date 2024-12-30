@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,19 +8,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import DashboardWrapper from "@/components/dashboard-wrapper";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import CurrentOpenings from "./current-openings";
-import ClosedOpenings from "./closed-openings";
-import JobDetails from "./job-details";
+import { useState } from "react";
 import CandidateDetail from "./candidate-detail";
+import ClosedOpenings from "./closed-openings";
+import CurrentOpenings from "./current-openings";
+import JobDetails from "./job-details";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
   const [currentView, setCurrentView] = useState("openings");
   const [selectedJob, setSelectedJob] = useState(null);
+  const [applicationId, setApplicationId] = useState("");
+
   return (
     <DashboardWrapper>
       <div className="flex w-full  justify-between items-center  mb-4">
@@ -77,10 +79,14 @@ const JobPostings = () => {
           <JobDetails
             selectedJob={selectedJob}
             setCurrentView={setCurrentView}
+            setApplicationId={(id) => setApplicationId(id)}
           />
         )}
         {currentView === "candidatedetail" && (
-          <CandidateDetail setCurrentView={setCurrentView} />
+          <CandidateDetail
+            applicationId={applicationId}
+            setCurrentView={setCurrentView}
+          />
         )}
         {/* {jobPosts.map((jobPost, index) => (
           <JobPost
