@@ -43,6 +43,7 @@ const CandidateDetail = ({
           <span className="text-2xl font-semibold">
             {getApplicationItemQuery?.data?.applicant.name}
           </span>
+          
         </div>
         <div className="ml-auto space-x-6">
           <span className="text-[#2D62A8]  cursor-pointer text-sm">
