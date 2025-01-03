@@ -1,5 +1,6 @@
+import { getJobApplicationItem } from "@/actions/get-job-application-item";
 import { Button } from "@/components/ui/button";
-import { API_CONFIG } from "@/constants/api_config";
+import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import { Urbanist } from "next/font/google";
@@ -19,16 +20,17 @@ const CandidateDetail = ({
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   applicationId: string;
 }) => {
-  // TODO: Replace any with correct type
-  const getApplicationItemQuery = useQuery<any>({
-    queryKey: [
-      API_CONFIG.GET_JOB_APPLICATION_ITEM.replace(
-        "{application_id}",
-        applicationId
-      ),
-    ],
+  const { userData } = useUserStore();
+
+  const getApplicationItemQuery = useQuery({
+    queryKey: ["get-job-application-item", applicationId],
+    queryFn: async () =>
+      await getJobApplicationItem({
+        token: userData?.token ?? "",
+        applicationId,
+      }),
   });
-  const data = getApplicationItemQuery.data?.data;
+  const data = getApplicationItemQuery?.data;
 
   return (
     <div>
