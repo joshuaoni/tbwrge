@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,12 +6,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LogOut } from "lucide-react";
-import { Button } from "./ui/button";
+import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 import { useUserStore } from "@/hooks/use-user-store";
+import { CookieStorage } from "@/lib/storage";
+import { LogOut } from "lucide-react";
+import { useRouter } from "next/router";
+import { Button } from "./ui/button";
 
 const LogoutModal = () => {
   const { removeUser } = useUserStore();
+  const storage = new CookieStorage();
+  const router = useRouter();
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -40,7 +45,14 @@ const LogoutModal = () => {
           Are you sure you want to logout from your account?
         </DialogDescription>
 
-        <Button onClick={() => removeUser()} className="bg-primary text-white">
+        <Button
+          onClick={() => {
+            removeUser();
+            storage.deleteItem(ACCESS_TOKEN_KEY);
+            router.push("/home/sign-in");
+          }}
+          className="bg-primary text-white"
+        >
           Yes, Logout
         </Button>
       </DialogContent>

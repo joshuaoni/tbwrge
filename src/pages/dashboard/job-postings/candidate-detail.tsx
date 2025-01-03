@@ -1,6 +1,5 @@
-import { getJobApplicationItem } from "@/actions/get-job-application-item";
 import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/hooks/use-user-store";
+import { API_CONFIG } from "@/constants/api_config";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, PlusCircle } from "lucide-react";
 import { Urbanist } from "next/font/google";
@@ -20,16 +19,17 @@ const CandidateDetail = ({
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   applicationId: string;
 }) => {
-  const { userData } = useUserStore();
-
-  const getApplicationItemQuery = useQuery({
-    queryKey: ["get-job-application-item", applicationId],
-    queryFn: async () =>
-      await getJobApplicationItem({
-        token: userData?.token ?? "",
-        applicationId,
-      }),
+  // TODO: Replace any with correct type
+  const getApplicationItemQuery = useQuery<any>({
+    queryKey: [
+      API_CONFIG.GET_JOB_APPLICATION_ITEM.replace(
+        "{application_id}",
+        applicationId
+      ),
+    ],
   });
+  const data = getApplicationItemQuery.data?.data;
+
   return (
     <div>
       <div className="flex justify-between">
@@ -40,10 +40,7 @@ const CandidateDetail = ({
               setCurrentView("details");
             }}
           />
-          <span className="text-2xl font-semibold">
-            {getApplicationItemQuery?.data?.applicant.name}
-          </span>
-          
+          <span className="text-2xl font-semibold">{data?.applicant.name}</span>
         </div>
         <div className="ml-auto space-x-6">
           <span className="text-[#2D62A8]  cursor-pointer text-sm">
@@ -66,7 +63,7 @@ const CandidateDetail = ({
           </div>
           <div className="w-full flex justify-end">
             <span className="bg-lightgreen text-white text-center text-2xl font-bold w-20 h-20 p-4 flex items-center justify-center rounded-full">
-              {getApplicationItemQuery.data?.fit_score}%
+              {data?.fit_score}%
             </span>
           </div>
           <div className="space-y-4">
@@ -89,8 +86,7 @@ const CandidateDetail = ({
                   <span className="h-4 w-36 bg-[#E7E7E7] rounded-lg animate-pulse" />
                 ) : (
                   <span className="text-xs font-medium text-[#898989]">
-                    {getApplicationItemQuery.data?.applicant![item.value_key] ??
-                      "not set"}
+                    {data?.applicant![item.value_key] ?? "not set"}
                   </span>
                 )}
               </div>
@@ -101,7 +97,7 @@ const CandidateDetail = ({
         <div className="shadow-lg border rounded-xl p-4 space-y-6">
           <h5 className="text-lg font-bold">Profile Summary</h5>
           <p className="text-[#898989]">
-            {getApplicationItemQuery.data?.applicant.professional_summary ??
+            {data?.applicant.professional_summary ??
               "summary not provided by application"}
           </p>
         </div>
@@ -116,11 +112,11 @@ const CandidateDetail = ({
           <div className="flex flex-col gap-3">
             {[
               {
-                fileName: getApplicationItemQuery.data?.cv,
+                fileName: data?.cv,
                 fileSize: 500,
               },
               {
-                fileName: getApplicationItemQuery.data?.cover_letter,
+                fileName: data?.cover_letter,
                 fileSize: 500,
               },
             ].map((item, i) => (
