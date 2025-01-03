@@ -2,9 +2,7 @@ import { loginUser } from "@/actions/login-user";
 import { loginUserWithGoogle } from "@/actions/login-with-google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 import { useUserStore } from "@/hooks/use-user-store";
-import { CookieStorage } from "@/lib/storage";
 import { GoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -15,7 +13,6 @@ import OR from "../../../../public/images/OR.png";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 
 const Index = () => {
-  const storage = new CookieStorage();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
@@ -33,7 +30,6 @@ const Index = () => {
           authenticatedUser: res.user,
           token: res.access_token,
         });
-        storage.setItem(ACCESS_TOKEN_KEY, res.access_token);
         router.push("/dashboard");
       }
     },
