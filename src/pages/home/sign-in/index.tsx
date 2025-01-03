@@ -1,17 +1,16 @@
+import { loginUser } from "@/actions/login-user";
+import { loginUserWithGoogle } from "@/actions/login-with-google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import React from "react";
-import OR from "../../../../public/images/OR.png";
-import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
-import { useRouter } from "next/router";
-import candivetlogowhite from "../../../../public/images/candivet-logo.png";
-import { loginUser } from "@/actions/login-user";
+import { useUserStore } from "@/hooks/use-user-store";
+import { GoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { GoogleLogin } from "@react-oauth/google";
-import { loginUserWithGoogle } from "@/actions/login-with-google";
-import { useUserStore } from "@/hooks/use-user-store";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
+import OR from "../../../../public/images/OR.png";
+import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 
 const Index = () => {
   const [email, setEmail] = React.useState("");
