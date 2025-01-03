@@ -6,16 +6,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 import { useUserStore } from "@/hooks/use-user-store";
-import { CookieStorage } from "@/lib/storage";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
 
 const LogoutModal = () => {
   const { removeUser } = useUserStore();
-  const storage = new CookieStorage();
   const router = useRouter();
 
   return (
@@ -48,7 +45,6 @@ const LogoutModal = () => {
         <Button
           onClick={() => {
             removeUser();
-            storage.deleteItem(ACCESS_TOKEN_KEY);
             router.push("/home/sign-in");
           }}
           className="bg-primary text-white"
