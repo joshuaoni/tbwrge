@@ -22,9 +22,11 @@ const JOB_TYPE = {
 
 const JobBoardPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState<IGetJobOpenJobType>("full_time");
   const [skills, setSkills] = useState<string[]>([]);
   const debouncedSkills = useDebounce(skills, 1500);
+  const debouncedLocation = useDebounce(location, 1500);
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
@@ -36,8 +38,9 @@ const JobBoardPage = () => {
       search_term: searchTerm,
       job_type: jobType,
       skills: debouncedSkills,
+      location: debouncedLocation,
     });
-  }, [searchTerm, jobType, debouncedSkills]);
+  }, [searchTerm, jobType, debouncedSkills, debouncedLocation]);
 
   return (
     <DashboardWrapper>
@@ -45,7 +48,12 @@ const JobBoardPage = () => {
         <h3 className="text-3xl font-bold">Job Board</h3>
 
         <div className="flex items-center gap-8 mt-8 mb-4 text-sm font-medium">
-          <JobBoardFilter onChange={() => {}} title="Location" options={[]} />
+          <input
+            className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
+            placeholder="Location"
+            onChange={(e) => setLocation(e.target.value)}
+            value={location}
+          />
           <JobBoardFilter
             title={JOB_TYPE[jobType]}
             onChange={(val) => setJobType(val as IGetJobOpenJobType)}
