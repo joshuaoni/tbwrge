@@ -7,3 +7,7 @@ export function joinPaths(...params: string[]): string {
   // Join the cleaned segments with a single slash between them
   return cleanedSegments.join("/");
 }
+
+export function copyToClipboard(text: string): void {
+  navigator.clipboard.writeText(text);
+}

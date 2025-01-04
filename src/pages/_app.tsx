@@ -5,6 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { AppProps } from "next/app";
 import { Outfit } from "next/font/google"; // Corrected import path
+import { Toaster } from "react-hot-toast";
 
 const outfit = Outfit({
   subsets: ["latin"], // specify subsets
@@ -22,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </main>
         </LocalizationProvider>
+        <Toaster />
       </GoogleOAuthProvider>
     </QueryClientProvider>
   );

@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -11,12 +10,23 @@ import {
   IGetJobOpenRes,
 } from "@/actions/get-jobs-open";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { useDebounce } from "@/hooks/debounce";
 import JobBoardFilter from "./job-board-filter";
+
+const JOB_TYPE = {
+  full_time: "Full Time",
+  hybrid: "Hybrid",
+  part_time: "Part Time",
+  internship: "Internship",
+};
 
 const JobBoardPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState<IGetJobOpenJobType>("full_time");
   const [skills, setSkills] = useState<string[]>([]);
+  const debouncedSkills = useDebounce(skills, 1500);
+  const debouncedLocation = useDebounce(location, 1500);
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
@@ -27,9 +37,10 @@ const JobBoardPage = () => {
     mutation.mutate({
       search_term: searchTerm,
       job_type: jobType,
-      skills: skills,
+      skills: debouncedSkills,
+      location: debouncedLocation,
     });
-  }, [searchTerm, jobType, skills]);
+  }, [searchTerm, jobType, debouncedSkills, debouncedLocation]);
 
   return (
     <DashboardWrapper>
@@ -37,9 +48,14 @@ const JobBoardPage = () => {
         <h3 className="text-3xl font-bold">Job Board</h3>
 
         <div className="flex items-center gap-8 mt-8 mb-4 text-sm font-medium">
-          <JobBoardFilter onChange={() => {}} title="Location" options={[]} />
+          <input
+            className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
+            placeholder="Location"
+            onChange={(e) => setLocation(e.target.value)}
+            value={location}
+          />
           <JobBoardFilter
-            title="Job Type"
+            title={JOB_TYPE[jobType]}
             onChange={(val) => setJobType(val as IGetJobOpenJobType)}
             options={[
               { label: "Full Time", value: "full_time" },
@@ -48,7 +64,12 @@ const JobBoardPage = () => {
               { label: "Internship", value: "internship" },
             ]}
           />
-          <JobBoardFilter title="Skills" options={[]} onChange={() => {}} />
+          <input
+            className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
+            placeholder='Skills (seprate with ",")'
+            onChange={(e) => setSkills(e.target.value.split(","))}
+            value={skills}
+          />
         </div>
 
         <div aria-roledescription="table" className="w-full">
@@ -80,16 +101,9 @@ const JobBoardPage = () => {
                     className="cursor-pointer w-full flex gap-4 px-5 py-3"
                   >
                     <div className="w-full flex items-center gap-2 py-1.5 px-2.5 rounded-lg bg-[#F9F9F9]">
-                      <Image
-                        src={
-                          item.company_logo ??
-                          `https://ui-avatars.com/api/?name=${item.company_name}&size=20&background=randoms`
-                        }
-                        alt={item.company_name + "icon"}
-                        width={20}
-                        height={20}
-                        className="p- bg-white rounded-full"
-                      />
+                      <span className="text-xl font-semibold bg-white rounded-full">
+                        {item.job_location_name[0]}
+                      </span>
 
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{item.job_title}</span>
@@ -99,16 +113,16 @@ const JobBoardPage = () => {
                         </span>
                       </div>
                     </div>
-                    <span className="w-4/5 block font-medium text-center">
-                      {item.job_type}
+                    <span className="w-4/5 block text-center">
+                      {JOB_TYPE[item.job_type as keyof typeof JOB_TYPE]}
                     </span>
-                    <span className="w-full block font-medium text-center">
+                    <span className="w-full block text-center">
                       {item.required_skills}
                     </span>
-                    <span className="w-full block font-medium text-center">
+                    <span className="w-full block text-center">
                       {item.languages}
                     </span>
-                    <span className="w-full block font-medium text-center">
+                    <span className="w-full block text-center">
                       {item.tags}
                     </span>
                   </div>
