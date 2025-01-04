@@ -1,10 +1,12 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { JobBoardFilterProps } from "./job-board.interface";
 
 function JobBoardFilter(props: JobBoardFilterProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     props.options[0]?.value ?? ""
@@ -18,11 +20,27 @@ function JobBoardFilter(props: JobBoardFilterProps) {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   return (
     <div className="relative">
       <label className="sr-only">{props.title}</label>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(true)}
         className="w-52 py-3 px-4 flex justify-between items-center rounded-lg bg-[#ebebeb]"
       >
         {props.title}
@@ -31,6 +49,7 @@ function JobBoardFilter(props: JobBoardFilterProps) {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={dropdownRef}
             className="absolute z-10 w-full mt-1 bg-[#ebebeb] rounded-md shadow-lg p-2"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
