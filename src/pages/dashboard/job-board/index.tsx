@@ -10,7 +10,7 @@ import {
   IGetJobOpenRes,
 } from "@/actions/get-jobs-open";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounce } from "@/hooks/debounce";
 import JobBoardFilter from "./job-board-filter";
 
 const JOB_TYPE = {
