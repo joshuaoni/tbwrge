@@ -1,16 +1,15 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
+import { useOutsideClick } from "@/hooks/outside-click";
 import { JobBoardFilterProps } from "./job-board.interface";
 
 function JobBoardFilter(props: JobBoardFilterProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(
-    props.options[0]?.value ?? ""
-  );
+  const [_, setSelectedOption] = useState(props.options[0]?.value ?? "");
 
   const handleOptionClick = (optionLabel: string, optionValue: string) => {
     setSelectedOption(optionLabel);
@@ -20,21 +19,7 @@ function JobBoardFilter(props: JobBoardFilterProps) {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   return (
     <div className="relative">
