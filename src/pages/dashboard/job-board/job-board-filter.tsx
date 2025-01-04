@@ -1,3 +1,4 @@
+import { CaretDownIcon } from "@radix-ui/react-icons";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ function JobBoardFilter(props: JobBoardFilterProps) {
         className="w-52 py-3 px-4 flex justify-between items-center rounded-lg bg-[#ebebeb]"
       >
         {props.title}
+        <CaretDownIcon />
       </button>
       <AnimatePresence>
         {isOpen && (
