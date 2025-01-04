@@ -27,7 +27,7 @@ const JobBoardPage = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const debouncedSkills = useDebounce(skills, 1500);
   const debouncedLocation = useDebounce(location, 1500);
-
+  const _ = require("lodash");
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
     mutationFn: async (data) => await getJobOpen(data),
@@ -66,7 +66,7 @@ const JobBoardPage = () => {
           />
           <input
             className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
-            placeholder='Skills (seprate with ",")'
+            placeholder='Skills (seperate with ",")'
             onChange={(e) => setSkills(e.target.value.split(","))}
             value={skills}
           />
@@ -100,15 +100,15 @@ const JobBoardPage = () => {
                     key={i}
                     className="cursor-pointer w-full flex gap-4 px-5 py-3"
                   >
-                    <div className="w-full flex items-center gap-2 py-1.5 px-2.5 rounded-lg bg-[#F9F9F9]">
-                      <span className="text-xl font-semibold bg-white rounded-full">
-                        {item.job_location_name[0]}
-                      </span>
-
+                    <div className="w-full flex justify-between items-center h-fit gap-2 p-2 rounded-lg bg-[#F9F9F9] ">
+                      <div className="w-8 h-8 bg-slate-300 flex items-center justify-center  rounded-full">
+                        <p>{item.job_title[0]}</p>
+                      </div>
                       <div className="flex flex-col items-start">
                         <span className="font-medium">{item.job_title}</span>
                         <span className="text-xs text-[#8F8F8F]">
-                          {item.company_name}. {item.job_location_name} -
+                          {_.truncate(item.company_name, { length: 12 })} •{" "}
+                          {item.job_location_name} -
                           {formatDateAndDifference(item.start_date)}
                         </span>
                       </div>
