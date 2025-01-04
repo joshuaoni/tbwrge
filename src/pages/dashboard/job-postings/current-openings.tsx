@@ -1,5 +1,6 @@
-import { File, ShoppingBag, User } from "lucide-react";
-import React, { useEffect } from "react";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { getDashboardStats } from "@/actions/get-dashboard-stats";
+import { BulkActionsJobsPopUp } from "@/components/ui/bulk-actions-jobs";
 import {
   Table,
   TableBody,
@@ -8,12 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getJobOpenings } from "@/actions/get-current-jobs";
 import { useUserStore } from "@/hooks/use-user-store";
 import { IJob } from "@/interfaces/job";
-import { BulkActionsJobsPopUp } from "@/components/ui/bulk-actions-jobs";
-import { getDashboardStats } from "@/actions/get-dashboard-stats";
+import { useQuery } from "@tanstack/react-query";
+import { File, ShoppingBag, User } from "lucide-react";
+import React, { useEffect } from "react";
 const CurrentOpenings = ({
   setCurrentView,
   setSelectedJob,
@@ -91,7 +91,10 @@ const CurrentOpenings = ({
           </div>
         ))}
       </div>
-      <BulkActionsJobsPopUp jobIds={selectedJobs.map((job) => job.id)} />
+      <BulkActionsJobsPopUp
+        jobIds={selectedJobs.map((job) => job.id)}
+        status="open"
+      />
       <Table className="mt-2">
         <TableHeader>
           <TableRow className="bg-[#D6D6D6] rounded-lg ">
