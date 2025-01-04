@@ -10,6 +10,7 @@ import {
   IGetJobOpenRes,
 } from "@/actions/get-jobs-open";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { useDebounce } from "@/hooks/use-debounce";
 import JobBoardFilter from "./job-board-filter";
 
 const JOB_TYPE = {
@@ -23,6 +24,7 @@ const JobBoardPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [jobType, setJobType] = useState<IGetJobOpenJobType>("full_time");
   const [skills, setSkills] = useState<string[]>([]);
+  const debouncedSkills = useDebounce(skills, 1500);
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
@@ -33,9 +35,9 @@ const JobBoardPage = () => {
     mutation.mutate({
       search_term: searchTerm,
       job_type: jobType,
-      skills: skills,
+      skills: debouncedSkills,
     });
-  }, [searchTerm, jobType, skills]);
+  }, [searchTerm, jobType, debouncedSkills]);
 
   return (
     <DashboardWrapper>
@@ -54,7 +56,12 @@ const JobBoardPage = () => {
               { label: "Internship", value: "internship" },
             ]}
           />
-          <JobBoardFilter title="Skills" options={[]} onChange={() => {}} />
+          <input
+            className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
+            placeholder='Skills (seprate with ",")'
+            onChange={(e) => setSkills(e.target.value.split(","))}
+            value={skills}
+          />
         </div>
 
         <div aria-roledescription="table" className="w-full">
