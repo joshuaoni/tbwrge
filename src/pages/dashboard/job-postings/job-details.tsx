@@ -18,8 +18,10 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { ICandidate } from "@/interfaces/candidate";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, CircleEllipsis } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import React, { useEffect } from "react";
+import JobDetailsOptions from "./job-details-options";
+
 const JobDetails = ({
   setCurrentView,
   selectedJob,
@@ -29,48 +31,6 @@ const JobDetails = ({
   selectedJob: any;
   setApplicationId: (val: string) => void;
 }) => {
-  // const CANDIDATES = [
-  //   {
-  //     selection: "",
-  //     name: "Amiolemen David",
-  //     id: "4930",
-  //     fitScore: "10",
-  //     YOE: "2",
-  //     keySkills: "89%",
-  //     date: "31/12/2024",
-  //     attachments: "Resume.pdf",
-  //   },
-  //   {
-  //     selection: "",
-  //     name: "Sinatra Frank",
-  //     id: "4930",
-  //     fitScore: "10",
-  //     YOE: "2",
-  //     keySkills: "89%",
-  //     date: "31/12/2024",
-  //     attachments: "Resume.pdf",
-  //   },
-  //   {
-  //     selection: "",
-  //     name: "Paul Walker",
-  //     id: "4930",
-  //     fitScore: "10",
-  //     YOE: "2",
-  //     keySkills: "89%",
-  //     date: "31/12/2024",
-  //     attachments: "Resume.pdf",
-  //   },
-  //   {
-  //     selection: "",
-  //     name: "Michael Davies",
-  //     id: "4930",
-  //     fitScore: "10",
-  //     YOE: "2",
-  //     keySkills: "89%",
-  //     date: "31/12/2024",
-  //     attachments: "Resume.pdf",
-  //   },
-  // ];
   const { userData } = useUserStore();
   const [applicants, setApplicants] = React.useState<ICandidate[]>([]);
   const [selectedApplications, setSelectedApplications] = React.useState<
@@ -109,7 +69,7 @@ const JobDetails = ({
                 Spotify, Singapore - 2 Days ago
               </span>
             </div>
-            <EllipsisPopUp />
+            <JobDetailsOptions id={selectedJob.id} />
           </div>
         </div>
 
@@ -215,60 +175,6 @@ const JobDetails = ({
   );
 };
 
-const EllipsisPopUp = () => {
-  const [selectedOption, setSelectedOption] = React.useState("edit_job");
-  return (
-    <Popover>
-      <PopoverTrigger>
-        <CircleEllipsis color="#065844" className="ml-4 cursor-pointer" />
-      </PopoverTrigger>
-      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
-        <div className="flex flex-col  w-fit  bg-white rounded-lg">
-          <span
-            onClick={() => setSelectedOption("edit_job")}
-            className={` ${
-              selectedOption === "edit_job"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm rounded-t-lg`}
-          >
-            Edit job{" "}
-          </span>
-          <span
-            onClick={() => setSelectedOption("copy_job_link")}
-            className={`${
-              selectedOption === "copy_job_link"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Copy Job Link
-          </span>
-          <span
-            onClick={() => setSelectedOption("copy_embed_code")}
-            className={`${
-              selectedOption === "copy_embed_code"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm`}
-          >
-            Copy Embed Code
-          </span>
-          <span
-            onClick={() => setSelectedOption("close_job")}
-            className={`${
-              selectedOption === "close_job"
-                ? "text-white bg-lightgreen"
-                : "text-[#898989]"
-            } cursor-pointer p-3 text-sm rounded-b-lg`}
-          >
-            Close Job
-          </span>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
 const TopCandidatesPopUp = () => {
   const [selectedOption, setSelectedOption] = React.useState("top_5");
   return (
