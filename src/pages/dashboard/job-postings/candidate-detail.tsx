@@ -58,7 +58,7 @@ const CandidateDetail = ({
       </div>
 
       <section className="grid grid-cols-3 gap-x-6 gap-y-10 mt-4">
-        <div className="shadow-lg border rounded-xl p-4 space-y-4">
+        <div className="shadow-lg border rounded-xl p-4 space-y-4 h-fit">
           <div className="flex justify-between font-bold">
             <h5 className="text-lg">Profile Overview</h5>
             <h5>Fit Score</h5>
@@ -96,7 +96,7 @@ const CandidateDetail = ({
           </div>
         </div>
 
-        <div className="shadow-lg border rounded-xl p-4 space-y-6">
+        <div className="shadow-lg border rounded-xl p-4 space-y-6 h-fit">
           <h5 className="text-lg font-bold">Profile Summary</h5>
           <p className="text-[#898989]">
             {data?.applicant.professional_summary ??
@@ -104,9 +104,22 @@ const CandidateDetail = ({
           </p>
         </div>
 
-        <div className="shadow-lg border rounded-xl p-4">
+        <div className="shadow-lg border rounded-xl p-4 h-fit">
           <h5 className="text-lg font-bold">AI Powered Insights</h5>
-          <div></div>
+          <div className="flex flex-col mt-3">
+            <span className="font-bold">Strengths</span>
+            <span className="text-[#898989]">{data?.strength}</span>
+          </div>
+          <div className="flex flex-col mt-3">
+            <span className="font-bold">Skills Summary</span>
+            <span className="text-[#898989]">{data?.skills_summary}</span>
+          </div>
+          <div className="flex flex-col mt-3">
+            <span className="font-bold">Areas For Development</span>
+            <span className="text-[#898989]">
+              {data?.areas_for_development}
+            </span>
+          </div>
         </div>
 
         <div className="shadow-lg border rounded-xl p-4 space-y-4">
