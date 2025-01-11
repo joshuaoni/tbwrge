@@ -1,17 +1,47 @@
-import React, { useState } from "react";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import classNames from "classnames";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import { TbCircles, TbSquareCheck, TbUserCheck } from "react-icons/tb";
+
+import { vetCV } from "@/actions/cv-tools/vet-cv";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { inter } from "@/constants/app";
+import { useUserStore } from "@/hooks/use-user-store";
+import { IconBaseProps, IconType } from "react-icons/lib";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { vetCV } from "@/actions/cv-tools/vet-cv";
-import { useUserStore } from "@/hooks/use-user-store";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { Textarea } from "@/components/ui/textarea";
-import { div } from "framer-motion/client";
+
+const metricStyles: Record<string, Record<string, string | IconType>> = {
+  relevance: { className: "bg-[#065844]", icon: TbCircles },
+  completeness: {
+    className: "bg-[#0BAA12]",
+    icon: TbSquareCheck,
+  },
+  grammar: { className: "bg-[#34A853]", icon: TbUserCheck },
+  formatting: {
+    className: "bg-[#307F4B]",
+    icon: TbSquareCheck,
+  },
+  fallback: { className: "bg-[#065844]", icon: TbSquareCheck },
+};
+
+const MetricIcon = (props: { metric: string } & IconBaseProps) => {
+  const Icon =
+    (metricStyles[props.metric]?.icon as IconType) ??
+    metricStyles.fallback.icon;
+  return <Icon {...props} />;
+};
+
+interface VettingResponse {
+  0: { metrics: { Metric: string; Score: number; Recommendation: string }[] };
+}
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -36,7 +66,8 @@ const Vetting = () => {
     mutate: vetCvMutation,
     data: vets,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<VettingResponse>({
     mutationKey: ["vetCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -218,23 +249,91 @@ const Vetting = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6 space-y-4">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Vetting</span>
-              <X onClick={() => null} size={20} />
+              <h4 className="font-bold">CV Vetting</h4>
+              <X size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : vets === undefined ? (
-                <div>Your vet will appear here</div>
-              ) : (
-                <div className="flex flex-col h-full">
-                  {vets.map((vet: any) => {
-                    return JSON.stringify(vet.metrics);
-                  })}
-                </div>
-              )}
+            <div className="grid gap-6">
+              {isPending &&
+                ["relevance", "grammar", "formatting", "completeness"].map(
+                  (item, i) => (
+                    <div key={i} className="flex items-center gap-6">
+                      <div
+                        className={classNames(
+                          "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
+                          inter.className,
+                          metricStyles[item]?.className ??
+                            metricStyles.fallback.className
+                        )}
+                      >
+                        <span className="w-fit p-3 rounded-full border border-white">
+                          <MetricIcon
+                            metric={item}
+                            size={32}
+                            color="white"
+                            className={classNames({
+                              "rotate-12": item == "Relevance",
+                            })}
+                          />
+                        </span>
+                        <h6 className="text-xl capitalize w-40">{item}</h6>
+                        <p className="font-bold text-4xl">
+                          <Skeleton className="inline-block bg-white/60 h-7 w-8 rounded-full" />
+                          %
+                        </p>
+                      </div>
+                      <div className="text-[#747474] space-y-4">
+                        <h6 className="text-xl font-semibold capitalize">
+                          {item}
+                        </h6>
+                        <p className="space-y-1.5">
+                          {[...new Array(8)].map((_, i) => (
+                            <Skeleton
+                              key={i}
+                              className="h-2.5 w-80 rounded-full"
+                              style={{
+                                width: `${20 - i}rem`,
+                              }}
+                            />
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                )}
+              {isSuccess &&
+                vets[0].metrics.map((item, i) => (
+                  <div key={i} className="flex items-center gap-6">
+                    <div
+                      className={classNames(
+                        "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
+                        inter.className,
+                        metricStyles[item.Metric]?.className ??
+                          metricStyles.fallback.className
+                      )}
+                    >
+                      <span className="w-fit p-3 rounded-full border border-white">
+                        <MetricIcon
+                          metric={item.Metric}
+                          size={32}
+                          color="white"
+                          className={classNames({
+                            "rotate-12": item.Metric == "Relevance",
+                          })}
+                        />
+                      </span>
+                      <h6 className="text-xl capitalize w-40">{item.Metric}</h6>
+                      <p className="font-bold text-4xl">{item.Score}%</p>
+                    </div>
+                    <div className="text-[#747474] space-y-4">
+                      <h6 className="text-xl font-semibold capitalize">
+                        {item.Metric}
+                      </h6>
+                      <p>{item.Recommendation}</p>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>

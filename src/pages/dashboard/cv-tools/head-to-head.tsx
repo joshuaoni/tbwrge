@@ -1,16 +1,42 @@
-import React, { useState } from "react";
+import { headToHead } from "@/actions/cv-tools/head-to-head";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { inter } from "@/constants/app";
+import { useUserStore } from "@/hooks/use-user-store";
+import { includeKeys } from "@/lib/common";
+import { useMutation } from "@tanstack/react-query";
+import classNames from "classnames";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import { TbCircles } from "react-icons/tb";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { headToHead } from "@/actions/cv-tools/head-to-head";
-import { useUserStore } from "@/hooks/use-user-store";
-import { Textarea } from "@/components/ui/textarea";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+
+interface CandidateInfo {
+  relevance_of_experience: number;
+  skills_alignment: number;
+  educational_background: number;
+  industry_experience: number;
+  project_portfolio_quality: number;
+  certifications: number;
+  soft_skills: number;
+  technical_competencies: number;
+  career_progression: number;
+  cultural_fit: number;
+  accomplishments_and_impact: number;
+  longevity_and_stability: number;
+  summary: string;
+  overall_score: number;
+  candidate_name: string;
+}
+
+interface ReportData {
+  candidates_info: CandidateInfo[];
+}
 
 const HeadToHead = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -31,7 +57,8 @@ const HeadToHead = () => {
     mutate: headToHeadMutation,
     data: H2H,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<ReportData>({
     mutationKey: ["summarizeCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -216,20 +243,53 @@ const HeadToHead = () => {
           <div className="rounded-xl shadow-xl min-h-[200px] mt-4 p-6 ">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Head To Head</span>
-              <X onClick={() => null} size={20} />
+              <X size={20} />
             </div>
-            <div className="flex items-center justify-center h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : H2H === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                <div className="w-fit  h-[400px] overflow-y-scroll ">
-                  {H2H?.candidates_info.map((h2h: any) => (
-                    <span className="">{JSON.stringify(h2h)}</span>
-                  ))}
-                </div>
-              )}
+            <div className="flex flex-col items-center justify-center gap-4 h-full mt-4">
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess &&
+                Object.keys(
+                  includeKeys(H2H.candidates_info[0], [
+                    "relevance_of_experience",
+                    "educational_background",
+                    "industry_experience",
+                    "skills_alignment",
+                  ])
+                ).map((item, i) => (
+                  <div
+                    key={i}
+                    className={classNames(
+                      "flex items-center gap-6 px-5 py-4 min-w-96 bg-[#065844] text-white rounded-xl",
+                      inter.className
+                    )}
+                  >
+                    <span className="w-fit h-fit p-3 rounded-full border border-white">
+                      <TbCircles
+                        size={32}
+                        color="white"
+                        className="rotate-12"
+                      />
+                    </span>
+
+                    <div className="flex flex-col gap-6">
+                      <span className="text-xl capitalize">
+                        {item.replaceAll("_", " ")}
+                      </span>
+                      <div className="flex gap-6">
+                        {H2H.candidates_info.map((cand, i) => (
+                          <div key={i} className="space-y-2">
+                            <p className="text-[#EBEBEB]">
+                              {cand.candidate_name}
+                            </p>
+                            <p className="font-bold text-4xl">
+                              {cand[item as keyof CandidateInfo]}%
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
