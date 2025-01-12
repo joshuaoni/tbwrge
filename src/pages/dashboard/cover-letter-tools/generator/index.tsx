@@ -1,8 +1,10 @@
 import { generateCoverLetter } from "@/actions/cover-letter-tools/generate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -117,6 +119,9 @@ const Generator = () => {
     setFiles((prevFiles: any) => [...prevFiles, ...newFiles]);
     event.target.value = ""; // Reset file input
   };
+
+  const clRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(clRef);
   return (
     <DashboardWrapper>
       <span className="font-bold text-xl">Cover Letter Generator</span>
@@ -317,10 +322,16 @@ const Generator = () => {
             <div className="flex items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <CoverLetter
-                  name={generatedCoverLetter[0].candidate_name}
-                  letter={generatedCoverLetter[0].cover_letter_text}
-                />
+                <div className="flex items-start">
+                  <CoverLetter
+                    ref={clRef}
+                    name={generatedCoverLetter[0].candidate_name}
+                    letter={generatedCoverLetter[0].cover_letter_text}
+                  />
+                  <button className="w-1/12" onClick={downloadPDF}>
+                    <DocumentDownloadIcon />
+                  </button>
+                </div>
               )}
             </div>
           </div>
