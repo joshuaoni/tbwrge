@@ -1,25 +1,25 @@
-import React, { useRef, useState } from "react";
+import { generateCoverLetter } from "@/actions/cover-letter-tools/generate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import RecordIcon from "../../../../public/images/icons/microphone.png";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 import {
   CircleXIcon,
-  EllipsisIcon,
-  EllipsisVerticalIcon,
   Loader2,
   Plus,
   StopCircleIcon,
   Trash,
   X,
 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import uploadIcon from "../../../../public/images/icons/upload.png";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import { generateCoverLetter } from "@/actions/cover-letter-tools/generate-cover-letter";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import Image from "next/image";
+import React, { useRef, useState } from "react";
+import RecordIcon from "../../../../../public/images/icons/microphone.png";
+import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
+import uploadIcon from "../../../../../public/images/icons/upload.png";
+import CoverLetter from "./cover-letter";
+import { CoverLetterGeneratorResponse } from "./generator.interface";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -36,7 +36,8 @@ const Generator = () => {
     mutate: generateCvMutation,
     data: generatedCoverLetter,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<CoverLetterGeneratorResponse>({
     mutationKey: ["generateCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -314,12 +315,12 @@ const Generator = () => {
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : generatedCoverLetter === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                JSON.stringify(generatedCoverLetter)
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess && (
+                <CoverLetter
+                  name={generatedCoverLetter[0].candidate_name}
+                  letter={generatedCoverLetter[0].cover_letter_text}
+                />
               )}
             </div>
           </div>
