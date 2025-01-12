@@ -14,7 +14,7 @@ export const generateCoverLetter = async (
   if (files) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i].file;
-      formData.append("cv", file);
+      formData.append("cv_files", file);
     }
   }
   if (audio) {
