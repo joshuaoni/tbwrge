@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import { vetCoverLetter } from "@/actions/cover-letter-tools/vet-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import { vetCoverLetter } from "@/actions/cover-letter-tools/vet-cover-letter";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  MetricCard,
+  MetricCardsLoading,
+} from "../cv-tools/vetting/metric-card";
+import { VettingResponse } from "../cv-tools/vetting/vetting.interface";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -36,7 +41,10 @@ const Vetting = () => {
     mutate: vetClMutation,
     data: vets,
     isPending,
-  } = useMutation({
+    isSuccess,
+    isError,
+    error,
+  } = useMutation<VettingResponse>({
     mutationKey: ["vetCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -74,7 +82,7 @@ const Vetting = () => {
       <section className="flex h-screen space-x-4">
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+            <span className="font-bold">Cover Letter Upload</span>
             <span className="font-light text-xs">
               Add your documents here, and you can upload up to 5 files max
             </span>
@@ -229,17 +237,14 @@ const Vetting = () => {
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              <div className="flex items-center justify-center flex-1 h-full">
-                {isPending ? (
-                  <Loader2 className="animate-spin" />
-                ) : vets === undefined ? (
-                  <div>Your vet will appear here</div>
-                ) : (
-                  <div className="flex flex-col h-full">
-                    {vets.map((vet: any) => {
-                      return JSON.stringify(vet.metrics);
-                    })}
-                  </div>
+              <div className="grid gap-6">
+                {isPending && <MetricCardsLoading />}
+                {isSuccess &&
+                  vets[0].metrics.map((item, i) => (
+                    <MetricCard key={i} {...item} />
+                  ))}
+                {isError && (
+                  <p>an error occured while vetting your cover letter</p>
                 )}
               </div>
             </div>
