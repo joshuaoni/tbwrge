@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import { translateCoverLetter } from "@/actions/cover-letter-tools/translate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import DocumentDownloadIcon from "@/components/icons/document-download";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { useDownloadPDF } from "@/hooks/download-pdf";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, X } from "lucide-react";
+import Image from "next/image";
+import React, { useRef, useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { translateCoverLetter } from "@/actions/cover-letter-tools/translate-cover-letter";
+import CoverLetter from "./generator/cover-letter";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -38,7 +41,8 @@ const Translator = () => {
     mutate: translateCoverLetterMutation,
     data: translated,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<string>({
     mutationKey: ["translateCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -63,6 +67,9 @@ const Translator = () => {
       return response;
     },
   });
+
+  const clRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(clRef);
 
   return (
     <DashboardWrapper>
@@ -166,15 +173,13 @@ const Translator = () => {
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : translated === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                <div className="w-fit  h-[400px] overflow-y-scroll">
-                  {translated.map((tran: any) =>
-                    JSON.stringify(tran.translated_cv)
-                  )}
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess && (
+                <div className="flex items-start">
+                  <CoverLetter ref={clRef} name={""} letter={translated} />
+                  <button className="w-1/12" onClick={downloadPDF}>
+                    <DocumentDownloadIcon />
+                  </button>
                 </div>
               )}
             </div>

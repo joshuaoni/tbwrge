@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../public/images/icons/upload.png";
+import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
+import uploadIcon from "../../../../../public/images/icons/upload.png";
 import { MetricCard, MetricCardsLoading } from "./metric-card";
 import { VettingResponse } from "./vetting.interface";
 
