@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import { rankCoverLetter } from "@/actions/cover-letter-tools/rank-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
+import { CircleXIcon, Loader2, Plus, Trash } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import { rankCoverLetter } from "@/actions/cover-letter-tools/rank-cover-letter";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import RankByFilter from "../cv-tools/ranking/rank-by-filter";
+import { rankFilters } from "../cv-tools/ranking/ranking.constant";
+import { Candidate } from "../cv-tools/ranking/ranking.interface";
 
 const Ranking = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -18,14 +22,17 @@ const Ranking = () => {
   const { userData } = useUserStore();
   const [value, setValue] = useState("");
   const [prompts, setPrompts] = useState<string[]>([]);
-  const [ranking, setRanking] = useState("");
+
+  const [ranking, setRanking] = useState(rankFilters[0].label);
+  const [rankFilter, setRankFilter] = useState(rankFilters[0].value);
   const [jobDescription, setJobDescription] = useState("");
 
   const {
     mutate: rankCoverLetterMutation,
     data: rankings,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<Partial<Candidate>[]>({
     mutationKey: ["rankingCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -135,6 +142,16 @@ const Ranking = () => {
             ))}
           </div>
 
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Post Job Ad</span>
+            <Textarea
+              placeholder="Input Job Description"
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="my-3 bg-white border"
+            />
+          </div>
+
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
@@ -207,20 +224,43 @@ const Ranking = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Ranking</span>
-              <X onClick={() => null} size={20} />
+              {isSuccess && (
+                <RankByFilter
+                  title="Rank By:"
+                  options={rankFilters}
+                  onChange={(val) => {
+                    const selectedFilter = rankFilters.find(
+                      (f) => f.value === val
+                    );
+                    if (selectedFilter) {
+                      setRanking(selectedFilter.label);
+                    }
+                    setRankFilter(val);
+                  }}
+                />
+              )}
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : rankings === undefined ? (
-                <div>Your vet will appear here</div>
-              ) : (
-                <div className="w-fit  h-fit overflow-y-scroll ">
-                  {rankings?.map((ranks: any) => (
-                    <span>{JSON.stringify(ranks)}</span>
+            <div className="flex items-center justify-center h-fit">
+              {isPending && <Loader2 className="animate-spin" />}
+
+              {isSuccess && (
+                <div className="py-10 w-full">
+                  <div className="w-full flex justify-between px-6 py-2 bg-[#D6D6D6] text-[#898989] text-sm font-bold rounded-lg">
+                    <span className="uppercase">candidate name</span>
+                    <span className="capitalize">{ranking}</span>
+                  </div>
+
+                  {rankings.map((item, i) => (
+                    <div
+                      key={i}
+                      className="w-full flex justify-between px-6 py-2"
+                    >
+                      <span>{item.candidate_name ?? 0}</span>
+                      <span>{item![rankFilter as keyof Candidate] ?? 0}</span>
+                    </div>
                   ))}
                 </div>
               )}

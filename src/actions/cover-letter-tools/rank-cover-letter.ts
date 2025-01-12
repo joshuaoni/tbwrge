@@ -20,7 +20,7 @@ export const rankCoverLetter = async (
   //   if (language) {
   //     formData.append("language", language);
   //   }
-  //   formData.append("job_description", jobDescription);
+  formData.append("job_ad", jobDescription);
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
