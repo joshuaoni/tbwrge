@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import { summarizeCoverLetter } from "@/actions/cover-letter-tools/summarizer";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
-import OrDivider from "../../../../public/images/or-divider.png";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import { summarizeCoverLetter } from "@/actions/cover-letter-tools/summarizer";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 
 interface UploadedFile {
   file: File;
@@ -221,16 +220,25 @@ const Summarizer: React.FC = () => {
         <div className="w-[50%]">
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Cover Letter Summary</span>
+              <span className="font-bold text-2xl">Cover Letter Summary</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 flex-col h-full">
+            <div className="flex items-center justify-center flex-col flex-1 h-full p-4 shadow-lg rounded-2xl">
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : summaries === undefined ? (
                 <div>Your summary will appear here</div>
               ) : (
-                summaries?.map((summary: string) => <span>{summary}</span>)
+                summaries?.map(
+                  (summary: { summarized_cl: string; name: string }) => (
+                    <div className="my-4">
+                      <h5 className="text-lg font-bold">{summary.name}</h5>
+                      <p className="text-sm text-[#898989]">
+                        {summary.summarized_cl}
+                      </p>
+                    </div>
+                  )
+                )
               )}
             </div>
           </div>
