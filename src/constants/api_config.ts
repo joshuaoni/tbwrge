@@ -18,6 +18,7 @@ export const API_CONFIG = {
   VET_COVER_LETTER: `${MAIN_URL}/cl/vett-cl/`,
   RANK_COVER_LETTER: `${MAIN_URL}/cl/rank-cl/`,
   GENERATE_COVER_LETTER: `${MAIN_URL}/cl/generate-cl/`,
+  TRANSLATE_COVER_LETTER: `${MAIN_URL}/cl/translate-cl/`,
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
