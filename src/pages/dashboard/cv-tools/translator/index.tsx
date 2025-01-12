@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
-import { CircleXIcon, Loader2, X } from "lucide-react";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
 import { translateCV } from "@/actions/cv-tools/translate-cv";
-import { useUserStore } from "@/hooks/use-user-store";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { useDownloadPDF } from "@/hooks/download-pdf";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
+import { CircleXIcon, Loader2, X } from "lucide-react";
+import Image from "next/image";
+import React, { useRef, useState } from "react";
+import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
+import uploadIcon from "../../../../../public/images/icons/upload.png";
+import Resume from "../generator/resume";
+import { CVTranslatorResponse } from "./translator.interface";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -20,7 +24,8 @@ const Translator = () => {
     mutate: translateCvMutation,
     data: translated,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<CVTranslatorResponse>({
     mutationKey: ["translateCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -60,6 +65,12 @@ const Translator = () => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
     setFileSizes((prev) => prev.filter((_, i) => i !== index));
   };
+
+  const resumeRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(
+    resumeRef,
+    isSuccess ? `${translated[0].cv_data.name.replaceAll(" ", "-")}-resume` : ""
+  );
 
   return (
     <DashboardWrapper>
@@ -175,16 +186,26 @@ const Translator = () => {
               <span className="font-bold">CV Translator</span>
               <X size={20} />
             </div>
-            <div className="flex items-center justify-center h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : translated === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                <div className="w-fit  h-[400px] overflow-y-scroll">
-                  {translated.map((tran: any) =>
-                    JSON.stringify(tran.translated_cv)
-                  )}
+            <div className="h-full">
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess && (
+                <div className="flex items-start">
+                  <Resume
+                    ref={resumeRef}
+                    name={translated[0].cv_data.name}
+                    title={"Product Designer"}
+                    contactInfo={{
+                      email: "kate.bishop@katedesign.com",
+                      linkedin: translated[0].cv_data.linkedin,
+                      phone: "+46 98-215 4231",
+                    }}
+                    workExperience={translated[0].cv_data.experience}
+                    education={translated[0].cv_data.education}
+                    skills={translated[0].cv_data.skills}
+                  />
+                  <button className="w-1/12" onClick={downloadPDF}>
+                    <DocumentDownloadIcon />
+                  </button>
                 </div>
               )}
             </div>
