@@ -1,15 +1,19 @@
-import React, { useRef, useState } from "react";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import RecordIcon from "../../../../public/images/icons/microphone.png";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+
 import { generateCV } from "@/actions/cv-tools/generate-cv";
-import { audio } from "framer-motion/client";
-import { useUserStore } from "@/hooks/use-user-store";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useDownloadPDF } from "@/hooks/download-pdf";
+import { useUserStore } from "@/hooks/use-user-store";
+import RecordIcon from "../../../../../public/images/icons/microphone.png";
+import { CVGeneratorResponse } from "./generator.interface";
+import Resume from "./resume";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -25,7 +29,8 @@ const Generator = () => {
     mutate: generateCvMutation,
     data: generatedCv,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<CVGeneratorResponse>({
     mutationKey: ["generateCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -43,11 +48,7 @@ const Generator = () => {
         language = "pt";
       }
 
-      const response = await generateCV(
-        audioBlob,
-        userData?.token as string,
-        prompts
-      );
+      const response = await generateCV(userData?.token as string, prompts);
       return response;
     },
   });
@@ -81,6 +82,13 @@ const Generator = () => {
       setIsRecording(false);
     }
   };
+
+  const resumeRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(
+    resumeRef,
+    isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume` : ""
+  );
+
   return (
     <DashboardWrapper>
       <span className="font-bold text-xl">CV Generator</span>
@@ -184,7 +192,7 @@ const Generator = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={prompts.length === 0 && audioBlob === null}
+                disabled={prompts.length === 0}
                 variant="default"
                 onClick={() => {
                   generateCvMutation();
@@ -204,16 +212,29 @@ const Generator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl shadow-xl h-fit min-w-full w-fit mt-4 p-6  ">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Generator</span>
-              <X onClick={() => null} size={20} />
+              <span className="font-bold text-lg">CV Generator</span>
             </div>
-            <div className="flex items-center justify-center  h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : generatedCv === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                JSON.stringify(generatedCv.cv_data)
+            <div className="h-full">
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess && (
+                <div className="flex items-start">
+                  <Resume
+                    ref={resumeRef}
+                    name={generatedCv.cv_data.name}
+                    title={"Product Designer"}
+                    contactInfo={{
+                      email: "kate.bishop@katedesign.com",
+                      linkedin: generatedCv.cv_data.linkedin,
+                      phone: "+46 98-215 4231",
+                    }}
+                    workExperience={generatedCv.cv_data.experience}
+                    education={generatedCv.cv_data.education}
+                    skills={generatedCv.cv_data.skills}
+                  />
+                  <button className="w-1/12" onClick={downloadPDF}>
+                    <DocumentDownloadIcon />
+                  </button>
+                </div>
               )}
             </div>
           </div>
