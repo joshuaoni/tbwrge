@@ -10,19 +10,8 @@ import { CircleXIcon, Loader2, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import RankByFilter from "./rank-by-filter";
-
-const rankFilters = [
-  { label: "Fit Score", value: "fit_score" },
-  { label: "YEO", value: "years_of_experience" },
-  { label: "Key Skils", value: "key_skills" },
-];
-
-interface Candidate {
-  candidate_name: string;
-  years_of_experience: number;
-  fit_score: number;
-  key_skills: number;
-}
+import { rankFilters } from "./ranking.constant";
+import { Candidate } from "./ranking.interface";
 
 const Ranking = () => {
   const [files, setFiles] = useState<any[]>([]);
