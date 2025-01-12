@@ -236,17 +236,16 @@ const Vetting = () => {
               <span className="font-bold">Cover Letter Vet</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              <div className="grid gap-6">
-                {isPending && <MetricCardsLoading />}
-                {isSuccess &&
-                  vets[0].metrics.map((item, i) => (
-                    <MetricCard key={i} {...item} />
-                  ))}
-                {isError && (
-                  <p>an error occured while vetting your cover letter</p>
-                )}
-              </div>
+
+            <div className="grid gap-6">
+              {isPending && <MetricCardsLoading />}
+              {isSuccess &&
+                vets[0].metrics.map((item, i) => (
+                  <MetricCard key={i} {...item} />
+                ))}
+              {isError && (
+                <p>an error occured while vetting your cover letter</p>
+              )}
             </div>
           </div>
         </div>
