@@ -1,14 +1,17 @@
-import React, { useRef, useState } from "react";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import RecordIcon from "../../../../public/images/icons/microphone.png";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
+import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+
 import { generateJob } from "@/actions/job-tools/generator";
+import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import RecordIcon from "../../../../../public/images/icons/microphone.png";
+import { JobPostGeneratorResponse } from "./generator.interface";
+import JobPost from "./job-post";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -47,9 +50,10 @@ const Generator = () => {
   };
   const {
     mutate: generateJobMutation,
-    data: generatedJob,
+    data,
     isPending,
-  } = useMutation({
+    isSuccess,
+  } = useMutation<JobPostGeneratorResponse>({
     mutationKey: ["generateCV"],
     mutationFn: async () => {
       let language: string = "en";
@@ -202,13 +206,13 @@ const Generator = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6  ">
+          <div className="rounded-xl shadow-xl mt-4 p-6  ">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Post Generator</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Add Prompts to generate Job Post</div>}
+            <div className="flex items-center">
+              {isSuccess && <JobPost {...data} />}
             </div>
           </div>
         </div>
