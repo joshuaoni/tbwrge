@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import { generateCandidateReport } from "@/actions/job-tools/candidate-rep-gen";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
-import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../public/images/icons/upload.png";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { generateCandidateReport } from "@/actions/job-tools/candidate-rep-gen";
 import { useUserStore } from "@/hooks/use-user-store";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { fileSizeToMb } from "@/lib/common";
+import { useMutation } from "@tanstack/react-query";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
+import uploadIcon from "../../../../public/images/icons/upload.png";
 
 const Generator = () => {
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
-  const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
-  const [translated, setTranslated] = useState("");
   const { userData } = useUserStore();
   const {
     mutate: generateReportMutation,
@@ -56,18 +55,12 @@ const Generator = () => {
         0,
         5 - files.length
       ); // Limit to 5 files
-      const newSizes = newFiles.map((file) =>
-        (file.size / (1024 * 1024)).toFixed(2)
-      ); // Sizes in MB
-
       setFiles((prev) => [...prev, ...newFiles]);
-      setFileSizes((prev) => [...prev, ...newSizes]);
     }
   };
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileSizes((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -119,7 +112,7 @@ const Generator = () => {
                   <div className="flex flex-col ml-2">
                     <span className="text-sm text-black">{file.name}</span>
                     <span className="text-sm text-textgray">
-                      {fileSizes[index]} MB
+                      {fileSizeToMb(file.size)} MB
                     </span>
                   </div>
                 </div>

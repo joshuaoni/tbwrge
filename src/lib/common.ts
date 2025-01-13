@@ -35,3 +35,7 @@ export function includeKeys<T extends Record<string, any>, K extends keyof T>(
     return acc;
   }, {} as Pick<T, K>);
 }
+
+export function fileSizeToMb(size: number) {
+  return (size / (1024 * 1024)).toFixed(2);
+}
