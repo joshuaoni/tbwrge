@@ -8,6 +8,7 @@ export const API_CONFIG = {
   FORGOT_PASSWORD: `${MAIN_URL}/auth/request-password-reset/`,
   RESET_PASSWORD: `${MAIN_URL}/auth/confirm-password-reset/`,
   CREATE_JOB: `${MAIN_URL}/job/create-job/`,
+  TRANSLATE_JOB_POSTING: `${MAIN_URL}/job/translate-jp`,
   SUMMARIZE_CV: `${MAIN_URL}/cv/summarize-cv/`,
   TRANSLATE_CV: `${MAIN_URL}/cv/translate-cv/`,
   VET_CV: `${MAIN_URL}/cv/vetting-cv/`,

@@ -1,7 +1,5 @@
 "use client";
-import JobDescription from "@/components/job/job-description";
 import { API_CONFIG } from "@/constants/api_config";
-import { useUserStore } from "@/hooks/use-user-store";
 import axios from "axios";
 
 export const translateJob = async (
@@ -14,7 +12,7 @@ export const translateJob = async (
   if (cv) {
     for (let i = 0; i < cv.length; i++) {
       const file = cv[i];
-      formData.append("cv_files", file);
+      formData.append("files", file);
     }
   }
   formData.append("text", JobDescription);
@@ -23,7 +21,7 @@ export const translateJob = async (
   try {
     const options = {
       method: "POST",
-      url: API_CONFIG.TRANSLATE_CV, // Replace with your API endpoint
+      url: API_CONFIG.TRANSLATE_JOB_POSTING, // Replace with your API endpoint
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
