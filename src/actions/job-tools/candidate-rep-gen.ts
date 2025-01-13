@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const generateCandidateReport = async (
   cv: any,
-  prompts: any,
+  jobAd: string,
   language: string,
   token: any
 ) => {
@@ -17,12 +17,8 @@ export const generateCandidateReport = async (
     }
   }
   formData.append("language", language);
-  if (prompts.length !== 0) {
-    let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
-    stringifiedPrompts.forEach((tag: any) => {
-      formData.append("prompts", tag);
-    });
-  }
+  formData.append("job_ad", jobAd);
+
   try {
     const response = await axios({
       method: "POST",
