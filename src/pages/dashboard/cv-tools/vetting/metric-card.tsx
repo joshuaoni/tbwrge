@@ -4,6 +4,7 @@ import { TbCircles, TbSquareCheck, TbUserCheck } from "react-icons/tb";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { inter } from "@/constants/app";
+import { twMerge } from "tailwind-merge";
 import { MetricCardProps } from "./vetting.interface";
 
 const metricStyles: Record<string, Record<string, string | IconType>> = {
@@ -30,31 +31,61 @@ const MetricIcon = (props: { metric: string } & IconBaseProps) => {
 function MetricCard(props: MetricCardProps) {
   return (
     <div className="flex items-center gap-6">
-      <div
-        className={classNames(
-          "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
-          inter.className,
-          metricStyles[props.Metric]?.className ??
-            metricStyles.fallback.className
-        )}
-      >
-        <span className="w-fit p-3 rounded-full border border-white">
-          <MetricIcon
-            metric={props.Metric}
-            size={32}
-            color="white"
-            className={classNames({
-              "rotate-12": props.Metric == "Relevance",
-            })}
-          />
-        </span>
-        <h6 className="text-xl capitalize w-40">{props.Metric}</h6>
-        <p className="font-bold text-4xl">{props.Score}%</p>
-      </div>
+      <MetricScore {...props} />
       <div className="text-[#747474] space-y-4">
         <h6 className="text-xl font-semibold capitalize">{props.Metric}</h6>
         <p>{props.Recommendation}</p>
       </div>
+    </div>
+  );
+}
+
+function MetricScore(
+  props: Omit<MetricCardProps, "Recommendation"> & {
+    size?: {
+      className?: string;
+      iconClass?: string;
+      iconSize?: number;
+      metricClass?: string;
+      scoreClass?: string;
+    };
+  }
+) {
+  return (
+    <div
+      className={twMerge(
+        classNames(
+          "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
+          inter.className,
+          metricStyles[props.Metric]?.className ??
+            metricStyles.fallback.className
+        ),
+        props.size?.className
+      )}
+    >
+      <span
+        className={twMerge(
+          "w-fit p-3 rounded-full border border-white",
+          props.size?.iconClass
+        )}
+      >
+        <MetricIcon
+          metric={props.Metric}
+          size={props.size?.iconSize ?? 32}
+          color="white"
+          className={classNames({
+            "rotate-12": props.Metric == "Relevance",
+          })}
+        />
+      </span>
+      <h6
+        className={twMerge("text-xl capitalize w-40", props.size?.metricClass)}
+      >
+        {props.Metric}
+      </h6>
+      <p className={twMerge("font-bold text-4xl", props.size?.scoreClass)}>
+        {props.Score}%
+      </p>
     </div>
   );
 }
@@ -105,4 +136,4 @@ function MetricCardsLoading() {
   );
 }
 
-export { MetricCard, MetricCardsLoading };
+export { MetricCard, MetricCardsLoading, MetricScore };
