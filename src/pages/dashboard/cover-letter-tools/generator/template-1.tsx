@@ -1,6 +1,6 @@
 function CoverLetterTemplate1() {
   return (
-    <div className="relative max-w-4xl mx-auto p-6 flex justify-center bg-white shadow-md border border-gray-200 rounded-lg">
+    <div className="relative max-w-4xl mx-auto p-4 flex justify-center bg-white border border-gray-200 rounded-lg text-xs">
       <div className="w-1/4 mt-28">
         <p className="">
           <span className="font-bold">Munzurul Hasan</span>
@@ -17,8 +17,8 @@ function CoverLetterTemplate1() {
         </p>
       </div>
 
-      <div className="absolute top-1/2 -translate-y-1/2 left-[16%] py-6 px-4 flex flex-col items-end bg-white">
-        <span className="uppercase tracking-widest text-lg font-semibold">
+      <div className="absolute top-1/2 -translate-y-1/2 left-[16%] py-4 px-2 flex flex-col items-end bg-white">
+        <span className="uppercase tracking-widest text-base font-semibold">
           date
         </span>
         <span className="font-bold">-</span>
@@ -26,13 +26,13 @@ function CoverLetterTemplate1() {
       </div>
 
       <div className="border-l-2 border-black pl-6 ml-6 w-2/3">
-        <h3 className="text-3xl font-extralight">Munzurul Hassan</h3>
-        <p className="border-b-2 border-orange-300 w-fit font-extralight text-lg mb-6">
+        <h3 className="text-xl font-extralight">Munzurul Hassan</h3>
+        <p className="border-b-2 border-orange-300 w-fit font-extralight text-base mb-6">
           Product Designer
         </p>
         <p className="font-semibold">Dear Hiring Manager,</p>
 
-        <p className="mt-4 text-gray-700">
+        <p className="mt-2 text-gray-700">
           I am writing to express my strong interest in the Product Designer
           role at your company. With my passion for design, creativity, and user
           experience, I am confident that I can make a valuable contribution to
