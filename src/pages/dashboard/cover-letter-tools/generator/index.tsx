@@ -325,8 +325,8 @@ const Generator = () => {
               {isSuccess && (
                 <div className="h-full overflow-y-scroll space-y-4">
                   <CoverLetterTemplate1 />
-                  <CoverLetterTemplate2 />
                   <CoverLetterTemplate />
+                  <CoverLetterTemplate2 />
                 </div>
               )}
             </div>
