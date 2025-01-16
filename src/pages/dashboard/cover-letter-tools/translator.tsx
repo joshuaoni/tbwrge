@@ -1,6 +1,5 @@
 import { translateCoverLetter } from "@/actions/cover-letter-tools/translate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { useDownloadPDF } from "@/hooks/download-pdf";
@@ -11,7 +10,8 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import CoverLetter from "./generator/cover-letter";
+import CoverLetterTemplate1 from "./generator/template-1";
+import CoverLetterTemplate from "./generator/template-2";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -175,11 +175,9 @@ const Translator = () => {
             <div className="flex items-center justify-center h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <div className="flex items-start">
-                  <CoverLetter ref={clRef} name={""} letter={translated} />
-                  <button className="w-1/12" onClick={downloadPDF}>
-                    <DocumentDownloadIcon />
-                  </button>
+                <div className="h-full overflow-y-scroll space-y-4">
+                  <CoverLetterTemplate1 />
+                  <CoverLetterTemplate />
                 </div>
               )}
             </div>
