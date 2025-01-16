@@ -1,6 +1,5 @@
 import { generateCoverLetter } from "@/actions/cover-letter-tools/generate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,8 +19,10 @@ import React, { useRef, useState } from "react";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import CoverLetter from "./cover-letter";
 import { CoverLetterGeneratorResponse } from "./generator.interface";
+import CoverLetterTemplate1 from "./template-1";
+import CoverLetterTemplate from "./template-2";
+import CoverLetterTemplate2 from "./template-3";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -322,15 +323,10 @@ const Generator = () => {
             <div className="flex items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <div className="flex items-start">
-                  <CoverLetter
-                    ref={clRef}
-                    name={generatedCoverLetter[0].candidate_name}
-                    letter={generatedCoverLetter[0].cover_letter_text}
-                  />
-                  <button className="w-1/12" onClick={downloadPDF}>
-                    <DocumentDownloadIcon />
-                  </button>
+                <div className="h-full overflow-y-scroll space-y-4">
+                  <CoverLetterTemplate1 />
+                  <CoverLetterTemplate2 />
+                  <CoverLetterTemplate />
                 </div>
               )}
             </div>
