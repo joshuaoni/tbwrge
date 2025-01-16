@@ -1,11 +1,11 @@
 function CoverLetterTemplate() {
   return (
-    <div className="bg-gray-50 flex items-center justify-center">
+    <div className="bg-gray-50 border border-gray-200 text-xs flex items-center justify-center">
       <div className="bg-white p-8 shadow-lg rounded-lg max-w-3xl w-full">
         <div className="flex justify-between items-start">
           {/* Left Section */}
           <div>
-            <h1 className="text-lg font-semibold">Munzurul Hasan</h1>
+            <h1 className="text-base font-semibold">Munzurul Hasan</h1>
             <p className="text-sm text-gray-600 font-medium mt-2">
               UX Designer
             </p>
@@ -28,7 +28,7 @@ function CoverLetterTemplate() {
 
         {/* Letter Content */}
         <div className="mt-6">
-          <p className="font-semibold text-lg">Dear Hiring Manager,</p>
+          <p className="font-semibold text-base">Dear Hiring Manager,</p>
           <p className="mt-4 text-gray-700">
             I am writing to express my strong interest in the Product Designer
             role at your company. With my passion for design, creativity, and
