@@ -1,18 +1,26 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 
 import { useOutsideClick } from "@/hooks/outside-click";
-import { JobBoardFilterProps } from "./job-board.interface";
 
-function JobBoardFilter(props: JobBoardFilterProps) {
+interface RankByFilterProps {
+  title: string;
+  options: { label: string; value: string }[];
+  onChange: (val: string) => void;
+}
+
+function RankByFilter(props: RankByFilterProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [_, setSelectedOption] = useState(props.options[0]?.value ?? "");
+  const [selectedOption, setSelectedOption] = useState(
+    props.options[0]?.value ?? ""
+  );
 
-  const handleOptionClick = (optionLabel: string, optionValue: string) => {
-    setSelectedOption(optionLabel);
+  const handleOptionClick = (optionValue: string) => {
+    setSelectedOption(optionValue);
     setIsOpen(false);
     if (props.onChange) {
       props.onChange(optionValue);
@@ -26,16 +34,17 @@ function JobBoardFilter(props: JobBoardFilterProps) {
       <label className="sr-only">{props.title}</label>
       <button
         onClick={() => setIsOpen(true)}
-        className="w-52 py-3 px-4 flex justify-between items-center rounded-lg bg-[#ebebeb]"
+        className="w-52 py-3 px-4 flex justify-between items-center rounded-full bg-[#ebebeb] text-[#898989]"
       >
-        {props.title}
+        {props.title}&nbsp;
+        {props.options.find((o) => o.value === selectedOption)?.label}
         <CaretDownIcon />
       </button>
       <AnimatePresence>
         {isOpen && (
           <motion.div
             ref={dropdownRef}
-            className="absolute z-10 w-full mt-1 bg-[#ebebeb] rounded-md shadow-lg p-2"
+            className="absolute z-10 w-full mt-1 bg-white"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -43,8 +52,13 @@ function JobBoardFilter(props: JobBoardFilterProps) {
             {props.options.map((option, i) => (
               <span
                 key={i}
-                className="py-2 px-4 hover:bg-[#c0c0c0] cursor-pointer rounded-lg transition-all block"
-                onClick={() => handleOptionClick(option.label, option.value)}
+                className={classNames(
+                  "py-3 px-6 hover:bg-lightgreen hover:text-white cursor-pointer transition-all block",
+                  {
+                    "bg-lightgreen text-white": option.value === selectedOption,
+                  }
+                )}
+                onClick={() => handleOptionClick(option.value)}
               >
                 {option.label}
               </span>
@@ -56,4 +70,4 @@ function JobBoardFilter(props: JobBoardFilterProps) {
   );
 }
 
-export default JobBoardFilter;
+export default RankByFilter;

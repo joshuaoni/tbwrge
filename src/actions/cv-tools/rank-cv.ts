@@ -30,7 +30,7 @@ export const rankCV = async (
   try {
     const response = await axios({
       method: "POST",
-      url: API_CONFIG.VET_CV,
+      url: API_CONFIG.RANK_CV,
       headers: {
         Authorization: `Bearer ${token}`,
       },

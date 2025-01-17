@@ -27,6 +27,7 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        resume: { text: "#CA6D18" },
       },
       borderRadius: {
         lg: "var(--radius)",

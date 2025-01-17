@@ -2,29 +2,24 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const translateCoverLetter = async (
-  cv: File[],
-  language: string,
-  token: any
-) => {
-  let formData = new FormData();
-  if (cv) {
-    for (let i = 0; i < cv.length; i++) {
-      const file = cv[i];
-      formData.append("file", file);
-    }
-  }
-  formData.append("language", language);
-
+export const getJobApplicationItem = async ({
+  token,
+  applicationId,
+}: {
+  token: string;
+  applicationId: string;
+}) => {
   try {
     const options = {
-      method: "POST",
-      url: API_CONFIG.TRANSLATE_COVER_LETTER, // Replace with your API endpoint
+      method: "GET",
+      url: `${API_CONFIG.GET_JOB_APPLICATION_ITEM.replace(
+        "{application_id}",
+        applicationId
+      )}`, // Replace with your API endpoint
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      data: formData,
     };
     const response = await axios(options);
     return response.data; // Return only the response data for convenience

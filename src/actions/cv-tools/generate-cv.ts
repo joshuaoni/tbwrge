@@ -3,9 +3,9 @@ import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
 export const generateCV = async (
-  audio: any,
   token: string,
-  prompts: string[]
+  prompts: string[],
+  audio?: any
 ) => {
   const formData = new FormData();
   if (audio) {

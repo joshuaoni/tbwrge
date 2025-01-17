@@ -13,6 +13,7 @@ export interface IGetJobOpen {
   search_term: string;
   job_type: IGetJobOpenJobType;
   skills: string[];
+  location: string;
 }
 
 export interface IGetJobOpenRes {

@@ -1,26 +1,57 @@
-import React, { useRef, useState } from "react";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import RecordIcon from "../../../../public/images/icons/microphone.png";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
-import { useUserStore } from "@/hooks/use-user-store";
-import { generateJob } from "@/actions/job-tools/generator";
+import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
+
+import { generateCV } from "@/actions/cv-tools/generate-cv";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useDownloadPDF } from "@/hooks/download-pdf";
+import { useUserStore } from "@/hooks/use-user-store";
+import RecordIcon from "../../../../../public/images/icons/microphone.png";
+import { CVGeneratorResponse } from "./generator.interface";
+import Resume from "./resume";
 
 const Generator = () => {
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const { userData } = useUserStore();
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
-  const { userData } = useUserStore();
+  const {
+    mutate: generateCvMutation,
+    data: generatedCv,
+    isPending,
+    isSuccess,
+  } = useMutation<CVGeneratorResponse>({
+    mutationKey: ["generateCV"],
+    mutationFn: async () => {
+      let language: string = "en";
+      if (selectedLanguage === "English") {
+        language = "en";
+      } else if (selectedLanguage === "French") {
+        language = "fr";
+      } else if (selectedLanguage === "Spanish") {
+        language = "es";
+      } else if (selectedLanguage === "German") {
+        language = "de";
+      } else if (selectedLanguage === "Arabic") {
+        language = "ar";
+      } else if (selectedLanguage === "Portugese") {
+        language = "pt";
+      }
+
+      const response = await generateCV(userData?.token as string, prompts);
+      return response;
+    },
+  });
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -45,51 +76,29 @@ const Generator = () => {
       alert("Microphone access is required to record audio.");
     }
   };
-  const {
-    mutate: generateJobMutation,
-    data: generatedJob,
-    isPending,
-  } = useMutation({
-    mutationKey: ["generateCV"],
-    mutationFn: async () => {
-      let language: string = "en";
-      if (selectedLanguage === "English") {
-        language = "en";
-      } else if (selectedLanguage === "French") {
-        language = "fr";
-      } else if (selectedLanguage === "Spanish") {
-        language = "es";
-      } else if (selectedLanguage === "German") {
-        language = "de";
-      } else if (selectedLanguage === "Arabic") {
-        language = "ar";
-      } else if (selectedLanguage === "Portugese") {
-        language = "pt";
-      }
-
-      const response = await generateJob(
-        audioBlob,
-        userData?.token,
-        prompts,
-        language
-      );
-      return response;
-    },
-  });
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
   };
+
+  const resumeRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(
+    resumeRef,
+    isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume` : ""
+  );
+
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">Job Post Generator</span>
+      <span className="font-bold text-xl">CV Generator</span>
       <section className="flex h-screen space-x-4 ">
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">Describe Job Post</span>
+              <span className="font-bold">
+                Decribe your Education/Professional Background
+              </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
@@ -142,7 +151,7 @@ const Generator = () => {
             </div>
 
             <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
-              <span className="text-xs font-light">Record Voicenote</span>
+              <span className="text-xs font-light">Record</span>
               {isRecording ? (
                 <StopCircleIcon
                   color="red"
@@ -173,7 +182,6 @@ const Generator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
                 Select Output language
               </span>
               <LanguageSelectorDropDown
@@ -187,14 +195,14 @@ const Generator = () => {
                 disabled={prompts.length === 0}
                 variant="default"
                 onClick={() => {
-                  generateJobMutation();
+                  generateCvMutation();
                 }}
                 className="self-center bg-lightgreen min-w-[100px]  text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Job "
+                  "Generate CV"
                 )}
               </Button>
             </div>
@@ -202,13 +210,32 @@ const Generator = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-[200px] mt-4 p-6  ">
+          <div className="rounded-xl shadow-xl h-fit min-w-full w-fit mt-4 p-6  ">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Job Post Generator</span>
-              <X onClick={() => null} size={20} />
+              <span className="font-bold text-lg">CV Generator</span>
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
-              {summary === "" && <div>Add Prompts to generate Job Post</div>}
+            <div className="h-full">
+              {isPending && <Loader2 className="animate-spin" />}
+              {isSuccess && (
+                <div className="flex items-start">
+                  <Resume
+                    ref={resumeRef}
+                    name={generatedCv.cv_data.name}
+                    title={"Product Designer"}
+                    contactInfo={{
+                      email: "kate.bishop@katedesign.com",
+                      linkedin: generatedCv.cv_data.linkedin,
+                      phone: "+46 98-215 4231",
+                    }}
+                    workExperience={generatedCv.cv_data.experience}
+                    education={generatedCv.cv_data.education}
+                    skills={generatedCv.cv_data.skills}
+                  />
+                  <button className="w-1/12" onClick={downloadPDF}>
+                    <DocumentDownloadIcon />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ export const API_CONFIG = {
   FORGOT_PASSWORD: `${MAIN_URL}/auth/request-password-reset/`,
   RESET_PASSWORD: `${MAIN_URL}/auth/confirm-password-reset/`,
   CREATE_JOB: `${MAIN_URL}/job/create-job/`,
+  TRANSLATE_JOB_POSTING: `${MAIN_URL}/job/translate-jp`,
   SUMMARIZE_CV: `${MAIN_URL}/cv/summarize-cv/`,
   TRANSLATE_CV: `${MAIN_URL}/cv/translate-cv/`,
   VET_CV: `${MAIN_URL}/cv/vetting-cv/`,
@@ -18,6 +19,7 @@ export const API_CONFIG = {
   VET_COVER_LETTER: `${MAIN_URL}/cl/vett-cl/`,
   RANK_COVER_LETTER: `${MAIN_URL}/cl/rank-cl/`,
   GENERATE_COVER_LETTER: `${MAIN_URL}/cl/generate-cl/`,
+  TRANSLATE_COVER_LETTER: `${MAIN_URL}/cl/translate-cl/`,
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
@@ -29,5 +31,5 @@ export const API_CONFIG = {
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
   SUBMIT_JOB_APPLICATION: `${MAIN_URL}/job/submit-application/`,
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
-  GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open`,
+  GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
 };
