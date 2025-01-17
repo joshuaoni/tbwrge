@@ -165,7 +165,7 @@ const Translator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Job "
+                  "Translate Job "
                 )}
               </Button>
             </div>
