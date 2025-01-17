@@ -10,9 +10,9 @@ export const generateJob = async (
 ) => {
   const formData = new FormData();
 
-  if (audioBlob) {
-    formData.append("file", audioBlob);
-  }
+  // if (audioBlob) {
+  //   formData.append("file", audioBlob);
+  // }
 
   formData.append("language", language);
   if (prompts.length !== 0) {

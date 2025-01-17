@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import { translateJob } from "@/actions/job-tools/translator";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
-import { CircleXIcon, Loader2, Plus, X } from "lucide-react";
-import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../public/images/icons/upload.png";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/hooks/use-user-store";
-import { translateJob } from "@/actions/job-tools/translator";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { useMutation } from "@tanstack/react-query";
+import { CircleXIcon, Loader2, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
+import uploadIcon from "../../../../public/images/icons/upload.png";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
-  const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [value, setValue] = useState("");
   const { userData } = useUserStore();
@@ -52,19 +51,14 @@ const Translator = () => {
       const newFiles = Array.from(event.target.files).slice(
         0,
         5 - files.length
-      ); // Limit to 5 files
-      const newSizes = newFiles.map((file) =>
-        (file.size / (1024 * 1024)).toFixed(2)
-      ); // Sizes in MB
+      ); // Limit to 5 filess
 
       setFiles((prev) => [...prev, ...newFiles]);
-      setFileSizes((prev) => [...prev, ...newSizes]);
     }
   };
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileSizes((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -81,7 +75,6 @@ const Translator = () => {
             </span>
             <div className="relative w-full px-4 mt-3 flex flex-col items-start">
               <input
-                multiple
                 onChange={handleFileChange}
                 type="file"
                 accept=".pdf, .doc, .docx, .txt"
@@ -116,7 +109,7 @@ const Translator = () => {
                   <div className="flex flex-col ml-2">
                     <span className="text-sm text-black">{file.name}</span>
                     <span className="text-sm text-textgray">
-                      {fileSizes[index]} MB
+                      {(file.size / (1024 * 1024)).toFixed(2)} MB
                     </span>
                   </div>
                 </div>
@@ -180,9 +173,7 @@ const Translator = () => {
               <X size={20} />
             </div>
             <div className="flex items-center justify-center h-full">
-              {translated?.map((tran: any) =>
-                JSON.stringify(tran.translated_cv)
-              )}
+              {translated}
             </div>
           </div>
         </div>

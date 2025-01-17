@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import { rewriteCoverLetter } from "@/actions/cover-letter-tools/rewrite-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useMutation } from "@tanstack/react-query";
-import { rewriteCoverLetter } from "@/actions/cover-letter-tools/rewrite-cover-letter";
-import { useUserStore } from "@/hooks/use-user-store";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import CoverLetterTemplate1 from "./generator/template-1";
+import CoverLetterTemplate from "./generator/template-2";
 
 const ReWriter = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -212,13 +213,11 @@ const ReWriter = () => {
               <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
-              {isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : rewrite === undefined ? (
-                <div>Your head to head will appear here</div>
-              ) : (
-                JSON.stringify(rewrite)
-              )}
+              {isPending && <Loader2 className="animate-spin" />}
+              <div className="h-full overflow-y-scroll space-y-4">
+                <CoverLetterTemplate1 />
+                <CoverLetterTemplate />
+              </div>
             </div>
           </div>
         </div>
