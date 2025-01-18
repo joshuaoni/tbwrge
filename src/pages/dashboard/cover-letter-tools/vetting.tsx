@@ -11,10 +11,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import {
-  MetricCard,
-  MetricCardsLoading,
-} from "../cv-tools/vetting/metric-card";
+import { MetricCardsLoading } from "../cv-tools/vetting/metric-card";
+import VettingWrapper from "../cv-tools/vetting/vetting-wrapper";
 import { VettingResponse } from "../cv-tools/vetting/vetting.interface";
 
 const Vetting = () => {
@@ -239,10 +237,7 @@ const Vetting = () => {
 
             <div className="grid gap-6">
               {isPending && <MetricCardsLoading />}
-              {isSuccess &&
-                vets[0].metrics.map((item, i) => (
-                  <MetricCard key={i} {...item} />
-                ))}
+              {isSuccess && <VettingWrapper files={files} vets={vets} />}
               {isError && (
                 <p>an error occured while vetting your cover letter</p>
               )}
