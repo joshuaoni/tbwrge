@@ -1,9 +1,9 @@
-import React from "react";
 import { ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
 import Image from "next/image";
-import gem from "../../../public/images/gem.png";
-import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
+import React from "react";
+import gem from "../../../public/images/gem.png";
 const CvDropDown = () => {
   const [showCvDropDown, setShowCvDropDown] = React.useState(false);
   const router = useRouter();
@@ -32,6 +32,11 @@ const CvDropDown = () => {
     {
       link: "/dashboard/cv-tools/translator",
       title: "CV Translator",
+      icon: <Image src={gem} alt="" width={20} height={20} />,
+    },
+    {
+      link: "/dashboard/cv-tools/rewriter",
+      title: "CV Rewriter",
       icon: <Image src={gem} alt="" width={20} height={20} />,
     },
     {
