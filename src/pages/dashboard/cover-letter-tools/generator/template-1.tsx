@@ -1,6 +1,11 @@
-function CoverLetterTemplate1() {
+import { forwardRef } from "react";
+
+const CoverLetterTemplate1 = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="relative max-w-4xl mx-auto p-4 flex justify-center bg-white border border-gray-200 rounded-lg text-xs">
+    <div
+      ref={ref}
+      className="relative max-w-4xl mx-auto p-4 flex justify-center bg-white border border-gray-200 rounded-lg text-xs"
+    >
       <div className="w-1/4 mt-28">
         <p className="">
           <span className="font-bold">Munzurul Hasan</span>
@@ -75,6 +80,6 @@ function CoverLetterTemplate1() {
       </div>
     </div>
   );
-}
+});
 
 export default CoverLetterTemplate1;
