@@ -1,6 +1,11 @@
-function CoverLetterTemplate2() {
+import { forwardRef } from "react";
+
+const CoverLetterTemplate2 = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="bg-gray-50 border border-gray-200 text-xs flex items-center justify-center">
+    <div
+      ref={ref}
+      className="bg-gray-50 border border-gray-200 text-xs flex items-center justify-center"
+    >
       <div className="bg-white p-8 shadow-lg rounded-lg max-w-3xl w-full">
         <div className="flex justify-between items-start">
           {/* Left Section */}
@@ -67,6 +72,6 @@ function CoverLetterTemplate2() {
       </div>
     </div>
   );
-}
+});
 
 export default CoverLetterTemplate2;
