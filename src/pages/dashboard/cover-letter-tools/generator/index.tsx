@@ -3,7 +3,6 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -23,6 +22,7 @@ import { CoverLetterGeneratorResponse } from "./generator.interface";
 import CoverLetterTemplate1 from "./template-1";
 import CoverLetterTemplate from "./template-2";
 import CoverLetterTemplate2 from "./template-3";
+import TemplateWrapper from "./template-wrapper";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -121,8 +121,6 @@ const Generator = () => {
     event.target.value = ""; // Reset file input
   };
 
-  const clRef = useRef<HTMLDivElement>(null);
-  const { downloadPDF } = useDownloadPDF(clRef);
   return (
     <DashboardWrapper>
       <span className="font-bold text-xl">Cover Letter Generator</span>
@@ -324,9 +322,9 @@ const Generator = () => {
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
                 <div className="h-full overflow-y-scroll space-y-4">
-                  <CoverLetterTemplate1 />
-                  <CoverLetterTemplate />
-                  <CoverLetterTemplate2 />
+                  <TemplateWrapper template={CoverLetterTemplate1} />
+                  <TemplateWrapper template={CoverLetterTemplate} />
+                  <TemplateWrapper template={CoverLetterTemplate2} />
                 </div>
               )}
             </div>
