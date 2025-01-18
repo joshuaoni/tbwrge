@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { summarizeCV } from "@/actions/cv-tools/summarize-cv";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Image from "next/image";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
-import { CircleXIcon, Loader, Loader2, Plus, Trash, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
+import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { summarizeCV } from "@/actions/cv-tools/summarize-cv";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { useUserStore } from "@/hooks/use-user-store";
 
 interface UploadedFile {
   file: File;
@@ -232,9 +232,16 @@ const Summarizer: React.FC = () => {
               ) : summaries === undefined ? (
                 <div>Your summary will appear here</div>
               ) : (
-                summaries?.map((summary: { summarized_cv: string }) => (
-                  <span>{summary.summarized_cv}</span>
-                ))
+                summaries?.map(
+                  (summary: { summarized_cv: string; name: string }) => (
+                    <div className="my-4">
+                      <h5 className="text-lg font-bold">{summary.name}</h5>
+                      <p className="text-sm text-[#898989]">
+                        {summary.summarized_cv}
+                      </p>
+                    </div>
+                  )
+                )
               )}
             </div>
           </div>
