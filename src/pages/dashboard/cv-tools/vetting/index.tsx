@@ -12,12 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import { MetricCard, MetricCardsLoading } from "./metric-card";
+import { MetricCardsLoading } from "./metric-card";
+import VettingWrapper from "./vetting-wrapper";
 import { VettingResponse } from "./vetting.interface";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
+  const [tabIndex, setTabIndex] = useState(0);
   const [value, setValue] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
@@ -228,10 +230,7 @@ const Vetting = () => {
             </div>
             <div className="grid gap-6">
               {isPending && <MetricCardsLoading />}
-              {isSuccess &&
-                vets[0].metrics.map((item, i) => (
-                  <MetricCard key={i} {...item} />
-                ))}
+              {isSuccess && <VettingWrapper files={files} vets={vets} />}
             </div>
           </div>
         </div>
