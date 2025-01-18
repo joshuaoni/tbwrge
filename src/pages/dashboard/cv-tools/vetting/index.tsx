@@ -145,11 +145,13 @@ const Vetting = () => {
               </div>
             )}
           </div>
+
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Post Job Ad</span>
+            <span className="font-bold">Paste Your Job description here</span>
             <Textarea
               placeholder="Input Job Description"
               value={jobDescription}
+              rows={8}
               onChange={(e) => setJobDescription(e.target.value)}
               className="my-3 bg-white border"
             />
@@ -158,19 +160,17 @@ const Vetting = () => {
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
+                Want to customize your results?
                 <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
+                  &#40;Add up to 20 prompts&#41;
                 </span>
               </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
-                  if (prompts.length < 20) {
+                  if (value && prompts.length < 20) {
                     setPrompts((prev) => [...prev, value]);
                     setValue("");
-                  } else {
-                    alert("You can only add up to 20 prompts.");
                   }
                 }}
               />
@@ -181,6 +181,7 @@ const Vetting = () => {
               className="my-3"
               onChange={(e) => setValue(e.target.value)}
             />
+
             <div>
               {prompts.map((prompt, index) => (
                 <div key={index} className="flex justify-between my-2">
@@ -196,6 +197,7 @@ const Vetting = () => {
               ))}
             </div>
           </div>
+
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
