@@ -14,6 +14,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { CVGeneratorResponse } from "./generator.interface";
 import Resume from "./resume";
+import ResumeTwo from "./resume-2";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -87,6 +88,12 @@ const Generator = () => {
   const { downloadPDF } = useDownloadPDF(
     resumeRef,
     isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume` : ""
+  );
+
+  const resumeRef2 = useRef<HTMLDivElement>(null);
+  const { downloadPDF: downloadPDF2 } = useDownloadPDF(
+    resumeRef2,
+    isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume-2` : ""
   );
 
   return (
@@ -217,23 +224,41 @@ const Generator = () => {
             <div className="h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <div className="flex items-start">
-                  <Resume
-                    ref={resumeRef}
-                    name={generatedCv.cv_data.name}
-                    title={"Product Designer"}
-                    contactInfo={{
-                      email: "kate.bishop@katedesign.com",
-                      linkedin: generatedCv.cv_data.linkedin,
-                      phone: "+46 98-215 4231",
-                    }}
-                    workExperience={generatedCv.cv_data.experience}
-                    education={generatedCv.cv_data.education}
-                    skills={generatedCv.cv_data.skills}
-                  />
-                  <button className="w-1/12" onClick={downloadPDF}>
-                    <DocumentDownloadIcon />
-                  </button>
+                <div className="space-y-6 mt-4">
+                  <div className="flex items-start">
+                    <Resume
+                      ref={resumeRef}
+                      name={generatedCv.cv_data.name}
+                      title={"Product Designer"}
+                      contactInfo={{
+                        email: "kate.bishop@katedesign.com",
+                        linkedin: generatedCv.cv_data.linkedin,
+                        phone: "+46 98-215 4231",
+                      }}
+                      workExperience={generatedCv.cv_data.experience}
+                      education={generatedCv.cv_data.education}
+                      skills={generatedCv.cv_data.skills}
+                    />
+                    <button className="w-1/12" onClick={downloadPDF}>
+                      <DocumentDownloadIcon />
+                    </button>
+                  </div>
+                  <div className="flex items-start">
+                    <ResumeTwo
+                      ref={resumeRef2}
+                      name={generatedCv.cv_data.name}
+                      title={"Product Designer"}
+                      contactInfo={{
+                        email: "kate.bishop@katedesign.com",
+                        linkedin: generatedCv.cv_data.linkedin,
+                        phone: "+46 98-215 4231",
+                      }}
+                      workExperience={generatedCv.cv_data.experience}
+                    />
+                    <button className="w-1/12" onClick={downloadPDF2}>
+                      <DocumentDownloadIcon />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
