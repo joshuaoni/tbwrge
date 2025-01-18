@@ -53,66 +53,70 @@ const Resume = forwardRef<HTMLDivElement, ResumeProps>(
 
         <div className="flex items-start gap-10">
           {/* Left Column */}
-          <div className="w-full">
-            {/* Work Experience */}
-            <section className="mb-10">
-              <h2
-                className={classNames(
-                  prata.className,
-                  "text-resume-text font-bold mb-4"
-                )}
-              >
-                Work Experience
-              </h2>
-              <div className="space-y-6">
-                {workExperience.map((job, index) => (
-                  <div key={index}>
-                    <h3
-                      className={classNames(
-                        prata.className,
-                        "font-semibold text-gray-800"
-                      )}
-                    >
-                      <span className="block text-sm">{job.role}</span>
-                      <span className="block text-gray-500 text-xs">
-                        {job.company_name}, {job.start_date} - {job.end_date}
-                      </span>
-                    </h3>
-                    <p
-                      className={classNames(
-                        poppins.className,
-                        "text-xs text-gray-600 mt-1"
-                      )}
-                    >
-                      {job.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+          {workExperience![0].role && (
+            <div className="w-full">
+              {/* Work Experience */}
+              <section className="mb-10">
+                <h2
+                  className={classNames(
+                    prata.className,
+                    "text-resume-text font-bold mb-4"
+                  )}
+                >
+                  Work Experience
+                </h2>
+                <div className="space-y-6">
+                  {workExperience.map((job, index) => (
+                    <div key={index}>
+                      <h3
+                        className={classNames(
+                          prata.className,
+                          "font-semibold text-gray-800"
+                        )}
+                      >
+                        <span className="block text-sm">{job.role}</span>
+                        <span className="block text-gray-500 text-xs">
+                          {job.company_name}, {job.start_date} - {job.end_date}
+                        </span>
+                      </h3>
+                      <p
+                        className={classNames(
+                          poppins.className,
+                          "text-xs text-gray-600 mt-1"
+                        )}
+                      >
+                        {job.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
 
           {/* Right Column */}
-          <div className={classNames(prata.className, "w-full")}>
-            {/* Education */}
-            <section>
-              <h2 className="text-resume-text font-bold mb-4">
-                Education & Learning
-              </h2>
-              <div className="space-y-6 text-xs">
-                {education.map((edu, index) => (
-                  <div key={index}>
-                    <h3 className="font-semibold text-gray-800">
-                      {edu.certificate}{" "}
-                      <span className="text-gray-500">
-                        - {edu.institution}, {edu.date}
-                      </span>
-                    </h3>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+          {education![0].certificate && (
+            <div className={classNames(prata.className, "w-full")}>
+              {/* Education */}
+              <section>
+                <h2 className="text-resume-text font-bold mb-4">
+                  Education & Learning
+                </h2>
+                <div className="space-y-6 text-xs">
+                  {education.map((edu, index) => (
+                    <div key={index}>
+                      <h3 className="font-semibold text-gray-800">
+                        {edu.certificate}{" "}
+                        <span className="text-gray-500">
+                          - {edu.institution}, {edu.date}
+                        </span>
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
         </div>
 
         {/* Skills */}
