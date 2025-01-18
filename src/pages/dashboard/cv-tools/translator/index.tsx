@@ -12,6 +12,7 @@ import React, { useRef, useState } from "react";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
 import Resume from "../generator/resume";
+import ResumeTwo from "../generator/resume-2";
 import { CVTranslatorResponse } from "./translator.interface";
 
 const Translator = () => {
@@ -70,6 +71,14 @@ const Translator = () => {
   const { downloadPDF } = useDownloadPDF(
     resumeRef,
     isSuccess ? `${translated[0].cv_data.name.replaceAll(" ", "-")}-resume` : ""
+  );
+
+  const rewriterRef2 = useRef<HTMLDivElement>(null);
+  const { downloadPDF: downloadPDF2 } = useDownloadPDF(
+    rewriterRef2,
+    isSuccess
+      ? `${translated[0].cv_data.name.replaceAll(" ", "-")}-resume2`
+      : ""
   );
 
   return (
@@ -189,23 +198,41 @@ const Translator = () => {
             <div className="h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <div className="flex items-start">
-                  <Resume
-                    ref={resumeRef}
-                    name={translated[0].cv_data.name}
-                    title={"Product Designer"}
-                    contactInfo={{
-                      email: "kate.bishop@katedesign.com",
-                      linkedin: translated[0].cv_data.linkedin,
-                      phone: "+46 98-215 4231",
-                    }}
-                    workExperience={translated[0].cv_data.experience}
-                    education={translated[0].cv_data.education}
-                    skills={translated[0].cv_data.skills}
-                  />
-                  <button className="w-1/12" onClick={downloadPDF}>
-                    <DocumentDownloadIcon />
-                  </button>
+                <div className="space-y-6 mt-4">
+                  <div className="flex items-start">
+                    <Resume
+                      ref={resumeRef}
+                      name={translated[0].cv_data.name}
+                      title={"Product Designer"}
+                      contactInfo={{
+                        email: "kate.bishop@katedesign.com",
+                        linkedin: translated[0].cv_data.linkedin,
+                        phone: "+46 98-215 4231",
+                      }}
+                      workExperience={translated[0].cv_data.experience}
+                      education={translated[0].cv_data.education}
+                      skills={translated[0].cv_data.skills}
+                    />
+                    <button className="w-1/12" onClick={downloadPDF}>
+                      <DocumentDownloadIcon />
+                    </button>
+                  </div>
+                  <div className="flex items-start">
+                    <ResumeTwo
+                      ref={rewriterRef2}
+                      name={translated[0].cv_data.name}
+                      title={"Product Designer"}
+                      contactInfo={{
+                        email: "kate.bishop@katedesign.com",
+                        linkedin: translated[0].cv_data.linkedin,
+                        phone: "+46 98-215 4231",
+                      }}
+                      workExperience={translated[0].cv_data.experience}
+                    />
+                    <button className="w-1/12" onClick={downloadPDF2}>
+                      <DocumentDownloadIcon />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
