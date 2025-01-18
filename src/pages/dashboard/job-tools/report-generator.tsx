@@ -224,27 +224,33 @@ const Generator = () => {
                       { title: "Company", value_key: "current_company" },
                       { title: "Nationality", value_key: "nationality" },
                       { title: "Location", value_key: "country_of_residence" },
-                    ].map((item, i) => (
-                      <div
-                        key={i}
-                        className="w-full flex justify-between items-end border-b-[0.5px] border-lightgreen"
-                      >
-                        <span className="text-sm font-medium">
-                          {item.title}
-                        </span>
-                        {isPending ? (
-                          <span className="h-4 w-36 bg-[#E7E7E7] rounded-lg animate-pulse" />
-                        ) : (
-                          <span className="text-xs font-medium text-[#898989]">
-                            {isSuccess
-                              ? report[0][
-                                  item.value_key as keyof JobReportGenerator
-                                ]
-                              : "not set"}
-                          </span>
-                        )}
-                      </div>
-                    ))}
+                    ].map(
+                      (item, i) =>
+                        isSuccess &&
+                        report[0][
+                          item.value_key as keyof JobReportGenerator
+                        ] && (
+                          <div
+                            key={i}
+                            className="w-full flex justify-between items-end border-b-[0.5px] border-lightgreen"
+                          >
+                            <span className="text-sm font-medium">
+                              {item.title}
+                            </span>
+                            {isPending ? (
+                              <span className="h-4 w-36 bg-[#E7E7E7] rounded-lg animate-pulse" />
+                            ) : (
+                              <span className="text-xs font-medium text-[#898989]">
+                                {isSuccess
+                                  ? report[0][
+                                      item.value_key as keyof JobReportGenerator
+                                    ]
+                                  : "not set"}
+                              </span>
+                            )}
+                          </div>
+                        )
+                    )}
                   </div>
                 </div>
 
@@ -272,12 +278,16 @@ const Generator = () => {
                           title: "Areas For Development",
                           value: report[0].areas_for_development,
                         },
-                      ].map((item, i) => (
-                        <div key={i} className="flex flex-col mt-3 text-sm">
-                          <span className="font-bold">{item.title}</span>
-                          <p className="text-[#898989]">{item.value}</p>
-                        </div>
-                      ))
+                      ].map(
+                        (item, i) =>
+                          isSuccess &&
+                          item.value !== null && (
+                            <div key={i} className="flex flex-col mt-3 text-sm">
+                              <span className="font-bold">{item.title}</span>
+                              <p className="text-[#898989]">{item.value}</p>
+                            </div>
+                          )
+                      )
                     : "not available"}
                 </div>
 
