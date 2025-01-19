@@ -11,10 +11,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import {
-  MetricCard,
-  MetricCardsLoading,
-} from "../cv-tools/vetting/metric-card";
+import { MetricCardsLoading } from "../cv-tools/vetting/metric-card";
+import VettingWrapper from "../cv-tools/vetting/vetting-wrapper";
 import { VettingResponse } from "../cv-tools/vetting/vetting.interface";
 
 const Vetting = () => {
@@ -149,10 +147,11 @@ const Vetting = () => {
             )}
           </div>
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Post Job Ad</span>
+            <span className="font-bold">Paste Your Job description here</span>
             <Textarea
               placeholder="Input Job Description"
               value={jobDescription}
+              rows={8}
               onChange={(e) => setJobDescription(e.target.value)}
               className="my-3 bg-white border"
             />
@@ -161,19 +160,17 @@ const Vetting = () => {
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
+                Want to customize your results?
                 <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
+                  &#40;Add up to 20 prompts&#41;
                 </span>
               </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
-                  if (prompts.length < 20) {
+                  if (value && prompts.length < 20) {
                     setPrompts((prev) => [...prev, value]);
                     setValue("");
-                  } else {
-                    alert("You can only add up to 20 prompts.");
                   }
                 }}
               />
@@ -184,6 +181,7 @@ const Vetting = () => {
               className="my-3"
               onChange={(e) => setValue(e.target.value)}
             />
+
             <div>
               {prompts.map((prompt, index) => (
                 <div key={index} className="flex justify-between my-2">
@@ -239,10 +237,7 @@ const Vetting = () => {
 
             <div className="grid gap-6">
               {isPending && <MetricCardsLoading />}
-              {isSuccess &&
-                vets[0].metrics.map((item, i) => (
-                  <MetricCard key={i} {...item} />
-                ))}
+              {isSuccess && <VettingWrapper files={files} vets={vets} />}
               {isError && (
                 <p>an error occured while vetting your cover letter</p>
               )}

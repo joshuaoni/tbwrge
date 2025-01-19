@@ -12,6 +12,8 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import CoverLetterTemplate1 from "./generator/template-1";
 import CoverLetterTemplate from "./generator/template-2";
+import CoverLetterTemplate2 from "./generator/template-3";
+import TemplateWrapper from "./generator/template-wrapper";
 
 const ReWriter = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -215,8 +217,9 @@ const ReWriter = () => {
             <div className="flex items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
               <div className="h-full overflow-y-scroll space-y-4">
-                <CoverLetterTemplate1 />
-                <CoverLetterTemplate />
+                <TemplateWrapper template={CoverLetterTemplate1} />
+                <TemplateWrapper template={CoverLetterTemplate} />
+                <TemplateWrapper template={CoverLetterTemplate2} />
               </div>
             </div>
           </div>

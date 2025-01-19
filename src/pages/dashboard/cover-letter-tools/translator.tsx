@@ -12,6 +12,8 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import CoverLetterTemplate1 from "./generator/template-1";
 import CoverLetterTemplate from "./generator/template-2";
+import CoverLetterTemplate2 from "./generator/template-3";
+import TemplateWrapper from "./generator/template-wrapper";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -176,8 +178,9 @@ const Translator = () => {
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
                 <div className="h-full overflow-y-scroll space-y-4">
-                  <CoverLetterTemplate1 />
-                  <CoverLetterTemplate />
+                  <TemplateWrapper template={CoverLetterTemplate1} />
+                  <TemplateWrapper template={CoverLetterTemplate} />
+                  <TemplateWrapper template={CoverLetterTemplate2} />
                 </div>
               )}
             </div>

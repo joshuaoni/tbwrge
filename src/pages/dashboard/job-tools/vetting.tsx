@@ -3,6 +3,7 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
@@ -10,19 +11,17 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import {
-  MetricCard,
-  MetricCardsLoading,
-} from "../cv-tools/vetting/metric-card";
+import { MetricCardsLoading } from "../cv-tools/vetting/metric-card";
+import VettingWrapper from "../cv-tools/vetting/vetting-wrapper";
 import { VettingResponse } from "../cv-tools/vetting/vetting.interface";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
   const { userData } = useUserStore();
-  const [summary, setSummary] = useState("");
   const {
     mutate: vetJobMutation,
     data: vets,
@@ -144,23 +143,31 @@ const Vetting = () => {
               </div>
             )}
           </div>
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Paste Your Job description here</span>
+            <Textarea
+              placeholder="Input Job Description"
+              value={jobDescription}
+              rows={8}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="my-3 bg-white border"
+            />
+          </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
+                Want to customize your results?
                 <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
+                  &#40;Add up to 20 prompts&#41;
                 </span>
               </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
-                  if (prompts.length < 20) {
+                  if (value && prompts.length < 20) {
                     setPrompts((prev) => [...prev, value]);
                     setValue("");
-                  } else {
-                    alert("You can only add up to 20 prompts.");
                   }
                 }}
               />
@@ -171,6 +178,7 @@ const Vetting = () => {
               className="my-3"
               onChange={(e) => setValue(e.target.value)}
             />
+
             <div>
               {prompts.map((prompt, index) => (
                 <div key={index} className="flex justify-between my-2">
@@ -186,6 +194,7 @@ const Vetting = () => {
               ))}
             </div>
           </div>
+
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
@@ -225,10 +234,7 @@ const Vetting = () => {
             </div>
             <div className="grid gap-6">
               {isPending && <MetricCardsLoading />}
-              {isSuccess &&
-                vets[0].metrics.map((item, i) => (
-                  <MetricCard key={i} {...item} />
-                ))}
+              {isSuccess && <VettingWrapper files={files} vets={vets} />}
               {isError && (
                 <p>an error occured while vetting your cover letter</p>
               )}

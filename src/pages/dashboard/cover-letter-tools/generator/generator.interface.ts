@@ -1,3 +1,5 @@
+import { ForwardRefExoticComponent, RefAttributes } from "react";
+
 export type CoverLetterGeneratorResponse = CoverLetterGenerator[];
 
 export interface CoverLetterGenerator {
@@ -11,4 +13,8 @@ export interface CoverLetterGenerator {
 export interface CoverLetterProps {
   name: string;
   letter: string;
+}
+
+export interface TemplateWrapperProps {
+  template: ForwardRefExoticComponent<RefAttributes<HTMLDivElement>>;
 }

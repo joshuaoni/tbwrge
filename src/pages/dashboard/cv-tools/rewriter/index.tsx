@@ -1,49 +1,46 @@
-import { translateCV } from "@/actions/cv-tools/translate-cv";
-import DashboardWrapper from "@/components/dashboard-wrapper";
-import DocumentDownloadIcon from "@/components/icons/document-download";
-import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { Button } from "@/components/ui/button";
-import { useDownloadPDF } from "@/hooks/download-pdf";
-import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
-import uploadIcon from "../../../../../public/images/icons/upload.png";
+
+import { rewriteCV } from "@/actions/cv-tools/rewrite-cv";
+import DashboardWrapper from "@/components/dashboard-wrapper";
+import DocumentDownloadIcon from "@/components/icons/document-download";
+import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useDownloadPDF } from "@/hooks/download-pdf";
+import { useUserStore } from "@/hooks/use-user-store";
+import { fileSizeToMb } from "@/lib/common";
 import Resume from "../generator/resume";
 import ResumeTwo from "../generator/resume-2";
-import { CVTranslatorResponse } from "./translator.interface";
+import { CVRewriterResponse } from "./rewriter.interface";
+
+const langSelector: Record<string, string> = {
+  English: "en",
+  French: "fr",
+  Spanish: "es",
+  German: "de",
+  Arabic: "ar",
+  Portugese: "pt",
+};
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);
-  const [fileSizes, setFileSizes] = useState<string[]>([]);
+  const [jobAd, setJobAd] = useState("");
   const { userData } = useUserStore();
 
-  const [selectedLanguage, setSelectedValue] = useState<string>("English");
-  const {
-    mutate: translateCvMutation,
-    data: translated,
-    isPending,
-    isSuccess,
-  } = useMutation<CVTranslatorResponse>({
-    mutationKey: ["translateCV"],
+  const [selectedLanguage, setSelectedValue] = useState("English");
+
+  const rewriterMutation = useMutation<CVRewriterResponse>({
+    mutationKey: ["rewriteCV"],
     mutationFn: async () => {
-      let language: string = "en";
-      if (selectedLanguage === "English") {
-        language = "en";
-      } else if (selectedLanguage === "French") {
-        language = "fr";
-      } else if (selectedLanguage === "Spanish") {
-        language = "es";
-      } else if (selectedLanguage === "German") {
-        language = "de";
-      } else if (selectedLanguage === "Arabic") {
-        language = "ar";
-      } else if (selectedLanguage === "Portugese") {
-        language = "pt";
-      }
-      const response = await translateCV(files, language, userData?.token);
+      const response = await rewriteCV(
+        files,
+        langSelector[selectedLanguage],
+        jobAd,
+        userData?.token
+      );
       return response;
     },
   });
@@ -53,45 +50,41 @@ const Translator = () => {
         0,
         5 - files.length
       ); // Limit to 5 files
-      const newSizes = newFiles.map((file) =>
-        (file.size / (1024 * 1024)).toFixed(2)
-      ); // Sizes in MB
 
       setFiles((prev) => [...prev, ...newFiles]);
-      setFileSizes((prev) => [...prev, ...newSizes]);
     }
   };
 
-  const removeFile = (index: number) => {
+  const removeFile = (index: number) =>
     setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFileSizes((prev) => prev.filter((_, i) => i !== index));
-  };
 
-  const resumeRef = useRef<HTMLDivElement>(null);
+  const rewriterRef1 = useRef<HTMLDivElement>(null);
   const { downloadPDF } = useDownloadPDF(
-    resumeRef,
-    isSuccess ? `${translated[0].cv_data.name.replaceAll(" ", "-")}-resume` : ""
+    rewriterRef1,
+    rewriterMutation.isSuccess
+      ? `${rewriterMutation.data[0].cv_data.name.replaceAll(" ", "-")}-resume`
+      : ""
   );
 
   const rewriterRef2 = useRef<HTMLDivElement>(null);
   const { downloadPDF: downloadPDF2 } = useDownloadPDF(
     rewriterRef2,
-    isSuccess
-      ? `${translated[0].cv_data.name.replaceAll(" ", "-")}-resume2`
+    rewriterMutation.isSuccess
+      ? `${rewriterMutation.data[0].cv_data.name.replaceAll(" ", "-")}-resume-2`
       : ""
   );
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Translator</span>
+      <span className="font-bold text-xl">CV Rewriter</span>
       <section className="flex h-screen space-x-4">
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+            <span className="font-bold">CV Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
+              Add your CVs here, and you can upload up to 5 files max
             </span>
             <div className="relative w-full px-4 mt-3 flex flex-col items-start rounded-lg">
               <input
@@ -105,8 +98,10 @@ const Translator = () => {
               <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
                 <Image
                   className="w-fit h-10 object-cover"
-                  src={uploadIcon}
+                  src="/images/icons/upload.png"
                   alt="Upload Icon"
+                  width={40}
+                  height={40}
                 />
                 <span>
                   Drag your file(s) or <span className="font-bold">browse</span>
@@ -122,38 +117,46 @@ const Translator = () => {
 
             {files.length > 0 && (
               <div className="mt-6 space-y-2">
-                {files.map((file, index) => {
-                  const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                  return (
-                    <div
-                      key={index}
-                      className="flex h-14 w-full px-4 border rounded-lg justify-between items-center space-x-2"
-                    >
-                      <div className="flex items-start">
-                        <Image
-                          className="w-10 h-10 object-cover"
-                          src={pdfIcon}
-                          alt="File Icon"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-sm text-black">
-                            {file.name}
-                          </span>
-                          <span className="text-sm text-textgray">
-                            {fileSizeInMB} MB
-                          </span>
-                        </div>
-                      </div>
-                      <CircleXIcon
-                        onClick={() => removeFile(index)}
-                        color="black"
-                        size={14}
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex h-14 w-full px-4 border rounded-lg justify-between items-center space-x-2"
+                  >
+                    <div className="flex items-start">
+                      <Image
+                        className="w-10 h-10 object-cover"
+                        src="/images/icons/pdf-icon.png"
+                        alt="File Icon"
+                        width={40}
+                        height={40}
                       />
+                      <div className="flex flex-col">
+                        <span className="text-sm text-black">{file.name}</span>
+                        <span className="text-sm text-textgray">
+                          {fileSizeToMb(file.size)} MB
+                        </span>
+                      </div>
                     </div>
-                  );
-                })}
+                    <CircleXIcon
+                      onClick={() => removeFile(index)}
+                      color="black"
+                      size={14}
+                    />
+                  </div>
+                ))}
               </div>
             )}
+          </div>
+
+          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Paste your Job Descriptiion Here</span>
+            <Textarea
+              placeholder="(optional)"
+              value={jobAd}
+              onChange={(e) => setJobAd(e.target.value)}
+              rows={10}
+              className="my-3 bg-gray-50 border"
+            />
           </div>
 
           {/* Translate Button */}
@@ -174,14 +177,14 @@ const Translator = () => {
                 disabled={files.length === 0}
                 variant="default"
                 onClick={() => {
-                  translateCvMutation();
+                  rewriterMutation.mutate();
                 }}
                 className="self-center bg-lightgreen min-w-[100px]  text-white"
               >
-                {isPending ? (
+                {rewriterMutation.isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Translate CV"
+                  "Rewrite"
                 )}
               </Button>
             </div>
@@ -190,28 +193,32 @@ const Translator = () => {
 
         {/* Right Side */}
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl min-h-[200px] mt-4 p-6">
+          <div className="rounded-xl shadow-xl mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Translator</span>
+              <span className="font-bold">CV Rewriter</span>
               <X size={20} />
             </div>
             <div className="h-full">
-              {isPending && <Loader2 className="animate-spin" />}
-              {isSuccess && (
+              {rewriterMutation.isPending && (
+                <Loader2 className="animate-spin" />
+              )}
+              {rewriterMutation.isSuccess && (
                 <div className="space-y-6 mt-4">
                   <div className="flex items-start">
                     <Resume
-                      ref={resumeRef}
-                      name={translated[0].cv_data.name}
+                      ref={rewriterRef1}
+                      name={rewriterMutation.data[0].cv_data.name}
                       title={"Product Designer"}
                       contactInfo={{
                         email: "kate.bishop@katedesign.com",
-                        linkedin: translated[0].cv_data.linkedin,
+                        linkedin: rewriterMutation.data[0].cv_data.linkedin,
                         phone: "+46 98-215 4231",
                       }}
-                      workExperience={translated[0].cv_data.experience}
-                      education={translated[0].cv_data.education}
-                      skills={translated[0].cv_data.skills}
+                      workExperience={
+                        rewriterMutation.data[0].cv_data.experience
+                      }
+                      education={rewriterMutation.data[0].cv_data.education}
+                      skills={rewriterMutation.data[0].cv_data.skills}
                     />
                     <button className="w-1/12" onClick={downloadPDF}>
                       <DocumentDownloadIcon />
@@ -220,14 +227,16 @@ const Translator = () => {
                   <div className="flex items-start">
                     <ResumeTwo
                       ref={rewriterRef2}
-                      name={translated[0].cv_data.name}
+                      name={rewriterMutation.data[0].cv_data.name}
                       title={"Product Designer"}
                       contactInfo={{
                         email: "kate.bishop@katedesign.com",
-                        linkedin: translated[0].cv_data.linkedin,
+                        linkedin: rewriterMutation.data[0].cv_data.linkedin,
                         phone: "+46 98-215 4231",
                       }}
-                      workExperience={translated[0].cv_data.experience}
+                      workExperience={
+                        rewriterMutation.data[0].cv_data.experience
+                      }
                     />
                     <button className="w-1/12" onClick={downloadPDF2}>
                       <DocumentDownloadIcon />
