@@ -53,7 +53,7 @@ const Resume = forwardRef<HTMLDivElement, ResumeProps>(
 
         <div className="flex items-start gap-10">
           {/* Left Column */}
-          {workExperience![0].role && (
+          {workExperience![0]?.role && (
             <div className="w-full">
               {/* Work Experience */}
               <section className="mb-10">
