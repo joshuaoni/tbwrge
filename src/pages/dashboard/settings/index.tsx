@@ -354,17 +354,15 @@ const index = () => {
             })}
           </div>
           <div className="flex flex-col">
-            <span className="text-[#4A5568] text-sm my-4 ">
-              InApp Notification
+            <span className=" text-sm my-4 text-red cursor-pointer ">
+              Delete Account
             </span>
-            {inAppNotifications.map((email) => {
-              return Object.keys(email).map((key) => (
-                <div className="items-center flex mb-4">
-                  <CheckSquare color="#87909E" />{" "}
-                  <span className="ml-2 text-[#87909E]">{key}</span>
-                </div>
-              ));
-            })}
+            <div className="items-center flex mb-4">
+              <CheckSquare color="#87909E" />{" "}
+              <span className="ml-2 text-[#87909E]">
+                {"I understand this account would delete all my data"}
+              </span>
+            </div>
           </div>
         </section>
       )}
