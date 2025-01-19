@@ -66,6 +66,7 @@ const Vetting = () => {
         prompts,
         jobDescription
       );
+
       return response;
     },
   });

@@ -16,7 +16,7 @@ function VettingWrapper({
   return (
     <div className="">
       <div className="flex items-center gap-6 w-full overflow-x-scroll">
-        {files.map((file, i) => (
+        {vets.map((vet: any, i) => (
           <button
             key={i}
             onClick={() => setTabIndex(i)}
@@ -25,7 +25,7 @@ function VettingWrapper({
               "font-semibold w-full"
             )}
           >
-            {file.name}
+            {vet.name}
           </button>
         ))}
       </div>
