@@ -67,7 +67,7 @@ function BillingPlanCard(props: BillingPlanCardProps) {
   );
 }
 
-function ChooseBillsView() {
+function BillingChooseView() {
   const ctx = useContext(BillingContext);
 
   return (
@@ -127,4 +127,4 @@ function ChooseBillsView() {
   );
 }
 
-export default ChooseBillsView;
+export default BillingChooseView;
