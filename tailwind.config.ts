@@ -16,7 +16,7 @@ const config: Config = {
         red: "#DB2020",
         darkgreen: "#003A26",
         lightgreen: "#009379",
-        textgray: "#9D9D9D",
+        textgray: "#898989",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

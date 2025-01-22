@@ -1,15 +1,14 @@
-import React from "react";
-import LandingWrapper from "../components/wrapper/landing-wrapper";
-import Community from "../components/community";
-import ToolsHeaderImage from "../../../../public/images/tools_img.jpeg";
+import Image from "next/image";
+import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
+import CVTools from "../../../../public/images/icons/cv-tools.png";
+import JobTools from "../../../../public/images/icons/job-tools.png";
 import Tool1 from "../../../../public/images/tool1.png";
 import Tool2 from "../../../../public/images/tool2.png";
-import Tool3 from "../../../../public/images/tool3.png";
-import JobTools from "../../../../public/images/icons/job-tools.png";
-import CVTools from "../../../../public/images/icons/cv-tools.png";
-import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
-import Image from "next/image";
-const index = () => {
+import ToolsHeaderImage from "../../../../public/images/tools_img.jpeg";
+import Community from "../components/community";
+import LandingWrapper from "../components/wrapper/landing-wrapper";
+
+const ToolsPage = () => {
   return (
     <LandingWrapper>
       <main className="flex flex-col pt-12">
@@ -128,4 +127,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ToolsPage;

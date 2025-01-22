@@ -1,5 +1,5 @@
+import { CoverLetterProps } from "@/interfaces/generator.interface";
 import { forwardRef } from "react";
-import { CoverLetterProps } from "../../../../interfaces/generator.interface";
 
 const CoverLetter = forwardRef<HTMLDivElement, CoverLetterProps>(
   (props, ref) => {

@@ -1,5 +1,9 @@
 import { translateCoverLetter } from "@/actions/cover-letter-tools/translate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import CoverLetterTemplate1 from "@/components/dashboard/cover-letter-tools/template-1";
+import CoverLetterTemplate from "@/components/dashboard/cover-letter-tools/template-2";
+import CoverLetterTemplate2 from "@/components/dashboard/cover-letter-tools/template-3";
+import TemplateWrapper from "@/components/dashboard/cover-letter-tools/template-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { useDownloadPDF } from "@/hooks/download-pdf";
@@ -10,10 +14,6 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import CoverLetterTemplate1 from "./generator/template-1";
-import CoverLetterTemplate from "./generator/template-2";
-import CoverLetterTemplate2 from "./generator/template-3";
-import TemplateWrapper from "./generator/template-wrapper";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);

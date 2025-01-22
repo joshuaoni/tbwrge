@@ -1,9 +1,14 @@
 import { generateCoverLetter } from "@/actions/cover-letter-tools/generate-cover-letter";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import CoverLetterTemplate1 from "@/components/dashboard/cover-letter-tools/template-1";
+import CoverLetterTemplate from "@/components/dashboard/cover-letter-tools/template-2";
+import CoverLetterTemplate2 from "@/components/dashboard/cover-letter-tools/template-3";
+import TemplateWrapper from "@/components/dashboard/cover-letter-tools/template-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
+import { CoverLetterGeneratorResponse } from "@/interfaces/generator.interface";
 import { useMutation } from "@tanstack/react-query";
 import {
   CircleXIcon,
@@ -18,11 +23,6 @@ import React, { useRef, useState } from "react";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import { CoverLetterGeneratorResponse } from "../../../../interfaces/generator.interface";
-import CoverLetterTemplate1 from "./template-1";
-import CoverLetterTemplate from "./template-2";
-import CoverLetterTemplate2 from "./template-3";
-import TemplateWrapper from "./template-wrapper";
 
 const Generator = () => {
   const [value, setValue] = useState("");

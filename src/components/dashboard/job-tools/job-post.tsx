@@ -1,4 +1,4 @@
-import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
+import { JobPostGeneratorResponse } from "@/interfaces/job-tools-generator.interface";
 
 function JobPost(props: JobPostGeneratorResponse) {
   return (

@@ -1,4 +1,8 @@
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import CandidateDetail from "@/components/dashboard/job-posting/candidate-detail";
+import ClosedOpenings from "@/components/dashboard/job-posting/closed-openings";
+import CurrentOpenings from "@/components/dashboard/job-posting/current-openings";
+import JobDetails from "@/components/dashboard/job-posting/job-details";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,10 +15,6 @@ import { CaretDownIcon } from "@radix-ui/react-icons";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import CandidateDetail from "./candidate-detail";
-import ClosedOpenings from "./closed-openings";
-import CurrentOpenings from "./current-openings";
-import JobDetails from "./job-details";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
