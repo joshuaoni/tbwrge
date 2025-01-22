@@ -1,5 +1,5 @@
-import DashboardSettingsLayout from "../layout";
-import { BillingProvider } from "./billing.context";
+import DashboardSettingsLayout from "@/components/settings/layout";
+import { BillingProvider } from "../../../../providers/billing.context";
 
 const BillingsAndSubscriptionPage = () => {
   return (

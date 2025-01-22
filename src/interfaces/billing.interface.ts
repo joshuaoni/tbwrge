@@ -1,5 +1,5 @@
+import { billingScreens } from "@/constants/billing.constant";
 import type { Dispatch, ElementType, SetStateAction } from "react";
-import { billingScreens } from "./billing.constant";
 
 export type IScreen = keyof typeof billingScreens;
 

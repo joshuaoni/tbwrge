@@ -1,5 +1,5 @@
+import { BillingInputGroupProps } from "@/interfaces/billing.interface";
 import { convertToSlug } from "../profile/input-group";
-import { BillingInputGroupProps } from "./billing.interface";
 
 function BillingInputGroup(props: BillingInputGroupProps) {
   return (

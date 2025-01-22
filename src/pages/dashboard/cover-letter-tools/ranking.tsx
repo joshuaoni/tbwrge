@@ -11,7 +11,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import RankByFilter from "../cv-tools/ranking/rank-by-filter";
+import RankByFilter from "../../../components/dashboard/ranking/rank-by-filter";
 import { rankFilters } from "../../../interfaces/ranking.constant";
 import { Candidate } from "../../../interfaces/ranking.interface";
 

@@ -1,15 +1,15 @@
 import BlogPosts from "../blog-posts";
-import Community from "./components/community";
 import AboutUs from "./components/about-us";
+import Community from "./components/community";
 import Expertise from "./components/expertise";
 import LandingHeroSection from "./components/landing-hero";
-import LandingWrapper from "./components/wrapper/landing-wrapper";
+import Partners from "./components/partners";
 import PricingPlans from "./components/pricing-plans";
 import RightCandidate from "./components/right-candidate";
 import Tools from "./components/tools";
-import Partners from "./components/partners";
+import LandingWrapper from "./components/wrapper/landing-wrapper";
 
-const index = () => {
+const HomePage = () => {
   return (
     <LandingWrapper>
       <LandingHeroSection />
@@ -25,4 +25,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default HomePage;

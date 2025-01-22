@@ -1,5 +1,5 @@
+import { CheckBoxInputProps } from "@/interfaces/settings.interface";
 import { convertToSlug } from "./profile/input-group";
-import { CheckBoxInputProps } from "./settings.interface";
 
 function CheckBoxInput(props: CheckBoxInputProps) {
   return (

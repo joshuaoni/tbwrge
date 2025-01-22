@@ -1,7 +1,7 @@
-import DashboardSettingsLayout from "@/pages/dashboard/settings/layout";
+import DashboardSettingsLayout from "@/components/settings/layout";
+import ProfileSettingsButton from "@/components/settings/profile/button";
+import { ProfileInputGroup } from "@/components/settings/profile/input-group";
 import { UserCircle } from "lucide-react";
-import ProfileSettingsButton from "./button";
-import { ProfileInputGroup } from "./input-group";
 
 const ProfileSettingsPage = () => {
   return (

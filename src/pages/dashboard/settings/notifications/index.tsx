@@ -1,7 +1,7 @@
-import CheckBoxInput from "../checkbox-input";
-import CheckBoxSectionWrapper from "../checkbox-section-wrapper";
-import SettingsHeader from "../header";
-import DashboardSettingsLayout from "../layout";
+import DashboardSettingsLayout from "@/components/settings/layout";
+import CheckBoxInput from "../../../../components/settings/checkbox-input";
+import CheckBoxSectionWrapper from "../../../../components/settings/checkbox-section-wrapper";
+import SettingsHeader from "../../../../components/settings/header";
 
 const NotificationsSettingsPage = () => {
   return (

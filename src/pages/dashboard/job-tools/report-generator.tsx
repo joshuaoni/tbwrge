@@ -11,7 +11,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { MetricScore } from "../cv-tools/vetting/metric-card";
+import { MetricScore } from "../../../components/dashboard/vetting/metric-card";
 
 export type JobReportGeneratorResponse = JobReportGenerator[];
 

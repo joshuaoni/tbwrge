@@ -5,16 +5,16 @@ import React, { useRef, useState } from "react";
 
 import { rewriteCV } from "@/actions/cv-tools/rewrite-cv";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import Resume from "@/components/dashboard/cv-tools/resume";
+import ResumeTwo from "@/components/dashboard/cv-tools/resume-2";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
+import { CVRewriterResponse } from "@/interfaces/rewriter.interface";
 import { fileSizeToMb } from "@/lib/common";
-import Resume from "../generator/resume";
-import ResumeTwo from "../generator/resume-2";
-import { CVRewriterResponse } from "../../../../interfaces/rewriter.interface";
 
 const langSelector: Record<string, string> = {
   English: "en",

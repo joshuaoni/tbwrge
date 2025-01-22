@@ -12,8 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import { MetricCardsLoading } from "./metric-card";
-import VettingWrapper from "./vetting-wrapper";
+import { MetricCardsLoading } from "../../../../components/dashboard/vetting/metric-card";
+import VettingWrapper from "../../../../components/dashboard/vetting/vetting-wrapper";
 import { VettingResponse } from "../../../../interfaces/vetting.interface";
 
 const Vetting = () => {

@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { ProfileInputGroupProps } from "./profile.interface";
+import { ProfileInputGroupProps } from "../../../interfaces/profile.interface";
 
 function convertToSlug(text: string) {
   return text

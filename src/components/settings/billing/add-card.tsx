@@ -3,8 +3,8 @@ import CardIcon from "@/components/icons/card";
 import CardAddIcon from "@/components/icons/card-add";
 import CloseCircleIcon from "@/components/icons/close-circle";
 import InfoCircleIcon from "@/components/icons/info-circle";
+import { BillingContext } from "@/providers/billing.context";
 import { useContext } from "react";
-import { BillingContext } from "./billing.context";
 import BillingInputGroup from "./input-group";
 
 function BillingAddCard() {

@@ -5,7 +5,7 @@ import { TbCircles, TbSquareCheck, TbUserCheck } from "react-icons/tb";
 import { Skeleton } from "@/components/ui/skeleton";
 import { inter } from "@/constants/app";
 import { twMerge } from "tailwind-merge";
-import { MetricCardProps } from "../../../../interfaces/vetting.interface";
+import { MetricCardProps } from "../../../interfaces/vetting.interface";
 
 const metricStyles: Record<string, Record<string, string | IconType>> = {
   relevance: { className: "bg-[#065844]", icon: TbCircles },

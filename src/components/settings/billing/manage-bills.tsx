@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 import VisaPaymentLogo from "@/components/icons/visa-logo";
-import { BillingContext } from "./billing.context";
+import { BillingContext } from "@/providers/billing.context";
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);

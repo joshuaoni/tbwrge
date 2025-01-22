@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-import { CheckBoxSectionWrapperProps } from "./settings.interface";
+import { CheckBoxSectionWrapperProps } from "@/interfaces/settings.interface";
 
 function CheckBoxSectionWrapper(props: CheckBoxSectionWrapperProps) {
   return (
