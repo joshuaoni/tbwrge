@@ -4,10 +4,10 @@ import AboutUs from "./components/about-us";
 import Expertise from "./components/expertise";
 import LandingHeroSection from "./components/landing-hero";
 import LandingWrapper from "./components/wrapper/landing-wrapper";
-import { Partners } from "./components/partners";
 import PricingPlans from "./components/pricing-plans";
 import RightCandidate from "./components/right-candidate";
 import Tools from "./components/tools";
+import Partners from "./components/partners";
 
 const index = () => {
   return (

@@ -10,8 +10,8 @@ import { CircleXIcon, Loader2, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import RankByFilter from "./rank-by-filter";
-import { rankFilters } from "./ranking.constant";
-import { Candidate } from "./ranking.interface";
+import { rankFilters } from "../../../../interfaces/ranking.constant";
+import { Candidate } from "../../../../interfaces/ranking.interface";
 
 const Ranking = () => {
   const [files, setFiles] = useState<any[]>([]);

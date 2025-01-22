@@ -18,7 +18,7 @@ import React, { useRef, useState } from "react";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import { CoverLetterGeneratorResponse } from "./generator.interface";
+import { CoverLetterGeneratorResponse } from "../../../../interfaces/generator.interface";
 import CoverLetterTemplate1 from "./template-1";
 import CoverLetterTemplate from "./template-2";
 import CoverLetterTemplate2 from "./template-3";

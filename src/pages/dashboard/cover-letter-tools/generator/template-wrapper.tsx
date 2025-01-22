@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import { useDownloadPDF } from "@/hooks/download-pdf";
-import { TemplateWrapperProps } from "./generator.interface";
+import { TemplateWrapperProps } from "../../../../interfaces/generator.interface";
 
 function TemplateWrapper({ template: Template }: TemplateWrapperProps) {
   const ref = useRef<HTMLDivElement>(null);

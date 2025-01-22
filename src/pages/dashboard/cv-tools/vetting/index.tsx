@@ -14,7 +14,7 @@ import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
 import { MetricCardsLoading } from "./metric-card";
 import VettingWrapper from "./vetting-wrapper";
-import { VettingResponse } from "./vetting.interface";
+import { VettingResponse } from "../../../../interfaces/vetting.interface";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);

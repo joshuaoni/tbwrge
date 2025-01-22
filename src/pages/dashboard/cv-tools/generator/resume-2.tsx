@@ -1,7 +1,7 @@
 import { poppins } from "@/constants/app";
 import classNames from "classnames";
 import { forwardRef } from "react";
-import { ResumeProps } from "./generator.interface";
+import { ResumeProps } from "../../../../interfaces/cv-generator.interface";
 
 const ResumeTwo = forwardRef<
   HTMLDivElement,

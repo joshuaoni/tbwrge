@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { useState } from "react";
 
-import { MetricCard } from "./metric-card";
-import { VettingResponse } from "./vetting.interface";
+import { VettingResponse } from "../../../../interfaces/vetting.interface";
+import MetricCard from "./metric-card";
 
 function VettingWrapper({
   files,

@@ -7,7 +7,7 @@ import { TbMailFilled } from "react-icons/tb";
 import { poppins, prata } from "@/constants/app";
 import { forwardRef } from "react";
 import { IconType } from "react-icons/lib";
-import { ContactInfo, ResumeProps } from "./generator.interface";
+import { ContactInfo, ResumeProps } from "../../../../interfaces/cv-generator.interface";
 
 const contactIcon: Record<string, IconType> = {
   email: TbMailFilled,

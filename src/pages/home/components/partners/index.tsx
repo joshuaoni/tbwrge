@@ -8,7 +8,7 @@ import FedEx from "../../../../../public/images/fedex.png";
 import hubspot from "../../../../../public/images/hubspot.png";
 import Image from "next/image";
 
-export const Partners = () => {
+const Partners = () => {
   const partners = [
     { image: AirBnB, alt: "airbnb" },
     { image: Google, alt: "google" },
@@ -71,3 +71,4 @@ export const Partners = () => {
     </div>
   );
 };
+export default Partners;
