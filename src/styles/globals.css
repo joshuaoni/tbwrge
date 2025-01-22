@@ -37,3 +37,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
+.plan-card-drop-shadow {
+  box-shadow: 29.16px 24.79px 40.44px 0px #3366ff0d;
+}
