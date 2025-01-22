@@ -32,7 +32,7 @@ const ResumeTwo = forwardRef<
         <h2 className="text-sm font-medium mb-4">Experience</h2>
 
         {/* Job 1 */}
-        {workExperience.map((job, index) => (
+        {workExperience?.map((job, index) => (
           <div key={index} className="mb-6 flex gap-8 justify-between">
             <p className="text-sm text-gray-500 w-2/5">
               {job.start_date} - {job.end_date}
