@@ -13,7 +13,7 @@ import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
 import Resume from "../generator/resume";
 import ResumeTwo from "../generator/resume-2";
-import { CVTranslatorResponse } from "./translator.interface";
+import { CVTranslatorResponse } from "../../../../interfaces/translator.interface";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);

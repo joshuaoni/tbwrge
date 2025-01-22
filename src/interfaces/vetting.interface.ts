@@ -6,5 +6,5 @@ export interface IMetric {
   Metric: string;
   Score: number;
   Recommendation: string;
-  name: string;
+  name?: string;
 }

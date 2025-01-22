@@ -16,7 +16,7 @@ function RankByFilter(props: RankByFilterProps) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
-    props.options[0]?.value ?? ""
+    props?.options?.[0]?.value ?? ""
   );
 
   const handleOptionClick = (optionValue: string) => {

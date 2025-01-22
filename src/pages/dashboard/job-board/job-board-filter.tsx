@@ -3,13 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 
 import { useOutsideClick } from "@/hooks/outside-click";
-import { JobBoardFilterProps } from "./job-board.interface";
+import { JobBoardFilterProps } from "../../../interfaces/job-board.interface";
 
 function JobBoardFilter(props: JobBoardFilterProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [_, setSelectedOption] = useState(props.options[0]?.value ?? "");
+  const [_, setSelectedOption] = useState(props.options?.[0]?.value ?? "");
 
   const handleOptionClick = (optionLabel: string, optionValue: string) => {
     setSelectedOption(optionLabel);
@@ -40,7 +40,7 @@ function JobBoardFilter(props: JobBoardFilterProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            {props.options.map((option, i) => (
+            {props?.options?.map((option, i) => (
               <span
                 key={i}
                 className="py-2 px-4 hover:bg-[#c0c0c0] cursor-pointer rounded-lg transition-all block"

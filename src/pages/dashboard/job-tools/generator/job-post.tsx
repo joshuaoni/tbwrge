@@ -1,4 +1,4 @@
-import { JobPostGeneratorResponse } from "./generator.interface";
+import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
 
 function JobPost(props: JobPostGeneratorResponse) {
   return (
@@ -34,7 +34,7 @@ function JobPost(props: JobPostGeneratorResponse) {
       <section className="mt-4">
         <h2 className="font-bold text-gray-800">Requirements</h2>{" "}
         <ul className="list-disc list-inside text-gray-700">
-          {props.required_skills.split(",").map((item, i) => (
+          {props?.required_skills?.split(",").map((item, i) => (
             <li key={i}>
               {item.trim().charAt(0).toUpperCase() + item.trim().slice(1)}
             </li>
@@ -45,7 +45,7 @@ function JobPost(props: JobPostGeneratorResponse) {
       <section className="mt-4">
         <h2 className="font-bold text-gray-800">What We Offer</h2>
         <ul className="list-disc list-inside text-gray-700">
-          {props.additional_benefits.split(",").map((item, i) => (
+          {props?.additional_benefits?.split(",").map((item, i) => (
             <li key={i}>
               {item.trim().charAt(0).toUpperCase() + item.trim().slice(1)}
             </li>
