@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import VisaPaymentLogo from "@/components/icons/visa-logo";
 import { BillingContext } from "./billing.context";
 
-function ManageBillsView() {
+function BillingManageView() {
   const ctx = useContext(BillingContext);
 
   return (
@@ -119,4 +119,4 @@ function ManageBillsView() {
   );
 }
 
-export default ManageBillsView;
+export default BillingManageView;

@@ -1,7 +1,7 @@
-import ChooseBillsView from "./choose-bills";
-import ManageBillsView from "./manage-bills";
+import BillingChooseView from "./choose-bills";
+import BillingManageView from "./manage-bills";
 
 export const billingScreens = {
-  manage: ManageBillsView,
-  choose: ChooseBillsView,
+  manage: BillingManageView,
+  choose: BillingChooseView,
 };
