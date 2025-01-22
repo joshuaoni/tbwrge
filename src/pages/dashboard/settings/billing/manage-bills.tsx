@@ -38,7 +38,7 @@ function BillingManageView() {
                 Change how you make payments
               </p>
             </div>
-            <button>
+            <button onClick={() => ctx.goTo("add")}>
               <PlusCircle />
             </button>
           </div>
