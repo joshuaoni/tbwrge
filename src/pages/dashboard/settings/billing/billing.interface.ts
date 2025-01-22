@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ElementType, SetStateAction } from "react";
 import { billingScreens } from "./billing.constant";
 
 export type IScreen = keyof typeof billingScreens;
@@ -14,4 +14,10 @@ export interface BillingPlanCardProps {
   features: string[];
   isActive: boolean;
   invert?: boolean;
+}
+
+export interface BillingInputGroupProps {
+  label: string;
+  placeholder: string;
+  icon?: ElementType<{ className: string }>;
 }
