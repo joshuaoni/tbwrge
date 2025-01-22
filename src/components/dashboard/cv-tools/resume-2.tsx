@@ -21,9 +21,9 @@ const ResumeTwo = forwardRef<
           <p className="text-sm">{title}</p>
         </div>
         <div className="w-full text-sm underline">
-          <p>{contactInfo.email}</p>
-          <p>{contactInfo.linkedin}</p>
-          <p>{contactInfo.phone}</p>
+          <p>{contactInfo?.email}</p>
+          <p>{contactInfo?.linkedin}</p>
+          <p>{contactInfo?.phone}</p>
         </div>
       </div>
 

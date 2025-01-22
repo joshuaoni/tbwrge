@@ -1,15 +1,6 @@
 import React, { useRef } from "react";
 import LandingHeader from "../landing-header";
 import LandingFooter from "../landing-footer";
-import AboutUs from "../../about-us";
-import Tools from "../../tools";
-import RightCandidate from "../../right-candidate";
-import PricingPlans from "../../pricing-plans";
-import BlogPosts from "@/pages/blog-posts";
-import Expertise from "../../expertise";
-import Community from "../../community";
-import LandingHeroSection from "../../landing-hero";
-
 const LandingWrapper = ({ children }: { children: React.ReactNode }) => {
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const toolsSectionRef = useRef<HTMLDivElement>(null);
