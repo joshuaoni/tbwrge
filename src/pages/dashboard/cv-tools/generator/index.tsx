@@ -5,16 +5,16 @@ import { useRef, useState } from "react";
 
 import { generateCV } from "@/actions/cv-tools/generate-cv";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import Resume from "@/components/dashboard/cv-tools/resume";
+import ResumeTwo from "@/components/dashboard/cv-tools/resume-2";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
+import { CVGeneratorResponse } from "@/interfaces/cv-generator.interface";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
-import { CVGeneratorResponse } from "../../../../interfaces/cv-generator.interface";
-import Resume from "./resume";
-import ResumeTwo from "./resume-2";
 
 const Generator = () => {
   const [value, setValue] = useState("");

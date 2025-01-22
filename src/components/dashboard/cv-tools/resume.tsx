@@ -5,9 +5,9 @@ import { RiLinkedinFill } from "react-icons/ri";
 import { TbMailFilled } from "react-icons/tb";
 
 import { poppins, prata } from "@/constants/app";
+import { ContactInfo, ResumeProps } from "@/interfaces/cv-generator.interface";
 import { forwardRef } from "react";
 import { IconType } from "react-icons/lib";
-import { ContactInfo, ResumeProps } from "../../../../interfaces/cv-generator.interface";
 
 const contactIcon: Record<string, IconType> = {
   email: TbMailFilled,

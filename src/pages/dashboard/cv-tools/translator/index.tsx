@@ -1,19 +1,19 @@
 import { translateCV } from "@/actions/cv-tools/translate-cv";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import Resume from "@/components/dashboard/cv-tools/resume";
+import ResumeTwo from "@/components/dashboard/cv-tools/resume-2";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
+import { CVTranslatorResponse } from "@/interfaces/translator.interface";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
-import Resume from "../generator/resume";
-import ResumeTwo from "../generator/resume-2";
-import { CVTranslatorResponse } from "../../../../interfaces/translator.interface";
 
 const Translator = () => {
   const [files, setFiles] = useState<any[]>([]);

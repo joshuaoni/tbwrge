@@ -1,5 +1,5 @@
-import DashboardSettingsLayout from "../layout";
-import SocialConnection from "./social-connection";
+import SocialConnection from "@/components/settings/integration/social-connection";
+import DashboardSettingsLayout from "@/components/settings/layout";
 
 const IntegrationSettingsPage = () => {
   return (

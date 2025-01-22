@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from "react";
 
-import { billingScreens } from "./billing.constant";
-import { IBillingContext, IScreen } from "./billing.interface";
+import { billingScreens } from "@/constants/billing.constant";
+import { IBillingContext, IScreen } from "@/interfaces/billing.interface";
 
 export const BillingContext = createContext<IBillingContext>({
   goTo: () => {},

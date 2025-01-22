@@ -5,13 +5,13 @@ import { useRef, useState } from "react";
 
 import { generateJob } from "@/actions/job-tools/generator";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import JobPost from "@/components/dashboard/job-tools/job-post";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
-import JobPost from "./job-post";
 
 const Generator = () => {
   const [value, setValue] = useState("");

@@ -11,8 +11,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
-import { MetricCardsLoading } from "../cv-tools/vetting/metric-card";
-import VettingWrapper from "../cv-tools/vetting/vetting-wrapper";
+import { MetricCardsLoading } from "../../../components/dashboard/vetting/metric-card";
+import VettingWrapper from "../../../components/dashboard/vetting/vetting-wrapper";
 import { VettingResponse } from "../../../interfaces/vetting.interface";
 
 const Vetting = () => {

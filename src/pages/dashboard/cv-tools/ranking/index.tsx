@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
-import RankByFilter from "./rank-by-filter";
+import RankByFilter from "../../../../components/dashboard/ranking/rank-by-filter";
 import { rankFilters } from "../../../../interfaces/ranking.constant";
 import { Candidate } from "../../../../interfaces/ranking.interface";
 

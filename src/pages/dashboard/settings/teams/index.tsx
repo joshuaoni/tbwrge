@@ -1,4 +1,4 @@
-import DashboardSettingsLayout from "../layout";
+import DashboardSettingsLayout from "@/components/settings/layout";
 
 const TeamsAndCollaborationSettingsPage = () => {
   return (

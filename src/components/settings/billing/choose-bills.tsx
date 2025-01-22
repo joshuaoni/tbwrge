@@ -1,10 +1,10 @@
 import CheckIcon from "@/components/icons/check";
 import { mullish, poppins } from "@/constants/app";
+import { BillingPlanCardProps } from "@/interfaces/billing.interface";
+import { BillingContext } from "@/providers/billing.context";
 import classNames from "classnames";
 import { ArrowLeft } from "lucide-react";
 import { useContext } from "react";
-import { BillingContext } from "./billing.context";
-import { BillingPlanCardProps } from "./billing.interface";
 
 function BillingPlanCard(props: BillingPlanCardProps) {
   return (

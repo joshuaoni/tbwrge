@@ -1,17 +1,18 @@
+import { registerUser } from "@/actions/register-user";
+import ChannelsDropDown from "@/components/channels-dropdown";
+import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import OR from "../../../../public/images/OR.png";
-import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
-import RoleSelectionDropDown from "@/components/role-selection-dropdown";
-import { useRouter } from "next/router";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
-import { registerUser } from "@/actions/register-user";
-import { useMutation } from "@tanstack/react-query";
-import ChannelsDropDown from "@/components/channels-dropdown";
-import { Loader2 } from "lucide-react";
-const index = () => {
+import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
+
+const SignUpPage = () => {
   const [fullName, setFullName] = React.useState("");
   const [role, setRole] = React.useState("Select Role");
   const [channel, setChannel] = React.useState("Select Channel");
@@ -156,4 +157,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default SignUpPage;
