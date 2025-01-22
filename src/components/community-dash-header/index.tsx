@@ -6,12 +6,11 @@ import {
   Search,
   Users2,
 } from "lucide-react";
-import { CreateJob } from "@/pages/dashboard/dashboard-home";
 import { Input } from "../ui/input";
 import Image from "next/image";
 import candivetlogo from "../../../public/images/candivet-logo.png";
 
-const CommunityDashHeader = () => {
+export const CommunityDashHeader = () => {
   return (
     <div className=" w-full  border-b  h-20 bg-white flex items-center px-6 fixed top-0">
       <div className="flex items-center w-full   ">
@@ -38,5 +37,3 @@ const CommunityDashHeader = () => {
     </div>
   );
 };
-
-export default CommunityDashHeader;

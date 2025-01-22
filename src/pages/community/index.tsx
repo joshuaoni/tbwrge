@@ -1,4 +1,4 @@
-import CommunityDashHeader from "@/components/community-dash-header";
+import { CommunityDashHeader } from "@/components/community-dash-header";
 import React from "react";
 
 const index = () => {
@@ -6,4 +6,3 @@ const index = () => {
 };
 
 export default index;
- 

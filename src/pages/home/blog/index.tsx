@@ -4,7 +4,6 @@ import Community from "../components/community";
 import Image from "next/image";
 import BlogsHeaderImage from "../../../../public/images/blogs_header_image.jpeg";
 import BlogPosts from "@/pages/blog-posts";
-import BlogsPagination from "@/components/blogs-pagination";
 const index = () => {
   return (
     <LandingWrapper>
