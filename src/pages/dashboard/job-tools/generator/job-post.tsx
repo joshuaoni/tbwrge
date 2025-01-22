@@ -61,7 +61,7 @@ function JobPost(props: JobPostGeneratorResponse) {
         </p>
         <p className="text-gray-700">
           Please send your resume, portfolio (or GitHub link), and a short cover
-          letter to: <span className="font-medium">{props.user.email}</span>.
+          letter to: <span className="font-medium">{props?.user?.email}</span>.
         </p>
       </section>
     </div>

@@ -37,7 +37,7 @@ function RankByFilter(props: RankByFilterProps) {
         className="w-52 py-3 px-4 flex justify-between items-center rounded-full bg-[#ebebeb] text-[#898989]"
       >
         {props.title}&nbsp;
-        {props.options.find((o) => o.value === selectedOption)?.label}
+        {props?.options?.find((o) => o.value === selectedOption)?.label}
         <CaretDownIcon />
       </button>
       <AnimatePresence>
