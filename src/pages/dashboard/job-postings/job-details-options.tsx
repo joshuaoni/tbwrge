@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleEllipsis } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { bulkAction } from "@/actions/bulk-action";
 import { useOutsideClick } from "@/hooks/outside-click";
@@ -14,12 +14,14 @@ function JobDetailsOptions(props: { id: string }) {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-
+  let jobUrl: any;
   useOutsideClick(dropdownRef, () => setOpen(false));
 
-  const jobUrl = encodeURI(
-    `${window?.location?.origin}/embedded-job-post/${props.id}`
-  );
+  useEffect(() => {
+    jobUrl = encodeURI(
+      `${window?.location?.origin}/embedded-job-post/${props.id}`
+    );
+  }, []);
 
   function handleCopy(textToCopy: string, successMessage: string) {
     copyToClipboard(textToCopy);
