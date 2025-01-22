@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
-import { CVGeneratorResponse } from "./generator.interface";
+import { CVGeneratorResponse } from "../../../../interfaces/cv-generator.interface";
 import Resume from "./resume";
 import ResumeTwo from "./resume-2";
 

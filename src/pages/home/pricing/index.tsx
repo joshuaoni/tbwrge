@@ -1,10 +1,10 @@
 import React from "react";
 import LandingWrapper from "../components/wrapper/landing-wrapper";
-import { Partners } from "../components/partners";
 import PricingPlans from "../components/pricing-plans";
 import Community from "../components/community";
 import Image from "next/image";
 import PricingHeaderImage from "../../../../public/images/pricing_header_image.jpeg";
+import Partners from "../components/partners";
 
 const index = () => {
   return (

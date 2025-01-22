@@ -8,7 +8,6 @@ import PricingPlans from "../../pricing-plans";
 import BlogPosts from "@/pages/blog-posts";
 import Expertise from "../../expertise";
 import Community from "../../community";
-import { Partners } from "../../partners";
 import LandingHeroSection from "../../landing-hero";
 
 const LandingWrapper = ({ children }: { children: React.ReactNode }) => {

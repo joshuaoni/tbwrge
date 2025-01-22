@@ -14,7 +14,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { fileSizeToMb } from "@/lib/common";
 import Resume from "../generator/resume";
 import ResumeTwo from "../generator/resume-2";
-import { CVRewriterResponse } from "./rewriter.interface";
+import { CVRewriterResponse } from "../../../../interfaces/rewriter.interface";
 
 const langSelector: Record<string, string> = {
   English: "en",

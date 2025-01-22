@@ -5,7 +5,7 @@ import { TbCircles, TbSquareCheck, TbUserCheck } from "react-icons/tb";
 import { Skeleton } from "@/components/ui/skeleton";
 import { inter } from "@/constants/app";
 import { twMerge } from "tailwind-merge";
-import { MetricCardProps } from "./vetting.interface";
+import { MetricCardProps } from "../../../../interfaces/vetting.interface";
 
 const metricStyles: Record<string, Record<string, string | IconType>> = {
   relevance: { className: "bg-[#065844]", icon: TbCircles },
@@ -28,7 +28,7 @@ const MetricIcon = (props: { metric: string } & IconBaseProps) => {
   return <Icon {...props} />;
 };
 
-function MetricCard(props: MetricCardProps) {
+const MetricCard = (props: MetricCardProps) => {
   return (
     <div className="flex items-center gap-6">
       <MetricScore {...props} />
@@ -38,9 +38,9 @@ function MetricCard(props: MetricCardProps) {
       </div>
     </div>
   );
-}
+};
 
-function MetricScore(
+export const MetricScore = (
   props: Omit<MetricCardProps, "Recommendation"> & {
     size?: {
       className?: string;
@@ -50,7 +50,7 @@ function MetricScore(
       scoreClass?: string;
     };
   }
-) {
+) => {
   return (
     <div
       className={twMerge(
@@ -88,9 +88,9 @@ function MetricScore(
       </p>
     </div>
   );
-}
+};
 
-function MetricCardsLoading() {
+export const MetricCardsLoading = () => {
   return ["relevance", "grammar", "formatting", "completeness"].map(
     (item, i) => (
       <div key={i} className="flex items-center gap-6">
@@ -134,6 +134,6 @@ function MetricCardsLoading() {
       </div>
     )
   );
-}
+};
 
-export { MetricCard, MetricCardsLoading, MetricScore };
+export default MetricCard;

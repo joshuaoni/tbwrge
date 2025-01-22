@@ -1,15 +1,15 @@
 import { forwardRef } from "react";
-import { CoverLetterProps } from "./generator.interface";
+import { CoverLetterProps } from "../../../../interfaces/generator.interface";
 
 const CoverLetter = forwardRef<HTMLDivElement, CoverLetterProps>(
   (props, ref) => {
-    const lines = props.letter.split("\n");
+    const lines = props?.letter?.split("\n");
 
     return (
       <div ref={ref}>
         <h3 className="text-xl font-bold text-center">{props.name}</h3>
         <p>
-          {lines.map((line, index) => {
+          {lines?.map((line, index) => {
             // Trim the line to remove excess whitespace
             const trimmedLine = line.trim();
 

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
-import { JobPostGeneratorResponse } from "./generator.interface";
+import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
 import JobPost from "./job-post";
 
 const Generator = () => {

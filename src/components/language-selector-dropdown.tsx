@@ -22,9 +22,9 @@ const LanguageSelectorDropDown = ({
   setValue,
 }: {
   onSelect?: (value: string) => void;
-  value: string;
-  setValue: (value: string) => void;
-  outputLanguage: boolean;
+  value?: string;
+  setValue?: (value: string) => void;
+  outputLanguage?: boolean;
 }) => {
   const [open, setOpen] = React.useState(false);
   const [language, setLanguage] = React.useState("English");
@@ -72,7 +72,7 @@ const LanguageSelectorDropDown = ({
                 key={language}
                 value={language}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  setValue?.(currentValue === value ? "" : currentValue);
                   onSelect?.(language);
                   setOpen(false);
                   setLanguage(language);
