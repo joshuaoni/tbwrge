@@ -8,13 +8,12 @@ import {
   UserCircle,
   Users2,
 } from "lucide-react";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import JobsDropdown from "./jobs-dropdown";
+import LogoutModal from "./logout-modal";
 import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
-import LogoutModal from "./logout-modal";
 
 const LeftSideBar = () => {
   const router = useRouter();
@@ -70,6 +69,12 @@ const LeftSideBar = () => {
       title: "Settings",
       icon: <Settings />,
       link: "/dashboard/settings",
+      active: false,
+    },
+    {
+      title: "Feedback & Support",
+      icon: <Settings />,
+      link: "/dashboard/feedback",
       active: false,
     },
     {

@@ -1,5 +1,3 @@
-export interface ProfileInputGroupProps {
-  label: string;
-  type?: "text" | "email" | "password";
-  className?: string;
-}
+import { InputGroupProps } from "./input";
+
+export interface ProfileInputGroupProps extends InputGroupProps {}
