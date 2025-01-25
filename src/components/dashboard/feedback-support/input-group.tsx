@@ -18,7 +18,7 @@ interface FeedbackSupportSelectGroupProps {
 interface FeebackSupportFileGroupProps {
   label: string;
   onChange?: (file: File) => void;
-  file: File | null;
+  file?: File | null;
 }
 
 export function FeedbackSupportInputGroup(props: InputGroupProps) {
