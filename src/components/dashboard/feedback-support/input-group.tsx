@@ -18,6 +18,7 @@ interface FeedbackSupportSelectGroupProps {
 interface FeebackSupportFileGroupProps {
   label: string;
   onChange?: (file: File) => void;
+  file: File | null;
 }
 
 export function FeedbackSupportInputGroup(props: InputGroupProps) {
@@ -34,6 +35,8 @@ export function FeedbackSupportInputGroup(props: InputGroupProps) {
         id={convertToSlug(props.label)}
         className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
         placeholder={`Enter your ${props.label}`}
+        onChange={(e) => props.onChange?.(e.target.value)}
+        value={props.value}
       />
     </div>
   );
@@ -46,9 +49,9 @@ export function FeedbackSupportTextareaGroup(props: InputGroupProps) {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setWordCount(e.target.value.split(/\s+/).filter(Boolean).length);
 
-    // if (props.onChange) {
-    //   props.onChange(e.target.value);
-    // }
+    if (props.onChange) {
+      props.onChange(e.target.value);
+    }
   };
 
   return (
@@ -64,6 +67,7 @@ export function FeedbackSupportTextareaGroup(props: InputGroupProps) {
         rows={5}
         className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
         placeholder={`Enter your ${props.label}`}
+        value={props.value}
         onChange={handleTextareaChange}
       />
       <span className="absolute top-8 right-6 text-xs font-medium text-[#87909E]">
@@ -142,14 +146,16 @@ export function FeedbackSupportFileGroup(props: FeebackSupportFileGroupProps) {
           <span className="capitalize border border-gray-500 py-0.5 px-2 rounded-sm cursor-pointer">
             choose file
           </span>{" "}
-          <span>No File Chosen</span>
+          <span>{props.file?.name ?? "No file chosen"}</span>
         </div>
       </label>
       <input
         type="file"
         id={convertToSlug(props.label)}
         className="hidden"
-        // onChange={(e) => props.onChange(e.target.files[0])}
+        onChange={(e) =>
+          props.onChange && e.target.files && props.onChange(e.target.files[0])
+        }
       />
     </div>
   );

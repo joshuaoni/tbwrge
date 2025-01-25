@@ -1,11 +1,19 @@
 import { convertToSlug } from "@/components/settings/profile/input-group";
 import Image from "next/image";
 
-function SubmitArticleFileGroup(props: { label: string }) {
+interface SubmitArticleFileGroupProps {
+  label: string;
+  onChange?: (file: File) => void;
+}
+
+function SubmitArticleFileGroup({
+  label,
+  onChange,
+}: SubmitArticleFileGroupProps) {
   return (
     <div className="w-full space-y-2">
-      <label htmlFor={convertToSlug(props.label)} className="block">
-        <span className="block text-[#4A5568] text-sm mb-2">{props.label}</span>
+      <label htmlFor={convertToSlug(label)} className="block">
+        <span className="block text-[#4A5568] text-sm mb-2">{label}</span>
         <p className="text-[#87909E] text-xs text-center flex items-center justify-center gap-2 py-4 px-7 bg-[#EDF2F7] cursor-pointer">
           <span>Upload Article</span>
           <Image
@@ -19,9 +27,12 @@ function SubmitArticleFileGroup(props: { label: string }) {
       </label>
       <input
         type="file"
-        id={convertToSlug(props.label)}
+        accept=".pdf,.docx"
+        id={convertToSlug(label)}
         className="sr-only"
-        // onChange={(e) => props.onChange(e.target.files[0])}
+        onChange={(e) =>
+          onChange && e.target.files && onChange(e.target.files[0])
+        }
       />
     </div>
   );
