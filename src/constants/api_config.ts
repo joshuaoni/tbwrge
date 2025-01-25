@@ -34,4 +34,5 @@ export const API_CONFIG = {
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
+  UPDATE_PROFILE: `${MAIN_URL}/profile/update-profile/`,
 };

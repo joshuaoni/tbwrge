@@ -18,6 +18,8 @@ function ProfileInputGroup(props: ProfileInputGroupProps) {
         {props.label}
       </label>
       <input
+        value={props.value}
+        onChange={(e) => props.onChange?.(e.target.value)}
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
         className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
