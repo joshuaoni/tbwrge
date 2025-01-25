@@ -41,7 +41,7 @@ const DashboardSubmitArticlePage = () => {
     onError: (error: any) => {
       if (error.response?.data?.detail) {
         error.response.data.detail.forEach((err: any) => {
-          toast.error(`${err.msg} at ${err.loc.join(" -> ")}`);
+          toast.error(`${err.loc.join(" ")} ${err.msg}`);
         });
       } else {
         toast.error(error.message);
