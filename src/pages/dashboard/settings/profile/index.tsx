@@ -36,7 +36,7 @@ const ProfileSettingsPage = () => {
 
   const UpdateProfile = useMutation({
     mutationKey: ["update-profile"],
-    onMutate: async (data: MutationData) => {
+    mutationFn: async (data: MutationData) => {
       // Utility function to validate fields
       const isValidValue = (value: unknown): value is string | Blob => {
         return typeof value === "string" && value.trim() !== "";

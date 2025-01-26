@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import OR from "../../../../public/images/OR.png";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
+import toast from "react-hot-toast";
 
 const Index = () => {
   const [email, setEmail] = React.useState("");
@@ -25,6 +26,7 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
+        toast.success("Login successful");
         console.log(res.user);
         addUser({
           authenticatedUser: res.user,
@@ -32,6 +34,9 @@ const Index = () => {
         });
         router.push("/dashboard");
       }
+    },
+    onError: (err) => {
+      toast.error("Login failed");
     },
   });
   const signInWithGoogleMutation = useMutation({
