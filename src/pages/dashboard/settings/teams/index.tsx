@@ -125,7 +125,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                   return (
                     <button
                       key={idx}
-                      className="bg-primary text-white px-3 py-1 rounded-full hover:bg-primary/90 transition-colors duration-300"
+                      className="bg-primary text-white text-sm px-3 py-1 rounded-full hover:bg-primary/90 transition-colors duration-300"
                     >
                       {action}
                     </button>

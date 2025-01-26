@@ -41,7 +41,7 @@ const EditTeamMember = () => {
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogTrigger>
-        <div className="bg-primary text-white px-3 py-1 rounded-full hover:bg-primary/90 transition-colors duration-300">
+        <div className="bg-primary text-sm text-white px-3 py-1 rounded-full hover:bg-primary/90 transition-colors duration-300">
           Edit
         </div>
       </DialogTrigger>
