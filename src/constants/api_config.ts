@@ -26,6 +26,7 @@ export const API_CONFIG = {
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
@@ -34,4 +35,10 @@ export const API_CONFIG = {
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
+  UPDATE_PROFILE: `${MAIN_URL}/profile/update-profile/`,
+  UPDATE_SETTINGS: `${MAIN_URL}/profile/update-settings/`,
+  GET_PROFILE_SETTINGS: `${MAIN_URL}/profile/get-settings/`,
+  ADD_TEAM_MEMBER: `${MAIN_URL}/profile/add-team-member/`,
+  GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
+  GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
 };
