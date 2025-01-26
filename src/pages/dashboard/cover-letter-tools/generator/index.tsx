@@ -318,7 +318,7 @@ const Generator = () => {
               <span className="font-bold">Cover Letter Summary</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
+            <div className="flex flex-col items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
                 <div className="h-full overflow-y-scroll space-y-4">
