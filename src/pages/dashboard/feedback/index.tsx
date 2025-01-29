@@ -52,7 +52,10 @@ const FeedbackPage = () => {
             { label: "Bug", value: "bug" },
             { label: "General Comment", value: "general-comment" },
           ]}
-          onChange={(val) => form.setFormField("category", val)}
+          onChange={(val) => {
+            form.setFormField("subject", val);
+            form.setFormField("category", val);
+          }}
         />
         <FeedbackSupportTextareaGroup
           label="Feedback Details"
