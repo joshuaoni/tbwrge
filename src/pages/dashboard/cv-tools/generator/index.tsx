@@ -87,7 +87,30 @@ const Generator = () => {
     }
   };
 
-  const resumeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // FIXME: refactor this to use a single function
+  const resumeRefs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
+
+  const downloadPDFs = [
+    useDownloadPDF(resumeRefs[0], "resume-1").downloadPDF,
+    useDownloadPDF(resumeRefs[1], "resume-2").downloadPDF,
+    useDownloadPDF(resumeRefs[2], "resume-3").downloadPDF,
+    useDownloadPDF(resumeRefs[3], "resume-4").downloadPDF,
+    useDownloadPDF(resumeRefs[4], "resume-5").downloadPDF,
+  ];
+
+  const resumeComponents = [
+    Resume,
+    ResumeTwo,
+    ResumeThree,
+    ResumeFour,
+    ResumeFive,
+  ];
 
   return (
     <DashboardWrapper>
@@ -218,48 +241,31 @@ const Generator = () => {
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
                 <div className="space-y-6 mt-4">
-                  {[Resume, ResumeTwo, ResumeThree, ResumeFour, ResumeFive].map(
-                    (ResumeComponent, index) => {
-                      if (!resumeRefs.current[index]) {
-                        resumeRefs.current[index] = null;
-                      }
-
-                      const setRef = (el: HTMLDivElement | null) => {
-                        resumeRefs.current[index] = el;
-                      };
-
-                      const { downloadPDF } = useDownloadPDF(
-                        { current: resumeRefs.current[index] }, // Wrap in a RefObject
-                        isSuccess && generatedCv.cv_data.name
-                          ? `${generatedCv.cv_data.name.replaceAll(
-                              " ",
-                              "-"
-                            )}-resume`
-                          : ""
-                      );
-
-                      return (
-                        <div key={index} className="flex items-start">
-                          <ResumeComponent
-                            ref={setRef}
-                            name={generatedCv.cv_data.name}
-                            title={"Product Designer"}
-                            contactInfo={{
-                              email: "kate.bishop@katedesign.com",
-                              linkedin: generatedCv.cv_data.linkedin,
-                              phone: "+46 98-215 4231",
-                            }}
-                            workExperience={generatedCv.cv_data.experience}
-                            education={generatedCv.cv_data.education}
-                            skills={generatedCv.cv_data.skills}
-                          />
-                          <button className="w-1/12" onClick={downloadPDF}>
-                            <DocumentDownloadIcon />
-                          </button>
-                        </div>
-                      );
-                    }
-                  )}
+                  {resumeComponents.map((ResumeComponent, index) => {
+                    return (
+                      <div key={index} className="flex items-start">
+                        <ResumeComponent
+                          ref={resumeRefs[index]}
+                          name={generatedCv.cv_data.name}
+                          title={"Product Designer"}
+                          contactInfo={{
+                            email: "kate.bishop@katedesign.com",
+                            linkedin: generatedCv.cv_data.linkedin,
+                            phone: "+46 98-215 4231",
+                          }}
+                          workExperience={generatedCv.cv_data.experience}
+                          education={generatedCv.cv_data.education}
+                          skills={generatedCv.cv_data.skills}
+                        />
+                        <button
+                          className="w-1/12"
+                          onClick={() => downloadPDFs[index]()}
+                        >
+                          <DocumentDownloadIcon />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
