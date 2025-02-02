@@ -255,12 +255,20 @@ const Ranking = () => {
                   </div>
 
                   {rankings.map((item, i) => (
-                    <div
-                      key={i}
-                      className="w-full flex justify-between px-6 py-2"
-                    >
-                      <span>{item.candidate_name ?? 0}</span>
-                      <span>{item![rankFilter as keyof Candidate] ?? 0}</span>
+                    <div key={i} className="px-6 py-2">
+                      <div className="w-full flex justify-between">
+                        <span className="font-medium">
+                          {item.candidate_name ?? "empty"}
+                        </span>
+                        <span>{item![rankFilter as keyof Candidate] ?? 0}</span>
+                      </div>
+                      <p className="text-gray-600">
+                        Lorem ipsum dolor sit amet consectetur, adipisicing
+                        elit. Neque accusamus omnis cum hic velit beatae
+                        ratione, illum et minima quod quisquam dolor
+                        exercitationem pariatur, aliquid vero blanditiis facere
+                        saepe? Incidunt.
+                      </p>
                     </div>
                   ))}
                 </div>

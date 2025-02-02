@@ -226,7 +226,7 @@ const Summarizer: React.FC = () => {
               <span className="font-bold">CV Summary</span>
               <X onClick={() => null} size={20} />
             </div>
-            <div className="flex items-center justify-center flex-1 h-full">
+            <div className="flex items-center flex-col justify-center flex-1 h-full">
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : summaries === undefined ? (
