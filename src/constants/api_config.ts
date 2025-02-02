@@ -41,4 +41,5 @@ export const API_CONFIG = {
   ADD_TEAM_MEMBER: `${MAIN_URL}/profile/add-team-member/`,
   GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
+  FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
 };

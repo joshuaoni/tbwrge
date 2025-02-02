@@ -7,6 +7,9 @@ import { generateCV } from "@/actions/cv-tools/generate-cv";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Resume from "@/components/dashboard/cv-tools/resume";
 import ResumeTwo from "@/components/dashboard/cv-tools/resume-2";
+import ResumeThree from "@/components/dashboard/cv-tools/resume-3";
+import ResumeFour from "@/components/dashboard/cv-tools/resume-4";
+import ResumeFive from "@/components/dashboard/cv-tools/resume-5";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
@@ -84,17 +87,30 @@ const Generator = () => {
     }
   };
 
-  const resumeRef = useRef<HTMLDivElement>(null);
-  const { downloadPDF } = useDownloadPDF(
-    resumeRef,
-    isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume` : ""
-  );
+  // FIXME: refactor this to use a single function
+  const resumeRefs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
 
-  const resumeRef2 = useRef<HTMLDivElement>(null);
-  const { downloadPDF: downloadPDF2 } = useDownloadPDF(
-    resumeRef2,
-    isSuccess ? `${generatedCv.cv_data.name.replaceAll(" ", "-")}-resume-2` : ""
-  );
+  const downloadPDFs = [
+    useDownloadPDF(resumeRefs[0], "resume-1").downloadPDF,
+    useDownloadPDF(resumeRefs[1], "resume-2").downloadPDF,
+    useDownloadPDF(resumeRefs[2], "resume-3").downloadPDF,
+    useDownloadPDF(resumeRefs[3], "resume-4").downloadPDF,
+    useDownloadPDF(resumeRefs[4], "resume-5").downloadPDF,
+  ];
+
+  const resumeComponents = [
+    Resume,
+    ResumeTwo,
+    ResumeThree,
+    ResumeFour,
+    ResumeFive,
+  ];
 
   return (
     <DashboardWrapper>
@@ -225,40 +241,31 @@ const Generator = () => {
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
                 <div className="space-y-6 mt-4">
-                  <div className="flex items-start">
-                    <Resume
-                      ref={resumeRef}
-                      name={generatedCv.cv_data.name}
-                      title={"Product Designer"}
-                      contactInfo={{
-                        email: "kate.bishop@katedesign.com",
-                        linkedin: generatedCv.cv_data.linkedin,
-                        phone: "+46 98-215 4231",
-                      }}
-                      workExperience={generatedCv.cv_data.experience}
-                      education={generatedCv.cv_data.education}
-                      skills={generatedCv.cv_data.skills}
-                    />
-                    <button className="w-1/12" onClick={downloadPDF}>
-                      <DocumentDownloadIcon />
-                    </button>
-                  </div>
-                  <div className="flex items-start">
-                    <ResumeTwo
-                      ref={resumeRef2}
-                      name={generatedCv.cv_data.name}
-                      title={"Product Designer"}
-                      contactInfo={{
-                        email: "kate.bishop@katedesign.com",
-                        linkedin: generatedCv.cv_data.linkedin,
-                        phone: "+46 98-215 4231",
-                      }}
-                      workExperience={generatedCv.cv_data.experience}
-                    />
-                    <button className="w-1/12" onClick={downloadPDF2}>
-                      <DocumentDownloadIcon />
-                    </button>
-                  </div>
+                  {resumeComponents.map((ResumeComponent, index) => {
+                    return (
+                      <div key={index} className="flex items-start">
+                        <ResumeComponent
+                          ref={resumeRefs[index]}
+                          name={generatedCv.cv_data.name}
+                          title={"Product Designer"}
+                          contactInfo={{
+                            email: "kate.bishop@katedesign.com",
+                            linkedin: generatedCv.cv_data.linkedin,
+                            phone: "+46 98-215 4231",
+                          }}
+                          workExperience={generatedCv.cv_data.experience}
+                          education={generatedCv.cv_data.education}
+                          skills={generatedCv.cv_data.skills}
+                        />
+                        <button
+                          className="w-1/12"
+                          onClick={() => downloadPDFs[index]()}
+                        >
+                          <DocumentDownloadIcon />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
