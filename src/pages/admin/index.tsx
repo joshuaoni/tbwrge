@@ -54,8 +54,8 @@ const AdminDashboardPage = () => {
                   id: index + 1,
                   name: "John James",
                   email: "john@gmail.com",
-                  status: Math.random() > 0.5 ? "Accepted" : "Pending",
-                  lastLogin: `${Math.floor(Math.random() * 60)} mins ago`,
+                  status: true ? "Accepted" : "Pending",
+                  lastLogin: ` mins ago`,
                 }))
                 .map((user) => (
                   <tr key={user.id} className="hover:bg-gray-100">
