@@ -11,7 +11,7 @@ const ResumeFour = forwardRef<HTMLDivElement, ResumeProps>(
         ref={ref}
         className={classNames(
           poppins.className,
-          "w-full px-4 py-5 space-y-4 bg-white"
+          "w-full px-4 py-5 space-y-4 bg-white shadow-md  rounded-lg  p-6"
         )}
       >
         <div className="flex gap-8">

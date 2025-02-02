@@ -10,7 +10,7 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
         ref={ref}
         className={classNames(
           poppins.className,
-          "w-full max-w-5xl mx-auto bg-white text-[#222222]"
+          " max-w-5xl mx-auto bg-white shadow-md  rounded-lg w-full p-6 text-[#222222]"
         )}
       >
         <div className="bg-[#E4F6FB]/50 flex justify-between items-start border-b p-5">
@@ -75,7 +75,7 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
               <h2 className="text-lg font-medium text-[#1C8EB5]">Skills</h2>
               <p className="mt-2 text-gray-700">
                 {skills.map((skill, index) => (
-                  <span key={index} className="mr-2">
+                  <span key={index} className="mr-2 ">
                     {skill}
                   </span>
                 ))}
