@@ -256,13 +256,7 @@ const Ranking = () => {
                         </span>
                         <span>{item![rankFilter as keyof Candidate] ?? 0}</span>
                       </div>
-                      <p className="text-gray-600">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Neque accusamus omnis cum hic velit beatae
-                        ratione, illum et minima quod quisquam dolor
-                        exercitationem pariatur, aliquid vero blanditiis facere
-                        saepe? Incidunt.
-                      </p>
+                      <p className="text-gray-600">{item.description}</p>
                     </div>
                   ))}
                 </div>
