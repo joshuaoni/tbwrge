@@ -1,3 +1,13 @@
+import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+import {
+  feedbackSupport,
+  FeedbackSupportRequestData,
+  INITIAL_FEEDBACK_SUPPORT_REQUEST_DATA,
+} from "@/actions/feedback-suoport";
 import FeedbackSupportAccordion from "@/components/dashboard/feedback-support/accordion";
 import FeedbackSupportButton from "@/components/dashboard/feedback-support/button";
 import {
@@ -7,12 +17,25 @@ import {
   FeedbackSupportTextareaGroup,
 } from "@/components/dashboard/feedback-support/input-group";
 import DashboardFeedbackSupportLayout from "@/components/dashboard/feedback-support/layout";
-import Link from "next/link";
-import { useState } from "react";
+import { useForm } from "@/hooks/form";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const DashboardSupportPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [feedbackType, setFeedbackType] = useState("");
+  const { userData } = useUserStore();
+
+  const supportMutation = useMutation({
+    mutationFn: async (data: FeedbackSupportRequestData) =>
+      await feedbackSupport(userData?.token ?? "", data),
+    onSuccess: () => {
+      toast.success("Support request submitted successfully");
+      form.resetForm();
+    },
+  });
+
+  const form = useForm(INITIAL_FEEDBACK_SUPPORT_REQUEST_DATA, (data) => {
+    supportMutation.mutate(data);
+  });
 
   return (
     <DashboardFeedbackSupportLayout>
@@ -21,7 +44,10 @@ const DashboardSupportPage = () => {
       </p>
 
       <section className="flex gap-10 items-start ">
-        <form className="w-full my-6 space-y-7 max-w-md">
+        <form
+          className="w-full my-6 space-y-7 max-w-md"
+          onSubmit={form.handleSubmit}
+        >
           <FeedbackSupportInputGroup label="Name (Optional)" />
           <FeedbackSupportInputGroup label="Email (Optional)" />
           <FeedbackSupportSelectGroup
@@ -33,11 +59,23 @@ const DashboardSupportPage = () => {
               { label: "Billing Inquiry", value: "billing-inquiry" },
               { label: "Report a Problem", value: "report-a-problem" },
             ]}
-            onChange={setFeedbackType}
+            onChange={(val) => form.setFormField("category", val)}
           />
-          <FeedbackSupportInputGroup label="Subject" />
-          <FeedbackSupportTextareaGroup label="Description" />
-          <FeedbackSupportFileGroup label="Attach Screenshot (Optional)" />
+          <FeedbackSupportInputGroup
+            label="Subject"
+            value={form.formData.subject}
+            onChange={(val) => form.setFormField("subject", val)}
+          />
+          <FeedbackSupportTextareaGroup
+            label="Description"
+            value={form.formData.details}
+            onChange={(val) => form.setFormField("details", val)}
+          />
+          <FeedbackSupportFileGroup
+            label="Attach Screenshot (Optional)"
+            file={form.formData.image}
+            onChange={(file) => form.setFormField("image", file)}
+          />
           <FeedbackSupportSelectGroup
             title="Preferred Contact Method"
             defaultValue="Email"
@@ -45,11 +83,16 @@ const DashboardSupportPage = () => {
               { label: "Email", value: "email" },
               { label: "Phone", value: "phone" },
             ]}
-            onChange={setFeedbackType}
+            onChange={(val) => form.setFormField("preferred_contact", val)}
           />
 
           <div className="w-full flex justify-end">
-            <FeedbackSupportButton />
+            <FeedbackSupportButton
+              onClick={() => {
+                form.setFormField("type", "support");
+              }}
+              isLoading={supportMutation.isPending}
+            />
           </div>
         </form>
         <section className="w-full max-w-xl mt-6">

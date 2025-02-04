@@ -23,7 +23,7 @@ function renderContactIcon(type: string) {
 const Resume = forwardRef<HTMLDivElement, ResumeProps>(
   ({ name, title, contactInfo, workExperience, education, skills }, ref) => {
     return (
-      <div ref={ref} className="bg-white p-6">
+      <div ref={ref} className=" bg-white shadow-md  rounded-lg w-full p-6">
         {/* Header */}
         <header
           className={classNames(
