@@ -152,7 +152,7 @@ const JobDetail = ({
           </div>
           <div className="flex flex-col">
             <label htmlFor="Company">Company Logo</label>
-            <div className="bg-[#EDF2F7] relative flex cursor-pointer items-center justify-center h-12 rounded-md border-none outline-none mt-2">
+            <div className="bg-[#EDF2F7] relative flex cursor-pointer items-center justify-center h-fit rounded-md border-none outline-none mt-2">
               <input
                 onChange={handleInput}
                 name="logo"

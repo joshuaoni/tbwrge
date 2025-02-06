@@ -294,10 +294,10 @@ const Generator = () => {
                 {/* metric scores */}
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { metric: "Relevance", score: 10 },
-                    { metric: "Perfomance", score: 20 },
-                    { metric: "Perfomance", score: 20 },
-                    { metric: "Perfomance", score: 20 },
+                    { metric: "Relevance", score: 0 },
+                    { metric: "Perfomance", score: 0 },
+                    { metric: "Perfomance", score: 0 },
+                    { metric: "Perfomance", score: 0 },
                   ].map((item, i) => (
                     <MetricScore
                       key={i}

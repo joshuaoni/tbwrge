@@ -70,6 +70,12 @@ const LeftSideBar = () => {
       active: false,
     },
     {
+      title: "Teams",
+      icon: <User />,
+      link: "/dashboard/billings",
+      active: false,
+    },
+    {
       title: "Settings",
       icon: <Settings />,
       link: "/dashboard/settings",

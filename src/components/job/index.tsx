@@ -82,8 +82,7 @@ const CreateJobFlow = ({
       // localStorage.removeItem("job-creation-details");
     },
     onError: (error) => {
-      console.log("the error is", error);
-      toast.error(String(error));
+      toast.error("An error occurred while creating the job");
     },
   });
   const handleCreateJob = async () => {
