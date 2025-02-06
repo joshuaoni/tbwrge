@@ -12,37 +12,37 @@ const CvDropDown = () => {
     {
       link: "/dashboard/cv-tools/summarizer",
       title: "Summarizer",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/vetting",
       title: "CV Vetting",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/head-to-head",
       title: "CV Head to Head",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/generator",
       title: "CV Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/translator",
       title: "CV Translator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/rewriter",
       title: "CV Rewriter",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cv-tools/ranking",
       title: "CV Ranking",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
   ]);
 
@@ -86,7 +86,7 @@ const CvDropDown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  {item.icon}
+                  <p className='py-1 px-4 bg-white rounded-xl text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>
