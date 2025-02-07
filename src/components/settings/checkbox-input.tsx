@@ -12,7 +12,7 @@ function CheckBoxInput(props: CheckBoxInputProps) {
         id={convertToSlug(props.label)}
         className="h-5 w-5"
         checked={value}
-        onChange={(e) => props.onChange?.(e.target.checked)}
+        onChange={(e) => props?.onChange?.(e.target.checked)}
       />
       <label htmlFor={convertToSlug(props.label)} className="text-[#87909E]">
         {props.label}

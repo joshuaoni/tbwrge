@@ -40,13 +40,13 @@ const index = () => {
         <CreateJob />
       </div>
       <div className=" flex-1 ">
-        <div className="flex h-[40%]  mt-8 justify-between items-center">
+        <div className="flex h-[40%]   mt-8 justify-between items-center">
           <div className="grid grid-cols-2 gap-6  ">
             {analytics.map((an) => (
               <AnalyticInfoCard {...an} />
             ))}
           </div>
-          <div className="w-[420px] h-full  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
+          <div className=" h-full flex-1  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
             <h1 className="font-extrabold text-2xl">
               Find the Perfect Candidate <br /> for the job
             </h1>
@@ -55,7 +55,7 @@ const index = () => {
               creation, cover letter translation, and more designed to simplify
               your workflow.
             </p>
-            <Button className="bg-white w-[50%] text-base py-6 self-center text-primary font-bold ">
+            <Button className="bg-white px-4 w-[50%] text-base py-6 self-center text-primary font-bold ">
               Subscribe for premium
             </Button>
           </div>

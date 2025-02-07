@@ -27,7 +27,7 @@ const Dashboard = ({ children }: { children: any }) => {
     }
   }, [userData, isLoading, router]);
   return (
-    <div>
+    <div className="flex">
       <DashboardHeader setStartCreateJobFlow={setStartCreateJobFlow} />
       <SidebarProvider className="">
         <Sidebar className="bg-[#e1e1e1] z-30">
