@@ -86,12 +86,12 @@ const index = () => {
         </div>
         <div className=" md:mt-12  ">
           <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
-            <div className="grid w-full md:w-[60%] grid-cols-1 md:grid-cols-2 gap-6  ">
+            <div className="grid  md:w-[60%]  w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
               {analytics.map((an) => (
                 <AnalyticInfoCard {...an} />
               ))}
             </div>
-            <div className=" mt-4 md:mt-0 md:w-[420px] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
+            <div className=" mt-4 md:mt-0 md:w-[40%] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
               <h1 className="font-extrabold text-2xl">
                 Find the Perfect Candidate <br /> for the job
               </h1>
@@ -100,7 +100,7 @@ const index = () => {
                 creation, cover letter translation, and more designed to
                 simplify your workflow.
               </p>
-              <Button className="bg-white md:w-[50%] text-base py-6 self-center text-primary font-bold ">
+              <Button className="bg-white  md:w-[54%] text-base py-6 self-center text-primary font-bold ">
                 Subscribe for premium
               </Button>
             </div>
