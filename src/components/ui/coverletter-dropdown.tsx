@@ -1,13 +1,14 @@
-import React from "react";
-import { ChevronDown, ChevronUp, File, ShoppingBag } from "lucide-react";
-import gem from "../../../public/images/gem.png";
+import { ChevronDown, ChevronUp, File } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import React from "react";
+import gem from "../../../public/images/gem.png";
 const CoverLetterDropDown = () => {
   const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
     React.useState(false);
   const router = useRouter();
+  const pathName = usePathname();
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
@@ -56,14 +57,14 @@ const CoverLetterDropDown = () => {
       </div>
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showCoverLetterDropDown
+          showCoverLetterDropDown ||
+          pathName.includes("/dashboard/cover-letter-tools")
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
         <div className="mb-2 ml-3 space-y-4 cursor-pointer">
           {dropDownItems.map((item, index) => {
-            const pathName = usePathname();
             const isActiveRoute = item.link === pathName;
             return (
               <div
