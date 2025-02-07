@@ -54,12 +54,6 @@ const LeftSideBar = () => {
       link: "/community",
       active: false,
     },
-    {
-      title: "Training",
-      icon: <User />,
-      link: "/dashboard/training",
-      active: false,
-    },
   ]);
 
   const [userLeftSideItems, setUserLeftSideItems] = React.useState([
