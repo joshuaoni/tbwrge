@@ -91,7 +91,7 @@ const index = () => {
                 <AnalyticInfoCard {...an} />
               ))}
             </div>
-            <div className=" mt-4 md:mt-0 md:w-[420px] h-fit py-6  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
+            <div className=" mt-4 md:mt-0 md:w-[420px] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
               <h1 className="font-extrabold text-2xl">
                 Find the Perfect Candidate <br /> for the job
               </h1>
@@ -299,7 +299,7 @@ const AnalyticInfoCard = ({
   icon: any;
 }) => {
   return (
-    <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
+    <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full w-fit">
       <div className="flex items-center space-x-2">
         {icon}
         <span className="text-sm font-light ">{title}</span>
