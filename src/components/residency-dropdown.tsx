@@ -30,7 +30,7 @@ const ResidenceDropDown = ({
           style={{ position: "relative" }}
         >
           {value
-            ? COUNTRIES.find((country) => country.value === value)?.label
+            ? COUNTRIES.find((country) => country.label === value)?.label
             : "Select country..."}
         </div>
       </PopoverTrigger>
@@ -46,15 +46,15 @@ const ResidenceDropDown = ({
             {COUNTRIES.map((country) => (
               <CommandItem
                 className="text-black"
-                key={country.value}
-                value={country.value}
+                key={country.label}
+                value={country.label}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   onSelect?.(country.label);
                   setOpen(false);
                 }}
               >
-                {country.value === value && (
+                {country.label === value && (
                   <Check className="mr-2 h-4 w-4" color="#065844" />
                 )}
                 {country.label}
