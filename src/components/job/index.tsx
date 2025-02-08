@@ -21,12 +21,12 @@ const CreateJobFlow = ({
     localStorage.getItem("job-creation-details") as string
   );
   const { userData } = useUserStore();
-
   const {
     mutate: jobCreationMutate,
     data,
     isPending,
   } = useMutation({
+    
     mutationKey: ["create-job"],
     mutationFn: async () => {
       let jobType =
@@ -43,7 +43,7 @@ const CreateJobFlow = ({
         company_website: storedDetails?.website,
         company_description: storedDetails?.description,
         company_name: storedDetails?.name,
-        company_logo: "",
+        company_logo: companyLogo,
         job_title: storedDetails?.title,
         start_date: new Date(storedDetails?.startDate)
           .toISOString()
