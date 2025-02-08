@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import {
   Dialog,
   DialogContent,
@@ -168,43 +170,25 @@ const CreateJob = () => {
 
                 <>
                   <label>Job Description</label>
-                  <input
-                    value={jobPost.description}
-                    onChange={(e) => {
-                      setJobPost({ ...jobPost, description: e.target.value });
-                    }}
-                    type="text"
-                    placeholder="Briefly describe the job"
-                    className="border p-2"
-                  />
+                  <ReactQuill
+                  value={jobPost.description}
+                  onChange={(value) => setJobPost({ ...jobPost, description: value })}
+                />
                 </>
                 <>
                   <label>Job Requirements</label>
-                  <input
-                    value={jobPost.requirements}
-                    onChange={(e) => {
-                      setJobPost({ ...jobPost, requirements: e.target.value });
-                    }}
-                    type="text"
-                    placeholder="Briefly describe the job requirements"
-                    className="border p-2"
-                  />
+                  <ReactQuill
+                  value={jobPost.requirements}
+                  onChange={(value) => setJobPost({ ...jobPost, requirements: value })}
+                />
                 </>
 
                 <>
                   <label>Company Description</label>
-                  <input
-                    value={jobPost.companyDescription}
-                    onChange={(e) => {
-                      setJobPost({
-                        ...jobPost,
-                        companyDescription: e.target.value,
-                      });
-                    }}
-                    type="text"
-                    placeholder="Briefly describe the company"
-                    className="border p-2"
-                  />
+                  <ReactQuill
+                  value={jobPost.companyDescription}
+                  onChange={(value) => setJobPost({ ...jobPost, companyDescription: value })}
+                />
                 </>
 
                 <Button
