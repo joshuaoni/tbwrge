@@ -13,33 +13,33 @@ const CoverLetterDropDown = () => {
     {
       link: "/dashboard/cover-letter-tools/summarizer",
       title: "Summarizer",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/vetting",
       title: "Vetting",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/ranking",
 
       title: "Ranking",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/generator",
       title: "Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/translator",
       title: "Translator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/rewriter",
       title: "Rewriter",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
   ]);
   return (
@@ -83,7 +83,7 @@ const CoverLetterDropDown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  {item.icon}
+                <p className='py-1 px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

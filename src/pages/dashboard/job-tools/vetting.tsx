@@ -3,17 +3,24 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { MetricCardsLoading } from "../../../components/dashboard/vetting/metric-card";
 import VettingWrapper from "../../../components/dashboard/vetting/vetting-wrapper";
 import { VettingResponse } from "../../../interfaces/vetting.interface";
+import "react-quill/dist/quill.snow.css";
+
+// Dynamic import for React Quill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -22,6 +29,30 @@ const Vetting = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
   const { userData } = useUserStore();
+
+  // Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
+  };
+
+  // Quill formats configuration
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "link",
+  ];
+
   const {
     mutate: vetJobMutation,
     data: vets,
@@ -55,6 +86,7 @@ const Vetting = () => {
       return response;
     },
   });
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles) {
@@ -145,13 +177,16 @@ const Vetting = () => {
           </div>
           <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">Paste Your Job description here</span>
-            <Textarea
-              placeholder="Input Job Description"
-              value={jobDescription}
-              rows={8}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="my-3 bg-white border"
-            />
+            <div className="my-8 bg-white border rounded-md">
+              <ReactQuill
+                theme="snow"
+                value={jobDescription}
+                onChange={setJobDescription}
+                modules={modules}
+                formats={formats}
+                className="h-64"
+              />
+            </div>
           </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
@@ -214,7 +249,7 @@ const Vetting = () => {
                 onClick={() => {
                   vetJobMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-lightgreen min-w-[100px] text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />

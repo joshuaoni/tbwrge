@@ -11,22 +11,22 @@ const JobsDropdown = () => {
     {
       link: "/dashboard/job-tools/generator",
       title: "Job Post Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/vetting",
       title: "Job Post Vetting",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/translator",
       title: "Job Post Translator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/report-generator",
       title: "Candidate Report Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
   ]);
   return (
@@ -69,7 +69,7 @@ const JobsDropdown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  {item.icon}
+                <p className='py-1 px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

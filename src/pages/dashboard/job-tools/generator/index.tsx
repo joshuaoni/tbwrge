@@ -2,13 +2,20 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import dynamic from 'next/dynamic';
+
+// Import React Quill dynamically to avoid SSR issues
+const ReactQuill = dynamic(() => import('react-quill'), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>
+});
+import 'react-quill/dist/quill.snow.css';
 
 import { generateJob } from "@/actions/job-tools/generator";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import JobPost from "@/components/dashboard/job-tools/job-post";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
@@ -24,6 +31,27 @@ const Generator = () => {
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
   const { userData } = useUserStore();
+
+  // Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['clean']
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet'
+  ];
+
+  const handleClearSummary = () => {
+    setSummary("");
+  };
+
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -48,11 +76,13 @@ const Generator = () => {
       alert("Microphone access is required to record audio.");
     }
   };
+
   const {
     mutate: generateJobMutation,
     data,
     isPending,
     isSuccess,
+    reset: resetMutation,
   } = useMutation<JobPostGeneratorResponse>({
     mutationKey: ["generateCV"],
     mutationFn: async () => {
@@ -80,12 +110,14 @@ const Generator = () => {
       return response;
     },
   });
+
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
   };
+
   return (
     <DashboardWrapper>
       <span className="font-bold text-xl">Job Post Generator</span>
@@ -104,18 +136,23 @@ const Generator = () => {
                 }}
               />
             </div>
-            <Textarea
-              placeholder="Input Prompt"
-              value={value}
-              className="my-3 bg-white"
-              onChange={(e) => setValue(e.target.value)}
-            />
+            <div className="my-7 bg-white">
+              <ReactQuill
+                theme="snow"
+                value={value}
+                onChange={setValue}
+                modules={modules}
+                formats={formats}
+                placeholder="Input Prompt"
+                className="h-32"
+              />
+            </div>
 
             <div className="">
               {prompts.map((prompt: string) => {
                 return (
                   <div className="flex justify-between my-2">
-                    <span>{prompt}</span>
+                    <div dangerouslySetInnerHTML={{ __html: prompt }} />
                     <Trash
                       className="cursor-pointer"
                       onClick={() =>
@@ -177,7 +214,6 @@ const Generator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
                 Select Output language
               </span>
               <LanguageSelectorDropDown
@@ -193,7 +229,7 @@ const Generator = () => {
                 onClick={() => {
                   generateJobMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-lightgreen min-w-[100px] text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -206,10 +242,17 @@ const Generator = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl mt-4 p-6  ">
+          <div className="rounded-xl shadow-xl mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Post Generator</span>
-              <X onClick={() => null} size={20} />
+              <X 
+                onClick={() => {
+                  handleClearSummary();
+                  resetMutation();
+                }} 
+                size={20} 
+                className="cursor-pointer" 
+              />
             </div>
             <div className="flex items-center">
               {isSuccess && <JobPost {...data} />}
