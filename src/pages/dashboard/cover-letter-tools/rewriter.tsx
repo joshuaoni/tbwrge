@@ -212,7 +212,6 @@ const ReWriter = () => {
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Rewriter</span>
-              <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}

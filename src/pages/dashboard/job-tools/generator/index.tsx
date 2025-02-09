@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
-import dynamic from 'next/dynamic';
+import { useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 // Import React Quill dynamically to avoid SSR issues
-const ReactQuill = dynamic(() => import('react-quill'), {
+const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
-  loading: () => <p>Loading Editor...</p>
+  loading: () => <p>Loading Editor...</p>,
 });
-import 'react-quill/dist/quill.snow.css';
+import "react-quill/dist/quill.snow.css";
 
 import { generateJob } from "@/actions/job-tools/generator";
 import DashboardWrapper from "@/components/dashboard-wrapper";
@@ -41,7 +41,9 @@ const Generator = () => {
   const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   useEffect(() => {
@@ -58,17 +60,21 @@ const Generator = () => {
   // Quill modules configuration
   const modules = {
     toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['clean']
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["clean"],
     ],
   };
 
   const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet'
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
   ];
 
   const handleClearSummary = () => {
@@ -79,12 +85,16 @@ const Generator = () => {
     if (analyzerRef.current) {
       const dataArray = new Uint8Array(analyzerRef.current.frequencyBinCount);
       analyzerRef.current.getByteFrequencyData(dataArray);
-      
+
       // Get average of frequencies for visualization
-      const values = Array.from(dataArray).slice(0, 10).map(value => value / 255);
+      const values = Array.from(dataArray)
+        .slice(0, 10)
+        .map((value) => value / 255);
       setAudioVisualization(values);
-      
-      animationFrameRef.current = requestAnimationFrame(updateAudioVisualization);
+
+      animationFrameRef.current = requestAnimationFrame(
+        updateAudioVisualization
+      );
     }
   };
 
@@ -98,7 +108,7 @@ const Generator = () => {
       analyzer.fftSize = 256;
       source.connect(analyzer);
       analyzerRef.current = analyzer;
-      
+
       const chunks: BlobPart[] = [];
 
       mediaRecorder.ondataavailable = (event: BlobEvent) => {
@@ -122,15 +132,14 @@ const Generator = () => {
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
       setRecordingDuration(0);
-      
+
       // Start duration timer
       durationIntervalRef.current = setInterval(() => {
-        setRecordingDuration(prev => prev + 1);
+        setRecordingDuration((prev) => prev + 1);
       }, 1000);
 
       // Start visualization
       updateAudioVisualization();
-
     } catch (error) {
       console.error("Error accessing microphone:", error);
       alert("Microphone access is required to record audio.");
@@ -251,16 +260,16 @@ const Generator = () => {
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-light text-sm">Record Voicenote </span>
-              <X
-                className="cursor-pointer"
-                onClick={clearRecording}
-              />
             </div>
 
             <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
               <div className="flex items-center space-x-3 flex-1">
                 <span className="text-xs font-light">
-                  {isRecording ? "Recording..." : audioBlob ? "Recording complete" : "Record Voicenote"}
+                  {isRecording
+                    ? "Recording..."
+                    : audioBlob
+                    ? "Recording complete"
+                    : "Record Voicenote"}
                 </span>
                 {(isRecording || audioBlob) && (
                   <span className="text-xs text-gray-500">
@@ -275,7 +284,7 @@ const Generator = () => {
                         className="w-1 bg-blue-500"
                         style={{
                           height: `${Math.max(4, value * 20)}px`,
-                          transition: 'height 0.1s ease'
+                          transition: "height 0.1s ease",
                         }}
                       />
                     ))}
@@ -335,14 +344,6 @@ const Generator = () => {
           <div className="rounded-xl shadow-xl mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Post Generator</span>
-              <X 
-                onClick={() => {
-                  handleClearSummary();
-                  resetMutation();
-                }} 
-                size={20} 
-                className="cursor-pointer" 
-              />
             </div>
             <div className="flex items-center">
               {isSuccess && <JobPost {...data} />}

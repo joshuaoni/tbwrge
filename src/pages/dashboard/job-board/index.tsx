@@ -47,7 +47,7 @@ const JobBoardPage = () => {
       <div>
         <h3 className="text-3xl font-bold">Job Board</h3>
 
-        <div className="flex items-center gap-8 mt-8 mb-4 text-sm font-medium">
+        <div className="flex items-center gap-8 mt-8 mb-4 text-xs font-medium">
           <input
             className="w-52 py-3 px-4 rounded-lg bg-[#ebebeb] focus:outline-none"
             placeholder="Location"

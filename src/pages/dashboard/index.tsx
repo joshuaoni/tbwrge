@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
   Dialog,
@@ -15,7 +14,12 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboardStats } from "@/actions/get-dashboard-stats";
+import dynamic from "next/dynamic";
 
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
 const index = () => {
   const { userData } = useUserStore();
   const { data, error } = useQuery({
@@ -171,24 +175,30 @@ const CreateJob = () => {
                 <>
                   <label>Job Description</label>
                   <ReactQuill
-                  value={jobPost.description}
-                  onChange={(value) => setJobPost({ ...jobPost, description: value })}
-                />
+                    value={jobPost.description}
+                    onChange={(value) =>
+                      setJobPost({ ...jobPost, description: value })
+                    }
+                  />
                 </>
                 <>
                   <label>Job Requirements</label>
                   <ReactQuill
-                  value={jobPost.requirements}
-                  onChange={(value) => setJobPost({ ...jobPost, requirements: value })}
-                />
+                    value={jobPost.requirements}
+                    onChange={(value) =>
+                      setJobPost({ ...jobPost, requirements: value })
+                    }
+                  />
                 </>
 
                 <>
                   <label>Company Description</label>
                   <ReactQuill
-                  value={jobPost.companyDescription}
-                  onChange={(value) => setJobPost({ ...jobPost, companyDescription: value })}
-                />
+                    value={jobPost.companyDescription}
+                    onChange={(value) =>
+                      setJobPost({ ...jobPost, companyDescription: value })
+                    }
+                  />
                 </>
 
                 <Button
