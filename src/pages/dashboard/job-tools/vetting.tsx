@@ -230,7 +230,7 @@ const Vetting = () => {
             </div>
           </div>
 
-          <div className="flex items-center h-fit mt-12 justify-between">
+          <div className="flex items-center h-fit mt-12 justify-between mb-24">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
                 {" "}
