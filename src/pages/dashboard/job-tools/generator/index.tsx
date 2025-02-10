@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 // Import React Quill dynamically to avoid SSR issues
