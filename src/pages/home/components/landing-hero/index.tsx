@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import ManSuit from "../../../../../public/images/man-suit.png";
 import RocketIcon from "../../../../../public/images/rocket.png";
-import Image from "next/image";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { span } from "framer-motion/client";
 
 const LandingHeroSection = () => {
   const [currentText, setCurrentText] = useState("");
@@ -31,35 +30,16 @@ const LandingHeroSection = () => {
     }
   }, [currentIndex, delay, fullText]);
   return (
-    <div className="h-fit bg-primary pt-24 md:pt-0 flex items-center  justify-center p-4 py-12 md:py-0 md:p-12  ">
+    <div className="h-fit bg-[#16372C] pt-24 md:pt-0 flex items-center  justify-center p-4 py-12 md:py-0 md:p-12  ">
       <div className="flex items-center justify-between w-fit ">
-        <div className="w-full md:w-[70%]">
-          {!isMobile ? (
-            <div className="text-[40px] text-white font-extrabold flex flex-col items-start">
-              <h1 className="block">Find The Right</h1>
-              <p className="text-[#DEA042]">
-                {!isMobile ? (
-                  <span>
-                    {currentText}{" "}
-                    <span className="animate-blink  font-light text-white">
-                      |
-                    </span>
-                  </span>
-                ) : (
-                  <span>Candidate</span>
-                )}{" "}
-                <span className="text-white"> For The Job</span>
-              </p>
-            </div>
-          ) : (
-            <div className="text-[40px] leading-[45px] mb-3 text-white font-extrabold flex flex-col items-start">
-              <h1 className="block">A Simple</h1>
-              <p className="text-[#DEA042]">
-                {<span>Candidate</span>}{" "}
-                <span className="text-white"> Management Platform</span>
-              </p>
-            </div>
-          )}
+        <div className="w-full md:w-2/3">
+          <div className="text-6xl mb-3 text-white font-extrabold flex flex-col items-start">
+            <p className="capitalize">
+              a simple <span className="text-[#FDB833]">candidate</span>
+              <br />
+              management platform
+            </p>
+          </div>
 
           <p className="text-white max-w-[700px] ">
             Accelerate your hiring with tools like CV vetting, job post
