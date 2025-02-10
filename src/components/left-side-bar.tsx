@@ -82,13 +82,16 @@ const LeftSideBar = () => {
       active: false,
     },
   ]);
+  console.log(userData, "userData");
   return (
     <div className=" h-screen pt-6 bg-[#e1e1e1]  sidebar">
       <div className=" w-full overflow-y-auto h-screen pt-4  bg-[#e1e1e1]   pl-[16px] pr-[16px] sidebar">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
           <div className="flex flex-col">
-            <p className="font-bold">{userData?.user?.username ?? "Not Set"}</p>
+            <p className="font-bold">
+              {userData?.user?.name ? userData?.user?.name : "Not Set"}
+            </p>
             <p className="text-sm font-normal text-[#A4A4A4] ">HR Manager</p>
           </div>
         </div>

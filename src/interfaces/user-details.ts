@@ -4,4 +4,5 @@ export interface UserResponse {
   username: string;
   createdAt: string;
   updatedAt: string;
+  name: string;
 }
