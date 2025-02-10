@@ -86,7 +86,7 @@ const CvDropDown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  <p className='py-1 px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
+                  <p className='py-1 px-4 text-black bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

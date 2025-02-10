@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import dynamic from 'next/dynamic';
 
 // Import React Quill dynamically to avoid SSR issues
@@ -26,11 +26,34 @@ const Generator = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [audioVisualization, setAudioVisualization] = useState<number[]>([]);
+  const durationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const analyzerRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
   const { userData } = useUserStore();
+
+  // Format duration to MM:SS
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    return () => {
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   // Quill modules configuration
   const modules = {
@@ -52,10 +75,30 @@ const Generator = () => {
     setSummary("");
   };
 
+  const updateAudioVisualization = () => {
+    if (analyzerRef.current) {
+      const dataArray = new Uint8Array(analyzerRef.current.frequencyBinCount);
+      analyzerRef.current.getByteFrequencyData(dataArray);
+      
+      // Get average of frequencies for visualization
+      const values = Array.from(dataArray).slice(0, 10).map(value => value / 255);
+      setAudioVisualization(values);
+      
+      animationFrameRef.current = requestAnimationFrame(updateAudioVisualization);
+    }
+  };
+
   const handleStartRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyzer = audioContext.createAnalyser();
+      analyzer.fftSize = 256;
+      source.connect(analyzer);
+      analyzerRef.current = analyzer;
+      
       const chunks: BlobPart[] = [];
 
       mediaRecorder.ondataavailable = (event: BlobEvent) => {
@@ -66,15 +109,52 @@ const Generator = () => {
         const blob = new Blob(chunks, { type: "audio/webm" });
         setAudioBlob(blob);
         setAudioUrl(URL.createObjectURL(blob));
+        if (durationIntervalRef.current) {
+          clearInterval(durationIntervalRef.current);
+        }
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+        setAudioVisualization([]);
       };
 
       mediaRecorder.start();
       mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
+      setRecordingDuration(0);
+      
+      // Start duration timer
+      durationIntervalRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+
+      // Start visualization
+      updateAudioVisualization();
+
     } catch (error) {
       console.error("Error accessing microphone:", error);
       alert("Microphone access is required to record audio.");
     }
+  };
+
+  const clearRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+    }
+    if (durationIntervalRef.current) {
+      clearInterval(durationIntervalRef.current);
+    }
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    setAudioBlob(null);
+    setAudioUrl(null);
+    setRecordingDuration(0);
+    setAudioVisualization([]);
   };
 
   const {
@@ -136,7 +216,7 @@ const Generator = () => {
                 }}
               />
             </div>
-            <div className="my-7 bg-white">
+            <div className="my-7 bg-white mb-24">
               <ReactQuill
                 theme="snow"
                 value={value}
@@ -173,34 +253,44 @@ const Generator = () => {
               <span className="font-light text-sm">Record Voicenote </span>
               <X
                 className="cursor-pointer"
-                onClick={() => {
-                  return (
-                    setPrompts((prevState: any) => [...prevState, value]),
-                    setValue("")
-                  );
-                }}
+                onClick={clearRecording}
               />
             </div>
 
             <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
-              <span className="text-xs font-light">Record Voicenote</span>
+              <div className="flex items-center space-x-3 flex-1">
+                <span className="text-xs font-light">
+                  {isRecording ? "Recording..." : audioBlob ? "Recording complete" : "Record Voicenote"}
+                </span>
+                {(isRecording || audioBlob) && (
+                  <span className="text-xs text-gray-500">
+                    {formatDuration(recordingDuration)}
+                  </span>
+                )}
+                {isRecording && (
+                  <div className="flex items-center space-x-1 flex-1 max-w-[200px]">
+                    {audioVisualization.map((value, index) => (
+                      <div
+                        key={index}
+                        className="w-1 bg-blue-500"
+                        style={{
+                          height: `${Math.max(4, value * 20)}px`,
+                          transition: 'height 0.1s ease'
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
               {isRecording ? (
                 <StopCircleIcon
                   color="red"
-                  onClick={() => {
-                    isRecording
-                      ? handleStopRecording()
-                      : handleStartRecording();
-                  }}
-                  className="animate-pulse cursor-pointer "
+                  onClick={handleStopRecording}
+                  className="animate-pulse cursor-pointer"
                 />
               ) : (
                 <Image
-                  onClick={() => {
-                    isRecording
-                      ? handleStopRecording()
-                      : handleStartRecording();
-                  }}
+                  onClick={handleStartRecording}
                   className="cursor-pointer"
                   src={RecordIcon}
                   alt=""
