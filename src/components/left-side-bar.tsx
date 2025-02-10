@@ -86,7 +86,7 @@ const LeftSideBar = () => {
   ]);
   return (
     <div className=" h-screen pt-6 bg-[#e1e1e1]  sidebar">
-      <div className=" w-full overflow-y-auto h-screen pt-4  bg-[#e1e1e1]   pl-[12px] pr-[12px] sidebar">
+      <div className=" w-full overflow-y-auto h-screen pt-4  bg-[#e1e1e1]   pl-[16px] pr-[16px] sidebar">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
           <div className="flex flex-col">

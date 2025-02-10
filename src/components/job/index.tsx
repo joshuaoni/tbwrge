@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createJob } from "@/actions/create-job";
 import { useUserStore } from "@/hooks/use-user-store";
 import ReviewScreen from "./review-screen";
+import toast from "react-hot-toast";
 
 const CreateJobFlow = ({
   setStartCreateJobFlow,
@@ -82,6 +83,7 @@ const CreateJobFlow = ({
     },
     onError: (error) => {
       console.log("the error is", error);
+      toast.error(String(error));
     },
   });
   const handleCreateJob = async () => {
