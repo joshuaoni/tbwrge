@@ -36,6 +36,12 @@ const LeftSideBar = () => {
       link: "/dashboard/job-board",
       active: false,
     },
+    {
+      title: "Talent Pool ",
+      icon: <ShoppingBag />,
+      link: "/dashboard/talent-pool",
+      active: false,
+    },
   ]);
   const [extras, setExtras] = React.useState([
     {
