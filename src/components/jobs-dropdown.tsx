@@ -1,12 +1,14 @@
-import React from "react";
 import { ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import gem from "../../public/images/gem.png";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import React from "react";
+import gem from "../../public/images/gem.png";
 const JobsDropdown = () => {
   const [showJobsDropdown, setShowJobsDropdown] = React.useState(false);
   const router = useRouter();
+  const pathName = usePathname();
+
   const [dropDownItems, setDropDownItems] = React.useState([
     {
       link: "/dashboard/job-tools/generator",
@@ -44,14 +46,13 @@ const JobsDropdown = () => {
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showJobsDropdown
+          showJobsDropdown || pathName.includes("/dashboard/job-tools")
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
         <div className="mb-2 ml-3 space-y-4 cursor-pointer">
           {dropDownItems.map((item, index) => {
-            const pathName = usePathname();
             const isActiveRoute = item.link === pathName;
             return (
               <div
