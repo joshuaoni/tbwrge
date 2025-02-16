@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaFilePdf } from "react-icons/fa";
+import { FaFilePdf, FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 const candidates = Array(9)
@@ -23,11 +23,12 @@ export default function TalentPool() {
       <div className="p-6  min-h-screen">
         <div className=" mx-auto bg-white p-4 rounded-lg ">
           <div className="flex items-center gap-3">
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4">
+            <div className="relative mb-4">
+              <FaSearch className="absolute left-3 top-3 text-gray-500" />
               <input
                 type="text"
                 placeholder="Search for Keywords"
-                className="w-full p-2 border text-sm rounded-full bg-[#F0F0F0]"
+                className="w-full p-2 pl-8 border text-sm rounded-full bg-[#F0F0F0]"
               />
             </div>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4">
