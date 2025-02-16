@@ -1,4 +1,5 @@
 import { CreateJobContext } from "@/providers/job-posting.context";
+import { ArrowLeft } from "lucide-react";
 import { useContext } from "react";
 import {
   DashboardCheckBoxInput,
@@ -11,11 +12,20 @@ function CreateJobJobDetails() {
 
   return (
     <div className="">
-      <h3 className="text-3xl font-semibold py-4">Job Title</h3>
+      <h3 className="text-3xl font-semibold py-4">
+        <button onClick={() => ctx.prevScreen()} className="mr-4">
+          <ArrowLeft />
+        </button>
+        {ctx.formData.job_title ?? "Job Title is missing"}
+      </h3>
       <div className="flex gap-20">
         <section className="w-full space-y-4">
           <h4 className="font-bold">Job Description & Requirements</h4>
-          <DashboardTextareaGroup label="Job Decription & Requirements" />
+          <DashboardTextareaGroup
+            label="Job Decription & Requirements"
+            value={ctx.formData.job_description}
+            onChange={(val) => ctx.setFormData("job_description", val)}
+          />
           <DashboardInputGroup label="Required Skills" />
           <DashboardInputGroup label="Educational Requirements" />
           <DashboardInputGroup label="Required Years of Experience" />

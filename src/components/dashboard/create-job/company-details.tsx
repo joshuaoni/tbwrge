@@ -12,10 +12,26 @@ function CreateJobCompanyDetails() {
       <h2 className="text-center text-3xl font-semibold">Create a Job Post</h2>
 
       <form className="space-y-6">
-        <DashboardInputGroup label="Job Title" />
-        <DashboardInputGroup label="Company Website" />
-        <DashboardInputGroup label="Company Name" />
-        <DashboardTextareaGroup label="Company Description" />
+        <DashboardInputGroup
+          label="Job Title"
+          value={ctx.formData.job_title}
+          onChange={(val) => ctx.setFormData("job_title", val)}
+        />
+        <DashboardInputGroup
+          label="Company Website"
+          value={ctx.formData.company_website}
+          onChange={(val) => ctx.setFormData("company_website", val)}
+        />
+        <DashboardInputGroup
+          label="Company Name"
+          value={ctx.formData.company_name}
+          onChange={(val) => ctx.setFormData("company_name", val)}
+        />
+        <DashboardTextareaGroup
+          label="Company Description"
+          value={ctx.formData.company_description}
+          onChange={(val) => ctx.setFormData("company_description", val)}
+        />
         <CreateJobFileGroup label="Company Logo" />
 
         <div className="flex flex-col items-center justify-center gap-8">

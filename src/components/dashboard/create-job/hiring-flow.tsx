@@ -1,6 +1,7 @@
 import { useContext } from "react";
 
 import { CreateJobContext } from "@/providers/job-posting.context";
+import { ArrowLeft } from "lucide-react";
 import { DashboardInputGroup, DashboardSelectGroup } from "../input-group";
 
 function CreateJobHiringFlow() {
@@ -8,7 +9,13 @@ function CreateJobHiringFlow() {
 
   return (
     <div className="">
-      <h3 className="text-3xl font-semibold pb-10">Hiring Flow</h3>
+      <h3 className="text-3xl font-semibold pb-10">
+        {" "}
+        <button onClick={() => ctx.prevScreen()} className="mr-4">
+          <ArrowLeft />
+        </button>
+        Hiring Flow
+      </h3>
       <div className="flex gap-20 items-start ">
         <section className="w-full space-y-4">
           <DashboardInputGroup

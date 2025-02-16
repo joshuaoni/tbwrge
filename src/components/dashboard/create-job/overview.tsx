@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
 import TrashIcon from "@/components/icons/trash";
-import { CheckIcon } from "lucide-react";
+import { CreateJobContext } from "@/providers/job-posting.context";
+import { ArrowLeft, CheckIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
 function CreateJobOverview() {
@@ -50,10 +51,16 @@ function CreateJobOverview() {
   const handleDeleteQuestion = (index: number) => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
+
+  const ctx = useContext(CreateJobContext);
+
   return (
     <div className="">
       <h3 className="text-3xl font-semibold py-4">
-        Job Title Screen Questions
+        <button onClick={() => ctx.prevScreen()} className="mr-4">
+          <ArrowLeft />
+        </button>{" "}
+        {ctx.formData.job_title} Screen Questions
       </h3>
       <div className="flex gap-20">
         <section className="w-full">
@@ -75,11 +82,10 @@ function CreateJobOverview() {
           </div>
 
           {[
-            { title: "Job Title", value: "Software Engineer" },
+            { title: "Job Title", value: ctx.formData.job_title },
             {
               title: "Job Description",
-              value:
-                "We are looking for a talented Software Engineer to join our dynamic development team.",
+              value: ctx.formData.job_description,
             },
             {
               title: "Key Responsibilities",
@@ -143,9 +149,10 @@ function CreateJobOverview() {
         </section>
         <section className="w-11/12 px-4 shadow-lg">
           <p className="text-sm text-[#898989]">
-            Thank you for taking the time to apply for the Job Title position at
-            Company Name and for sharing your qualifications and experiences
-            with us.
+            Thank you for taking the time to apply for the&nbsp;
+            {ctx.formData.job_title} position at&nbsp;
+            {ctx.formData.company_name} and for sharing your qualifications and
+            experiences with us.
             <br />
             As the next step in our hiring process, we’d love to invite you to
             screening process to get to know you better.
