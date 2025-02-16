@@ -87,12 +87,8 @@ const CvDropDown = () => {
 
                   <p className='py-1 px-4 text-black bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
 
-<<<<<<< HEAD
-              <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
-=======
 
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
->>>>>>> 82762044da69de7cb55bf4e22491ae966343aa38
                 </div>
               </div>
             );
