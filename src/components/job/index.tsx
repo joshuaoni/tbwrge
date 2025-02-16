@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createJob } from "@/actions/create-job";
 import { useUserStore } from "@/hooks/use-user-store";
 import ReviewScreen from "./review-screen";
+import toast from "react-hot-toast";
 
 const CreateJobFlow = ({
   setStartCreateJobFlow,
@@ -20,12 +21,12 @@ const CreateJobFlow = ({
     localStorage.getItem("job-creation-details") as string
   );
   const { userData } = useUserStore();
-
   const {
     mutate: jobCreationMutate,
     data,
     isPending,
   } = useMutation({
+    
     mutationKey: ["create-job"],
     mutationFn: async () => {
       let jobType =
@@ -42,7 +43,7 @@ const CreateJobFlow = ({
         company_website: storedDetails?.website,
         company_description: storedDetails?.description,
         company_name: storedDetails?.name,
-        company_logo: "",
+        company_logo: companyLogo,
         job_title: storedDetails?.title,
         start_date: new Date(storedDetails?.startDate)
           .toISOString()
@@ -82,6 +83,7 @@ const CreateJobFlow = ({
     },
     onError: (error) => {
       console.log("the error is", error);
+      toast.error(String(error));
     },
   });
   const handleCreateJob = async () => {

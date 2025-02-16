@@ -1,45 +1,46 @@
-import React from "react";
-import { ChevronDown, ChevronUp, File, ShoppingBag } from "lucide-react";
-import gem from "../../../public/images/gem.png";
+import { ChevronDown, ChevronUp, File } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import React from "react";
+import gem from "../../../public/images/gem.png";
 const CoverLetterDropDown = () => {
   const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
     React.useState(false);
   const router = useRouter();
+  const pathName = usePathname();
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
       link: "/dashboard/cover-letter-tools/summarizer",
       title: "Summarizer",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/vetting",
       title: "Vetting",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/ranking",
 
       title: "Ranking",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/generator",
       title: "Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/translator",
       title: "Translator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/cover-letter-tools/rewriter",
       title: "Rewriter",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
   ]);
   return (
@@ -56,14 +57,14 @@ const CoverLetterDropDown = () => {
       </div>
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showCoverLetterDropDown
+          showCoverLetterDropDown ||
+          pathName.includes("/dashboard/cover-letter-tools")
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
         <div className="mb-2 ml-3 space-y-4 cursor-pointer">
           {dropDownItems.map((item, index) => {
-            const pathName = usePathname();
             const isActiveRoute = item.link === pathName;
             return (
               <div
@@ -83,7 +84,7 @@ const CoverLetterDropDown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  {item.icon}
+                <p className='py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

@@ -1,32 +1,34 @@
-import React from "react";
 import { ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import gem from "../../public/images/gem.png";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import React from "react";
+import gem from "../../public/images/gem.png";
 const JobsDropdown = () => {
   const [showJobsDropdown, setShowJobsDropdown] = React.useState(false);
   const router = useRouter();
+  const pathName = usePathname();
+
   const [dropDownItems, setDropDownItems] = React.useState([
     {
       link: "/dashboard/job-tools/generator",
       title: "Job Post Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/vetting",
       title: "Job Post Vetting",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/translator",
       title: "Job Post Translator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
     {
       link: "/dashboard/job-tools/report-generator",
       title: "Candidate Report Generator",
-      icon: <Image src={gem} alt="" width={20} height={20} />,
+      icon: 'Pro',
     },
   ]);
   return (
@@ -44,14 +46,13 @@ const JobsDropdown = () => {
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showJobsDropdown
+          showJobsDropdown || pathName.includes("/dashboard/job-tools")
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
         <div className="mb-2 ml-3 space-y-4 cursor-pointer">
           {dropDownItems.map((item, index) => {
-            const pathName = usePathname();
             const isActiveRoute = item.link === pathName;
             return (
               <div
@@ -69,7 +70,7 @@ const JobsDropdown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  {item.icon}
+                <p className='py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

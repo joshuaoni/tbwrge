@@ -1,3 +1,4 @@
+import { useUserStore } from "@/hooks/use-user-store";
 import {
   House,
   IdCard,
@@ -17,6 +18,9 @@ import CvDropDown from "./ui/cv-dropdown";
 
 const LeftSideBar = () => {
   const router = useRouter();
+
+  const { userData } = useUserStore();
+
   const [leftSideItems, setLeftSideItems] = React.useState([
     {
       title: "Dashboard",
@@ -36,6 +40,12 @@ const LeftSideBar = () => {
       link: "/dashboard/job-board",
       active: false,
     },
+    {
+      title: "Talent Pool ",
+      icon: <ShoppingBag />,
+      link: "/dashboard/talent-pool",
+      active: false,
+    },
   ]);
   const [extras, setExtras] = React.useState([
     {
@@ -48,12 +58,6 @@ const LeftSideBar = () => {
       title: "Community",
       icon: <Users2 />,
       link: "/community",
-      active: false,
-    },
-    {
-      title: "Training",
-      icon: <User />,
-      link: "/dashboard/training",
       active: false,
     },
   ]);
@@ -85,12 +89,12 @@ const LeftSideBar = () => {
     },
   ]);
   return (
-    <div className=" h-screen pt-6 bg-[#e1e1e1]  ">
-      <div className=" w-full overflow-y-scroll h-screen pt-4  bg-[#e1e1e1]   pl-[12px] pr-[12px]">
+    <div className=" h-screen pt-6 bg-[#e1e1e1]  sidebar">
+      <div className=" w-full overflow-y-auto h-screen pt-4  bg-[#e1e1e1]   pl-[16px] pr-[16px] sidebar">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
           <div className="flex flex-col">
-            <p className="font-bold">David</p>
+            <p className="font-bold">{userData?.user?.username ?? "Not Set"}</p>
             <p className="text-sm font-normal text-[#A4A4A4] ">HR Manager</p>
           </div>
         </div>
