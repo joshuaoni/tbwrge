@@ -62,7 +62,7 @@ export default function ChatPage() {
   return (
     <DashboardWrapper>
       <div className="p-6  min-h-screen flex">
-        <div className="w-1/4 bg-white p-4 rounded-lg shadow">
+        <div className="w-1/4 bg-white p-4 rounded-lg px-4">
           <h2 className="text-xl font-semibold mb-4">Chat</h2>
           <div className="relative mb-4">
             <FaSearch className="absolute left-3 top-3 text-gray-500" />
@@ -93,15 +93,15 @@ export default function ChatPage() {
           </ul>
         </div>
 
-        <div className="w-3/4 rounded-lg h-fit shadow ml-4 flex flex-col">
-          <div className="flex justify-between p-4 items-center border-b  ">
+        <div className="w-3/4 rounded-lg h-fit  ml-4 flex flex-col">
+          <div className="flex justify-between p-4 items-center ">
             <div className="flex items-center">
               <UserCircle className="mr-2" size={30} />
               <h3 className="text-lg font-semibold">Alexandra Michu</h3>
             </div>
             <FaEllipsisH className="text-gray-500 cursor-pointer" />
           </div>
-          <div className="bg-[#F5F9FF] h-[700px] flex flex-col">
+          <div className="bg-[#F5F9FF] h-[700px] rounded-lg mt-4 flex flex-col">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg, index) => (
                 <div
