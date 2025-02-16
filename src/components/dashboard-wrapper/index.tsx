@@ -1,6 +1,11 @@
 "use client";
+import { useUserStore } from "@/hooks/use-user-store";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import candivetlogo from "../../../public/images/candivet-logo.png";
 import DashboardHeader from "../dashboard-header";
+import CreateJobFlow from "../job";
 import LeftSideBar from "../left-side-bar";
 import {
   Sidebar,
@@ -9,11 +14,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
-import Image from "next/image";
-import candivetlogo from "../../../public/images/candivet-logo.png";
-import { useRouter } from "next/router";
-import { useUserStore } from "@/hooks/use-user-store";
-import CreateJobFlow from "../job";
 
 const Dashboard = ({ children }: { children: any }) => {
   const router = useRouter();
@@ -26,9 +26,10 @@ const Dashboard = ({ children }: { children: any }) => {
       }
     }
   }, [userData, isLoading, router]);
+
   return (
     <div className="flex">
-      <DashboardHeader setStartCreateJobFlow={setStartCreateJobFlow} />
+      <DashboardHeader />
       <SidebarProvider className="">
         <Sidebar className="bg-[#e1e1e1] z-30">
           <SidebarHeader className="bg-[#e1e1e1] ">

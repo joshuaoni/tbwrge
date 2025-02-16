@@ -5,4 +5,5 @@ export interface InputGroupProps {
   className?: string;
   onChange?: (val: string) => void;
   value?: string;
+  placeholder?: string;
 }
