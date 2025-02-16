@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FaSearch, FaEllipsisH } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { User, UserCircle } from "lucide-react";
 const users = [
   {
     name: "Andreana Viola",
@@ -68,7 +69,7 @@ export default function ChatPage() {
             <input
               type="text"
               placeholder="Search for any user"
-              className="w-full pl-10 p-2 border rounded-lg bg-gray-100"
+              className="w-[70%] pl-10 p-2 border rounded-lg bg-white"
             />
           </div>
           <ul>
@@ -77,61 +78,70 @@ export default function ChatPage() {
                 key={index}
                 className="p-3 border-b flex justify-between cursor-pointer hover:bg-gray-200"
               >
-                <span>
-                  <strong>{user.name}</strong>
-                  <p className="text-sm text-gray-500">{user.lastMessage}</p>
-                </span>
-                <span className="text-xs text-gray-500">{user.time}</span>
+                <div className="flex w-full items-start">
+                  <UserCircle className="mr-4" size={30} />
+                  <span>
+                    <strong>{user.name}</strong>
+                    <p className="text-sm text-gray-500">{user.lastMessage}</p>
+                  </span>
+                  <span className="text-xs text-gray-500 ml-auto">
+                    {user.time}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="w-3/4 bg-white p-4 rounded-lg shadow ml-4 flex flex-col">
-          <div className="flex justify-between items-center border-b pb-2 mb-2">
-            <h3 className="text-lg font-semibold">Alexandra Michu</h3>
+        <div className="w-3/4 rounded-lg h-fit shadow ml-4 flex flex-col">
+          <div className="flex justify-between p-4 items-center border-b  ">
+            <div className="flex items-center">
+              <UserCircle className="mr-2" size={30} />
+              <h3 className="text-lg font-semibold">Alexandra Michu</h3>
+            </div>
             <FaEllipsisH className="text-gray-500 cursor-pointer" />
           </div>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.sender === "Me" ? "justify-end" : ""}`}
-              >
+          <div className="bg-[#F5F9FF] h-[700px] flex flex-col">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((msg, index) => (
                 <div
-                  className={`p-3 ${
-                    msg.sender === "Me"
-                      ? "bg-green-600 text-white rounded-xl rounded-tl-none"
-                      : "bg-gray-200 rounded-xl rounded-tr-none"
-                  }`}
+                  key={index}
+                  className={`flex ${msg.sender === "Me" ? "justify-end" : ""}`}
                 >
-                  <p>{msg.text}</p>
-                  {msg.attachments && (
-                    <div className="flex space-x-2 mt-2">
-                      {msg.attachments.map((img, i) => (
-                        <img
-                          key={i}
-                          src={img}
-                          alt="attachment"
-                          className="w-10 h-10 rounded-md"
-                        />
-                      ))}
-                    </div>
-                  )}
-                  <p className="text-xs text-gray-400 mt-1">{msg.time}</p>
+                  <div
+                    className={`p-3 ${
+                      msg.sender === "Me"
+                        ? "bg-[#145959] text-white rounded-xl rounded-tl-none"
+                        : "bg-white rounded-xl rounded-tr-none"
+                    }`}
+                  >
+                    <p>{msg.text}</p>
+                    {msg.attachments && (
+                      <div className="flex space-x-2 mt-2">
+                        {msg.attachments.map((img, i) => (
+                          <img
+                            key={i}
+                            src={img}
+                            alt="attachment"
+                            className="w-10 h-10 rounded-md"
+                          />
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">{msg.time}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className="border-t pt-2 flex items-center">
-            <input
-              type="text"
-              placeholder="Write your message..."
-              className="w-full p-2 border rounded-lg bg-gray-100"
-            />
-            <IoSend className="text-green-600 text-2xl ml-2 cursor-pointer" />
+            <div className=" pt-2 flex items-center p-4">
+              <input
+                type="text"
+                placeholder="Write your message..."
+                className="w-full p-5  rounded-lg bg-white"
+              />
+              <IoSend className="text-green-600 text-2xl ml-2 cursor-pointer" />
+            </div>
           </div>
         </div>
       </div>
