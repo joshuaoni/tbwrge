@@ -147,7 +147,7 @@ function CreateJobOverview() {
             </div>
           ))}
         </section>
-        <section className="w-11/12 px-4 shadow-lg">
+        <section className="w-11/12 px-4 h-fit pb-8 shadow-lg">
           <p className="text-sm text-[#898989]">
             Thank you for taking the time to apply for the&nbsp;
             {ctx.formData.job_title} position at&nbsp;
