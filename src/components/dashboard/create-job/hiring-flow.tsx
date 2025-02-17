@@ -16,17 +16,14 @@ function CreateJobHiringFlow() {
         </button>
         Hiring Flow
       </h3>
-      <div className="flex gap-20 items-start ">
-        <section className="w-full space-y-4">
-          <DashboardInputGroup
-            label="Step 1"
-            placeholder="First state application fit score"
-          />
-          <DashboardInputGroup
-            label="Minimum Candidate Fit Score"
-            placeholder="70%"
-            className="w-1/3"
-          />
+
+      <section className="w-full grid grid-cols-2 gap-y-4 gap-x-10">
+        <DashboardInputGroup
+          label="Step 1: Minimum Candidate Fit Score"
+          placeholder="70%"
+          value={ctx.formData.minimum_fit_score.toString()}
+          onChange={(val) => ctx.setFormData("minimum_fit_score", val)}
+        />
 
           <DashboardSelectGroup
             className="pt-14"
