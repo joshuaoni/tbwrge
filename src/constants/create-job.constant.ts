@@ -16,4 +16,5 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   company_name: "",
   company_description: "",
   job_description: "",
+  minimum_fit_score: 0,
 };
