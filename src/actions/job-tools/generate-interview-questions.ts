@@ -35,7 +35,7 @@ export const generateInterviewQuestions = async (
     return response.data;
   } catch (error: any) {
     if (error.response) {
-      throw new Error(error.response.data.message || "Server error occurred");
+      throw new Error(error.response.data.message || "Servzer error occurred");
     } else if (error.request) {
       throw new Error("No response from server. Please try again.");
     } else {

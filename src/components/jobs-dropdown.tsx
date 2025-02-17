@@ -26,6 +26,11 @@ const JobsDropdown = () => {
       icon: 'Pro',
     },
     {
+      link: "/dashboard/job-tools/report-generator/",
+      title: "Candidate Report Generator",
+      icon: 'Pro',
+    },
+    {
       link: "/dashboard/job-tools/generate-interview-questions/",
       title: "Ai Interview and Screening Generator",
       icon: 'Pro',
@@ -73,7 +78,7 @@ const JobsDropdown = () => {
                   isActiveRoute
                     ? "bg-primary  py-3 hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary text-white z-30 font-bold"
                     : " font-normal"
-                } items-center`}
+                } items-center hover:bg-primary  hover:py-3 hover:bg-primary/80 hover:transition-colors hover:transform hover:duration-300 hover:border-l-2 hover:border-l-primary hover:text-white z-30 hover:font-bold`}
               >
                 <div
                   className={`h-7 w-[5px] ${
