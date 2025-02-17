@@ -113,8 +113,8 @@ const AiScreeningAssistant = () => {
   return (
     <DashboardWrapper>
    
-    <span className="font-bold text-xl">Screening Question Assistant</span>
-      <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <span className="font-bold text-xl">Screening Question Assistant</span><br /><br />
+      <div className="max-w-5xl mx-auto space-y-6">
       <div className="cont flex flex-col lg:flex-row gap-6">
       <div className="grid shadow-xl border-[1px] p-4 rounded-md pb-8 lg:w-[70%] w-full">
             {/* File Upload Section */}
