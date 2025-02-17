@@ -24,6 +24,8 @@ export const API_CONFIG = {
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
+  INTERVIEW_QUESTION_GEN: `${MAIN_URL}/job/interview-questions-gen/`,
+  SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
 

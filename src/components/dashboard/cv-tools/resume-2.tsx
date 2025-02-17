@@ -4,9 +4,11 @@ import classNames from "classnames";
 import { forwardRef } from "react";
 
 const ResumeTwo = forwardRef<HTMLDivElement, ResumeProps>(
+  
   ({ name, title, contactInfo, workExperience, education, skills }, ref) => {
     return (
       <div
+      open
         className={classNames(
           poppins.className,
           "bg-white shadow-md p-6 rounded-lg w-full"
@@ -14,6 +16,7 @@ const ResumeTwo = forwardRef<HTMLDivElement, ResumeProps>(
       >
         {/* Header Section */}
         <div className="flex justify-between gap-8 mb-6">
+          
           <div className="w-2/5">
             <h1 className="text-2xl font-semibold">{name}</h1>
             <p className="text-sm">{title}</p>
