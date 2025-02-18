@@ -7,14 +7,14 @@ import { CircleXIcon, Loader2, Download } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import downloadIcon from "../../../../public/images/icons/file-download.png";
-import Image from 'next/image';
+import Image from "next/image";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { generateInterviewQuestions } from "@/actions/job-tools/generate-interview-questions";
 import "react-quill/dist/quill.snow.css";
 // import './style.css'
 // import '@/styles/globals.css'
-// 
+//
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -32,8 +32,14 @@ const modules = {
 };
 
 const formats = [
-  "header", "bold", "italic", "underline", "strike",
-  "list", "bullet", "link",
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "bullet",
+  "link",
 ];
 
 const AiScreeningAssistant = () => {
@@ -42,19 +48,19 @@ const AiScreeningAssistant = () => {
   const [jobAd, setJobAd] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
   const { userData } = useUserStore();
-  
+
   const handleDownload = () => {
     if (!questions) return;
-    
-    const content = questions.map((q: string, index: number) => 
-      `${index + 1}. ${q}\n`
-    ).join('\n');
 
-    const blob = new Blob([content], { type: 'text/plain' });
+    const content = questions
+      .map((q: string, index: number) => `${index + 1}. ${q}\n`)
+      .join("\n");
+
+    const blob = new Blob([content], { type: "text/plain" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'interview-questions.txt';
+    a.download = "interview-questions.txt";
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
@@ -71,20 +77,29 @@ const AiScreeningAssistant = () => {
     mutationKey: ["generateInterviewQuestions"],
     mutationFn: async () => {
       let language = "en";
-      switch(selectedLanguage) {
-        case "French": language = "fr"; break;
-        case "Spanish": language = "es"; break;
-        case "German": language = "de"; break;
-        case "Arabic": language = "ar"; break;
-        case "Portuguese": language = "pt"; break;
+      switch (selectedLanguage) {
+        case "French":
+          language = "fr";
+          break;
+        case "Spanish":
+          language = "es";
+          break;
+        case "German":
+          language = "de";
+          break;
+        case "Arabic":
+          language = "ar";
+          break;
+        case "Portuguese":
+          language = "pt";
+          break;
       }
-      
+
       return generateInterviewQuestions(
         files,
         language,
         userData?.token as string,
-          screeningQuestion,
-
+        screeningQuestion
       );
     },
   });
@@ -112,14 +127,17 @@ const AiScreeningAssistant = () => {
 
   return (
     <DashboardWrapper>
-   
-    <span className="font-bold text-xl">Screening Question Assistant</span><br /><br />
-      <div className="max-w-5xl mx-auto space-y-6">
-      <div className="cont flex flex-col lg:flex-row gap-6">
-      <div className="grid shadow-xl border-[1px] p-4 rounded-md pb-8 lg:w-[70%] w-full">
+      <span className="font-bold text-xl">Screening Question Assistant</span>
+      <br />
+      <br />
+      <div className="mx-auto space-y-6">
+        <div className="cont flex flex-col lg:flex-row gap-6">
+          <div className="grid shadow-xl border-[1px] p-4 rounded-md pb-8 lg:w-[50%] w-full">
             {/* File Upload Section */}
             <div className="rounded-xl h-fit flex flex-col p-6 ">
-              <span className="font-bold text-xl">CV and Cover Letter Upload</span>
+              <span className="font-bold text-xl">
+                CV and Cover Letter Upload
+              </span>
               <span className="font-light text-xs">
                 Add your documents here, and you can upload up to 5 files max
               </span>
@@ -138,7 +156,8 @@ const AiScreeningAssistant = () => {
                     alt="Upload Icon"
                   />
                   <span>
-                    Drag your file(s) or <span className="font-bold">browse</span>
+                    Drag your file(s) or{" "}
+                    <span className="font-bold">browse</span>
                   </span>
                   <span className="text-gray-500 text-sm">
                     Max 10MB files are allowed
@@ -150,7 +169,10 @@ const AiScreeningAssistant = () => {
               {files.length > 0 && (
                 <div className="mt-6 space-y-2">
                   {files.map((file, index) => (
-                    <div key={index} className="flex h-14 w-full px-4 border rounded-lg justify-between items-center">
+                    <div
+                      key={index}
+                      className="flex h-14 w-full px-4 border rounded-lg justify-between items-center"
+                    >
                       <div className="flex items-start">
                         <Image
                           className="w-10 h-10 object-cover"
@@ -183,7 +205,9 @@ const AiScreeningAssistant = () => {
 
             {/* Job Description Editor */}
             <div className="rounded-xl shadow-md h-fit flex flex-col p-6">
-              <span className="font-bold text-xl">Paste Screening Questions Here</span>
+              <span className="font-bold text-xl">
+                Paste Screening Questions Here
+              </span>
               <div className="my-8 bg-white border rounded-md mb-10">
                 <ReactQuill
                   theme="snow"
@@ -212,59 +236,64 @@ const AiScreeningAssistant = () => {
           </div>
 
           {/* Results Display */}
-          <div className="border rounded-xl p-4 shadow-md flex flex-col h-fit ">
+          <div className="border rounded-xl p-4 shadow-md flex flex-col h-fit flex-1 ">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Screening Question response</h2>
+              <h2 className="text-lg font-semibold">
+                Screening Question response
+              </h2>
               {isSuccess && questions && questions.length > 0 && (
-             <>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={handleDownload}
-                  className="hover:bg-gray-100"
-                >
-                  <Image
-                    src={downloadIcon}
-                    alt="Download"
-                    className="w-4 h-4"
-                  />
-                </Button>
-                   <Button 
-                   variant="ghost" 
-                   size="icon"
-                   onClick={clearResults}
-                   className="hover:bg-gray-100"
-                 >
-                   X
-                 </Button>
-             </>
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleDownload}
+                    className="hover:bg-gray-100"
+                  >
+                    <Image
+                      src={downloadIcon}
+                      alt="Download"
+                      className="w-4 h-4"
+                    />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={clearResults}
+                    className="hover:bg-gray-100"
+                  >
+                    X
+                  </Button>
+                </>
               )}
             </div>
-            
+
             {isPending && (
               <div className="flex items-center justify-center h-[200px]">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
             )}
-            
+
             {!isPending && !isSuccess && !isError && (
               <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
                 Generated Interview question will be displayed here
               </div>
             )}
-            
+
             {isSuccess && questions && (
               <div className="mt-4 space-y-4 max-h-[500px] overflow-y-auto">
                 <div className="space-y-2">
                   {questions.map((question: string, index: number) => (
-                    <div key={index} className="p-2 rounded-lg border hover:bg-gray-50">
+                    <div
+                      key={index}
+                      className="p-2 rounded-lg border hover:bg-gray-50"
+                    >
                       <p className="text-sm">{`${index + 1}. ${question}`}</p>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-            
+
             {isError && (
               <div className="text-red-500 mt-4 text-center p-4">
                 An error occurred while generating questions. Please try again.
@@ -283,16 +312,17 @@ const AiScreeningAssistant = () => {
               setValue={setSelectedValue}
             />
           </div>
-          <Button 
+          <Button
             className="bg-lightgreen min-w-[100px] text-white self-center"
             onClick={() => generateQuestions()}
-            disabled={(!files.length && !screeningQuestion && !jobAd) || isPending}
+            disabled={
+              (!files.length && !screeningQuestion && !jobAd) || isPending
+            }
           >
             {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
           </Button>
         </div>
       </div>
-        
     </DashboardWrapper>
   );
 };
