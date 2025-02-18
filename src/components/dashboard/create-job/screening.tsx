@@ -7,7 +7,7 @@ import { CreateJobContext } from "@/providers/job-posting.context";
 import { ArrowLeft, CheckIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
-function CreateJobOverview() {
+function CreateJobScreening() {
   const [questions, setQuestions] = useState<
     { title: string; answer: string }[]
   >([
@@ -233,4 +233,4 @@ function CreateJobOverview() {
   );
 }
 
-export default CreateJobOverview;
+export default CreateJobScreening;
