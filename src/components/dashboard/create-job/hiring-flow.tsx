@@ -155,7 +155,7 @@ function CreateJobHiringFlow() {
 
       <div className="w-full py-6 flex items-center justify-center">
         <button
-          // onClick={() => ctx.goTo("overview")}
+          onClick={() => ctx.goTo("overview")}
           className="bg-[#009379] text-white px-8 py-2 rounded-lg"
         >
           Publish & View Job Post
