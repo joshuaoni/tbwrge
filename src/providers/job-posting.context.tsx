@@ -1,6 +1,7 @@
 import {
   createJobScreens,
   INITIAL_CREATE_JOB_FORM_DATA,
+  INITIAL_HIRING_FLOW_STATE,
 } from "@/constants/create-job.constant";
 import {
   ICreateJobContext,
@@ -15,6 +16,8 @@ export const CreateJobContext = createContext<ICreateJobContext>({
   prevScreen: () => {},
   formData: INITIAL_CREATE_JOB_FORM_DATA,
   setFormData: () => {},
+  hiringFlow: INITIAL_HIRING_FLOW_STATE,
+  setHiringFlow: () => {},
 });
 
 export function CreateJobProvider(props: { query: URLSearchParams }) {
@@ -22,6 +25,7 @@ export function CreateJobProvider(props: { query: URLSearchParams }) {
     Object.keys(createJobScreens)[0] as ICreateJobScreen
   );
   const [formData, setForm] = useState(INITIAL_CREATE_JOB_FORM_DATA);
+  const [hiringFlow, setHiringFlow] = useState(INITIAL_HIRING_FLOW_STATE);
 
   useEffect(() => {
     const step = props.query.get("step");
@@ -56,6 +60,8 @@ export function CreateJobProvider(props: { query: URLSearchParams }) {
     prevScreen,
     formData,
     setFormData,
+    hiringFlow,
+    setHiringFlow,
   } satisfies ICreateJobContext;
 
   const Screen = useMemo(() => createJobScreens[screen], [screen]);
