@@ -1,13 +1,13 @@
 import CreateJobCompanyDetails from "@/components/dashboard/create-job/company-details";
 import CreateJobHiringFlow from "@/components/dashboard/create-job/hiring-flow";
 import CreateJobJobDetails from "@/components/dashboard/create-job/job-details";
-import CreateJobOverview from "@/components/dashboard/create-job/overview";
+import CreateJobScreening from "@/components/dashboard/create-job/screening";
 
 export const createJobScreens = {
   intro: CreateJobCompanyDetails,
   job: CreateJobJobDetails,
   hiring: CreateJobHiringFlow,
-  overview: CreateJobOverview,
+  screening: CreateJobScreening,
 };
 
 export const INITIAL_CREATE_JOB_FORM_DATA = {
@@ -16,4 +16,5 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   company_name: "",
   company_description: "",
   job_description: "",
+  minimum_fit_score: 0,
 };
