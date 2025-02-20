@@ -8,6 +8,20 @@ import { DashboardInputGroup } from "../input-group";
 import { CreateJobHiringSelectGroup } from "./hiring-select-group";
 import { CreateJobModal } from "./modal";
 
+const dummyContent = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum iste
+    nobis beatae soluta. Expedita nesciunt ducimus temporibus,
+    distinctio sunt iusto repellendus ea reiciendis.
+    <br />
+    <br />
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
+    totam blanditiis, repudiandae corrupti consequuntur fuga quis?
+    Tempore. <br />
+    <br />
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
+    totam blanditiis, repudiandae corrupti consequuntur fuga quis?
+    Tempore, id exercitationem, molestiae hic commodi illo numquam
+    laborum.`;
+
 function CreateJobHiringFlow() {
   const ctx = useContext(CreateJobContext);
 
@@ -17,7 +31,23 @@ function CreateJobHiringFlow() {
   const [interviewEmailModal, setInterviewModal] = useState(false);
   const [rejectionEmailModal, setRejectionEmailModal] = useState(false);
 
-  const [screeningEmailSubject, setScreeningEmailSubject] = useState("");
+  const [screeningEmail, setScreeningEmail] = useState({
+    isEditing: false,
+    subject: "Update on your application for job title",
+    content: dummyContent,
+  });
+
+  const [interviewEmail, setInterviewEmail] = useState({
+    isEditing: false,
+    subject: "Congratulations let's schedule your interview",
+    content: dummyContent,
+  });
+
+  const [rejectionEmail, setRejectionEmail] = useState({
+    isEditing: false,
+    subject: "Update on your application for job title",
+    content: dummyContent,
+  });
 
   const stepActions = {
     topFitScore: [
@@ -132,114 +162,98 @@ function CreateJobHiringFlow() {
         </button>
       </div>
 
-      <CreateJobModal
-        visibility={screeningEmailModal}
-        setVisibility={() => setScreeningEmailModal(false)}
-        showCloseButton
-      >
-        <div className="max-w-96 w-full py-3 px-4">
-          <h4 className="font-bold py-2 border-b">Screening Email</h4>
-
-          <section className="text-sm text-[#898989] pt-4 min-h-[28rem]">
-            <h5>Subject: Update on your application for job title</h5>
-            <p className="py-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum iste
-              nobis beatae soluta. Expedita nesciunt ducimus temporibus,
-              distinctio sunt iusto repellendus ea reiciendis.
-              <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore. <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore, id exercitationem, molestiae hic commodi illo numquam
-              laborum.
-            </p>
-          </section>
-          <div className="flex items-center justify-between gap-6 py-4 border-t">
-            <button className="bg-primary text-white font-semibold px-6 py-3 rounded-md w-full">
-              Save
-            </button>
-            <button className="bg-lightgreen text-white font-semibold px-6 py-3 rounded-md w-full">
-              Edit
-            </button>
+      {[
+        {
+          modal: screeningEmailModal,
+          setModal: setScreeningEmailModal,
+          email: screeningEmail,
+          setEmail: setScreeningEmail,
+          title: "Edit Screening Email",
+        },
+        {
+          modal: interviewEmailModal,
+          setModal: setInterviewModal,
+          email: interviewEmail,
+          setEmail: setInterviewEmail,
+          title: "Edit Interview Email",
+        },
+        {
+          modal: rejectionEmailModal,
+          setModal: setRejectionEmailModal,
+          email: rejectionEmail,
+          setEmail: setRejectionEmail,
+          title: "Edit Rejection Email",
+        },
+      ].map(({ modal, setModal, email, setEmail, title }, index) => (
+        <CreateJobModal
+          key={index}
+          visibility={modal}
+          setVisibility={() => setModal(false)}
+          showCloseButton
+        >
+          <div className="max-w-96 w-full py-3 px-4">
+            <h4 className="font-bold py-2 border-b">{title}</h4>
+            <section className="text-sm text-[#898989] pt-4 min-h-[28rem]">
+              {email.isEditing ? (
+                <>
+                  <label>Subject:</label>
+                  <input
+                    type="text"
+                    value={email.subject}
+                    onChange={(e) =>
+                      setEmail({
+                        ...email,
+                        subject: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border rounded focus:outline-none"
+                  />
+                </>
+              ) : (
+                <h5>Subject: {email.subject}</h5>
+              )}
+              {email.isEditing ? (
+                <>
+                  <label className="pt-4">Content:</label>
+                  <textarea
+                    value={email.content}
+                    onChange={(e) =>
+                      setEmail({
+                        ...email,
+                        content: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border rounded min-h-[20rem] focus:outline-none"
+                  />
+                </>
+              ) : (
+                <p
+                  className="py-4"
+                  dangerouslySetInnerHTML={{ __html: email.content }}
+                />
+              )}
+            </section>
+            <div className="flex items-center justify-between gap-6 py-4 border-t">
+              <button
+                className="bg-primary text-white font-semibold px-6 py-3 rounded-md w-full"
+                onClick={() => setModal(false)}
+              >
+                Save
+              </button>
+              <button
+                className="bg-lightgreen text-white font-semibold px-6 py-3 rounded-md w-full"
+                onClick={() =>
+                  email.isEditing
+                    ? setEmail({ ...email, isEditing: false })
+                    : setEmail({ ...email, isEditing: true })
+                }
+              >
+                {email.isEditing ? "Cancel" : "Edit"}
+              </button>
+            </div>
           </div>
-        </div>
-      </CreateJobModal>
-      <CreateJobModal
-        visibility={interviewEmailModal}
-        setVisibility={() => setInterviewModal(false)}
-        showCloseButton
-      >
-        <div className="max-w-96 w-full py-3 px-4">
-          <h4 className="font-bold py-2 border-b">Send Interview Email</h4>
-
-          <section className="text-sm text-[#898989] pt-4 min-h-[28rem]">
-            <h5>Subject: Congratulations let's schedule your interview</h5>
-            <p className="py-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum iste
-              nobis beatae soluta. Expedita nesciunt ducimus temporibus,
-              distinctio sunt iusto repellendus ea reiciendis.
-              <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore. <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore, id exercitationem, molestiae hic commodi illo numquam
-              laborum.
-            </p>
-          </section>
-          <div className="flex items-center justify-between gap-6 py-4 border-t">
-            <button className="bg-primary text-white font-semibold px-6 py-3 rounded-md w-full">
-              Save
-            </button>
-            <button className="bg-lightgreen text-white font-semibold px-6 py-3 rounded-md w-full">
-              Edit
-            </button>
-          </div>
-        </div>
-      </CreateJobModal>
-      <CreateJobModal
-        visibility={rejectionEmailModal}
-        setVisibility={() => setRejectionEmailModal(false)}
-        showCloseButton
-      >
-        <div className="max-w-96 w-full py-3 px-4">
-          <h4 className="font-bold py-2 border-b">Rejection Email</h4>
-
-          <section className="text-sm text-[#898989] pt-4 min-h-[28rem]">
-            <h5>Subject: Update on your application for job title</h5>
-            <p className="py-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum iste
-              nobis beatae soluta. Expedita nesciunt ducimus temporibus,
-              distinctio sunt iusto repellendus ea reiciendis.
-              <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore. <br />
-              <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
-              totam blanditiis, repudiandae corrupti consequuntur fuga quis?
-              Tempore, id exercitationem, molestiae hic commodi illo numquam
-              laborum.
-            </p>
-          </section>
-          <div className="flex items-center justify-between gap-6 py-4 border-t">
-            <button className="bg-primary text-white font-semibold px-6 py-3 rounded-md w-full">
-              Save
-            </button>
-            <button className="bg-lightgreen text-white font-semibold px-6 py-3 rounded-md w-full">
-              Edit
-            </button>
-          </div>
-        </div>
-      </CreateJobModal>
+        </CreateJobModal>
+      ))}
     </div>
   );
 }
