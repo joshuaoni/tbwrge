@@ -236,7 +236,8 @@ const AiScreeningAssistant = () => {
           </div>
 
           {/* Results Display */}
-          <div className="border rounded-xl p-4 shadow-md flex flex-col h-fit flex-1 ">
+          <div className="border rounded-xl p-4 shadow-md flex flex-col h-fit flex-1
+           ">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">
                 Screening Question response
