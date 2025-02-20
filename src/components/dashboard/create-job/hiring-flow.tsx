@@ -1,6 +1,8 @@
 import { useContext, useMemo, useState } from "react";
 
+import { INITIAL_HIRING_FLOW_STATE } from "@/constants/create-job.constant";
 import { CreateJobContext } from "@/providers/job-posting.context";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { ArrowLeft } from "lucide-react";
 import { DashboardInputGroup } from "../input-group";
 import { CreateJobHiringSelectGroup } from "./hiring-select-group";
@@ -9,9 +11,7 @@ import { CreateJobModal } from "./modal";
 function CreateJobHiringFlow() {
   const ctx = useContext(CreateJobContext);
 
-  const [secondStep, setSecondStep] = useState("");
-  const [thirdStep, setThirdStep] = useState("");
-  const [fourthStep, setFourthStep] = useState("");
+  const { secondStep, thirdStep, fourthStep } = ctx.hiringFlow;
 
   const [screeningEmailModal, setScreeningEmailModal] = useState(false);
   const [interviewEmailModal, setInterviewModal] = useState(false);
@@ -50,7 +50,9 @@ function CreateJobHiringFlow() {
     () => [
       {
         label: `Send Screening Email Top ${
-          100 - ctx.formData.minimum_fit_score
+          isNaN(ctx.formData.minimum_fit_score)
+            ? 0
+            : 100 - ctx.formData.minimum_fit_score
         }% Candidates`,
         value: "topFitScore",
         disabled: isDisabled("topFitScore"),
@@ -71,25 +73,29 @@ function CreateJobHiringFlow() {
 
   return (
     <div className="">
-      <h3 className="text-3xl font-semibold pb-10">
-        <button onClick={() => ctx.prevScreen()} className="mr-4">
+      <h3 className="text-3xl font-semibold pb-10 flex items-center gap-5">
+        <button onClick={() => ctx.prevScreen()}>
           <ArrowLeft />
         </button>
-        Hiring Flow
+        <span>Hiring Flow</span>
+        <button onClick={() => ctx.setHiringFlow(INITIAL_HIRING_FLOW_STATE)}>
+          <ReloadIcon />
+        </button>
       </h3>
 
       <section className="w-full grid grid-cols-2 gap-y-4 gap-x-10">
         <DashboardInputGroup
-          label="Step 1: Minimum Candidate Fit Score"
-          placeholder="70%"
+          label="Step 1: Minimum Candidate Fit Score (%)"
+          placeholder="70"
           value={ctx.formData.minimum_fit_score.toString()}
           onChange={(val) => ctx.setFormData("minimum_fit_score", val)}
+          pattern="[0-9]+"
         />
 
         {[
-          { val: secondStep, state: setSecondStep },
-          { val: thirdStep, state: setThirdStep },
-          { val: fourthStep, state: setFourthStep },
+          { val: secondStep, key: "secondStep" },
+          { val: thirdStep, key: "thirdStep" },
+          { val: fourthStep, key: "fourthStep" },
         ].map((item, i) => (
           <div className="space-y-4">
             <CreateJobHiringSelectGroup
@@ -97,7 +103,13 @@ function CreateJobHiringFlow() {
               title={"Step " + (i + 2)}
               options={options}
               defaultValue="Choose the next step of your hiring process"
-              onChange={(val) => item.state(val)}
+              value={item.val}
+              onChange={(val) =>
+                ctx.setHiringFlow((prevSteps) => ({
+                  ...prevSteps,
+                  [item.key]: val,
+                }))
+              }
               actions={actionsVal(item.val)}
             />
             {item.val == "topSelected" && (

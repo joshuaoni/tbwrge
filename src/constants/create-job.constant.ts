@@ -18,3 +18,9 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   job_description: "",
   minimum_fit_score: 0,
 };
+
+export const INITIAL_HIRING_FLOW_STATE = {
+  secondStep: "",
+  thirdStep: "",
+  fourthStep: "",
+};
