@@ -1,3 +1,5 @@
+import { createContext, useEffect, useMemo, useState } from "react";
+
 import {
   createJobScreens,
   INITIAL_CREATE_JOB_FORM_DATA,
@@ -8,7 +10,6 @@ import {
   ICreateJobFormDataKey,
   ICreateJobScreen,
 } from "@/interfaces/create-job";
-import { createContext, useEffect, useMemo, useState } from "react";
 
 export const CreateJobContext = createContext<ICreateJobContext>({
   goTo: () => {},
