@@ -1,46 +1,43 @@
 import { ChevronDown, ChevronUp, File } from "lucide-react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
-import gem from "../../../public/images/gem.png";
 const CoverLetterDropDown = () => {
   const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
     React.useState(false);
   const router = useRouter();
-  const pathName = usePathname();
+  const pathName = router.asPath;
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
       link: "/dashboard/cover-letter-tools/summarizer",
       title: "Summarizer",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/vetting",
       title: "Vetting",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/ranking",
 
       title: "Ranking",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/generator",
       title: "Generator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/translator",
       title: "Translator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/rewriter",
       title: "Rewriter",
-      icon: 'Pro',
+      icon: "Pro",
     },
   ]);
   return (
@@ -84,7 +81,9 @@ const CoverLetterDropDown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                <p className='py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
+                  <p className="py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600">
+                    {item.icon}
+                  </p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>

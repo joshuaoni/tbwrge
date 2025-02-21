@@ -1,51 +1,47 @@
 import { ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
-import gem from "../../public/images/gem.png";
 const JobsDropdown = () => {
   const [showJobsDropdown, setShowJobsDropdown] = React.useState(false);
   const router = useRouter();
-  const pathName = usePathname();
+  const pathName = router.asPath;
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
       link: "/dashboard/job-tools/generator",
       title: "Job Post Generator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/vetting",
       title: "Job Post Vetting",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/translator",
       title: "Job Post Translator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/report-generator/",
       title: "Candidate Report Generator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/generate-interview-questions/",
       title: "Ai Interview and Screening Generator",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/screening-question-assistant/",
       title: "Screening Assistant",
-      icon: 'Pro',
+      icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/ai-prep",
       title: "Prep Guide",
-      icon: 'Pro',
+      icon: "Pro",
     },
-
   ]);
   return (
     <>
@@ -86,7 +82,9 @@ const JobsDropdown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                <p className='py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600'>{item.icon}</p>
+                  <p className="py-1 text-black px-4 bg-white rounded-lg text-sm font-bold border-[1px] border-solid border-green-600">
+                    {item.icon}
+                  </p>
                   <span className="ml-2 opacity-40 text-sm ">{item.title}</span>
                 </div>
               </div>
