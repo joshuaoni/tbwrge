@@ -45,7 +45,7 @@ export const API_CONFIG = {
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
 
-  GET_TALENTS: (page: number) => `${MAIN_URL}/talent/get-talents/${page}/`,
+  GET_TALENTS: `${MAIN_URL}/talent/get-talents/`,
   GET_TALENT_ITEM: (talent_id: string) =>
     `${MAIN_URL}/talent/get-talent-item/${talent_id}/`,
   TALENT_START_CHAT: (talent_id: string) =>
