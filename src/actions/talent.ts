@@ -29,14 +29,14 @@ export interface TalentItem {
 
 export const getTalents = async (
   token: string,
-  page: number,
-  data: { text: string; search_type: string }
+  query: { page: string; text: string; search_type: string }
 ) => {
+  const queryParams = new URLSearchParams(query);
+
   const response = await axios({
-    method: "POST",
-    url: API_CONFIG.GET_TALENTS(page),
+    method: "GET",
+    url: `${API_CONFIG.GET_TALENTS}?${queryParams.toString()}`,
     headers: { Authorization: `Bearer ${token}` },
-    data,
   });
   return response.data;
 };
