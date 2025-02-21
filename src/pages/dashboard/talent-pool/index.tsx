@@ -1,34 +1,32 @@
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaFilePdf, FaSearch } from "react-icons/fa";
 
 import { getTalents, TalentItem } from "@/actions/talent";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
 import { useUserStore } from "@/hooks/use-user-store";
-import { useMutation } from "@tanstack/react-query";
 
 export default function TalentPool() {
   const router = useRouter();
 
+  const [page, setPage] = useState(1);
   const [searchVal, setSearchVal] = useState("");
   const [type, setType] = useState<"location" | "skills" | "text">("location");
   const searchValDebounce = useDebounce(searchVal, 1500);
 
   const { userData } = useUserStore();
 
-  const mutation = useMutation<TalentItem[]>({
-    mutationKey: ["getTalents"],
-    mutationFn: async () =>
-      await getTalents(userData?.token ?? "", 1, {
+  const query = useQuery<TalentItem[]>({
+    queryKey: ["get-talents", page, searchValDebounce, type],
+    queryFn: async () =>
+      await getTalents(userData?.token ?? "", {
+        page: page.toString(),
         text: searchValDebounce,
         search_type: type,
       }),
   });
-
-  useEffect(() => {
-    mutation.mutate();
-  }, [searchValDebounce]);
 
   return (
     <DashboardWrapper>
@@ -87,12 +85,14 @@ export default function TalentPool() {
                 </tr>
               </thead>
               <tbody className="">
-                {mutation.data?.map((candidate, index) => (
+                {query.data?.map((candidate, index) => (
                   <tr
                     key={index}
                     className="border-t cursor-pointer"
                     onClick={() =>
-                      router.push(`/dashboard/talent-pool/candidate-profile`)
+                      router.push(
+                        `/dashboard/talent-pool/${candidate.id}/details`
+                      )
                     }
                   >
                     <td className="p-3 font-medium whitespace-nowrap text-[#000000] ">
