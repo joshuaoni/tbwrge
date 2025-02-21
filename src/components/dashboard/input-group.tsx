@@ -38,13 +38,13 @@ export function DashboardInputGroup(props: InputGroupProps) {
         {props.label}
       </label>
       <input
+        {...props}
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
         className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
         placeholder={props.placeholder ?? `Enter your ${props.label}`}
         onChange={(e) => props.onChange?.(e.target.value)}
-        value={props.value}
       />
     </div>
   );

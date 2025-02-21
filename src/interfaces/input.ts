@@ -1,4 +1,6 @@
-export interface InputGroupProps {
+import { ComponentProps } from "react";
+
+interface InputGroup {
   label: string;
   type?: "text" | "email" | "password";
   name?: string;
@@ -7,3 +9,6 @@ export interface InputGroupProps {
   value?: string;
   placeholder?: string;
 }
+
+export type InputGroupProps = InputGroup &
+  Omit<ComponentProps<"input">, keyof InputGroup>;

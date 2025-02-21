@@ -1,21 +1,34 @@
-"use client";
-
-import { useState } from "react";
-import { FaFilePdf, FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaFilePdf, FaSearch } from "react-icons/fa";
+
+import { getTalents, TalentItem } from "@/actions/talent";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-const candidates = Array(9)
-  .fill(null)
-  .map(() => ({
-    name: "Ramrex David",
-    location: "London, UK",
-    skills: "Proficiency in SQL and Python",
-    position: "Senior Data Analyst, ABC LTD",
-    attachment: "Resume.pdf",
-  }));
+import { useDebounce } from "@/hooks/debounce";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useMutation } from "@tanstack/react-query";
 
 export default function TalentPool() {
   const router = useRouter();
+
+  const [searchVal, setSearchVal] = useState("");
+  const [type, setType] = useState<"location" | "skills" | "text">("location");
+  const searchValDebounce = useDebounce(searchVal, 1500);
+
+  const { userData } = useUserStore();
+
+  const mutation = useMutation<TalentItem[]>({
+    mutationKey: ["getTalents"],
+    mutationFn: async () =>
+      await getTalents(userData?.token ?? "", 1, {
+        text: searchValDebounce,
+        search_type: type,
+      }),
+  });
+
+  useEffect(() => {
+    mutation.mutate();
+  }, [searchValDebounce]);
 
   return (
     <DashboardWrapper>
@@ -28,21 +41,36 @@ export default function TalentPool() {
               <input
                 type="text"
                 placeholder="Search for Keywords"
-                className="w-full p-2 pl-8 border text-sm rounded-full bg-[#F0F0F0]"
+                className="w-full p-2 pl-8 border text-sm rounded-full bg-[#F0F0F0] focus:outline-none"
+                value={type === "text" ? searchVal : ""}
+                onChange={(e) => {
+                  setType("text");
+                  setSearchVal(e.target.value);
+                }}
               />
             </div>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4">
               <input
                 type="text"
                 placeholder="Location"
-                className="w-full p-2 border text-sm rounded-lg bg-[#F0F0F0]"
+                className="w-full p-2 border text-sm rounded-lg bg-[#F0F0F0] focus:outline-none"
+                value={type === "location" ? searchVal : ""}
+                onChange={(e) => {
+                  setType("location");
+                  setSearchVal(e.target.value);
+                }}
               />
             </div>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4">
               <input
                 type="text"
                 placeholder="Skills"
-                className="w-full p-2 border text-sm rounded-lg bg-[#F0F0F0]"
+                className="w-full p-2 border text-sm rounded-lg bg-[#F0F0F0] focus:outline-none"
+                value={type === "skills" ? searchVal : ""}
+                onChange={(e) => {
+                  setType("skills");
+                  setSearchVal(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -59,7 +87,7 @@ export default function TalentPool() {
                 </tr>
               </thead>
               <tbody className="">
-                {candidates.map((candidate, index) => (
+                {mutation.data?.map((candidate, index) => (
                   <tr
                     key={index}
                     className="border-t cursor-pointer"
@@ -70,11 +98,17 @@ export default function TalentPool() {
                     <td className="p-3 font-medium whitespace-nowrap text-[#000000] ">
                       {candidate.name}
                     </td>
-                    <td className="whitespace-nowrap">{candidate.location}</td>
-                    <td className="whitespace-nowrap">{candidate.skills}</td>
-                    <td className="whitespace-nowrap">{candidate.position}</td>
+                    <td className="whitespace-nowrap">
+                      {candidate.nationality}
+                    </td>
+                    <td className="whitespace-nowrap">
+                      {candidate.skills_summary}
+                    </td>
+                    <td className="whitespace-nowrap">
+                      {candidate.current_position}
+                    </td>
                     <td className="text-blue-500 flex items-center gap-2 whitespace-nowrap">
-                      <FaFilePdf /> {candidate.attachment}
+                      <FaFilePdf /> {candidate.cv}
                     </td>
                   </tr>
                 ))}

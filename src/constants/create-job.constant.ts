@@ -1,6 +1,7 @@
 import CreateJobCompanyDetails from "@/components/dashboard/create-job/company-details";
 import CreateJobHiringFlow from "@/components/dashboard/create-job/hiring-flow";
 import CreateJobJobDetails from "@/components/dashboard/create-job/job-details";
+import CreateJobOverview from "@/components/dashboard/create-job/overview";
 import CreateJobScreening from "@/components/dashboard/create-job/screening";
 
 export const createJobScreens = {
@@ -8,6 +9,7 @@ export const createJobScreens = {
   job: CreateJobJobDetails,
   hiring: CreateJobHiringFlow,
   screening: CreateJobScreening,
+  overview: CreateJobOverview,
 };
 
 export const INITIAL_CREATE_JOB_FORM_DATA = {
@@ -17,4 +19,10 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   company_description: "",
   job_description: "",
   minimum_fit_score: 0,
+};
+
+export const INITIAL_HIRING_FLOW_STATE = {
+  secondStep: "",
+  thirdStep: "",
+  fourthStep: "",
 };
