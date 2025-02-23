@@ -11,7 +11,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 export default function TalentPool() {
   const router = useRouter();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [searchVal, setSearchVal] = useState("");
   const [type, setType] = useState<"location" | "skills" | "text">("location");
   const searchValDebounce = useDebounce(searchVal, 1500);
