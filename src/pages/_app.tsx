@@ -7,11 +7,10 @@ import type { AppProps } from "next/app";
 import { Inter } from "next/font/google"; // Corrected import path
 import { Toaster } from "react-hot-toast";
 
-const inter = Inter({
+const outfit = Inter({
   subsets: ["latin"], // specify subsets
   weight: ["400", "700", "100", "200", "300", "400", "500", "600"], // specify weights you need
 });
-console.log(inter);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -20,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
         clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <main className={inter.className}>
+          <main className={outfit.className}>
             <Component {...pageProps} />
           </main>
         </LocalizationProvider>
