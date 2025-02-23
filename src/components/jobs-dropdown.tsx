@@ -63,7 +63,7 @@ const JobsDropdown = () => {
             : "max-h-0 opacity-0 scale-95"
         }`}
       >
-        <div className="mb-2 ml-3 space-y-4 cursor-pointer">
+        <div className="mb-2 ml-3 space-y-4 cursor-pointer overflow-auto h-full">
           {dropDownItems.map((item, index) => {
             const isActiveRoute = item.link === pathName;
             return (

@@ -48,7 +48,7 @@ const Dashboard = ({ children }: { children: any }) => {
           </SidebarContent>
         </Sidebar>
         {!startCreateJobFlow ? (
-          <main className="bg-white w-screen h-screen p-4 pt-24">
+          <main className="bg-white px-[70px]  w-screen h-screen p-4 pt-24">
             <SidebarTrigger />
             {children}
           </main>

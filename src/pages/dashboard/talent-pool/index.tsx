@@ -118,7 +118,7 @@ export default function TalentPool() {
                       <td className="whitespace-nowrap">
                         {candidate.current_position}
                       </td>
-                      <td className="text-blue-500 flex items-center gap-2 whitespace-nowrap">
+                      <td className="text-blue-500 max-w-md truncate flex items-center gap-2 whitespace-nowrap">
                         <FaFilePdf /> {candidate.cv}
                       </td>
                     </tr>
