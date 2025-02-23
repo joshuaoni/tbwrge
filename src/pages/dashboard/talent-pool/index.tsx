@@ -7,6 +7,7 @@ import { getTalents, TalentItem } from "@/actions/talent";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
 import { useUserStore } from "@/hooks/use-user-store";
+import { Loader2 } from "lucide-react";
 
 export default function TalentPool() {
   const router = useRouter();
@@ -20,12 +21,14 @@ export default function TalentPool() {
 
   const query = useQuery<TalentItem[]>({
     queryKey: ["get-talents", page, searchValDebounce, type],
-    queryFn: async () =>
-      await getTalents(userData?.token ?? "", {
+    queryFn: async () => {
+      const response = await getTalents(userData?.token ?? "", {
         page: page.toString(),
         text: searchValDebounce,
         search_type: type,
-      }),
+      });
+      return response;
+    },
   });
 
   return (
@@ -74,44 +77,57 @@ export default function TalentPool() {
           </div>
 
           <div className="border rounded-lg overflow-x-auto bg-[#F0F0F0] p-4">
-            <table className="w-full text-left text-sm">
+            <table className="min-w-full text-left text-sm">
               <thead className="bg-[#D6D6D6] rounded-lg mb-4">
                 <tr className="rounded-lg">
-                  <th className="p-3 text-[#898989]">CANDIDATE NAME</th>
-                  <th className="text-[#898989]">Location</th>
-                  <th className="text-[#898989]">Skills</th>
-                  <th className="text-[#898989]">Most Recent Position</th>
-                  <th className="text-[#898989]">ATTACHMENTS</th>
+                  <th className="p-3 text-[#898989] whitespace-nowrap px-6">
+                    CANDIDATE NAME
+                  </th>
+                  <th className="px-6 text-[#898989]">Location</th>
+                  <th className="px-6 text-[#898989]">Skills</th>
+                  <th className="px-6 text-[#898989] whitespace-nowrap">
+                    Most Recent Position
+                  </th>
+                  <th className="px-6 text-[#898989]">ATTACHMENTS</th>
                 </tr>
               </thead>
-              <tbody className="">
-                {query.data?.map((candidate, index) => (
-                  <tr
-                    key={index}
-                    className="border-t cursor-pointer"
-                    onClick={() =>
-                      router.push(
-                        `/dashboard/talent-pool/${candidate.id}/details`
-                      )
-                    }
-                  >
-                    <td className="p-3 font-medium whitespace-nowrap text-[#000000] ">
-                      {candidate.name}
-                    </td>
-                    <td className="whitespace-nowrap">
-                      {candidate.nationality}
-                    </td>
-                    <td className="whitespace-nowrap">
-                      {candidate.skills_summary}
-                    </td>
-                    <td className="whitespace-nowrap">
-                      {candidate.current_position}
-                    </td>
-                    <td className="text-blue-500 flex items-center gap-2 whitespace-nowrap">
-                      <FaFilePdf /> {candidate.cv}
-                    </td>
-                  </tr>
-                ))}
+
+              <tbody>
+                {query.isLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (query.data ?? []).length > 0 ? (
+                  query.data?.map((candidate, index) => (
+                    <tr
+                      key={index}
+                      className="border-t cursor-pointer my-10"
+                      onClick={() =>
+                        router.push(
+                          `/dashboard/talent-pool/${candidate.id}/details`
+                        )
+                      }
+                    >
+                      <td className="p-3 font-medium whitespace-nowrap text-[#000000] ">
+                        {candidate.name}
+                      </td>
+                      <td className="whitespace-nowrap">
+                        {candidate.nationality}
+                      </td>
+                      <td className="whitespace-nowrap max-w-xs truncate">
+                        {candidate.skills_summary}
+                      </td>
+                      <td className="whitespace-nowrap">
+                        {candidate.current_position}
+                      </td>
+                      <td className="text-blue-500 flex items-center gap-2 whitespace-nowrap">
+                        <FaFilePdf /> {candidate.cv}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <div>
+                    <span>No Talent at this moment</span>
+                  </div>
+                )}
               </tbody>
             </table>
           </div>
