@@ -7,6 +7,7 @@ import {
 } from "@/constants/create-job.constant";
 import {
   ICreateJobContext,
+  ICreateJobFormData,
   ICreateJobFormDataKey,
   ICreateJobScreen,
 } from "@/interfaces/create-job";
@@ -50,8 +51,10 @@ export function CreateJobProvider(props: { query: URLSearchParams }) {
       setScreen(screens[currentIndex - 1] as ICreateJobScreen);
     }
   }
-
-  function setFormData(key: ICreateJobFormDataKey, value: string) {
+  function setFormData<K extends ICreateJobFormDataKey>(
+    key: K,
+    value: ICreateJobFormData[K]
+  ) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 

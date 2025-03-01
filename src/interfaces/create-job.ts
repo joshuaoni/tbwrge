@@ -16,7 +16,10 @@ export interface ICreateJobContext {
   nextScreen: () => void;
   prevScreen: () => void;
   formData: ICreateJobFormData;
-  setFormData: (key: ICreateJobFormDataKey, value: string) => void;
+  setFormData: <K extends ICreateJobFormDataKey>(
+    key: K,
+    value: ICreateJobFormData[K]
+  ) => void;
   hiringFlow: ICreateJobHiringFlow;
   setHiringFlow: Dispatch<SetStateAction<ICreateJobHiringFlow>>;
 }
