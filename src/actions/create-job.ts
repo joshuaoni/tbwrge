@@ -1,42 +1,11 @@
 "use client";
 import { API_CONFIG } from "@/constants/api_config";
-import { useUserStore } from "@/hooks/use-user-store";
 import axios from "axios";
 
-export const createJob = async ({
-  company_website,
-  company_description,
-  company_logo,
-  company_name,
-  job_title,
-  start_date,
-  end_date,
-  job_type,
-  job_description,
-  required_skills,
-  educational_requirements,
-  additional_benefits,
-  languages,
-  country_of_residence,
-  years_of_experience_required,
-  job_location_name,
-  salary_range_min,
-  salary_range_max,
-  filter_out_salary_range,
-  require_cv,
-  require_cover_letter,
-  require_voicenote,
-  visibility_public,
-  visibility_private,
-  tags,
-  hide_personal_details_during_screening,
-  job_questions,
-  token,
-}: {
+export interface CreateJobResponse {
   company_website: string;
-  company_description: string;
   company_name: string;
-  company_logo: any;
+  company_description: string;
   job_title: string;
   start_date: string;
   end_date: string;
@@ -47,8 +16,9 @@ export const createJob = async ({
   additional_benefits: string;
   languages: string;
   country_of_residence: string;
-  years_of_experience_required: number;
+  years_of_experience_required: string;
   job_location_name: string;
+  salary_currency: string;
   salary_range_min: number;
   salary_range_max: number;
   filter_out_salary_range: boolean;
@@ -59,64 +29,75 @@ export const createJob = async ({
   visibility_private: boolean;
   tags: string;
   hide_personal_details_during_screening: boolean;
-  job_questions: string[];
-  token: string;
-}) => {
-  try {
-    const options = {
-      method: "POST",
-      url: API_CONFIG.CREATE_JOB, // Replace with your API endpoint
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      data: JSON.stringify({
-        company_website,
-        company_name,
-        company_description,
-        company_logo,
-        job_title,
-        start_date,
-        end_date,
-        job_type,
-        job_description,
-        required_skills,
-        educational_requirements,
-        additional_benefits,
-        languages,
-        country_of_residence,
-        years_of_experience_required,
-        job_location_name,
-        salary_range_min,
-        salary_range_max,
-        filter_out_salary_range,
-        require_cv,
-        require_cover_letter,
-        require_voicenote,
-        visibility_public,
-        visibility_private,
-        tags,
-        hide_personal_details_during_screening,
-        job_questions,
-      }),
-    };
+  minimum_fit_score: number;
+  filter_minimum_fit_score: boolean;
+  status: string;
+  auto_send_interview_mail_on_close: boolean;
+  candidate_interview_count: number;
+  interview_link: string;
+  id: string;
+  reference: string;
+  created_at: string;
+  updated_at: string;
+  total_applicants: number;
+  user: User;
+  company_logo: string;
+  questions: string[];
+}
 
-    const response = await axios(options);
-    return response.data; // Return only the response data for convenience
-  } catch (error: any) {
-    // Handle errors and return meaningful information
-    if (error.response) {
-      // Server responded with a status code outside the 2xx range
-      console.error("Error Response:", error.response.data);
-      throw new Error(error.response.data.message || "Server error occurred");
-    } else if (error.request) {
-      // Request was made, but no response received
-      console.error("Error Request:", error.request);
-      throw new Error("No response from server. Please try again.");
-    } else {
-      // Something else caused an error
-      console.error("Error Message:", error.message);
-      throw new Error(error.message || "Unexpected error occurred");
-    }
-  }
+interface User {
+  id: string;
+  reference: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  email: string;
+  role: string;
+  is_verified: boolean;
+  channel: string;
+  last_name: string;
+  country_code: string;
+  phone: string;
+  profile_picture: string;
+  calendly_link: string;
+  google_calender_link: string;
+  username: string;
+  location: string;
+  last_login: string;
+}
+
+export type CreateJobRequest = Omit<
+  CreateJobResponse,
+  | "id"
+  | "reference"
+  | "created_at"
+  | "updated_at"
+  | "total_applicants"
+  | "user"
+  | "company_logo"
+  | "questions"
+>;
+
+export const createJob = async (token: string, data: CreateJobRequest) => {
+  const options = {
+    method: "POST",
+    url: API_CONFIG.CREATE_JOB,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(data),
+  };
+
+  const response = await axios(options);
+  return response.data;
+};
+
+export const createJobWithAi = async (token: string) => {
+  const res = await axios({
+    method: "POST",
+    url: API_CONFIG.CREATE_JOB_WITH_AI,
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
 };
