@@ -88,12 +88,12 @@ function CreateJobHiringFlow() {
         disabled: isDisabled("topFitScore"),
       },
       {
-        label: "Send Screening Email Top selected Candidates",
+        label: "Send Interview Email Top selected Candidates",
         value: "topSelected",
         disabled: isDisabled("topSelected"),
       },
       {
-        label: "Send Screening Email Top filtered Candidates",
+        label: "Send Rejection Email Top filtered Candidates",
         value: "topFiltered",
         disabled: isDisabled("topFiltered"),
       },
