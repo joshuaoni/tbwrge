@@ -1,11 +1,14 @@
+import { useMutation } from "@tanstack/react-query";
+import { ArrowLeft, CheckIcon } from "lucide-react";
 import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 
+import { createJob, CreateJobResponse } from "@/actions/create-job";
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
 import TrashIcon from "@/components/icons/trash";
+import { useUserStore } from "@/hooks/use-user-store";
 import { CreateJobContext } from "@/providers/job-posting.context";
-import { ArrowLeft, CheckIcon } from "lucide-react";
-import toast from "react-hot-toast";
 import {
   DashboardFileGroup,
   DashboardInputGroup,
@@ -56,6 +59,16 @@ function CreateJobOverview() {
   };
 
   const ctx = useContext(CreateJobContext);
+
+  const { userData } = useUserStore();
+
+  const createJobMutation = useMutation<CreateJobResponse>({
+    mutationFn: async () =>
+      await createJob(userData?.token ?? "", ctx.formData), // FIXME: update formData
+    onSuccess: () => {
+      toast.success("Job post created successfully");
+    },
+  });
 
   return (
     <div className="">
