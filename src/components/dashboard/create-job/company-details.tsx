@@ -82,7 +82,7 @@ function CreateJobCompanyDetails() {
             disabled={createJobWithAiMutation.isPending}
             className="flex items-center gap-2 border-2 border-[#009379] px-4 py-3 rounded-lg disabled:cursor-not-allowed disabled:bg-black/10"
           >
-            <span>
+            <span>a
               {createJobWithAiMutation.isPending
                 ? "Generating Job Post..."
                 : "Generate with AI"}
