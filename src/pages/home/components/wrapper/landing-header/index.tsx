@@ -26,15 +26,23 @@ const LandingHeader = ({
   const router = useRouter();
   const isMobile = useIsMobile();
   return (
-    <div className="w-full md:px-16 z-20 fixed flex items-center justify-between bg-white top-0 border py-4">
+    <div className="w-full px-4 md:px-16 z-20 fixed flex items-center justify-between bg-white top-0 border py-4">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-8">
           <div
             onClick={() => router.push("/home")}
             className="flex items-center cursor-pointer"
           >
-            <Image src="/header-logo.png" alt="" width={50} height={50} />
-            <h1 className={`${outfit.className} ml-2 text-3xl font-bold`}>
+            <Image
+              src="/header-logo.png"
+              alt=""
+              width={25}
+              height={25}
+              className="w-[25px] h-[25px] md:w-[50px] md:h-[50px]"
+            />
+            <h1
+              className={`${outfit.className} ml-2 text-xl md:text-3xl font-bold`}
+            >
               Candivet
             </h1>
           </div>
@@ -65,7 +73,7 @@ const LandingHeader = ({
             </Button>
           </div>
         ) : (
-          <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center ml-auto"></div>
+          <div className=""></div>
         )}
       </div>
     </div>
