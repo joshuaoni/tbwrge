@@ -73,7 +73,9 @@ const LandingHeader = ({
             </Button>
           </div>
         ) : (
-          <div className=""></div>
+          <div className="w-9 h-9 gap-2.5 rounded-full border border-[#D6DDEB] p-2">
+            <Image src="/ham.png" alt="" width={20} height={20} />
+          </div>
         )}
       </div>
     </div>
