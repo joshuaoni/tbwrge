@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { poppins } from "@/constants/app";
+import { outfit } from "@/constants/app";
 
 const LandingHeader = ({
   scrollToSection,
@@ -24,42 +26,48 @@ const LandingHeader = ({
   const router = useRouter();
   const isMobile = useIsMobile();
   return (
-    <div className="w-full px-4 md:px-0 z-20 fixed flex items-center bg-white   top-0 border py-4">
-      <div
-        onClick={() => router.push("/home")}
-        className="flex items-center md:ml-[170px] cursor-pointer"
-      >
-        <Image src={candivetlogo} alt="" width={50} height={50} />
-        <h1 className="text-3xl font-bold">Candivet</h1>
-      </div>
-      {!isMobile && (
-        <NavigationHeader
-          CommunitySectionRef={CommunitySectionRef}
-          scrollToSection={scrollToSection}
-          aboutUsSectionRef={aboutUsSectionRef}
-          toolsSectionRef={toolsSectionRef}
-          pricingSectionRef={pricingSectionRef}
-          blogSectionRef={blogSectionRef}
-        />
-      )}
-      {!isMobile ? (
-        <div className="ml-auto mr-8">
-          <Button
-            onClick={() => router.push("/home/sign-in")}
-            className="border-none outline-none tet-black"
+    <div className="w-full md:px-16 z-20 fixed flex items-center justify-between bg-white top-0 border py-4">
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-8">
+          <div
+            onClick={() => router.push("/home")}
+            className="flex items-center cursor-pointer"
           >
-            Log In
-          </Button>
-          <Button
-            onClick={() => router.push("/home/sign-up")}
-            className="bg-primary text-white"
-          >
-            Sign Up
-          </Button>
+            <Image src="/header-logo.png" alt="" width={50} height={50} />
+            <h1 className={`${outfit.className} ml-2 text-3xl font-bold`}>
+              Candivet
+            </h1>
+          </div>
+          {!isMobile && (
+            <NavigationHeader
+              CommunitySectionRef={CommunitySectionRef}
+              scrollToSection={scrollToSection}
+              aboutUsSectionRef={aboutUsSectionRef}
+              toolsSectionRef={toolsSectionRef}
+              pricingSectionRef={pricingSectionRef}
+              blogSectionRef={blogSectionRef}
+            />
+          )}
         </div>
-      ) : (
-        <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center ml-auto"></div>
-      )}
+        {!isMobile ? (
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => router.push("/home/sign-in")}
+              className="border-none outline-none tet-black"
+            >
+              Log In
+            </Button>
+            <Button
+              onClick={() => router.push("/home/sign-up")}
+              className="bg-[#009379] text-white"
+            >
+              Sign Up
+            </Button>
+          </div>
+        ) : (
+          <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center ml-auto"></div>
+        )}
+      </div>
     </div>
   );
 };
@@ -112,7 +120,7 @@ const NavigationHeader = ({
   ];
   return (
     <div>
-      <div className="flex items-center space-x-8 ml-12">
+      <div className="flex items-center text-[14px] space-x-12 ml-12">
         {Navs.map((nav, index) => (
           <NavItem scrollToSection={scrollToSection} {...nav} key={index} />
         ))}
@@ -138,7 +146,7 @@ const NavItem = ({ title, link }: any) => {
         isActive
           ? "text-primary font-bold underline underline-offset-2 transform transition-all"
           : "text-black"
-      } cursor-pointer`}
+      } ${poppins.className} cursor-pointer`}
     >
       {title}
     </span>

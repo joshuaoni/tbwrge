@@ -34,7 +34,7 @@ const Partners = () => {
   };
 
   return (
-    <div className="overflow-hidden py-8 border-b bg-white">
+    <div className="overflow-hidden pt-16 pb-10 border-b bg-white">
       <motion.div
         className="flex space-x-12" // Add space between images
         variants={marqueeVariants}

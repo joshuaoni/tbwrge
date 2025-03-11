@@ -3,6 +3,7 @@ import JobTools from "../../../../../public/images/icons/job-tools.png";
 import CVTools from "../../../../../public/images/icons/cv-tools.png";
 import CoverLetterTools from "../../../../../public/images/icons/cover-letter-tools.png";
 import Image from "next/image";
+import { poppins } from "@/constants/app";
 
 const Tools = () => {
   const tools = [
@@ -26,7 +27,9 @@ const Tools = () => {
     },
   ];
   return (
-    <div className=" bg-white  flex flex-col  spaec-y-4 items-center ">
+    <div
+      className={`${poppins.className} bg-[#F8F9FF]  flex flex-col  spaec-y-4 items-center`}
+    >
       <div className="bg-[#F8F9FF]  flex flex-col w-full md:w-[80%] my-12 pb-8  space-y-4 mb-12 items-center">
         <h1 className="text-[25px] font-extrabold p-4 text-center">
           Our Tools simplifies your vetting process
@@ -38,7 +41,7 @@ const Tools = () => {
         </p>
         <div className="flex flex-col md:flex-row items-center  mt-6 space-y-4 md:space-y-0 md:space-x-8 ">
           {tools.map((tool, index) => (
-            <div className="flex flex-col bg-white space-y-6  min-h-[400px] max-w-[300px] rounded-lg items-center justify-center px-4 ">
+            <div className="flex flex-col bg-white space-y-6  min-h-[400px] max-w-[300px] items-center justify-center p-[40px_30px] rounded-[20px] border border-[#E5F4F2] shadow-[34.85px_29.63px_48.34px_0px_#3366FF0D]">
               <Image src={tool.icon} alt={tool.title} width={60} height={60} />
               <h1 className="font-bold text-xl">{tool.title}</h1>
               <p className="text-center">{tool.description}</p>

@@ -10,6 +10,7 @@ const LandingWrapper = ({ children }: { children: React.ReactNode }) => {
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     sectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
   return (
     <div className="flex flex-col h-screen ">
       <LandingHeader
@@ -20,7 +21,7 @@ const LandingWrapper = ({ children }: { children: React.ReactNode }) => {
         CommunitySectionRef={CommunitySectionRef}
         scrollToSection={scrollToSection}
       />
-      <main>{children}</main>
+      <main className="md:pt-[74px]">{children}</main>
       <LandingFooter />
     </div>
   );
