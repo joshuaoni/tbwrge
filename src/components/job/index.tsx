@@ -26,7 +26,6 @@ const CreateJobFlow = ({
     data,
     isPending,
   } = useMutation({
-    
     mutationKey: ["create-job"],
     mutationFn: async () => {
       let jobType =
@@ -39,11 +38,10 @@ const CreateJobFlow = ({
           : "internship";
       console.log(companyLogo);
       const formData = new FormData();
-      let response = await createJob({
+      let response = await createJob(userData?.token as string, {
         company_website: storedDetails?.website,
         company_description: storedDetails?.description,
         company_name: storedDetails?.name,
-        company_logo: companyLogo,
         job_title: storedDetails?.title,
         start_date: new Date(storedDetails?.startDate)
           .toISOString()
@@ -70,9 +68,14 @@ const CreateJobFlow = ({
         tags: storedDetails?.tags,
         hide_personal_details_during_screening:
           storedDetails?.diversityInclusionSettings,
-        job_questions: storedDetails?.questions,
         job_location_name: storedDetails?.JobLocation,
-        token: userData?.token as string,
+        status: "DRAFT",
+        salary_currency: "USD",
+        minimum_fit_score: 0,
+        filter_minimum_fit_score: false,
+        auto_send_interview_mail_on_close: false,
+        candidate_interview_count: 0,
+        interview_link: "",
       });
       console.log("the data is", response);
       setCreatedJob(response);

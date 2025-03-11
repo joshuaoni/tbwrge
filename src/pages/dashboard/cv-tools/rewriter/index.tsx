@@ -237,6 +237,8 @@ const Translator = () => {
                       workExperience={
                         rewriterMutation.data[0].cv_data.experience
                       }
+                      education={rewriterMutation.data[0].cv_data.education}
+                      skills={rewriterMutation.data[0].cv_data.skills}
                     />
                     <button className="w-1/12" onClick={downloadPDF2}>
                       <DocumentDownloadIcon />

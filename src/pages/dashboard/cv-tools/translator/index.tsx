@@ -228,6 +228,8 @@ const Translator = () => {
                         phone: "+46 98-215 4231",
                       }}
                       workExperience={translated[0].cv_data.experience}
+                      education={translated[0].cv_data.education}
+                      skills={translated[0].cv_data.skills}
                     />
                     <button className="w-1/12" onClick={downloadPDF2}>
                       <DocumentDownloadIcon />
