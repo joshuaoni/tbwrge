@@ -22,7 +22,7 @@ function CreateJobOverview() {
   >([
     {
       title:
-        "Could you describe a project or task you’ve worked on that best demonstrates your skills for this role?",
+        "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
       answer: "",
     },
   ]);
@@ -63,8 +63,43 @@ function CreateJobOverview() {
   const { userData } = useUserStore();
 
   const createJobMutation = useMutation<CreateJobResponse>({
-    mutationFn: async () =>
-      await createJob(userData?.token ?? "", ctx.formData), // FIXME: update formData
+    mutationFn: async () => {
+      const completeFormData = {
+        ...ctx.formData,
+        additional_benefits: "",
+        country_of_residence: "",
+        job_location_name: "",
+        salary_currency: "EUR",
+        salary_range_start: 0,
+        salary_range_end: 0,
+        job_type: "FULL_TIME",
+        employment_type: "PERMANENT",
+        experience_level: "MID_LEVEL",
+        required_education: "BACHELORS",
+        application_deadline: new Date().toISOString(),
+        job_function: "ENGINEERING",
+        industry: "TECHNOLOGY",
+        require_voicenote: false,
+        visibility_public: true,
+        visibility_private: false,
+        tags: "",
+        required_languages: [],
+        required_certifications: [],
+        required_skills_years: {},
+        screening_questions: [],
+        company_logo: "",
+        hide_personal_details_during_screening: false,
+        filter_minimum_fit_score: true,
+        filter_minimum_experience: 0,
+        status: "DRAFT",
+        auto_send_interview_mail_on_close: false,
+        auto_reject_mail_on_close: false,
+        auto_reject_mail_on_screen: false,
+        candidate_interview_count: 0,
+        interview_link: "",
+      };
+      return await createJob(userData?.token ?? "", completeFormData);
+    },
     onSuccess: () => {
       toast.success("Job post created successfully");
     },
