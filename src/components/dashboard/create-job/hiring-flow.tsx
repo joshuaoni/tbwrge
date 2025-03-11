@@ -118,7 +118,7 @@ function CreateJobHiringFlow() {
           label="Step 1: Minimum Candidate Fit Score (%)"
           placeholder="70"
           value={ctx.formData.minimum_fit_score.toString()}
-          onChange={(val) => ctx.setFormData("minimum_fit_score", val)}
+          onChange={(val) => ctx.setFormData("minimum_fit_score", Number(val))}
           pattern="[0-9]+"
         />
 
