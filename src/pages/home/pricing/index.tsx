@@ -289,11 +289,11 @@ const PricingPage = () => {
     <LandingWrapper>
       <main className={`${inter.className} flex flex-col`}>
         <div
-          className={`${poppins.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
+          className={`${poppins.className} bg-gradient-to-b from-gray-50 via-gray-50/50 to-white md:px-16 flex flex-col space-y-4 items-center`}
         >
-          <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-4 mb-0 md:mb-12 items-center">
+          <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 mb-0 md:mb-12 items-center">
             <h1 className="text-[25px] font-extrabold p-4">Pricing</h1>
-            <p className="text-sm text-[#2D2D2D] text-center md:px-24">
+            <p className="text-sm text-[#2D2D2D] md:pb-12 text-center md:px-24">
               Choose the Perfect Pricing for Your Hiring and Career Goals
             </p>
             {/* Mobile View with Slider */}

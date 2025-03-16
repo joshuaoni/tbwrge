@@ -35,7 +35,7 @@ const LandingHeroSection = () => {
     <div className="relative h-fit bg-[#065844] pt-24 md:pt-0 flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16">
       {/* Top-right circle */}
       {!isMobile && (
-        <div className="absolute top-[10px] right-[0px] w-[80px] h-[80px] md:w-[120px] md:h-[120px] bg-[#FDB833] border-[15px] md:border-[25px] border-[#009379] rounded-full"></div>
+        <div className="absolute top-[0px] right-[0px] w-[80px] h-[80px] md:w-[120px] md:h-[120px] bg-[#FDB833] border-[15px] md:border-[25px] border-[#009379] rounded-full"></div>
       )}
 
       {/* Bottom-left circle */}

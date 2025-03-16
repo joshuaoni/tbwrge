@@ -19,7 +19,7 @@ const BlogPosts = () => {
 
   return (
     <div
-      className={`${poppins.className}  bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
+      className={`${poppins.className}  bg-[#F8F9FF] h-fit p-6 md:p-16 md:pt-0 md:pb-[150px] pb-[100px] w-full flex items-center flex-col`}
     >
       <div className="flex flex-col text-center">
         <h1 className="text-2xl font-bold">Blog Posts</h1>

@@ -72,7 +72,7 @@ const CommunityPage = () => {
     <div className="min-h-screen bg-gray-50">
       <CommunityDashHeader />
 
-      <div className="max-w-7xl mx-auto pt-16 md:pt-20 px-4 md:px-16">
+      <div className="mx-auto pt-16 md:pt-20 px-4 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           {/* Left Sidebar - Popular Tags */}
           <div className="hidden md:block md:col-span-3">

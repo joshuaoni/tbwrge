@@ -217,7 +217,7 @@ const ToolsPage = () => {
                     <div className="absolute top-8 -left-8 w-[105%] h-[110%] bg-[#4A4A4A] rounded-lg -z-10 -translate-x-4" />
                     <div className="relative w-full">
                       <Image
-                        src={Tool1}
+                        src="/joao-ferrao-4YzrcDNcRVg-unsplash.png"
                         alt=""
                         width={450}
                         height={300}

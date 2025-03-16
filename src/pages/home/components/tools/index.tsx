@@ -35,7 +35,7 @@ const Tools = () => {
         <h1 className="text-[25px] font-extrabold p-4 text-center">
           Our Tools Simplify Your Journey
         </h1>
-        <p className="text-sm text-[#2D2D2D] text-center px-4 md:w-full w-[90%] md:px-24">
+        <p className="text-sm text-[#2D2D2D] text-center px-4 md:w-[75%] w-[90%] md:px-24">
           Intuitive, AI-powered tools for candidates and recruiters. From
           tailored CVs and cover letters to community forums and job matching,
           our platform simplifies career growth and hiring.
@@ -62,7 +62,7 @@ const Tools = () => {
                   <p className="text-center text-[14px]">{tool.description}</p>
                 </div>
                 <div className="pt-6">
-                  <span className="font-semibold text-green-700 text-center flex items-center justify-center gap-2 cursor-pointer hover:underline group">
+                  <span className="font-semibold text-[#009379] text-center flex items-center justify-center gap-2 cursor-pointer hover:underline group">
                     Learn More
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
