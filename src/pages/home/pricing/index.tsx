@@ -457,14 +457,14 @@ const PricingPage = () => {
                             <>
                               <span className="text-[20px] mr-1">€</span>
                               <span>
-                                {plan.price.split("€")[1]?.split("/")[0] || ""}
+                                {plan.price.split("€")[1].split("/")[0]}
                               </span>
                               <span className="text-[16px] text-gray-500 ml-1">
                                 /month
                               </span>
                             </>
                           ) : (
-                            plan.price || "Free"
+                            plan.price
                           )}
                         </div>
                       </div>

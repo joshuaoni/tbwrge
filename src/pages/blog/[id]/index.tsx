@@ -5,12 +5,57 @@ import LandingFooter from "@/pages/home/components/wrapper/landing-footer";
 import LandingHeader from "@/pages/home/components/wrapper/landing-header";
 import { ChevronLeft } from "lucide-react";
 import { ChevronRight } from "lucide-react";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, RefObject, useState } from "react";
 
-const BlogPostDetail = () => {
+interface BlogPost {
+  title: string;
+  subtitle: string;
+  author: string;
+  role: string;
+  readTime: string;
+  views: string;
+  shares: string;
+}
+
+interface BlogPostDetailProps {
+  post: BlogPost;
+}
+
+// Add getStaticPaths
+export const getStaticPaths: GetStaticPaths = async () => {
+  // For now, we'll pre-render only one blog post
+  return {
+    paths: [{ params: { id: "1" } }],
+    fallback: "blocking",
+  };
+};
+
+// Add getStaticProps
+export const getStaticProps: GetStaticProps<BlogPostDetailProps> = async ({
+  params,
+}) => {
+  // Here you would normally fetch the blog post data
+  return {
+    props: {
+      post: {
+        title: "5 EFFICIENT RULES HOW TO ORGANIZE YOUR WORKING PLACE",
+        subtitle:
+          "Relationship tips couples therapists are giving all the time",
+        author: "Paul Lomino",
+        role: "Director HR, ABC LTD",
+        readTime: "2 minute read",
+        views: "1.6K",
+        shares: "1.2K",
+      },
+    },
+  };
+};
+
+const BlogPostDetail = ({ post }: BlogPostDetailProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const isMobile = useIsMobile();
@@ -54,19 +99,19 @@ const BlogPostDetail = () => {
           <h1
             className={`${outfit.className} text-[30px] md:text-[56px] leading-tight mb-[12px] md:mb-6`}
           >
-            5 EFFICIENT RULES HOW TO ORGANIZE YOUR WORKING PLACE
+            {post.title}
           </h1>
           <h2
             className={`${outfit.className} text-[20px] md:text-[32px] font-normal mb-[12px] leading-tight md:mb-8`}
           >
-            Relationship tips couples therapists are giving all the time
+            {post.subtitle}
           </h2>
 
           {/* Author Info */}
           <div className="flex items-center gap-3">
             {isMobile ? (
               <div className="flex items-center gap-2">
-                <span>by Paul Lomino</span>
+                <span>by {post.author}</span>
                 <span className="text-gray-400">—</span>
                 <div className="flex items-center gap-2">
                   <Image
@@ -75,7 +120,7 @@ const BlogPostDetail = () => {
                     width={14}
                     height={14}
                   />
-                  <span>2 minute read</span>
+                  <span>{post.readTime}</span>
                 </div>
               </div>
             ) : (
@@ -92,7 +137,7 @@ const BlogPostDetail = () => {
             {!isMobile && (
               <div className="flex items-center gap-2">
                 <span className="text-base">
-                  Paul Lomino - Director HR, ABC LTD
+                  {post.author} - {post.role}
                 </span>
                 <span className="text-gray-400">—</span>
                 <div className="flex items-center gap-2">
@@ -102,7 +147,7 @@ const BlogPostDetail = () => {
                     width={14}
                     height={14}
                   />
-                  <span>2 minute read</span>
+                  <span>{post.readTime}</span>
                 </div>
                 <span className="text-gray-400">—</span>
                 <div className="flex items-center gap-1">
@@ -113,7 +158,7 @@ const BlogPostDetail = () => {
                       width={12}
                       height={12}
                     />
-                    <span>1.6K views</span>
+                    <span>{post.views} views</span>
                   </div>
                   <span className="text-gray-400">—</span>
                   <div className="flex items-center gap-2">
@@ -135,7 +180,7 @@ const BlogPostDetail = () => {
                       width={13.3}
                       height={13.3}
                     />
-                    <span>1.2K shares</span>
+                    <span>{post.shares} shares</span>
                   </div>
                 </div>
               </div>
