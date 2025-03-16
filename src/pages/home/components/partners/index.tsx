@@ -7,8 +7,10 @@ import Amazon from "../../../../../public/images/amazon.png";
 import FedEx from "../../../../../public/images/fedex.png";
 import hubspot from "../../../../../public/images/hubspot.png";
 import Image from "next/image";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Partners = () => {
+  const isMobile = useIsMobile();
   const partners = [
     { image: AirBnB, alt: "airbnb" },
     { image: Google, alt: "google" },
@@ -21,7 +23,7 @@ const Partners = () => {
   // Framer Motion Variants for scrolling animation
   const marqueeVariants = {
     animate: {
-      x: [0, -1020], // Adjusted width based on new spacing
+      x: [0, -1020],
       transition: {
         x: {
           repeat: Infinity,
@@ -33,11 +35,33 @@ const Partners = () => {
     },
   };
 
+  if (isMobile) {
+    return (
+      <div className="overflow-hidden pt-16 pb-16 border-b bg-white">
+        <div className="px-4">
+          <div className="grid grid-cols-3 gap-6">
+            {partners.map((partner, index) => (
+              <div
+                className="flex flex-col items-center justify-center"
+                key={index}
+              >
+                <Image
+                  src={partner.image}
+                  alt={partner.alt}
+                  width={70}
+                  height={70}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-hidden pt-16 pb-10 border-b bg-white">
       <div className="max-w-[1020px] mx-auto">
-        {" "}
-        {/* Adjusted container width */}
         <motion.div
           className="flex items-center"
           variants={marqueeVariants}
@@ -46,7 +70,7 @@ const Partners = () => {
           <div className="flex shrink-0">
             {partners.map((partner, index) => (
               <div
-                className="flex flex-col items-center justify-center w-[170px]" // Fixed width including spacing
+                className="flex flex-col items-center justify-center w-[170px]"
                 key={index}
               >
                 <Image
@@ -61,7 +85,7 @@ const Partners = () => {
           <div className="flex shrink-0">
             {partners.map((partner, index) => (
               <div
-                className="flex flex-col items-center justify-center w-[170px]" // Fixed width including spacing
+                className="flex flex-col items-center justify-center w-[170px]"
                 key={`duplicate-${index}`}
               >
                 <Image
