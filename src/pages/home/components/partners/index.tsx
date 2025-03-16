@@ -21,12 +21,12 @@ const Partners = () => {
   // Framer Motion Variants for scrolling animation
   const marqueeVariants = {
     animate: {
-      x: ["10%", "-100%"], // Slide from start to end
+      x: [0, -1020], // Adjusted width based on new spacing
       transition: {
         x: {
           repeat: Infinity,
           repeatType: "loop",
-          duration: 70, // Adjust duration for scroll speed
+          duration: 30,
           ease: "linear",
         },
       },
@@ -35,40 +35,48 @@ const Partners = () => {
 
   return (
     <div className="overflow-hidden pt-16 pb-10 border-b bg-white">
-      <motion.div
-        className="flex space-x-12" // Add space between images
-        variants={marqueeVariants}
-        animate="animate"
-      >
-        {partners.map((partner, index) => (
-          <div
-            className="flex flex-col items-center justify-center"
-            key={index}
-          >
-            <Image
-              src={partner.image}
-              alt={partner.alt}
-              width={70}
-              height={70}
-            />
+      <div className="max-w-[1020px] mx-auto">
+        {" "}
+        {/* Adjusted container width */}
+        <motion.div
+          className="flex items-center"
+          variants={marqueeVariants}
+          animate="animate"
+        >
+          <div className="flex shrink-0">
+            {partners.map((partner, index) => (
+              <div
+                className="flex flex-col items-center justify-center w-[170px]" // Fixed width including spacing
+                key={index}
+              >
+                <Image
+                  src={partner.image}
+                  alt={partner.alt}
+                  width={70}
+                  height={70}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-        {/* Duplicate logos for seamless looping */}
-        {partners.map((partner, index) => (
-          <div
-            className="flex flex-col items-center justify-center"
-            key={`duplicate-${index}`}
-          >
-            <Image
-              src={partner.image}
-              alt={partner.alt}
-              width={70}
-              height={70}
-            />
+          <div className="flex shrink-0">
+            {partners.map((partner, index) => (
+              <div
+                className="flex flex-col items-center justify-center w-[170px]" // Fixed width including spacing
+                key={`duplicate-${index}`}
+              >
+                <Image
+                  src={partner.image}
+                  alt={partner.alt}
+                  width={70}
+                  height={70}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };
+
 export default Partners;

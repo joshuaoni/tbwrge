@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import JobTools from "../../../../public/images/icons/job-tools.png";
 import CVTools from "../../../../public/images/icons/cv-tools.png";
 import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { poppins } from "@/constants/app";
 
 const PricingPlans = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % plans.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + plans.length) % plans.length);
+  };
+
   const plans = [
     {
       plan: "Free",
@@ -58,12 +68,89 @@ const PricingPlans = () => {
     <div
       className={`${poppins.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
     >
-      <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-4 mb-12 items-center">
+      <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-4 mb-0 md:mb-12 items-center">
         <h1 className="text-[25px] font-extrabold p-4">Our Pricing Plans</h1>
-        <p className="text-sm text-[#2D2D2D] text-center px-24">
+        <p className="text-sm text-[#2D2D2D] text-center md:px-24">
           Choose the Perfect Pricing for your hiring and career goals
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
+        {/* Mobile View with Slider */}
+        <div className="relative block md:hidden w-full mt-8">
+          <div className="overflow-hidden">
+            <div
+              className="flex transition-transform duration-300 ease-in-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {plans.map((plan, index) => (
+                <div key={index} className="w-full flex-shrink-0 px-4">
+                  <div
+                    className={`flex flex-col ${
+                      plan.plan === "Enterprise"
+                        ? "bg-primary text-white"
+                        : "bg-white text-black"
+                    } h-[420px] w-full border border-[#F8F9FF] rounded-[20px] shadow-[34.85px_29.63px_48.34px_0px_#3366FF0D] p-[40px_30px]`}
+                  >
+                    <div className="space-y-2">
+                      <span className="font-semibold">{plan.plan}</span>{" "}
+                      <span className="font-light">{plan.title}</span>
+                      <div>
+                        <span className="text-[50px] font-extrabold">
+                          €{plan.price}
+                          {plan.plan === "Enterprise" ? null : (
+                            <span className="text-sm font-semibold">
+                              /month
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                      <span className="text-[12px] font-light block">
+                        {plan.description}
+                      </span>
+                    </div>
+
+                    <div className="flex-grow mt-2">
+                      <div className="grid grid-cols-1">
+                        <div className="flex flex-col gap-0">
+                          {plan.features.map((feature, i) => (
+                            <div
+                              key={i}
+                              className="flex gap-4 items-start min-h-[40px]"
+                            >
+                              <Check className="w-5 h-5 text-[#009379] flex-shrink-0" />
+                              <div className="leading-tight text-[12px] font-semibold">
+                                {feature}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-2">
+                      <Button className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold">
+                        Get Started
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button
+            onClick={prevSlide}
+            className="absolute left-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Desktop/Tablet Grid View */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
           {plans.map((plan, index: number) => (
             <div
               key={index}
@@ -98,7 +185,7 @@ const PricingPlans = () => {
                         className="flex gap-4 items-start min-h-[40px]"
                       >
                         <Check className="w-5 h-5 text-[#009379] flex-shrink-0" />
-                        <div className="leading-tight  text-[12px] font-semibold">
+                        <div className="leading-tight text-[12px] font-semibold">
                           {feature}
                         </div>
                       </div>

@@ -57,11 +57,11 @@ const LandingHeroSection = () => {
           </div>
 
           <p
-            className={`${outfit.className} text-white text-left max-w-[700px] text-sm md:text-base`}
+            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base`}
           >
-            Accelerate your hiring with tools like CV vetting, job post
-            creation, cover letter translation, and more designed to simplify
-            your workflow.
+            A comprehensive suite of tools to simplify the recruitment journey
+            for both recruiters and job seekers. Our AI-powered platform makes
+            every step of the process faster, smarter, and more effective.
           </p>
           <div
             className={`${poppins.className} flex flex-col w-full items-start md:justify-center md:flex-row md:items-center space-y-4 md:space-y-0 mt-6 md:mt-8 md:space-x-4`}
@@ -76,7 +76,7 @@ const LandingHeroSection = () => {
               />
               Get Started
             </Button>
-            <Button className="bg-white text-[12px] px-[40px] py-[25px] md:max-w-40 text-primary rounded-[20px]">
+            <Button className="bg-white text-[12px] px-[40px] py-[25px] rounded-[20px] md:max-w-40 text-primary">
               How it works
             </Button>
           </div>

@@ -1,14 +1,25 @@
 import BlogsPagination from "@/components/blogs-pagination";
 import { Button } from "@/components/ui/button";
 import { poppins } from "@/constants/app";
-import { User2, UserCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, User2, UserCircle2 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 const BlogPosts = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % 8);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + 8) % 8);
+  };
+
   return (
     <div
-      className={`${poppins.className} bg-[#F8F9FF] h-fit p-12 md:p-16 md:pb-[100px] w-full flex flex-col`}
+      className={`${poppins.className}  bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
     >
       <div className="flex flex-col text-center">
         <h1 className="text-2xl font-bold">Blog Posts</h1>
@@ -16,31 +27,148 @@ const BlogPosts = () => {
           Read Up to Date Tips from Professionals
         </p>
       </div>
-      <div className="w-full flex flex-wrap gap-x-6 gap-y-6 mt-8  items-center justify-between">
+
+      {/* Mobile View with Slider */}
+      <div className="relative w-full md:hidden mt-8">
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {Array(8)
+              .fill(null)
+              .map((_, index) => (
+                <div key={index} className="w-full flex-shrink-0">
+                  <BlogCard />
+                </div>
+              ))}
+          </div>
+        </div>
+        <button
+          onClick={prevSlide}
+          className="absolute left-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Desktop/Tablet Grid View */}
+      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <BlogCard />
         <BlogCard />
         <BlogCard />
         <BlogCard />
       </div>
-      {/* <BlogsPagination /> */}
+      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <BlogCard />
+        <BlogCard />
+        <BlogCard />
+        <BlogCard />
+      </div>
 
-      <Button className="text-[12px]  self-center mt-8 bg-[#009379] py-4 text-white">
+      <Button className="text-[12px] self-center mt-8 bg-[#009379] py-4 text-white">
         View All Blog Posts
       </Button>
     </div>
   );
 };
-const BlogCard = () => {
+
+export const BlogPostsWithPagination = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 8;
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % 8);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + 8) % 8);
+  };
+
   return (
-    <div className="flex flex-col border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-[330px]">
+    <div
+      className={`${poppins.className} pt-[90px] md:pt-[20px] bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
+    >
+      <div className="flex flex-col text-center">
+        <h1 className="text-2xl font-bold">Blog Posts</h1>
+        <p className="text-sm text-[#2D2D2D] mt-4">
+          Read Up to Date Tips from Professionals
+        </p>
+      </div>
+
+      {/* Mobile View with Slider */}
+      <div className="relative w-full md:hidden mt-8">
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {Array(8)
+              .fill(null)
+              .map((_, index) => (
+                <div key={index} className="w-full flex-shrink-0">
+                  <BlogCard />
+                </div>
+              ))}
+          </div>
+        </div>
+        <button
+          onClick={prevSlide}
+          className="absolute left-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-[-20px] top-1/2 -translate-y-1/2 bg-white/0 rounded-full p-2 shadow-md"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Desktop/Tablet Grid View */}
+      <div className="tatata hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        {[1, 2, 3, 4].map((_, index) => (
+          <BlogCard key={index} />
+        ))}
+      </div>
+      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        {[1, 2, 3, 4].map((_, index) => (
+          <BlogCard key={index} />
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-8">
+        <BlogsPagination />
+      </div>
+    </div>
+  );
+};
+
+export const BlogCard = () => {
+  const router = useRouter();
+  return (
+    <div
+      onClick={() => router.push("/blog/1")}
+      className="flex cursor-pointer flex-col border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full"
+    >
       <div
-        className="w-[330px] h-[200px] bg-cover bg-center rounded-t-[20px]"
+        className="w-full h-[200px] bg-cover bg-center rounded-t-[20px]"
         style={{ backgroundImage: "url('/unsplash_Tyg0rVhOTrE.png')" }}
       >
         {/* Content goes here */}
       </div>
 
       <div className="p-4">
-        <div className="my-4 w-[72px] text-center h-[25px] bg-[#E2D8FD] rounded-[20px]">
+        <div className="my-2 w-[72px] text-center h-[25px] bg-[#E2D8FD] rounded-[20px]">
           <span>Article</span>
         </div>
 

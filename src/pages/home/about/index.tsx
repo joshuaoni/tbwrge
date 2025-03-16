@@ -5,17 +5,26 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import AboutUs from "../../../../public/images/about-us.png";
 import Image from "next/image";
+import { outfit, poppins } from "@/constants/app";
+import Expertise from "../components/expertise";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const index = () => {
+  const isMobile = useIsMobile();
+
   return (
     <LandingWrapper>
-      <main className=" pt-[100px] flex flex-col">
-        <div className="flex items-center  px-24 ">
-          <div className="flex w-[50%] flex-col items-start space-y-2">
-            <h1 className="text-[60px] text-primary font-extrabold">
+      <main
+        className={`${poppins.className} pt-[150px] md:pt-[100px] px-4 md:px-16 flex flex-col`}
+      >
+        <div className="flex items-center pb-32 ">
+          <div className="flex md:w-[50%] w-full flex-col items-start">
+            <h1 className="mb-4 md:text-[60px] text-[16px] text-primary font-extrabold">
               About Us
             </h1>
-            <p className="text-sm font-light max-w-[400px]">
+            <p
+              className={`${outfit.className} leading-[26px] text-[#898989] text-sm font-light`}
+            >
               At Candivet, we’re transforming the way professionals connect with
               opportunities by merging technology with human-centered design to
               support every stage of the hiring journey. Built with AI-driven
@@ -23,15 +32,18 @@ const index = () => {
               and job seekers to simplify the job search, application, and
               candidate vetting processes.
             </p>
-            <Button className="flex bg-primary text-white items-center">
+            <Button className="flex md:mt-8 mt-4 text-[12px] px-[40px] py-[25px] rounded-[20px] bg-[#009379] text-white items-center">
               <p>Join Us</p> <ArrowRight />
             </Button>
           </div>
-          <div className="w-[50%]">
-            <Image src={AboutUs} alt="" width={500} height={500} />
-          </div>
+          {!isMobile && (
+            <div className="w-[50%] flex justify-end">
+              <Image src={AboutUs} alt="" width={500} height={500} />
+            </div>
+          )}
         </div>
-        <section className="flex bg-[#F5F5F5]  p-12 mt-12 flex-col items-center py-8 justify-center">
+
+        {/* <section className="flex bg-[#F5F5F5]  p-12 mt-12 flex-col items-center py-8 justify-center">
           <h1 className="text-[30px] font-bold">
             Streamline your hiring with Candivet
           </h1>
@@ -63,8 +75,9 @@ const index = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
+      <Expertise />
       <Community />
     </LandingWrapper>
   );

@@ -9,11 +9,11 @@ import { poppins } from "@/constants/app";
 const RightCandidate = () => {
   const isMobile = useIsMobile();
   return (
-    <div className="h-fit bg-[#133026] md:flex items-center  justify-center  p-4  md:p-0 md:pl-16 ">
+    <div className="h-fit bg-[#133026] md:flex items-center  justify-center py-[50px] md:mb-0  p-4  md:p-0 md:pl-16 ">
       <div className="flex items-center justify-between w-full">
         <div className="w-full md:w-[50%]">
           <div
-            className={`${poppins.className} text-[50px] text-white font-extrabold flex flex-col items-start pr-12`}
+            className={`${poppins.className} text-[30px] md:text-[50px] text-white font-extrabold flex flex-col items-start pr-12`}
           >
             <h1 className="leading-[1.3]">
               Ready to <br />
@@ -22,7 +22,7 @@ const RightCandidate = () => {
             </h1>
           </div>
           <div className="flex items-center mt-8 space-x-4">
-            <Button className="bg-[#009379]  text-[12px] px-[40px] py-[20px] text-white  rounded-xl">
+            <Button className="bg-[#009379]  text-[12px] px-[40px] py-[20px] md:py-[25px]  text-white  rounded-xl">
               <Image src={RocketIcon} alt="" width={20} height={20} />
               Get Started
             </Button>

@@ -11,13 +11,13 @@ const Expertise = () => {
   const isMobile = useIsMobile();
   return (
     <div
-      className={`${poppins.className} h-[500px] relative bg-[#FADAA9] flex items-center  justify-center p-4 md:p-16 md:pb-[16px]`}
+      className={`${poppins.className} h-fit  py-[50px] md:py-0 md:h-[500px] relative bg-[#FADAA9] flex items-center  justify-center p-4 md:p-16 md:pb-[16px]`}
     >
       <div className="flex items-center justify-between w-fit relative">
         <div className="w-full md:w-[50%] relative z-10">
           <div className="text-[30px] md-text-[40px] text-black font-extrabold flex flex-col items-start">
             <div
-              className={`${poppins.className} text-[50px] text-black font-extrabold flex flex-col items-start`}
+              className={`${poppins.className}  text-[30px] md:text-[50px] text-black font-extrabold flex flex-col items-start`}
             >
               <h1 className="leading-[1.3]">
                 Share Your
@@ -26,13 +26,13 @@ const Expertise = () => {
               </h1>
             </div>
           </div>
-          <p className="text-black max-w-[700px] ">
+          <p className="text-black text-[12px] md:text-[16px] w-[95%] mt-8 md:mt-0 max-w-[700px] ">
             Submit your blog post with your title, name, job title, company, and
             profile image. After a quick review, your post will be published
             with full recognition as an expert in the Candivet community.
           </p>
           <div className="flex items-center mt-8">
-            <Button className="bg-[#009379] text-[12px] px-6 py-5 text-white  rounded-xl">
+            <Button className="bg-[#009379]  text-[12px] px-[40px] py-[25px] text-white  rounded-[20px]">
               <Image src={RocketIcon} alt="" width={16} height={16} />
               Share Now
             </Button>
