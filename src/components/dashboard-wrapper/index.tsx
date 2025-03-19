@@ -14,8 +14,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
+import { outfit } from "@/constants/app";
 
-const Dashboard = ({ children }: { children: any }) => {
+interface DashboardProps {
+  children: React.ReactNode;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+}
+
+const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   const router = useRouter();
   const { userData, isLoading } = useUserStore();
   const [startCreateJobFlow, setStartCreateJobFlow] = React.useState(false);
@@ -29,18 +36,33 @@ const Dashboard = ({ children }: { children: any }) => {
 
   return (
     <div className="flex">
-      <DashboardHeader />
+      <DashboardHeader
+        searchTerm={searchTerm || ""}
+        setSearchTerm={setSearchTerm || (() => {})}
+      />
       <SidebarProvider className="">
-        <Sidebar className="bg-[#e1e1e1] z-30">
-          <SidebarHeader className="bg-[#e1e1e1] ">
+        <Sidebar className={`${outfit.className} bg-[#F5F5F5] z-30`}>
+          <SidebarHeader className="bg-[#F5F5F5] ">
             <div
               onClick={() => {
                 router.push("/dashboard");
               }}
-              className="flex mt-6 items-center ml-6 cursor-pointer"
+              className="flex ml-8 items-center cursor-pointer"
             >
-              <Image src={candivetlogo} alt="" width={50} height={50} />
-              <h1 className="text-3xl font-bold">Candivet</h1>
+              <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
+                <Image
+                  src="/header-final.png"
+                  alt=""
+                  width={32}
+                  height={29.2}
+                  className="w-[32px] h-[29.2px] md:w-[32px] md:h-[29.2px]"
+                />
+              </div>
+              <h1
+                className={`${outfit.className} ml-2 text-black text-xl md:text-3xl font-bold`}
+              >
+                Candivet
+              </h1>
             </div>
           </SidebarHeader>
           <SidebarContent>

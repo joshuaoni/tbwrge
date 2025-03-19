@@ -1,13 +1,17 @@
 import { useUserStore } from "@/hooks/use-user-store";
 import {
-  House,
-  IdCard,
-  LogOut,
-  Settings,
-  ShoppingBag,
-  User,
-  UserCircle,
+  LayoutDashboard,
+  BriefcaseBusiness,
+  ScrollText,
+  GraduationCap,
   Users2,
+  User,
+  Settings,
+  MessageSquare,
+  LogOut,
+  CreditCard,
+  BookOpen,
+  UserCircle,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -24,80 +28,85 @@ const LeftSideBar = () => {
   const [leftSideItems, setLeftSideItems] = React.useState([
     {
       title: "Dashboard",
-      icon: <House />,
+      icon: <LayoutDashboard size={20} />,
       link: "/dashboard",
       active: false,
     },
     {
       title: "Posted Jobs",
-      icon: <ShoppingBag />,
+      icon: <BriefcaseBusiness size={20} />,
       link: "/dashboard/job-postings",
       active: false,
     },
     {
       title: "Job Board",
-      icon: <ShoppingBag />,
+      icon: <BriefcaseBusiness size={20} />,
       link: "/dashboard/job-board",
       active: false,
     },
-    {
-      title: "Talent Pool ",
-      icon: <ShoppingBag />,
-      link: "/dashboard/talent-pool",
-      active: false,
-    },
+    // {
+    //   title: "Talent Pool",
+    //   icon: <Briefcase />,
+    //   link: "/dashboard/talent-pool",
+    //   active: false,
+    // },
   ]);
   const [extras, setExtras] = React.useState([
     {
       title: "Submit An Article",
-      icon: <User />,
+      icon: <ScrollText size={20} />,
       link: "/dashboard/submit-article",
       active: false,
     },
     {
       title: "Community",
-      icon: <Users2 />,
+      icon: <Users2 size={20} />,
       link: "/community",
       active: false,
     },
+    {
+      title: "Training",
+      icon: <BookOpen size={20} />,
+      link: "/training",
+      active: false,
+    },
   ]);
-
   const [userLeftSideItems, setUserLeftSideItems] = React.useState([
     {
       title: "Billings & Subscription",
-      icon: <IdCard />,
+      icon: <CreditCard size={20} />,
       link: "/dashboard/billings",
       active: false,
     },
-    {
-      title: "Teams",
-      icon: <User />,
-      link: "/dashboard/billings",
-      active: false,
-    },
+    // {
+    //   title: "Teams",
+    //   icon: <User />,
+    //   link: "/dashboard/billings",
+    //   active: false,
+    // },
     {
       title: "Settings",
-      icon: <Settings />,
+      icon: <Settings size={20} />,
       link: "/dashboard/settings",
       active: false,
     },
     {
       title: "Feedback & Support",
-      icon: <Settings />,
+      icon: <MessageSquare size={20} />,
       link: "/dashboard/feedback",
       active: false,
     },
     {
       title: "Logout",
-      icon: <LogOut />,
+      icon: <LogOut size={20} />,
       link: "/dashboard/logout",
       active: false,
     },
   ]);
-  console.log(userData, "userData");
+
   return (
-    <div className="  h-screen pt-6 bg-[#e1e1e1]  sidebar">
-      <div className=" w-full overflow-y-auto h-screen pt-4  bg-[#e1e1e1]   pl-[16px] pr-[16px] sidebar">
+    <div className="h-screen pt-6 bg-[#F5F5F5] overflow-hidden sidebar">
+      <div className="w-full h-full pt-4 bg-[#F5F5F5] pl-[16px] pr-[6px] overflow-y-auto sidebar [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F5F5F5] [&::-webkit-scrollbar-thumb]:bg-[#A6CCB8] [&::-webkit-scrollbar-thumb]:rounded-full">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
           <div className="flex flex-col">
@@ -116,7 +125,7 @@ const LeftSideBar = () => {
             />
           );
         })}
-        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-2 mb-8" />
         <div className="flex flex-col ml-8 ">
           <div className="space-y-4">
             <JobsDropdown />
@@ -168,7 +177,10 @@ const LeftSideBar = () => {
 const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   const router = useRouter();
   const pathName = usePathname();
-  const isActiveRoute = item.link === pathName;
+  const isActiveRoute =
+    item.link === "/dashboard/job-board"
+      ? pathName?.includes("/dashboard/job-board") || false
+      : pathName === item.link;
 
   const handleClick = () => {
     setLeftSideItems((prevItems: any) => {
@@ -184,7 +196,9 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   return (
     <div
       onClick={() => handleClick()}
-      className={`flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  mb-3  cursor-pointer ${
+      className={`flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  ${
+        item.title === "Dashboard" ? "mb-8" : "mb-3"
+      } cursor-pointer ${
         isActiveRoute
           ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"
           : " font-normal"
@@ -195,7 +209,9 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
           isActiveRoute ? "bg-white" : "bg-transparent"
         } absolute -left-[2px] rounded-r`}
       />
-      {item.icon}
+      <div className={`${isActiveRoute ? "text-white" : "text-primary"}`}>
+        {item.icon}
+      </div>
       <div className="text-[16px]">{item.title}</div>
     </div>
   );

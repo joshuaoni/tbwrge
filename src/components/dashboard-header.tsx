@@ -2,8 +2,17 @@ import { PlusCircle, Search } from "lucide-react";
 import Link from "next/link";
 import LanguageSelectorDropDown from "./language-selector-dropdown";
 import { Input } from "./ui/input";
+import { useState } from "react";
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+}
+
+const DashboardHeader = ({
+  searchTerm,
+  setSearchTerm,
+}: DashboardHeaderProps) => {
   return (
     <div className=" ml-[260px] w-full pl-16  border-b h-20 b z-20 bg-white flex flex-wrap items-center px-2 fixed top-0">
       <div className="flex items-center w-screen justify-between flex-wrap  pr-[200px]">
@@ -12,6 +21,8 @@ const DashboardHeader = () => {
           <Input
             placeholder="Search for jobs"
             className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         {/* <CreateJob /> */}
