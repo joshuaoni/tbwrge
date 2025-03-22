@@ -14,6 +14,7 @@ import candivetlogowhite from "../../../../public/images/candivet-logo.png";
 import toast from "react-hot-toast";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ArrowLeft } from "lucide-react";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -97,6 +98,16 @@ const Index = () => {
           <DecorativeCircles position="bottom" />
         </>
       )}
+
+      <div className="absolute top-6 left-6">
+        <button
+          onClick={() => router.push("/home")}
+          className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className={`${poppins.className} text-sm`}>Back to home</span>
+        </button>
+      </div>
 
       <div className="w-full max-w-[400px] mx-auto py-6 md:py-8 px-4">
         <div className="flex items-center justify-center cursor-pointer">

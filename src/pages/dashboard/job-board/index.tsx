@@ -12,6 +12,7 @@ import {
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
 import { Table } from "./components/Table/Table";
+import { outfit } from "@/constants/app";
 
 const JOB_TYPE = {
   full_time: "Full Time",
@@ -60,7 +61,7 @@ const JobBoardPage = () => {
 
   return (
     <DashboardWrapper searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
-      <div className="min-h-screen bg-white">
+      <div className={`${outfit.className} min-h-screen bg-white`}>
         <div className="max-w-screen-xl w-full mx-auto">
           {/* Filters */}
           <div className="w-full max-w-screen-lg flex flex-wrap gap-4 mt-4">

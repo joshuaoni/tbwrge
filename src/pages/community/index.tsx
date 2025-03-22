@@ -1,8 +1,17 @@
 // import { CommunityDashHeader } from "@/components/community-dash-header";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import CommunityDashHeader from "@/components/community-dash-header";
 import { outfit } from "@/constants/app";
+import PostDetails from "@/components/post-details";
+import CreatePost from "@/components/create-post";
+import { getPosts, Post } from "@/actions/get-posts";
+import { useUserStore } from "@/hooks/use-user-store";
+import { togglePostVote } from "@/actions/upvote-post";
+import { deletePost } from "@/actions/delete-post";
+import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 const popularTags = [
   {
@@ -68,11 +77,75 @@ const popularTags = [
 ];
 
 const CommunityPage = () => {
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const { userData } = useUserStore();
+  const queryClient = useQueryClient();
+
+  const {
+    data: posts = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["posts", currentPage],
+    queryFn: async () => {
+      if (!userData?.token) {
+        throw new Error("No authentication token found");
+      }
+      return getPosts(userData.token, currentPage);
+    },
+    enabled: !!userData?.token,
+  });
+
+  const upvoteMutation = useMutation({
+    mutationFn: async (postId: string) => {
+      if (!userData?.token) {
+        throw new Error("Please sign in to vote on posts");
+      }
+      return togglePostVote(postId, userData.token);
+    },
+    onSuccess: (_, postId) => {
+      const post = posts.find((p) => p.id.toString() === postId);
+      toast.success(
+        post?.reacted
+          ? "Post downvoted successfully"
+          : "Post upvoted successfully"
+      );
+      // Invalidate and refetch posts with current page
+      queryClient.invalidateQueries({
+        queryKey: ["posts", currentPage],
+        exact: true,
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to vote on post");
+    },
+  });
+
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId: string) => {
+      if (!userData?.token) {
+        throw new Error("Please sign in to delete posts");
+      }
+      return deletePost(postId, userData.token);
+    },
+    onSuccess: () => {
+      toast.success("Post deleted successfully");
+      // Invalidate and refetch posts
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to delete post");
+    },
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
       <CommunityDashHeader />
 
-      <div className="mx-auto pt-16 md:pt-20 px-4 md:px-16">
+      <div className="mx-auto pt-16 md:pt-[90px] px-4 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           {/* Left Sidebar - Popular Tags */}
           <div className="hidden md:block md:col-span-3">
@@ -144,97 +217,172 @@ const CommunityPage = () => {
               </div>
             </div>
 
-            {/* Create Post Card */}
-            <div className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4">
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
-                  <Image
-                    src="/Mask.png"
-                    alt="User Avatar"
-                    width={24}
-                    height={24}
-                    className="rounded-full md:w-[30px] md:h-[32px]"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Let's share what going on your mind..."
-                  className="flex-1 px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:border-gray-300 text-xs md:text-sm"
-                />
-                <button className="px-3 md:px-4 py-2 md:py-2.5 bg-[#065844] text-white rounded-lg text-xs md:text-sm font-medium hover:bg-[#054e3a] transition-colors whitespace-nowrap">
-                  Create Post
-                </button>
-              </div>
-            </div>
-
-            {/* Post Cards */}
-            {[1, 2, 3].map((post) => (
-              <div
-                key={post}
-                className="bg-white rounded-xl shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] p-3 md:p-4 mb-4"
-              >
-                <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
-                    <Image
-                      src="/Mask.png"
-                      alt="User Avatar"
-                      width={24}
-                      height={24}
-                      className="rounded-full md:w-[30px] md:h-[32px]"
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1 md:gap-2">
-                      <h3 className="text-xs md:text-sm font-medium">
-                        AR Jakir
-                      </h3>
-                      <span className="text-[10px] md:text-xs text-black">
-                        •
-                      </span>
-                      <p className="text-[10px] md:text-xs text-black">
-                        3 days ago
-                      </p>
+            {isCreatingPost ? (
+              <CreatePost
+                onClose={() => {
+                  setIsCreatingPost(false);
+                  setEditingPost(null);
+                }}
+                post={editingPost || undefined}
+              />
+            ) : (
+              <>
+                {/* Create Post Card */}
+                {!selectedPost && (
+                  <div
+                    className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all"
+                    onClick={() => setIsCreatingPost(true)}
+                  >
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+                        <Image
+                          src="/Mask.png"
+                          alt="User Avatar"
+                          width={24}
+                          height={24}
+                          className="rounded-full md:w-[30px] md:h-[32px]"
+                        />
+                      </div>
+                      <div className="flex-1 text-gray-500 text-xs md:text-sm">
+                        Let's share what's going on your mind...
+                      </div>
+                      <div className="px-3 md:px-4 py-2 md:py-2.5 bg-[#065844] text-white rounded-lg text-xs md:text-sm font-medium hover:bg-[#054e3a] transition-colors whitespace-nowrap">
+                        Create Post
+                      </div>
                     </div>
                   </div>
-                </div>
-                <p className="text-xs md:text-sm font-semibold text-gray-700 mb-3 md:mb-4">
-                  I'm preparing for an interview at Candivet. I am trying to
-                  prep but I don't know what to expect.
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-col font-semibold">
-                    <p className="text-xs md:text-sm font-medium">232</p>
-                    <p className="text-xs md:text-sm text-black">Comment</p>
+                )}
+
+                {/* Post Cards or Post Details */}
+                {selectedPost ? (
+                  <PostDetails
+                    post={selectedPost}
+                    onClose={() => setSelectedPost(null)}
+                  />
+                ) : isLoading ? (
+                  <div className="text-center py-4">Loading posts...</div>
+                ) : error ? (
+                  <div className="text-center text-red-500 py-4">
+                    Error loading posts. Please try again.
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-xs md:text-sm">Last followed</p>
-                    <p className="text-xs md:text-sm text-black">11h</p>
-                  </div>
-                </div>
-                <div className="flex font-semibold items-center gap-2 md:gap-4 mt-3 md:mt-4 border-t pt-3 md:pt-4">
-                  <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
-                    <Image
-                      src="/like.png"
-                      alt="Upvote"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 md:w-5 md:h-5"
-                    />
-                    <span className="text-xs md:text-sm">Upvote</span>
-                  </button>
-                  <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
-                    <Image
-                      src="/brush.png"
-                      alt="Comment"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 md:w-5 md:h-5"
-                    />
-                    <span className="text-xs md:text-sm">Comment</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+                ) : (
+                  posts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="bg-white rounded-xl shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] p-3 md:p-4 mb-4 cursor-pointer hover:shadow-lg transition-shadow relative"
+                      onClick={() => setSelectedPost(post)}
+                    >
+                      {userData?.user?.id?.toString() ===
+                        post.user.id.toString() && (
+                        <div className="absolute top-3 right-3 flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingPost(post);
+                              setIsCreatingPost(true);
+                            }}
+                            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                            title="Edit post"
+                          >
+                            <PencilIcon className="w-4 h-4 text-gray-500 hover:text-blue-500" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deletePostMutation.mutate(post.id.toString());
+                            }}
+                            disabled={deletePostMutation.isPending}
+                            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                            title="Delete post"
+                          >
+                            <TrashIcon className="w-4 h-4 text-gray-500 hover:text-red-500" />
+                          </button>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+                          <Image
+                            src={post.user.profile_picture || "/Mask.png"}
+                            alt={`${post.user.name} ${post.user.last_name}`}
+                            width={24}
+                            height={24}
+                            className="rounded-full md:w-[30px] md:h-[32px]"
+                          />
+                        </div>
+                        <p className="text-black"> jagajaga</p>
+                        <div>
+                          <div className="flex items-center gap-1 md:gap-2">
+                            <h3 className="text-xs md:text-sm font-medium">
+                              {post.user.name} {post.user.last_name}
+                            </h3>
+                            <span className="text-[10px] md:text-xs text-black">
+                              •
+                            </span>
+                            <p className="text-[10px] md:text-xs text-black">
+                              {new Date(post.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <h2 className="text-base md:text-[16px] font-semibold text-[#1E2937] mb-2">
+                        {post.title}
+                      </h2>
+                      <div className="flex items-center gap-4">
+                        <div className="flex flex-col font-semibold">
+                          <p className="text-xs md:text-sm font-medium">
+                            {post.comments}
+                          </p>
+                          <p className="text-xs md:text-sm text-black">
+                            Comment
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs md:text-sm text-black">
+                            {post.upvotes}
+                          </p>
+                          <p className="text-xs md:text-sm">Upvotes</p>
+                        </div>
+                      </div>
+                      <div className="flex font-semibold items-center gap-2 md:gap-4 mt-3 md:mt-4 border-t pt-3 md:pt-4">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            upvoteMutation.mutate(post.id.toString());
+                          }}
+                          disabled={upvoteMutation.isPending}
+                          className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
+                            post.reacted ? "bg-green-50 border-green-300" : ""
+                          }`}
+                        >
+                          <Image
+                            src="/like.png"
+                            alt="Upvote"
+                            width={16}
+                            height={16}
+                            className={`w-4 h-4 md:w-5 md:h-5 ${
+                              post.reacted ? "opacity-100" : "opacity-50"
+                            }`}
+                          />
+                          <span className="text-xs md:text-sm">
+                            {post.reacted ? "Upvoted" : "Upvote"}
+                          </span>
+                        </button>
+                        <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
+                          <Image
+                            src="/brush.png"
+                            alt="Comment"
+                            width={16}
+                            height={16}
+                            className="w-4 h-4 md:w-5 md:h-5"
+                          />
+                          <span className="text-xs md:text-sm">Comment</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </>
+            )}
           </div>
 
           {/* Right Sidebar - Advertisement */}
@@ -252,6 +400,29 @@ const CommunityPage = () => {
             </h1>
           </div>
         </div>
+
+        {/* Add pagination controls at the bottom of the posts list */}
+        {!selectedPost && !isCreatingPost && (
+          <div className="flex justify-center items-center gap-4 mt-6 mb-8">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+              disabled={currentPage === 0 || isLoading}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-gray-600">
+              Page {currentPage + 1}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={posts.length === 0 || isLoading}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

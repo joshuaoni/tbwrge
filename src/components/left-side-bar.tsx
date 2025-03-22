@@ -44,12 +44,12 @@ const LeftSideBar = () => {
       link: "/dashboard/job-board",
       active: false,
     },
-    // {
-    //   title: "Talent Pool",
-    //   icon: <Briefcase />,
-    //   link: "/dashboard/talent-pool",
-    //   active: false,
-    // },
+    {
+      title: "Talent Pool",
+      icon: <BriefcaseBusiness size={20} />,
+      link: "/dashboard/talent-pool",
+      active: false,
+    },
   ]);
   const [extras, setExtras] = React.useState([
     {

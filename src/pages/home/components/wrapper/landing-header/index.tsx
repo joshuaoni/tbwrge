@@ -200,6 +200,10 @@ const NavigationHeader = ({
       title: "Community",
       link: "/community",
     },
+    {
+      title: "Apply for jobs",
+      link: "home/sign-in",
+    },
   ];
   return (
     <div>

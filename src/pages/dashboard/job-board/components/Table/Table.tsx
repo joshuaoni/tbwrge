@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { IGetJobOpenRes } from "@/types/jobs";
+import { formatDistanceToNow } from "date-fns";
 
 interface TableProps {
   data: IGetJobOpenRes[];
@@ -176,11 +177,18 @@ const ListWithCounterBlue = ({
   );
 };
 
+const formatJobType = (type: string) => {
+  const words = type.split("_");
+  return words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 const JobType = ({ type }: { type: string }) => {
   return (
     <div className="w-full h-[19px] flex items-center justify-start">
       <p className="font-inter font-normal text-[16px] leading-[100%] tracking-[5%] text-black">
-        {type}
+        {formatJobType(type)}
       </p>
     </div>
   );
@@ -219,7 +227,9 @@ const Tags = ({ tags }: { tags: string }) => {
 
 const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
   const router = useRouter();
-  const timeAgo = new Date(job.start_date).toLocaleDateString();
+  const timeAgo = formatDistanceToNow(new Date(job.created_at), {
+    addSuffix: true,
+  });
 
   const handleClick = () => {
     router.push(`/dashboard/job-board/${job.id}`);
@@ -265,7 +275,7 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
         </div>
       </div>
       <div
-        className="hidden md:grid h-[51px] grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-4 items-center hover:scale-[1.01]"
+        className="hidden md:grid h-[51px] grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-4 items-center hover:scale-[1.01] transition-all duration-200"
         data-testid="table-row-desktop"
       >
         <JobDetails

@@ -438,7 +438,7 @@ const JobDetailsPage = () => {
 
   return (
     <DashboardWrapper>
-      <div className="max-w-[1400px] w-full mx-auto px-4 py-8">
+      <div className="details max-w-[1400px] w-full mx-auto py-8">
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">

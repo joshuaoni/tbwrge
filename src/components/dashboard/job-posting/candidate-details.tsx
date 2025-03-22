@@ -1,0 +1,572 @@
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useState } from "react";
+
+interface CandidateDetailsProps {
+  setCurrentView: React.Dispatch<React.SetStateAction<string>>;
+  candidate: any;
+}
+
+const CandidateDetails = ({
+  setCurrentView,
+  candidate,
+}: CandidateDetailsProps) => {
+  const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
+
+  return (
+    <div className="bg-white min-h-screen">
+      <div className="px-6 py-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentView("details")}
+              className="hover:bg-gray-100 p-1 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 text-gray-600" />
+            </button>
+            <h1 className="text-xl font-semibold">Babalola Emmanuel</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              className="text-[#009379] border border-[#009379] hover:bg-[#009379] hover:text-white px-6"
+            >
+              Generate Candidate Report
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-red-500 border border-red-500 hover:bg-red-500 hover:text-white hover:bg-red px-6"
+            >
+              Reject Candidate
+            </Button>
+            <Button className="bg-[#009379] text-white hover:bg-[#009379]/90 px-6">
+              Mark as Fit
+            </Button>
+          </div>
+        </div>
+
+        {/* Content Grid */}
+        <div className="flex flex-col gap-6">
+          {/* First Row */}
+          <div className="grid grid-cols-3 gap-6">
+            {/* Profile Overview */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <div className="flex items-start justify-between mb-4">
+                <h2 className="text-lg font-semibold">Profile Overview</h2>
+                <div className="flex flex-col items-center gap-2">
+                  <h2 className="text-lg font-semibold">Fit Score</h2>
+                  <div className="flex items-center justify-center">
+                    <div className="relative w-16 h-16">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-[16px] font-bold text-[#009379]">
+                          86%
+                        </span>
+                      </div>
+                      <svg className="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#E5E7EB"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#009379"
+                          strokeWidth="3"
+                          strokeDasharray="86, 100"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Email</p>
+                    <p className="text-sm text-gray-500">hello@gmail.com</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Phone</p>
+                    <p className="text-sm text-gray-500">(123) 456 7890</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">DOB</p>
+                    <p className="text-sm text-gray-500">06-04-2001</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">LinkedIn</p>
+                    <p className="text-sm text-gray-500 cursor-pointer hover:underline">
+                      LinkedIn Profile
+                    </p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">
+                      Current Position
+                    </p>
+                    <p className="text-sm text-gray-500">Senior Data Analyst</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Company</p>
+                    <p className="text-sm text-gray-500">ABC Corp.</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Nationality</p>
+                    <p className="text-sm text-gray-500">Nigerian</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Location</p>
+                    <p className="text-sm text-gray-500">New York, NY</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Summary */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <h2 className="text-lg font-semibold mb-4">Profile Summary</h2>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Creative and results-driven Product Designer with over 3 years
+                of experience in developing user-centered digital solutions that
+                engage and delight users. Proven expertise in collaborating with
+                cross-functional teams to craft intuitive and impactful designs,
+                from initial concept through to final implementation. Creative
+                and results-driven Product Designer with over 3 years of
+                experience in developing user-centered digital solutions that
+                engage and delight users. Proven expertise in collaborating with
+                cross-functional teams to craft intuitive and impactful designs,
+                from initial concept through to final implementation.
+                <br />
+                Creative and results-driven Product Designer with over 3 years
+                of experience in developing user-centered digital solutions that
+                engage and delight users.
+              </p>
+            </div>
+
+            {/* AI-Powered Insights */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <h2 className="text-lg font-semibold mb-4">
+                AI-Powered Insights
+              </h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                  <p className="text-sm text-gray-600">
+                    High match for skills in data analysis, finance, and
+                    experience with large dataset
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Strengths</h3>
+                  <p className="text-sm text-gray-600">
+                    Proficiency in SQL and Python, effective communication,
+                    strong leadership in project settings.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium mb-2">
+                    Areas for Development
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Proficiency in SQL and Python, effective communication,
+                    strong leadership in project settings.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium mb-2">
+                    Culture Fit Indicators
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Proficiency in SQL and Python, effective communication,
+                    strong leadership in project settings.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Languages</h3>
+                  <p className="text-sm text-gray-600">
+                    English (Native), French (Intermediate)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/*Other Questions*/}
+          <div className="grid grid-cols-1">
+            <div className="rounded-lg p-4">
+              <div
+                className="flex items-center gap-4 cursor-pointer"
+                onClick={() => setIsQuestionsOpen(!isQuestionsOpen)}
+              >
+                <h2 className="text-lg font-semibold mb-4">Other Questions</h2>
+                {isQuestionsOpen ? (
+                  <ChevronUp className="w-5 h-5 mb-4 text-gray-600 transition-transform duration-300" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 mb-4 text-gray-600 transition-transform duration-300" />
+                )}
+              </div>
+              <div
+                className={`grid transition-all duration-300 ease-in-out ${
+                  isQuestionsOpen
+                    ? "grid-rows-[1fr] opacity-100"
+                    : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-sm font-medium mb-2">
+                        Could you describe a project or task you've worked on
+                        that best demonstrate your skills in this role?
+                      </p>
+                      <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
+                        Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
+                        dolor sit amet dolor sit amet amet dolor sit amet dolor
+                        sit amet amet dolor sit amet dolor sit amet.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium mb-2">
+                        Tell us about a challenging situation at work and how
+                        you resolved it?
+                      </p>
+                      <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
+                        Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
+                        dolor sit amet dolor sit amet amet dolor sit amet dolor
+                        sit amet amet dolor sit amet dolor sit amet.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Second Row */}
+          <div className="grid grid-cols-[0.8fr_2fr] gap-6">
+            {/* Supporting Documents */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <h2 className="text-lg font-semibold mb-4">
+                Supporting Documents
+              </h2>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
+                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.75 2.5V5H16.25"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 10H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 12.5H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">David CV.pdf</p>
+                    <p className="text-xs text-gray-500">500kb</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
+                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.75 2.5V5H16.25"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 10H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 12.5H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">
+                      David Cover Letter.pdf
+                    </p>
+                    <p className="text-xs text-gray-500">500kb</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col border border-gray-200 rounded-xl p-3">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 flex items-center justify-center bg-[#009379]/10 rounded-lg">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
+                          stroke="#009379"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
+                          stroke="#009379"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">
+                        Candidate Application Voicenote
+                      </p>
+                      <p className="text-xs text-gray-500">5:03</p>
+                    </div>
+                  </div>
+                  <div className="h-8 flex items-center gap-[2px]">
+                    {Array.from({ length: 40 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 bg-gray-300 rounded-sm"
+                        style={{
+                          height: `${Math.random() * 100}%`,
+                          minWidth: "2px",
+                        }}
+                      ></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Add Notes */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Add Notes</h2>
+                <button className="w-7 h-7 rounded-full border-2 border-gray-900 flex items-center justify-center">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 1V13M1 7H13"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="overflow-hidden">
+                <div className="grid rounded-xl grid-cols-[120px_1fr] bg-gray-200">
+                  <div className="p-3 text-sm font-medium text-gray-600">
+                    Date
+                  </div>
+                  <div className="p-3 text-sm font-medium text-gray-600">
+                    Notes
+                  </div>
+                </div>
+                <div className="divide-y divide-gray-200">
+                  <div className="grid grid-cols-[120px_1fr]">
+                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
+                    <div className="p-3 text-sm">
+                      Impressive Skills in finance analytics. Consider for next
+                      interview
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-[120px_1fr]">
+                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
+                    <div className="p-3 text-sm">
+                      Impressive Skills in finance analytics. Consider for next
+                      interview
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-[120px_1fr]">
+                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
+                    <div className="p-3 text-sm">
+                      Impressive Skills in finance analytics. Consider for next
+                      interview
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-[120px_1fr]">
+                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
+                    <div className="p-3 text-sm">
+                      Impressive Skills in finance analytics. Consider for next
+                      interview
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Third Row */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* Screening Questions */}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <div className="bg-white rounded-lg p-4 mb-4 border border-gray-100">
+                <h2 className="text-lg font-semibold mb-4">
+                  Screening Fit Score
+                </h2>
+                <div className="flex items-center justify-center">
+                  <div className="relative w-24 h-24">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-[20px] font-bold text-[#009379]">
+                        86%
+                      </span>
+                    </div>
+                    <svg className="w-full h-full" viewBox="0 0 36 36">
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="#E5E7EB"
+                        strokeWidth="3"
+                      />
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="#009379"
+                        strokeWidth="3"
+                        strokeDasharray="86, 100"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <p className="text-sm font-medium mb-2">
+                    Could you describe a project or task you've worked on that
+                    best demonstrate your skills in this role?
+                  </p>
+                  <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
+                    Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
+                    dolor sit amet dolor sit amet amet dolor sit amet dolor sit
+                    amet amet dolor sit amet dolor sit amet.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">
+                    Tell us about a challenging situation at work and how you
+                    resolved it?
+                  </p>
+                  <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
+                    Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
+                    dolor sit amet dolor sit amet amet dolor sit amet dolor sit
+                    amet amet dolor sit amet dolor sit amet.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/*Screening: AI-Powered Insights*/}
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
+              <h2 className="text-lg font-semibold mb-4">
+                Screening: AI-Powered Insights
+              </h2>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Creative and results-driven Product Designer with over 3 years
+                of experience in developing user-centered digital solutions that
+                engage and delight users. Proven expertise in collaborating with
+                cross-functional teams to craft intuitive and impactful designs,
+                from initial concept through to final implementation. Creative
+                and results-driven Product Designer with over 3 years of
+                experience in developing user-centered digital solutions that
+                engage and delight users. Proven expertise in collaborating with
+                cross-functional teams to craft intuitive and impactful designs,
+                from initial concept through to final implementation.
+                <br />
+                Creative and results-driven Product Designer with over 3 years
+                of experience in developing user-centered digital solutions that
+                engage and delight users.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CandidateDetails;

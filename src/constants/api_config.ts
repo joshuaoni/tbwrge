@@ -54,4 +54,19 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+
+  GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
+  GET_COMMENTS: (post_id: string) =>
+    `${MAIN_URL}/community/get-comments/${post_id}/`,
+  CREATE_COMMENT: (post_id: string) =>
+    `${MAIN_URL}/community/create-comment/${post_id}/`,
+  CREATE_POST: `${MAIN_URL}/community/create-post/`,
+  UPVOTE_DOWNVOTE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/react-unreact-item/${post_id}/`,
+  DELETE_COMMENT: (comment_id: string) =>
+    `${MAIN_URL}/community/delete-comment/${comment_id}/`,
+  DELETE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/delete-post/${post_id}/`,
+  UPDATE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/update-post/${post_id}/`,
 };

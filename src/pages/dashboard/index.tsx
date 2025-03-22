@@ -8,13 +8,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { File, Loader2, PlusCircle, ShoppingBag, User } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  File,
+  Loader2,
+  PlusCircle,
+  ShoppingBag,
+  User,
+} from "lucide-react";
 import AllActivityDropDown from "@/components/all-activity-dropdown";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery } from "@tanstack/react-query";
 import { getDashboardStats } from "@/actions/get-dashboard-stats";
 import dynamic from "next/dynamic";
+import { outfit } from "@/constants/app";
+import ActivityFeed from "@/components/activity-feed";
+import ArticlesCommunity from "@/components/articles-community";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -41,7 +51,7 @@ const index = () => {
     {
       title: "Total Jobs Posts",
       value: 12,
-      icon: <ShoppingBag className="w-6 h-6 text-primary" />,
+      icon: <BriefcaseBusiness size={20} className="text-primary" />,
     },
     {
       title: "Qualified Applicants",
@@ -64,7 +74,7 @@ const index = () => {
       {
         title: "Total Jobs Posts",
         value: data?.total_job_posts,
-        icon: <ShoppingBag className="w-6 h-6 text-primary" />,
+        icon: <BriefcaseBusiness size={20} className="text-primary" />,
       },
       {
         title: "Qualified Applicants",
@@ -84,40 +94,149 @@ const index = () => {
     ]);
   }, [data]);
 
+  const activities = [
+    {
+      id: "1",
+      userName: "David Amiolehmen",
+      jobTitle: "Product Designer",
+      timeAgo: "2 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "2",
+      userName: "Folajimi Bankole",
+      jobTitle: "Product Designer",
+      timeAgo: "12 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "3",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "4",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "5",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "6",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "7",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+    {
+      id: "8",
+      userName: "Jane Andrews",
+      jobTitle: "Product Designer",
+      timeAgo: "25 mins ago",
+      profilePicture: "/Mask.png",
+      status: "Applying" as const,
+    },
+  ];
+
+  const articles = [
+    {
+      id: "1",
+      text: "I'm preparing for an interview at Candivet. I am trying to prep but I don't know what to expect.",
+      answers: 232,
+      author: {
+        name: "AR Jakir",
+        avatar: "/Mask.png",
+      },
+      daysAgo: 3,
+      lastFollowed: "11h",
+    },
+    {
+      id: "2",
+      text: "I'm preparing for an interview at Candivet. I am trying to prep but I don't know what to expect.",
+      answers: 232,
+      author: {
+        name: "AR Jakir",
+        avatar: "/Mask.png",
+      },
+      daysAgo: 3,
+      lastFollowed: "11h",
+    },
+    {
+      id: "3",
+      text: "I'm preparing for an interview at Candivet. I am trying to prep but I don't know what to expect.",
+      answers: 232,
+      author: {
+        name: "AR Jakir",
+        avatar: "/Mask.png",
+      },
+      daysAgo: 3,
+      lastFollowed: "11h",
+    },
+  ];
+
   return (
     <DashboardWrapper>
-      <div className=" h-screen flex flex-col ">
+      <div className={`${outfit.className} flex flex-col pb-12`}>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold ">Dashboard</h1>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
         </div>
-        <div className=" md:mt-12  ">
+        <div className="">
           <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
             <div className="grid  md:w-[60%]  w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
               {analytics.map((an) => (
                 <AnalyticInfoCard {...an} />
               ))}
             </div>
-            <div className=" mt-4 md:mt-0 md:w-[40%] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border rounded-lg bg-gradient-to-br from-[#29AB91] to-[#065844]">
-              <h1 className="font-extrabold text-2xl">
-                Find the Perfect Candidate <br /> for the job
+            <div className="bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
+              <h1 className="font-bold leading-[1.3] text-[20px] pt-4">
+                Find the Right Candidate for <br /> Your Job
               </h1>
-              <p className="text-sm">
+              <p className="text-[12px]">
                 Accelerate your hiring with tools like CV vetting, job post
                 creation, cover letter translation, and more designed to
                 simplify your workflow.
               </p>
-              <Button className="bg-white  md:w-[54%] text-base py-6 self-center text-primary font-bold ">
+              <Button className="bg-white  md:w-[60%] text-base py-[20px] self-center text-[14px] text-primary font-bold ">
                 Subscribe for premium
               </Button>
             </div>
           </div>
         </div>
-        <div className="w-full p-4 md:h-[300px] h-[800px] mt-8 overflow-y-scroll bg-[#F9F9F9] rounded-lg">
-          <div className="flex items-center justify-between ">
-            <h1 className="font-bold text-lg">Activity Feed</h1>
-            <AllActivityDropDown />
+        <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6 mt-[50px]">
+          <div className="bg-[#F9F9F9] rounded-lg p-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold">Activity</h2>
+              <AllActivityDropDown />
+            </div>
+            <div className="rounded-lg p-6 px-2">
+              <ActivityFeed activities={activities} />
+            </div>
           </div>
-          {/* Add activity feed items here */}
+
+          <ArticlesCommunity articles={articles} />
         </div>
       </div>
     </DashboardWrapper>
@@ -293,7 +412,7 @@ const AnalyticInfoCard = ({
   icon: any;
 }) => {
   return (
-    <div className="shadow-md rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full w-fit">
+    <div className="shadow-[0px_4px_50px_rgba(0,0,0,0.2)] rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full w-fit">
       <div className="flex items-center space-x-2">
         {icon}
         <span className="text-sm font-light ">{title}</span>

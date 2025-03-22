@@ -70,7 +70,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
           </SidebarContent>
         </Sidebar>
         {!startCreateJobFlow ? (
-          <main className="bg-white px-[70px]  w-screen h-screen p-4 pt-24">
+          <main className="bg-white px-[70px] pr-[30px] flex-1 h-screen p-4 pt-24 overflow-x-hidden">
             <SidebarTrigger />
             {children}
           </main>
