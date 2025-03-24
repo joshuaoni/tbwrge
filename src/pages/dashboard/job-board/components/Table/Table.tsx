@@ -317,7 +317,7 @@ const TableBody = ({ jobs }: TableBodyProps) => {
   );
 };
 
-export const Table = ({ data = [], isLoading = false }: TableProps) => {
+const Table = ({ data = [], isLoading = false }: TableProps) => {
   if (isLoading) {
     return <TableSkeleton />;
   }
@@ -329,3 +329,5 @@ export const Table = ({ data = [], isLoading = false }: TableProps) => {
     </div>
   );
 };
+
+export default Table;
