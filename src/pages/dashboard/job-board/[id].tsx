@@ -6,6 +6,7 @@ import { getJobOpen } from "@/actions/get-jobs-open";
 import { IGetJobOpenRes } from "@/types/jobs";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { formatDateAndDifference } from "@/actions/get-jobs-open";
+import { outfit } from "@/constants/app";
 
 const JobDetailsSkeleton = () => (
   <div className="max-w-[1000px] w-full mx-auto px-4 py-8 animate-pulse">
@@ -438,7 +439,9 @@ const JobDetailsPage = () => {
 
   return (
     <DashboardWrapper>
-      <div className="details max-w-[1400px] w-full mx-auto py-8">
+      <div
+        className={`${outfit.className} details max-w-[1400px] w-full mx-auto py-8`}
+      >
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">
