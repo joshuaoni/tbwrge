@@ -11,7 +11,7 @@ import {
 } from "@/actions/get-jobs-open";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
-import { Table } from "./components/Table/Table";
+import Table from "./components/Table/Table";
 import { outfit } from "@/constants/app";
 
 const JOB_TYPE = {
