@@ -88,8 +88,10 @@ export const createJob = async (token: string, data: CreateJobRequest) => {
     },
     data: JSON.stringify(data),
   };
+  console.log("createjob", { data });
 
   const response = await axios(options);
+  console.log({ response });
   return response.data;
 };
 
@@ -100,4 +102,61 @@ export const createJobWithAi = async (token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
+};
+
+export const createJobAi = async (
+  token: string,
+  data: {
+    company_logo?: File;
+    company_name: string;
+    company_website: string;
+    company_description: string;
+    job_title: string;
+    company_id?: string;
+  }
+) => {
+  const formData = new FormData();
+
+  if (data.company_logo) {
+    formData.append("company_logo", data.company_logo);
+  }
+  formData.append("company_name", data.company_name);
+  formData.append("company_website", data.company_website);
+  formData.append("company_description", data.company_description);
+  formData.append("job_title", data.job_title);
+  if (data.company_id) {
+    formData.append("company_id", data.company_id);
+  }
+
+  const response = await axios({
+    method: "POST",
+    url: API_CONFIG.CREATE_JOB_AI,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: formData,
+  });
+  console.log({ response });
+  return response.data;
+};
+
+export const updateJob = async (
+  token: string,
+  jobId: string,
+  data: CreateJobRequest
+) => {
+  const options = {
+    method: "PUT",
+    url: API_CONFIG.UPDATE_JOB(jobId),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: JSON.stringify(data),
+  };
+  console.log("updatejob", { data });
+
+  const response = await axios(options);
+  console.log({ response });
+  return response.data;
 };

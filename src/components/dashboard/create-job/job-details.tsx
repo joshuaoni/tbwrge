@@ -27,11 +27,57 @@ function CreateJobJobDetails() {
             value={ctx.formData.job_description}
             onChange={(val) => ctx.setFormData("job_description", val)}
           />
-          <DashboardInputGroup
-            label="Required Skills"
-            value={ctx.formData.required_skills}
-            onChange={(val) => ctx.setFormData("required_skills", val)}
-          />
+          <div className="w-full space-y-2">
+            <label className="block text-[#4A5568] text-sm">
+              Required Skills
+            </label>
+            <div className="flex flex-wrap gap-2 p-2 bg-[#EDF2F7] rounded min-h-[48px]">
+              {ctx.formData.required_skills
+                .split(",")
+                .filter(Boolean)
+                .map((skill, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center gap-1 bg-white px-2 py-1 rounded text-sm"
+                  >
+                    {skill.trim()}
+                    <button
+                      onClick={() => {
+                        const skills = ctx.formData.required_skills
+                          .split(",")
+                          .filter((_, i) => i !== index);
+                        ctx.setFormData("required_skills", skills.join(","));
+                      }}
+                      className="text-gray-500 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              <input
+                type="text"
+                className="flex-1 bg-transparent outline-none text-sm"
+                placeholder="Type a skill and press Enter"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const input = e.currentTarget;
+                    const newSkill = input.value.trim();
+                    if (newSkill) {
+                      const currentSkills = ctx.formData.required_skills
+                        .split(",")
+                        .filter(Boolean);
+                      ctx.setFormData(
+                        "required_skills",
+                        [...currentSkills, newSkill].join(",")
+                      );
+                      input.value = "";
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
           <DashboardInputGroup
             label="Educational Requirements"
             value={ctx.formData.educational_requirements}
@@ -46,17 +92,16 @@ function CreateJobJobDetails() {
           />
           <DashboardSelectGroup
             title="Job Type"
+            value={ctx.formData.job_type}
             defaultValue="Select Job Type"
             options={[
-              { label: "Full Time", value: "full-time" },
-              { label: "Part Time", value: "part-time" },
+              { label: "Full Time", value: "full_time" },
+              { label: "Part Time", value: "part_time" },
               { label: "Contract", value: "contract" },
               { label: "Internship", value: "internship" },
               { label: "Remote", value: "remote" },
             ]}
-            onChange={function (val: string): void {
-              throw new Error("Function not implemented.");
-            }}
+            onChange={(val) => ctx.setFormData("job_type", val)}
           />
           <DashboardInputGroup
             label="Job Location"
@@ -68,14 +113,63 @@ function CreateJobJobDetails() {
             value={ctx.formData.languages}
             onChange={(val) => ctx.setFormData("languages", val)}
           />
+          <DashboardInputGroup
+            label="Additional Benefits"
+            value={ctx.formData.additional_benefits}
+            onChange={(val) => ctx.setFormData("additional_benefits", val)}
+          />
         </section>
         <section className="w-full space-y-4">
           <h4 className="font-bold">Job Settings</h4>
-          <DashboardInputGroup
-            label="Job Tags"
-            value={ctx.formData.job_tags}
-            onChange={(val) => ctx.setFormData("job_tags", val)}
-          />
+          <div className="w-full space-y-2">
+            <label className="block text-[#4A5568] text-sm">Job Tags</label>
+            <div className="flex flex-wrap gap-2 p-2 bg-[#EDF2F7] rounded min-h-[48px]">
+              {ctx.formData.job_tags
+                .split(",")
+                .filter(Boolean)
+                .map((tag, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center gap-1 bg-white px-2 py-1 rounded text-sm"
+                  >
+                    {tag.trim()}
+                    <button
+                      onClick={() => {
+                        const tags = ctx.formData.job_tags
+                          .split(",")
+                          .filter((_, i) => i !== index);
+                        ctx.setFormData("job_tags", tags.join(","));
+                      }}
+                      className="text-gray-500 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              <input
+                type="text"
+                className="flex-1 bg-transparent outline-none text-sm"
+                placeholder="Type a tag and press Enter"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const input = e.currentTarget;
+                    const newTag = input.value.trim();
+                    if (newTag) {
+                      const currentTags = ctx.formData.job_tags
+                        .split(",")
+                        .filter(Boolean);
+                      ctx.setFormData(
+                        "job_tags",
+                        [...currentTags, newTag].join(",")
+                      );
+                      input.value = "";
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
           <DashboardInputGroup
             label="Recruiter's Calendar Booking Link"
             value={ctx.formData.recruiter_calendar_booking_link}

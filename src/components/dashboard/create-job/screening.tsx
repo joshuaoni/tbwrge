@@ -6,6 +6,7 @@ import TrashIcon from "@/components/icons/trash";
 import { CreateJobContext } from "@/providers/job-posting.context";
 import { ArrowLeft, CheckIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 function CreateJobScreening() {
   const [questions, setQuestions] = useState<
@@ -65,16 +66,25 @@ function CreateJobScreening() {
       <div className="flex gap-20">
         <section className="w-full">
           <div className="flex justify-between items-center my-6">
-            <span>Example Tech Solution</span>
-            <span className="w-16 h-16 bg-gray-300 rounded-full"></span>
+            <span>{ctx.formData.company_name}</span>
+            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-100">
+              <Image
+                src={
+                  ctx.formData.company_logo
+                    ? URL.createObjectURL(ctx.formData.company_logo)
+                    : "/placeholder-logo.png"
+                }
+                alt="company logo"
+                width={100}
+                height={100}
+                className="w-full h-full object-cover"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
           </div>
           <div className="flex justify-between items-center gap-10">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              atque laboriosam vero labore ullam expedita dolorem distinctio
-              debitis nesciunt tenetur.
-            </p>
-            <p>www.babs.com</p>
+            <p>{ctx.formData.company_description}</p>
+            <p>{ctx.formData.company_website}</p>
           </div>
 
           <div className="flex justify-between items-center">
@@ -84,51 +94,32 @@ function CreateJobScreening() {
           {[
             { title: "Job Title", value: ctx.formData.job_title },
             {
-              title: "Job Description",
+              title: "Job Description & Responsibilities",
               value: ctx.formData.job_description,
             },
             {
-              title: "Key Responsibilities",
-              value: [
-                "Develop, test, and maintain software applications and systems.",
-                "Write clean, scalable, and efficient code following best practices and industry standards.",
-                "Participate in code reviews to maintain high code quality.",
-                "Troubleshoot and resolve bugs and issues across production systems.",
-                "Stay up-to-date with the latest trends in software development.",
-              ],
-            },
-            {
               title: "Required Skills",
-              value: [
-                "JavaScript",
-                "TypeScript",
-                "Python",
-                "C++",
-                "Node.js",
-                "React",
-                "AWS",
-                "Docker",
-              ],
+              value: ctx.formData.required_skills
+                .split(",")
+                .filter(Boolean)
+                .map((skill) => skill.trim()),
             },
             {
               title: "Experience",
-              value:
-                "Minimum 3+ years of professional software development experience",
+              value: `Minimum ${ctx.formData.years_of_experience_required} years of professional software development experience`,
             },
-            { title: "Job Type", value: "Full Time" },
-            { title: "Location", value: "Remote (Flexible Working Hours)" },
-            { title: "Salary Range", value: "€60,000 - €90,000 USD per year" },
+            { title: "Job Type", value: ctx.formData.job_type },
+            { title: "Location", value: ctx.formData.job_location },
+            {
+              title: "Salary Range",
+              value: `€${ctx.formData.salary_range_min} - €${ctx.formData.salary_range_max} USD per year`,
+            },
             {
               title: "Benefits",
-              value: [
-                "Health and dental insurance",
-                "401(k) matching",
-                "PTO",
-                "Professional development opportunities",
-              ],
+              value: ctx.formData.additional_benefits,
             },
             { title: "Job ID", value: "JOB12345" },
-            { title: "Job Expiry", value: "December 31, 2024" },
+            { title: "Job Expiry", value: ctx.formData.end_date || "Not set" },
           ].map((item, i) => (
             <div
               key={i}

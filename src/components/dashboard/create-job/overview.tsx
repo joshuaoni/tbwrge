@@ -3,7 +3,7 @@ import { ArrowLeft, CheckIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
-import { createJob, CreateJobResponse } from "@/actions/create-job";
+import { createJob, CreateJobResponse, updateJob } from "@/actions/create-job";
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
 import TrashIcon from "@/components/icons/trash";
@@ -15,6 +15,8 @@ import {
   DashboardSelectGroup,
   DashboardTextareaGroup,
 } from "../input-group";
+import Image from "next/image";
+import { JobCreatedSuccessPopup } from "./success-popup";
 
 function CreateJobOverview() {
   const [questions, setQuestions] = useState<
@@ -29,6 +31,9 @@ function CreateJobOverview() {
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [createdJobLink, setCreatedJobLink] = useState("");
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -65,43 +70,63 @@ function CreateJobOverview() {
   const createJobMutation = useMutation<CreateJobResponse>({
     mutationFn: async () => {
       const completeFormData = {
-        ...ctx.formData,
-        additional_benefits: "",
+        company_website: ctx.formData.company_website,
+        company_name: ctx.formData.company_name,
+        company_description: ctx.formData.company_description,
+        job_title: ctx.formData.job_title,
+        start_date: ctx.formData.start_date,
+        end_date: ctx.formData.end_date,
+        job_type: ctx.formData.job_type,
+        job_description: ctx.formData.job_description,
+        required_skills: ctx.formData.required_skills,
+        educational_requirements: ctx.formData.educational_requirements,
+        additional_benefits: ctx.formData.additional_benefits,
+        languages: ctx.formData.languages,
         country_of_residence: "",
-        job_location_name: "",
-        salary_currency: "EUR",
-        salary_range_start: 0,
-        salary_range_end: 0,
-        job_type: "FULL_TIME",
-        employment_type: "PERMANENT",
-        experience_level: "MID_LEVEL",
-        required_education: "BACHELORS",
-        application_deadline: new Date().toISOString(),
-        job_function: "ENGINEERING",
-        industry: "TECHNOLOGY",
-        require_voicenote: false,
-        visibility_public: true,
-        visibility_private: false,
-        tags: "",
-        required_languages: [],
-        required_certifications: [],
-        required_skills_years: {},
-        screening_questions: [],
-        company_logo: "",
-        hide_personal_details_during_screening: false,
+        years_of_experience_required: ctx.formData.years_of_experience_required,
+        job_location_name: ctx.formData.job_location,
+        salary_currency: "USD",
+        salary_range_min: ctx.formData.salary_range_min,
+        salary_range_max: ctx.formData.salary_range_max,
+        filter_out_salary_range: ctx.formData.filter_out_salary_range,
+        require_cv: ctx.formData.require_cv,
+        require_cover_letter: ctx.formData.require_cover_letter,
+        require_voicenote: ctx.formData.voicenote_recording,
+        visibility_public: ctx.formData.job_visibility,
+        visibility_private: !ctx.formData.job_visibility,
+        tags: ctx.formData.job_tags,
+        hide_personal_details_during_screening:
+          ctx.formData.hide_candidates_personal_details,
+        minimum_fit_score: ctx.formData.minimum_fit_score,
         filter_minimum_fit_score: true,
-        filter_minimum_experience: 0,
-        status: "DRAFT",
-        auto_send_interview_mail_on_close: false,
-        auto_reject_mail_on_close: false,
-        auto_reject_mail_on_screen: false,
+        status: "open",
+        auto_send_interview_mail_on_close:
+          ctx.formData.auto_send_interview_email,
         candidate_interview_count: 0,
-        interview_link: "",
+        interview_link: ctx.formData.recruiter_calendar_booking_link,
+        company_id: null,
+        recruiter_id: userData?.user?.id,
+        job_questions: questions.map((q) => q.title),
       };
-      return await createJob(userData?.token ?? "", completeFormData);
+
+      if (ctx.formData.job_id) {
+        return await updateJob(
+          userData?.token ?? "",
+          ctx.formData.job_id,
+          completeFormData
+        );
+      } else {
+        return await createJob(userData?.token ?? "", completeFormData);
+      }
     },
-    onSuccess: () => {
-      toast.success("Job post created successfully");
+    onSuccess: (data) => {
+      const jobLink = `${window.location.origin}/jobs/${data.id}`;
+      setCreatedJobLink(jobLink);
+      setShowSuccessPopup(true);
+    },
+    onError: (error) => {
+      toast.error("Failed to create job post");
+      console.error("Error creating job:", error);
     },
   });
 
@@ -116,16 +141,25 @@ function CreateJobOverview() {
       <div className="flex gap-20">
         <section className="w-full">
           <div className="flex justify-between items-center my-6">
-            <span>Example Tech Solution</span>
-            <span className="w-16 h-16 bg-gray-300 rounded-full"></span>
+            <span>{ctx.formData.company_name}</span>
+            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-100">
+              <Image
+                src={
+                  ctx.formData.company_logo
+                    ? URL.createObjectURL(ctx.formData.company_logo)
+                    : "/placeholder-logo.png"
+                }
+                alt="company logo"
+                width={100}
+                height={100}
+                className="w-full h-full object-cover"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
           </div>
           <div className="flex justify-between items-center gap-10">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              atque laboriosam vero labore ullam expedita dolorem distinctio
-              debitis nesciunt tenetur.
-            </p>
-            <p>www.babs.com</p>
+            <p>{ctx.formData.company_description}</p>
+            <p>{ctx.formData.company_website}</p>
           </div>
 
           <div className="flex justify-between items-center">
@@ -135,51 +169,32 @@ function CreateJobOverview() {
           {[
             { title: "Job Title", value: ctx.formData.job_title },
             {
-              title: "Job Description",
+              title: "Job Description & Responsibilities",
               value: ctx.formData.job_description,
             },
             {
-              title: "Key Responsibilities",
-              value: [
-                "Develop, test, and maintain software applications and systems.",
-                "Write clean, scalable, and efficient code following best practices and industry standards.",
-                "Participate in code reviews to maintain high code quality.",
-                "Troubleshoot and resolve bugs and issues across production systems.",
-                "Stay up-to-date with the latest trends in software development.",
-              ],
-            },
-            {
               title: "Required Skills",
-              value: [
-                "JavaScript",
-                "TypeScript",
-                "Python",
-                "C++",
-                "Node.js",
-                "React",
-                "AWS",
-                "Docker",
-              ],
+              value: ctx.formData.required_skills
+                .split(",")
+                .filter(Boolean)
+                .map((skill) => skill.trim()),
             },
             {
               title: "Experience",
-              value:
-                "Minimum 3+ years of professional software development experience",
+              value: `Minimum ${ctx.formData.years_of_experience_required} years of professional software development experience`,
             },
-            { title: "Job Type", value: "Full Time" },
-            { title: "Location", value: "Remote (Flexible Working Hours)" },
-            { title: "Salary Range", value: "€60,000 - €90,000 USD per year" },
+            { title: "Job Type", value: ctx.formData.job_type },
+            { title: "Location", value: ctx.formData.job_location },
+            {
+              title: "Salary Range",
+              value: `€${ctx.formData.salary_range_min} - €${ctx.formData.salary_range_max} USD per year`,
+            },
             {
               title: "Benefits",
-              value: [
-                "Health and dental insurance",
-                "401(k) matching",
-                "PTO",
-                "Professional development opportunities",
-              ],
+              value: ctx.formData.additional_benefits,
             },
             { title: "Job ID", value: "JOB12345" },
-            { title: "Job Expiry", value: "December 31, 2024" },
+            { title: "Job Expiry", value: ctx.formData.end_date || "Not set" },
           ].map((item, i) => (
             <div
               key={i}
@@ -312,12 +327,18 @@ function CreateJobOverview() {
       </div>
       <div className="w-full py-6 flex items-center justify-center">
         <button
-          onClick={() => ctx.goTo("overview")}
+          onClick={() => createJobMutation.mutate()}
           className="bg-[#009379] text-white px-8 py-2 rounded-lg"
         >
           Publish & View Job Post
         </button>
       </div>
+
+      <JobCreatedSuccessPopup
+        isOpen={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+        jobLink={createdJobLink}
+      />
     </div>
   );
 }

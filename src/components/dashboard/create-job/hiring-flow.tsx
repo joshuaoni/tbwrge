@@ -108,7 +108,12 @@ function CreateJobHiringFlow() {
           <ArrowLeft />
         </button>
         <span>Hiring Flow</span>
-        <button onClick={() => ctx.setHiringFlow(INITIAL_HIRING_FLOW_STATE)}>
+        <button
+          onClick={() => {
+            ctx.setHiringFlow(INITIAL_HIRING_FLOW_STATE);
+            ctx.setFormData("minimum_fit_score", 0);
+          }}
+        >
           <ReloadIcon />
         </button>
       </h3>
@@ -117,7 +122,11 @@ function CreateJobHiringFlow() {
         <DashboardInputGroup
           label="Step 1: Minimum Candidate Fit Score (%)"
           placeholder="70"
-          value={ctx.formData.minimum_fit_score.toString()}
+          value={
+            ctx.formData.minimum_fit_score === 0
+              ? ""
+              : ctx.formData.minimum_fit_score.toString()
+          }
           onChange={(val) => ctx.setFormData("minimum_fit_score", Number(val))}
           pattern="[0-9]+"
         />

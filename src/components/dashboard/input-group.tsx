@@ -1,7 +1,7 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { convertToSlug } from "@/components/settings/profile/input-group";
@@ -11,6 +11,7 @@ import { InputGroupProps } from "@/interfaces/input";
 interface DashboardSelectGroupProps {
   title: string;
   defaultValue?: string;
+  value?: string;
   options: { label: string; value: string }[];
   onChange: (val: string) => void;
   className?: string;
@@ -90,7 +91,13 @@ export function DashboardSelectGroup(props: DashboardSelectGroupProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(props.value || "");
+
+  useEffect(() => {
+    if (props.value) {
+      setSelectedOption(props.value);
+    }
+  }, [props.value]);
 
   const handleOptionClick = (optionValue: string) => {
     setSelectedOption(optionValue);

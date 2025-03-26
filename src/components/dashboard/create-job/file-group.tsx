@@ -1,5 +1,6 @@
 import { convertToSlug } from "@/components/settings/profile/input-group";
 import Image from "next/image";
+import { useState } from "react";
 
 interface FileGroupProps {
   label: string;
@@ -7,28 +8,52 @@ interface FileGroupProps {
 }
 
 function CreateJobFileGroup({ label, onChange }: FileGroupProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      onChange?.(file);
+    }
+  };
+
   return (
     <div className="w-full space-y-2">
       <label htmlFor={convertToSlug(label)} className="block">
         <span className="block text-[#4A5568] text-sm mb-2">{label}</span>
-        <p className="text-[#87909E] text-xs text-center flex items-center justify-center gap-2 py-4 px-7 bg-[#EDF2F7] cursor-pointer">
-          <span>Upload Logo</span>
-          <Image
-            src="/images/icons/upload.png"
-            alt="pdf icon"
-            width={24}
-            height={16}
-          />
-        </p>
+        <div className="text-[#87909E] text-xs text-center flex items-center justify-center gap-2 py-4 px-7 bg-[#EDF2F7] cursor-pointer">
+          {previewUrl ? (
+            <div className="relative w-24 h-24">
+              <Image
+                src={previewUrl}
+                alt="Selected logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            <>
+              <span>Upload Logo</span>
+              <Image
+                src="/images/icons/upload.png"
+                alt="upload icon"
+                width={24}
+                height={16}
+              />
+            </>
+          )}
+        </div>
       </label>
       <input
         type="file"
-        accept=".pdf,.docx"
+        accept="image/*"
         id={convertToSlug(label)}
         className="sr-only"
-        onChange={(e) =>
-          onChange && e.target.files && onChange(e.target.files[0])
-        }
+        onChange={handleFileChange}
       />
     </div>
   );

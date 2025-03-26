@@ -2,69 +2,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import { getJobOpen } from "@/actions/get-jobs-open";
+import { getJobDetail } from "@/actions/get-job-detail";
 import { IGetJobOpenRes } from "@/types/jobs";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import { formatDateAndDifference } from "@/actions/get-jobs-open";
+import { formatDateAndDifference } from "@/lib/utils";
 import { outfit } from "@/constants/app";
-
-const JobDetailsSkeleton = () => (
-  <div className="max-w-[1000px] w-full mx-auto px-4 py-8 animate-pulse">
-    <div className="w-24 h-8 bg-gray-100 rounded mb-4 md:mb-6" />
-
-    <div className="bg-white rounded-lg p-6 mb-6">
-      <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
-        <div className="w-12 h-12 rounded-lg bg-gray-100 flex-shrink-0" />
-        <div className="flex-grow">
-          <div className="w-full md:w-2/3 h-6 md:h-7 bg-gray-100 rounded mb-3 md:mb-4" />
-          <div className="flex flex-wrap items-center gap-2 md:gap-4">
-            <div className="w-24 md:w-32 h-4 md:h-5 bg-gray-100 rounded" />
-            <div className="hidden md:block w-1 h-1 bg-gray-100 rounded-full" />
-            <div className="w-20 md:w-24 h-4 md:h-5 bg-gray-100 rounded" />
-            <div className="hidden md:block w-1 h-1 bg-gray-100 rounded-full" />
-            <div className="w-16 md:w-20 h-4 md:h-5 bg-gray-100 rounded" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="bg-gray-50 rounded-lg p-4">
-          <div className="w-20 h-4 bg-gray-100 rounded mb-1" />
-          <div className="w-32 h-5 bg-gray-100 rounded" />
-        </div>
-      ))}
-    </div>
-
-    <div className="space-y-6 md:space-y-8">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="mb-8">
-          <div className="w-32 h-5 bg-gray-100 rounded mb-4" />
-          <div className="space-y-2">
-            <div className="w-full h-4 bg-gray-100 rounded" />
-            <div className="w-3/4 h-4 bg-gray-100 rounded" />
-            <div className="w-1/2 h-4 bg-gray-100 rounded" />
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const ErrorState = () => (
-  <div className="flex items-center justify-center py-20">
-    <div className="text-center px-4 md:px-0">
-      <h1 className="text-xl md:text-2xl font-bold mb-4">Job Not Found</h1>
-      <Link
-        href="/dashboard/job-board"
-        className="text-blue-600 hover:underline"
-      >
-        Back to Jobs
-      </Link>
-    </div>
-  </div>
-);
+import { useUserStore } from "@/hooks/use-user-store";
+import { JobDetailsSkeleton } from "@/components/job-details-skeleton";
+import { ErrorState } from "@/components/error-state";
 
 const Section = ({
   title,
@@ -387,28 +332,23 @@ const JobDetailsPage = () => {
   const [job, setJob] = useState<IGetJobOpenRes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { userData } = useUserStore();
 
   useEffect(() => {
     const fetchJob = async () => {
-      if (!id) return;
+      if (!id || !userData?.token) return;
 
       try {
         setIsLoading(true);
         setError(null);
 
-        const jobs = await getJobOpen({
-          search_term: "",
-          job_type: "full_time",
-          location: "",
-          skills: [],
+        const jobData = await getJobDetail({
+          job_id: id as string,
+          token: userData.token,
         });
+        console.log({ jobData });
 
-        const foundJob = jobs.find((j) => j.id === id);
-        if (!foundJob) {
-          throw new Error("Job not found");
-        }
-
-        setJob(foundJob);
+        setJob(jobData);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch job");
       } finally {
@@ -417,7 +357,7 @@ const JobDetailsPage = () => {
     };
 
     fetchJob();
-  }, [id]);
+  }, [id, userData?.token]);
 
   if (isLoading) {
     return (

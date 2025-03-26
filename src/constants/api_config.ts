@@ -9,6 +9,7 @@ export const API_CONFIG = {
   RESET_PASSWORD: `${MAIN_URL}/auth/confirm-password-reset/`,
   CREATE_JOB: `${MAIN_URL}/job/create-job/`,
   CREATE_JOB_WITH_AI: `${MAIN_URL}/job/create-job-with-ai/`,
+  CREATE_JOB_AI: `${MAIN_URL}/job/create-job-ai/`,
   TRANSLATE_JOB_POSTING: `${MAIN_URL}/job/translate-jp/`,
   SUMMARIZE_CV: `${MAIN_URL}/cv/summarize-cv/`,
   TRANSLATE_CV: `${MAIN_URL}/cv/translate-cv/`,
@@ -29,8 +30,10 @@ export const API_CONFIG = {
   SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
 
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
+  UPDATE_JOB: (job_id: string) => `${MAIN_URL}/job/update-job/${job_id}/`,
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
