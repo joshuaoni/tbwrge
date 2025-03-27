@@ -17,6 +17,20 @@ import {
 } from "../input-group";
 import Image from "next/image";
 import { JobCreatedSuccessPopup } from "./success-popup";
+import { outfit } from "@/constants/app";
+
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <div className="mb-8">
+    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    {children}
+  </div>
+);
 
 function CreateJobOverview() {
   const [questions, setQuestions] = useState<
@@ -131,131 +145,312 @@ function CreateJobOverview() {
   });
 
   return (
-    <div className="">
+    <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold py-4">
         <button onClick={() => ctx.goTo("hiring")} className="mr-4">
           <ArrowLeft />
         </button>
         <span>Create Job Post</span>
       </h3>
-      <div className="flex gap-20">
+      <div className="flex gap-8">
         <section className="w-full">
-          <div className="flex justify-between items-center my-6">
-            <span>{ctx.formData.company_name}</span>
-            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-100">
-              <Image
-                src={
-                  ctx.formData.company_logo
-                    ? URL.createObjectURL(ctx.formData.company_logo)
-                    : "/placeholder-logo.png"
-                }
-                alt="company logo"
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-                style={{ objectFit: "cover" }}
+          <div className="bg-white rounded-lg p-6 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                {ctx.formData.company_logo ? (
+                  <Image
+                    src={URL.createObjectURL(ctx.formData.company_logo)}
+                    alt={ctx.formData.company_name}
+                    width={48}
+                    height={48}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-300 flex items-center justify-center">
+                    <span className="text-white font-medium text-xl">
+                      {ctx.formData.company_name[0]}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold mb-2">
+                  {ctx.formData.job_title}
+                </h1>
+                <div className="flex flex-col gap-1">
+                  <div className="text-[15px] text-gray-600">
+                    {ctx.formData.company_name}
+                  </div>
+                  <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                    <span>{ctx.formData.job_location}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="font-medium">
+                {ctx.formData.job_type.replace("_", " ")}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="font-medium">
+                {ctx.formData.years_of_experience_required}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+              <div className="font-medium">
+                {ctx.formData.salary_range_min && ctx.formData.salary_range_max
+                  ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
+                  : "Not specified"}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="font-medium">{ctx.formData.job_location}</div>
+            </div>
+          </div>
+
+          {ctx.formData.company_description && (
+            <Section title="About the Company">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.company_description}
+              </p>
+            </Section>
+          )}
+
+          <Section title="Job Description">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {ctx.formData.job_description}
+            </p>
+          </Section>
+
+          <Section title="Required Skills">
+            <div className="flex flex-wrap gap-2">
+              {ctx.formData.required_skills.split(",").map((skill: string) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 bg-gray-100 rounded text-sm"
+                >
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
+          </Section>
+
+          {ctx.formData.educational_requirements && (
+            <Section title="Educational Requirements">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.educational_requirements}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.languages && (
+            <Section title="Languages">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.languages.split(",").map((language: string) => (
+                  <span
+                    key={language}
+                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm"
+                  >
+                    {language.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {ctx.formData.additional_benefits && (
+            <Section title="Additional Benefits">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.additional_benefits}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.job_tags && (
+            <Section title="Tags">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.job_tags.split(",").map((tag: string) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm"
+                  >
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
+        </section>
+
+        <section className="w-full h-fit p-6 pb-8">
+          <h2 className="text-xl font-semibold mb-6">Job Application</h2>
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter your name"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
-          </div>
-          <div className="flex justify-between items-center gap-10">
-            <p>{ctx.formData.company_description}</p>
-            <p>{ctx.formData.company_website}</p>
-          </div>
 
-          <div className="flex justify-between items-center">
-            <h4 className="text-lg font-semibold mt-6">Job Information</h4>
-          </div>
-
-          {[
-            { title: "Job Title", value: ctx.formData.job_title },
-            {
-              title: "Job Description & Responsibilities",
-              value: ctx.formData.job_description,
-            },
-            {
-              title: "Required Skills",
-              value: ctx.formData.required_skills
-                .split(",")
-                .filter(Boolean)
-                .map((skill) => skill.trim()),
-            },
-            {
-              title: "Experience",
-              value: `Minimum ${ctx.formData.years_of_experience_required} years of professional software development experience`,
-            },
-            { title: "Job Type", value: ctx.formData.job_type },
-            { title: "Location", value: ctx.formData.job_location },
-            {
-              title: "Salary Range",
-              value: `€${ctx.formData.salary_range_min} - €${ctx.formData.salary_range_max} USD per year`,
-            },
-            {
-              title: "Benefits",
-              value: ctx.formData.additional_benefits,
-            },
-            { title: "Job ID", value: "JOB12345" },
-            { title: "Job Expiry", value: ctx.formData.end_date || "Not set" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-start gap-10 my-6"
-            >
-              <span className="font-semibold w-1/3">{item.title}</span>
-              {Array.isArray(item.value) ? (
-                <ul className="list-disc w-full">
-                  {item.value.map((val, index) => (
-                    <li key={index}>{val}</li>
-                  ))}
-                </ul>
-              ) : (
-                <span className="w-full">{item.value}</span>
-              )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
             </div>
-          ))}
-        </section>
-        <section className="w-11/12 px-4 h-fit pb-8">
-          <h4 className="text-lg font-semibold mb-4">Job Application</h4>
 
-          <form className="space-y-4">
-            <DashboardInputGroup label="Full Name" />
-            <DashboardInputGroup label="Email" />
-            <DashboardInputGroup label="Phone Number" />
-            <DashboardInputGroup
-              label="Date of Birth"
-              placeholder="mm-dd-yyyy"
-            />
-            <DashboardInputGroup label="Linked Profile Link (optional)" />
-            <DashboardInputGroup label="Current Company" />
-            <DashboardInputGroup label="Current Position" />
-            <DashboardSelectGroup
-              title="Nationality"
-              defaultValue="Select Nationality"
-              options={[{ label: "Nigeria", value: "nig" }]}
-              onChange={function (val: string): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-            <DashboardSelectGroup
-              title="Country of Residence"
-              defaultValue="Number of years of Experience"
-              options={[{ label: "Nigeria", value: "nig" }]}
-              onChange={function (val: string): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-            <DashboardTextareaGroup
-              label="Relevant Experience Summary (Max 200 words)"
-              placeholder="Describe our your past roles"
-            />
-            <DashboardTextareaGroup
-              label="Relevant Skills Summary (Max 100 words)"
-              placeholder="Highlight your key skills"
-            />
-            <DashboardFileGroup label="Upload CV" />
-            <DashboardFileGroup label="Upload Cover Letter(Optional)" />
-            <DashboardFileGroup label="Upload Application Voice note(Optional)" />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                placeholder="Enter your phone number"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                placeholder="mm/dd/yyyy"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                LinkedIn Profile Link
+              </label>
+              <input
+                type="url"
+                placeholder="Enter link"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Current Company
+              </label>
+              <input
+                type="text"
+                placeholder="Enter N/A if none"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Current Position
+              </label>
+              <input
+                type="text"
+                placeholder="Manager, etc..."
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nationality
+              </label>
+              <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
+                <option value="" className="text-[#6B7280]">
+                  Select Nationality
+                </option>
+                <option value="nig">Nigeria</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Country of Residence
+              </label>
+              <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
+                <option value="" className="text-[#6B7280]">
+                  Select Country
+                </option>
+                <option value="nig">Nigeria</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Relevant Experience (Max 300 words)
+              </label>
+              <textarea
+                placeholder="Describe your past roles"
+                rows={4}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Skills Summary (Max 300 words)
+              </label>
+              <textarea
+                placeholder="Highlight your key skills"
+                rows={4}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload CV
+              </label>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Cover Letter (Optional)
+              </label>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Application Video/demo (Optional)
+              </label>
+              <input
+                type="file"
+                accept="video/*"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+              />
+            </div>
           </form>
 
+          {/* Custom Questions Section */}
           {questions.map((question, i) => (
             <div key={i} className="my-6">
               <div className="flex justify-end gap-2">
@@ -287,12 +482,12 @@ function CreateJobOverview() {
                   <textarea
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
-                    className="w-full rounded text-sm bg-gray-50 focus:outline-none"
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   />
                 ) : (
                   <label
                     onClick={() => handleEditQuestion(i)}
-                    className="block text-gray-700 text-sm font-medium"
+                    className="block text-sm font-medium text-gray-700 mb-1"
                   >
                     {question.title}
                   </label>
@@ -301,7 +496,7 @@ function CreateJobOverview() {
                   placeholder="Type your answer here"
                   value={question.answer}
                   onChange={(e) => handleInputChange(e, i)}
-                  className="w-full bg-gray-100 p-2 border rounded focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
               </div>
             </div>

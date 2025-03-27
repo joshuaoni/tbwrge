@@ -7,7 +7,7 @@ const JobPostingPage = () => {
 
   return (
     <DashboardWrapper>
-      <div className="mx-auto px-10">
+      <div className="mx-auto">
         <CreateJobProvider query={query} />
       </div>
     </DashboardWrapper>

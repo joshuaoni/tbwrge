@@ -7,6 +7,19 @@ import { CreateJobContext } from "@/providers/job-posting.context";
 import { ArrowLeft, CheckIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { outfit } from "@/constants/app";
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <div className="mb-8">
+    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    {children}
+  </div>
+);
 
 function CreateJobScreening() {
   const [questions, setQuestions] = useState<
@@ -14,7 +27,7 @@ function CreateJobScreening() {
   >([
     {
       title:
-        "Could you describe a project or task you’ve worked on that best demonstrates your skills for this role?",
+        "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
       answer: "",
     },
   ]);
@@ -56,96 +69,159 @@ function CreateJobScreening() {
   const ctx = useContext(CreateJobContext);
 
   return (
-    <div className="">
+    <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.prevScreen()} className="mr-4">
+        <button onClick={() => ctx.goTo("job")} className="mr-4">
           <ArrowLeft />
-        </button>{" "}
-        {ctx.formData.job_title} Screen Questions
+        </button>
+        <span>Job Screening</span>
       </h3>
-      <div className="flex gap-20">
+      <div className="flex gap-8">
         <section className="w-full">
-          <div className="flex justify-between items-center my-6">
-            <span>{ctx.formData.company_name}</span>
-            <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-100">
-              <Image
-                src={
-                  ctx.formData.company_logo
-                    ? URL.createObjectURL(ctx.formData.company_logo)
-                    : "/placeholder-logo.png"
-                }
-                alt="company logo"
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-                style={{ objectFit: "cover" }}
-              />
+          <div className="bg-white rounded-lg p-6 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                {ctx.formData.company_logo ? (
+                  <Image
+                    src={URL.createObjectURL(ctx.formData.company_logo)}
+                    alt={ctx.formData.company_name}
+                    width={48}
+                    height={48}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-300 flex items-center justify-center">
+                    <span className="text-white font-medium text-xl">
+                      {ctx.formData.company_name[0]}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold mb-2">
+                  {ctx.formData.job_title}
+                </h1>
+                <div className="flex flex-col gap-1">
+                  <div className="text-[15px] text-gray-600">
+                    {ctx.formData.company_name}
+                  </div>
+                  <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                    <span>{ctx.formData.job_location}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="flex justify-between items-center gap-10">
-            <p>{ctx.formData.company_description}</p>
-            <p>{ctx.formData.company_website}</p>
-          </div>
 
-          <div className="flex justify-between items-center">
-            <h4 className="text-lg font-semibold mt-6">Job Information</h4>
-          </div>
-
-          {[
-            { title: "Job Title", value: ctx.formData.job_title },
-            {
-              title: "Job Description & Responsibilities",
-              value: ctx.formData.job_description,
-            },
-            {
-              title: "Required Skills",
-              value: ctx.formData.required_skills
-                .split(",")
-                .filter(Boolean)
-                .map((skill) => skill.trim()),
-            },
-            {
-              title: "Experience",
-              value: `Minimum ${ctx.formData.years_of_experience_required} years of professional software development experience`,
-            },
-            { title: "Job Type", value: ctx.formData.job_type },
-            { title: "Location", value: ctx.formData.job_location },
-            {
-              title: "Salary Range",
-              value: `€${ctx.formData.salary_range_min} - €${ctx.formData.salary_range_max} USD per year`,
-            },
-            {
-              title: "Benefits",
-              value: ctx.formData.additional_benefits,
-            },
-            { title: "Job ID", value: "JOB12345" },
-            { title: "Job Expiry", value: ctx.formData.end_date || "Not set" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-start gap-10 my-6"
-            >
-              <span className="font-semibold w-1/3">{item.title}</span>
-              {Array.isArray(item.value) ? (
-                <ul className="list-disc w-full">
-                  {item.value.map((val, index) => (
-                    <li key={index}>{val}</li>
-                  ))}
-                </ul>
-              ) : (
-                <span className="w-full">{item.value}</span>
-              )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="font-medium">
+                {ctx.formData.job_type.replace("_", " ")}
+              </div>
             </div>
-          ))}
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="font-medium">
+                {ctx.formData.years_of_experience_required}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+              <div className="font-medium">
+                {ctx.formData.salary_range_min && ctx.formData.salary_range_max
+                  ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
+                  : "Not specified"}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="font-medium">{ctx.formData.job_location}</div>
+            </div>
+          </div>
+
+          {ctx.formData.company_description && (
+            <Section title="About the Company">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.company_description}
+              </p>
+            </Section>
+          )}
+
+          <Section title="Job Description">
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {ctx.formData.job_description}
+            </p>
+          </Section>
+
+          <Section title="Required Skills">
+            <div className="flex flex-wrap gap-2">
+              {ctx.formData.required_skills.split(",").map((skill: string) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 bg-gray-100 rounded text-sm"
+                >
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
+          </Section>
+
+          {ctx.formData.educational_requirements && (
+            <Section title="Educational Requirements">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.educational_requirements}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.languages && (
+            <Section title="Languages">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.languages.split(",").map((language: string) => (
+                  <span
+                    key={language}
+                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm"
+                  >
+                    {language.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {ctx.formData.additional_benefits && (
+            <Section title="Additional Benefits">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.additional_benefits}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.job_tags && (
+            <Section title="Tags">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.job_tags.split(",").map((tag: string) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm"
+                  >
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
         </section>
-        <section className="w-11/12 px-4 h-fit pb-8 shadow-lg">
+
+        <section className="w-full h-fit p-6 pb-8">
           <p className="text-sm text-[#898989]">
             Thank you for taking the time to apply for the&nbsp;
             {ctx.formData.job_title} position at&nbsp;
             {ctx.formData.company_name} and for sharing your qualifications and
             experiences with us.
             <br />
-            As the next step in our hiring process, we’d love to invite you to
+            As the next step in our hiring process, we'd love to invite you to
             screening process to get to know you better.
           </p>
 

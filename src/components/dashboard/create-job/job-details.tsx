@@ -7,31 +7,40 @@ import {
   DashboardSelectGroup,
   DashboardTextareaGroup,
 } from "../input-group";
-
+import { outfit } from "@/constants/app";
 function CreateJobJobDetails() {
   const ctx = useContext(CreateJobContext);
 
   return (
-    <div className="">
+    <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold py-4">
         <button onClick={() => ctx.prevScreen()} className="mr-4">
           <ArrowLeft />
         </button>
         {ctx.formData.job_title ?? "Job Title is missing"}
       </h3>
-      <div className="flex gap-20">
+      <div className="flex gap-8">
         <section className="w-full space-y-4">
           <h4 className="font-bold">Job Description & Requirements</h4>
-          <DashboardTextareaGroup
-            label="Job Decription & Requirements"
-            value={ctx.formData.job_description}
-            onChange={(val) => ctx.setFormData("job_description", val)}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Job Description & Requirements
+            </label>
+            <textarea
+              value={ctx.formData.job_description}
+              onChange={(e) =>
+                ctx.setFormData("job_description", e.target.value)
+              }
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              rows={6}
+            />
+          </div>
+
           <div className="w-full space-y-2">
-            <label className="block text-[#4A5568] text-sm">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Required Skills
             </label>
-            <div className="flex flex-wrap gap-2 p-2 bg-[#EDF2F7] rounded min-h-[48px]">
+            <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.required_skills
                 .split(",")
                 .filter(Boolean)
@@ -56,7 +65,7 @@ function CreateJobJobDetails() {
                 ))}
               <input
                 type="text"
-                className="flex-1 bg-transparent outline-none text-sm"
+                className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
                 placeholder="Type a skill and press Enter"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -78,52 +87,99 @@ function CreateJobJobDetails() {
               />
             </div>
           </div>
-          <DashboardInputGroup
-            label="Educational Requirements"
-            value={ctx.formData.educational_requirements}
-            onChange={(val) => ctx.setFormData("educational_requirements", val)}
-          />
-          <DashboardInputGroup
-            label="Required Years of Experience"
-            value={ctx.formData.years_of_experience_required}
-            onChange={(val) =>
-              ctx.setFormData("years_of_experience_required", val)
-            }
-          />
-          <DashboardSelectGroup
-            title="Job Type"
-            value={ctx.formData.job_type}
-            defaultValue="Select Job Type"
-            options={[
-              { label: "Full Time", value: "full_time" },
-              { label: "Part Time", value: "part_time" },
-              { label: "Contract", value: "contract" },
-              { label: "Internship", value: "internship" },
-              { label: "Remote", value: "remote" },
-            ]}
-            onChange={(val) => ctx.setFormData("job_type", val)}
-          />
-          <DashboardInputGroup
-            label="Job Location"
-            value={ctx.formData.job_location}
-            onChange={(val) => ctx.setFormData("job_location", val)}
-          />
-          <DashboardInputGroup
-            label="Languages"
-            value={ctx.formData.languages}
-            onChange={(val) => ctx.setFormData("languages", val)}
-          />
-          <DashboardInputGroup
-            label="Additional Benefits"
-            value={ctx.formData.additional_benefits}
-            onChange={(val) => ctx.setFormData("additional_benefits", val)}
-          />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Educational Requirements
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.educational_requirements}
+              onChange={(e) =>
+                ctx.setFormData("educational_requirements", e.target.value)
+              }
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Required Years of Experience
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.years_of_experience_required}
+              onChange={(e) =>
+                ctx.setFormData("years_of_experience_required", e.target.value)
+              }
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Job Type
+            </label>
+            <select
+              value={ctx.formData.job_type}
+              onChange={(e) => ctx.setFormData("job_type", e.target.value)}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+            >
+              <option value="">Select Job Type</option>
+              <option value="full_time">Full Time</option>
+              <option value="part_time">Part Time</option>
+              <option value="contract">Contract</option>
+              <option value="internship">Internship</option>
+              <option value="remote">Remote</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Job Location
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.job_location}
+              onChange={(e) => ctx.setFormData("job_location", e.target.value)}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Languages
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.languages}
+              onChange={(e) => ctx.setFormData("languages", e.target.value)}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Additional Benefits
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.additional_benefits}
+              onChange={(e) =>
+                ctx.setFormData("additional_benefits", e.target.value)
+              }
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
         </section>
-        <section className="w-full space-y-4">
+
+        <section className="w-full space-y-4 px-6">
           <h4 className="font-bold">Job Settings</h4>
           <div className="w-full space-y-2">
-            <label className="block text-[#4A5568] text-sm">Job Tags</label>
-            <div className="flex flex-wrap gap-2 p-2 bg-[#EDF2F7] rounded min-h-[48px]">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Job Tags
+            </label>
+            <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.job_tags
                 .split(",")
                 .filter(Boolean)
@@ -148,7 +204,7 @@ function CreateJobJobDetails() {
                 ))}
               <input
                 type="text"
-                className="flex-1 bg-transparent outline-none text-sm"
+                className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
                 placeholder="Type a tag and press Enter"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -170,97 +226,202 @@ function CreateJobJobDetails() {
               />
             </div>
           </div>
-          <DashboardInputGroup
-            label="Recruiter's Calendar Booking Link"
-            value={ctx.formData.recruiter_calendar_booking_link}
-            onChange={(v) =>
-              ctx.setFormData("recruiter_calendar_booking_link", v)
-            }
-          />
-          <div className="flex gap-4">
-            <DashboardInputGroup
-              label="Start Date"
-              value={ctx.formData.start_date}
-              onChange={(val) => ctx.setFormData("start_date", val)}
-            />
-            <DashboardInputGroup
-              label="End Date"
-              value={ctx.formData.end_date}
-              onChange={(val) => ctx.setFormData("end_date", val)}
-            />
-          </div>
-          <div className="flex gap-4">
-            <DashboardInputGroup
-              label="Salary Range Min"
-              value={String(ctx.formData.salary_range_min)}
-              onChange={(val) =>
-                ctx.setFormData("salary_range_min", Number(val))
-              }
-            />
-            <DashboardInputGroup
-              label="Salary Range Max"
-              value={String(ctx.formData.salary_range_max)}
-              onChange={(val) =>
-                ctx.setFormData("salary_range_max", Number(val))
-              }
-            />
-          </div>
-          <DashboardCheckBoxInput
-            label="Filter out Candidates exceeding salary range"
-            value={ctx.formData.filter_out_salary_range}
-            onChange={(val) => ctx.setFormData("filter_out_salary_range", val)}
-          />
-          <DashboardCheckBoxInput
-            label="Automatically Send Interview Email"
-            value={ctx.formData.auto_send_interview_email}
-            onChange={(val) =>
-              ctx.setFormData("auto_send_interview_email", val)
-            }
-          />
+
           <div>
-            <label>Application Requirements</label>
-            <div className="flex justify-between items-center gap-2">
-              <DashboardCheckBoxInput
-                label="CV"
-                value={ctx.formData.require_cv}
-                onChange={(val) => ctx.setFormData("require_cv", val)}
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Recruiter's Calendar Booking Link
+            </label>
+            <input
+              type="text"
+              value={ctx.formData.recruiter_calendar_booking_link}
+              onChange={(e) =>
+                ctx.setFormData(
+                  "recruiter_calendar_booking_link",
+                  e.target.value
+                )
+              }
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+              </label>
+              <input
+                type="date"
+                value={ctx.formData.start_date}
+                onChange={(e) => ctx.setFormData("start_date", e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] [color-scheme:light]"
               />
-              <DashboardCheckBoxInput
-                label="Cover Letter"
-                value={ctx.formData.require_cover_letter}
-                onChange={(val) => ctx.setFormData("require_cover_letter", val)}
-              />
-              <DashboardCheckBoxInput
-                label="Voicenote Recording"
-                value={ctx.formData.voicenote_recording}
-                onChange={(val) => ctx.setFormData("voicenote_recording", val)}
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={ctx.formData.end_date}
+                onChange={(e) => ctx.setFormData("end_date", e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] [color-scheme:light]"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label>Job Visibility</label>
-            <DashboardCheckBoxInput
-              label="Public (Visible on Job Board)"
-              value={ctx.formData.job_visibility}
-              onChange={() => ctx.setFormData("job_visibility", true)}
-            />
-            <DashboardCheckBoxInput
-              label="Private (Only accessible via generated link or embed code)"
-              value={!ctx.formData.job_visibility}
-              onChange={() => ctx.setFormData("job_visibility", false)}
-            />
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Salary Range Min
+              </label>
+              <input
+                type="number"
+                value={ctx.formData.salary_range_min}
+                onChange={(e) =>
+                  ctx.setFormData("salary_range_min", Number(e.target.value))
+                }
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Salary Range Max
+              </label>
+              <input
+                type="number"
+                value={ctx.formData.salary_range_max}
+                onChange={(e) =>
+                  ctx.setFormData("salary_range_max", Number(e.target.value))
+                }
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="pb-2">Diversity & Inclusion Settings</label>
-            <DashboardCheckBoxInput
-              label="Hide Candidates Names or personal details during initial screening"
-              value={ctx.formData.hide_candidates_personal_details}
-              onChange={(val) =>
-                ctx.setFormData("hide_candidates_personal_details", val)
-              }
-            />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={ctx.formData.filter_out_salary_range}
+                onChange={(e) =>
+                  ctx.setFormData("filter_out_salary_range", e.target.checked)
+                }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label className="text-sm text-gray-700">
+                Filter out Candidates exceeding salary range
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={ctx.formData.auto_send_interview_email}
+                onChange={(e) =>
+                  ctx.setFormData("auto_send_interview_email", e.target.checked)
+                }
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label className="text-sm text-gray-700">
+                Automatically Send Interview Email
+              </label>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Application Requirements
+              </label>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={ctx.formData.require_cv}
+                    onChange={(e) =>
+                      ctx.setFormData("require_cv", e.target.checked)
+                    }
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-gray-700">CV</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={ctx.formData.require_cover_letter}
+                    onChange={(e) =>
+                      ctx.setFormData("require_cover_letter", e.target.checked)
+                    }
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-gray-700">Cover Letter</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={ctx.formData.voicenote_recording}
+                    onChange={(e) =>
+                      ctx.setFormData("voicenote_recording", e.target.checked)
+                    }
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-gray-700">
+                    Voicenote Recording
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Job Visibility
+              </label>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    checked={ctx.formData.job_visibility}
+                    onChange={() => ctx.setFormData("job_visibility", true)}
+                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-gray-700">
+                    Public (Visible on Job Board)
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    checked={!ctx.formData.job_visibility}
+                    onChange={() => ctx.setFormData("job_visibility", false)}
+                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-gray-700">
+                    Private (Only accessible via generated link or embed code)
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Diversity & Inclusion Settings
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={ctx.formData.hide_candidates_personal_details}
+                  onChange={(e) =>
+                    ctx.setFormData(
+                      "hide_candidates_personal_details",
+                      e.target.checked
+                    )
+                  }
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label className="text-sm text-gray-700">
+                  Hide Candidates Names or personal details during initial
+                  screening
+                </label>
+              </div>
+            </div>
           </div>
         </section>
       </div>
