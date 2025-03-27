@@ -1,6 +1,8 @@
 import { CreateJobContext } from "@/providers/job-posting.context";
 import { ArrowLeft } from "lucide-react";
 import { useContext } from "react";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 import {
   DashboardCheckBoxInput,
   DashboardInputGroup,
@@ -8,11 +10,89 @@ import {
   DashboardTextareaGroup,
 } from "../input-group";
 import { outfit } from "@/constants/app";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
+
+// Add custom styles for ReactQuill
+const quillStyles = `
+  .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-container.ql-snow {
+    border: none;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-editor {
+    background-color: #F9FAFB;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-editor.ql-blank::before {
+    font-style: normal;
+    font-family: 'Outfit', sans-serif;
+    color: #9CA3AF;
+    font-size: 14px;
+    position: absolute;
+    content: 'Write job description and responsibilities here...';
+    pointer-events: none;
+  }
+
+  .ql-toolbar button {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Apply Outfit font to all text in the editor */
+  .ql-editor p,
+  .ql-editor ol,
+  .ql-editor ul,
+  .ql-editor pre,
+  .ql-editor blockquote,
+  .ql-editor h1,
+  .ql-editor h2,
+  .ql-editor h3,
+  .ql-editor h4,
+  .ql-editor h5,
+  .ql-editor h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+`;
+
+const modules = {
+  toolbar: [
+    ["bold", "italic", "underline"],
+    [{ size: ["small", false, "large"] }],
+    [{ align: [] }],
+    ["list", "bullet"],
+    ["link", "emoji"],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "bold",
+  "italic",
+  "underline",
+  "size",
+  "align",
+  "list",
+  "bullet",
+  "link",
+  "emoji",
+];
+
 function CreateJobJobDetails() {
   const ctx = useContext(CreateJobContext);
 
   return (
     <div className={`${outfit.className}`}>
+      <style>{quillStyles}</style>
       <h3 className="text-3xl font-semibold py-4">
         <button onClick={() => ctx.prevScreen()} className="mr-4">
           <ArrowLeft />
@@ -23,17 +103,31 @@ function CreateJobJobDetails() {
         <section className="w-full space-y-4">
           <h4 className="font-bold">Job Description & Requirements</h4>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Job Description & Requirements
-            </label>
-            <textarea
-              value={ctx.formData.job_description}
-              onChange={(e) =>
-                ctx.setFormData("job_description", e.target.value)
-              }
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-              rows={6}
-            />
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Job Description & Responsibilities
+              </label>
+              <span className="text-sm text-gray-500">
+                {ctx.formData.job_description.length}/1000
+              </span>
+            </div>
+            <div className="border border-gray-200 rounded-lg overflow-hidden h-[200px]">
+              <div className="h-full">
+                <ReactQuill
+                  theme="snow"
+                  value={ctx.formData.job_description}
+                  onChange={(value: string) => {
+                    if (value.length <= 1000) {
+                      ctx.setFormData("job_description", value);
+                    }
+                  }}
+                  modules={modules}
+                  formats={formats}
+                  className="bg-gray-50 h-full"
+                  style={{ height: "100%" }}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="w-full space-y-2">
@@ -253,7 +347,8 @@ function CreateJobJobDetails() {
                 type="date"
                 value={ctx.formData.start_date}
                 onChange={(e) => ctx.setFormData("start_date", e.target.value)}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] [color-scheme:light]"
+                data-empty={!ctx.formData.start_date}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
               />
             </div>
             <div className="flex-1">
@@ -264,7 +359,8 @@ function CreateJobJobDetails() {
                 type="date"
                 value={ctx.formData.end_date}
                 onChange={(e) => ctx.setFormData("end_date", e.target.value)}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] [color-scheme:light]"
+                data-empty={!ctx.formData.end_date}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
               />
             </div>
           </div>

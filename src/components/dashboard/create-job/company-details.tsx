@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { DashboardInputGroup, DashboardTextareaGroup } from "../input-group";
 import CreateJobFileGroup from "./file-group";
 import { cn } from "@/lib/utils";
-
+import { outfit } from "@/constants/app";
 function CreateJobCompanyDetails() {
   const ctx = useContext(CreateJobContext);
   const { userData } = useUserStore();
@@ -110,7 +110,9 @@ function CreateJobCompanyDetails() {
   };
 
   return (
-    <section className="max-w-screen-sm mx-auto space-y-6">
+    <section
+      className={`${outfit.className} max-w-screen-sm mx-auto space-y-6`}
+    >
       <h2 className="text-center text-3xl font-semibold">Create a Job Post</h2>
 
       <form className="space-y-6">
@@ -120,14 +122,33 @@ function CreateJobCompanyDetails() {
           onChange={(val) => ctx.setFormData("job_title", val)}
         />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
+        <div className="!mt-0">
+          {/*<label className="text-sm font-medium text-gray-700">
             Company Name
-          </label>
+          </label> */}
           <div className="relative" ref={dropdownRef}>
-            <div className="flex items-center justify-between">
-              <div className="relative flex-1">
-                {!showNewCompanyForm && (
+            {!showNewCompanyForm && (
+              <div className="flex items-center justify-between">
+                <div className="relative flex-1">
+                  <div className="p-2 pr-0 flex justify-between items-end">
+                    <span className="text-[#4A5568] text-sm">Company name</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowNewCompanyForm(true);
+                        setIsDropdownOpen(false);
+                        // Clear form fields
+                        ctx.setFormData("company_name", "");
+                        ctx.setFormData("company_website", "");
+                        ctx.setFormData("company_description", "");
+                        ctx.setFormData("company_logo", null);
+                      }}
+                      className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
+                    >
+                      Add a New Company
+                      <PlusCircle className="w-6 h-6" />
+                    </button>
+                  </div>
                   <div className="relative w-full">
                     <div
                       className={cn(
@@ -156,7 +177,7 @@ function CreateJobCompanyDetails() {
                           <span>{selectedCompany.name}</span>
                         </div>
                       ) : (
-                        <span className="text-gray-500">Select a company</span>
+                        <span className="text-gray-400">Select a company</span>
                       )}
                       <svg
                         className="w-5 h-5 text-gray-400"
@@ -172,56 +193,41 @@ function CreateJobCompanyDetails() {
                         />
                       </svg>
                     </div>
-                    {isDropdownOpen &&
-                      !showNewCompanyForm &&
-                      !isLoadingCompanies && (
-                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
-                          <div className="p-2">
+                    {isDropdownOpen && !isLoadingCompanies && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+                        <div className="max-h-60 overflow-auto">
+                          {companies.map((company) => (
                             <button
+                              key={company.id}
                               type="button"
-                              onClick={() => {
-                                setShowNewCompanyForm(true);
-                                setIsDropdownOpen(false);
-                              }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
+                              onClick={() => handleCompanySelect(company)}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
                             >
-                              <PlusCircle className="w-4 h-4" />
-                              Add a New Company
+                              {company.logo ? (
+                                <Image
+                                  src={company.logo}
+                                  alt={company.name}
+                                  width={24}
+                                  height={24}
+                                  className="rounded-full"
+                                />
+                              ) : (
+                                <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                                  <span className="text-xs font-medium">
+                                    {company.name[0]}
+                                  </span>
+                                </div>
+                              )}
+                              {company.name}
                             </button>
-                          </div>
-                          <div className="max-h-60 overflow-auto">
-                            {companies.map((company) => (
-                              <button
-                                key={company.id}
-                                type="button"
-                                onClick={() => handleCompanySelect(company)}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                              >
-                                {company.logo ? (
-                                  <Image
-                                    src={company.logo}
-                                    alt={company.name}
-                                    width={24}
-                                    height={24}
-                                    className="rounded-full"
-                                  />
-                                ) : (
-                                  <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-                                    <span className="text-xs font-medium">
-                                      {company.name[0]}
-                                    </span>
-                                  </div>
-                                )}
-                                {company.name}
-                              </button>
-                            ))}
-                          </div>
+                          ))}
                         </div>
-                      )}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -249,11 +255,11 @@ function CreateJobCompanyDetails() {
           </>
         ) : null}
 
-        <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-4">
           <button
             type="button"
             onClick={() => ctx.goTo("job")}
-            className="px-4 py-3 bg-primary text-white font-medium rounded-lg"
+            className="px-4 py-3 bg-primary text-white font-medium rounded-[10px]"
           >
             Write your own job post
           </button>
@@ -262,13 +268,18 @@ function CreateJobCompanyDetails() {
             type="button"
             disabled={createJobAiMutation.isPending}
             onClick={() => createJobAiMutation.mutate()}
-            className="w-[280px] py-3 border border-[#006F5C] text-[#006F5C] rounded-lg flex items-center justify-center gap-2 hover:bg-[#006F5C]/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-3 border-2 border-[#006F5C] text-black rounded-[10px] flex items-center justify-center gap-2 hover:bg-[#006F5C] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>Generate with AI</span>
             {createJobAiMutation.isPending ? (
               <Loader2Icon className="w-5 h-5 animate-spin" />
             ) : (
-              <Image src="/ai-logo.png" alt="ai icon" width={20} height={20} />
+              <Image
+                src="/ai-technology.png"
+                alt="ai icon"
+                width={20}
+                height={20}
+              />
             )}
           </button>
         </div>

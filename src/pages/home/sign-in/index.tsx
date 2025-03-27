@@ -58,7 +58,11 @@ const Index = () => {
           authenticatedUser: res.user,
           token: res.access_token,
         });
-        router.push("/dashboard");
+        if (res.user.role === "job_seeker") {
+          router.push("/dashboard/job-board");
+        } else if (res.user.role === "recruiter") {
+          router.push("/dashboard");
+        }
       }
     },
     onError: (err) => {

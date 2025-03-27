@@ -119,7 +119,7 @@ function CreateJobHiringFlow() {
         </button>
       </h3>
 
-      <section className="w-full grid grid-cols-2 gap-y-4 gap-x-12 pr-6">
+      <section className="w-full grid grid-cols-2 gap-y-4 gap-x-12 pr-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Step 1: Minimum Candidate Fit Score (%)
@@ -213,7 +213,7 @@ function CreateJobHiringFlow() {
           setVisibility={() => setModal(false)}
           showCloseButton
         >
-          <div className="max-w-96 w-full py-3 px-4">
+          <div className="max-w-96 w-full pt-2 px-4">
             <h4 className="font-bold py-2 border-b">{title}</h4>
             <section className="text-sm text-[#898989] pt-4 min-h-[28rem] space-y-4">
               {email.isEditing ? (
@@ -253,28 +253,33 @@ function CreateJobHiringFlow() {
               ) : (
                 <>
                   <div>
-                    <h5 className="font-medium text-gray-700">Subject:</h5>
-                    <p className="mt-1">{email.subject}</p>
+                    <h5 className=" text-[#898989]">
+                      Subject: <span className="mt-1">{email.subject}</span>
+                    </h5>
+                    <p className="text-[#898989] mt-4">
+                      {"Dear [Candiate's name],"}
+                    </p>
                   </div>
                   <div>
-                    <h5 className="font-medium text-gray-700">Content:</h5>
-                    <p
+                    {/* <h5 className="font-medium text-[#898989]">Content:</h5> */}
+                    <span
                       className="mt-1"
                       dangerouslySetInnerHTML={{ __html: email.content }}
                     />
                   </div>
                 </>
               )}
+              <p className="text-[#898989]">Best Regards</p>
             </section>
             <div className="flex items-center justify-between gap-6 py-4 border-t">
               <button
-                className="bg-[#009379] text-white font-semibold px-6 py-3 rounded-lg w-full hover:bg-[#007a61] transition-colors"
+                className="bg-primary text-white text-[12px] px-6 py-3 rounded-[4px] w-full hover:bg-[#007a61] transition-colors"
                 onClick={() => setModal(false)}
               >
                 Save
               </button>
               <button
-                className="bg-gray-100 text-gray-700 font-semibold px-6 py-3 rounded-lg w-full hover:bg-gray-200 transition-colors"
+                className="bg-[#009379] text-white text-[12px] px-6 py-3 rounded-[4px] w-full hover:bg-gray-200 transition-colors"
                 onClick={() =>
                   email.isEditing
                     ? setEmail({ ...email, isEditing: false })

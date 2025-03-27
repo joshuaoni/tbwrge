@@ -25,7 +25,7 @@ function CreateJobFileGroup({ label, onChange }: FileGroupProps) {
     <div className="w-full space-y-2">
       <label htmlFor={convertToSlug(label)} className="block">
         <span className="block text-[#4A5568] text-sm mb-2">{label}</span>
-        <div className="text-[#87909E] text-xs text-center flex items-center justify-center gap-2 py-4 px-7 bg-[#EDF2F7] cursor-pointer">
+        <div className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#87909E] text-xs text-center flex items-center justify-center gap-2  cursor-pointer">
           {previewUrl ? (
             <div className="relative w-24 h-24">
               <Image

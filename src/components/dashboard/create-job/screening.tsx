@@ -149,9 +149,10 @@ function CreateJobScreening() {
           )}
 
           <Section title="Job Description">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {ctx.formData.job_description}
-            </p>
+            <div
+              className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
+            />
           </Section>
 
           <Section title="Required Skills">

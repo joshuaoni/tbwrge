@@ -43,7 +43,7 @@ export function DashboardInputGroup(props: InputGroupProps) {
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 "
         placeholder={props.placeholder ?? `Enter your ${props.label}`}
         onChange={(e) => props.onChange?.(e.target.value)}
       />
@@ -75,7 +75,7 @@ export function DashboardTextareaGroup(props: InputGroupProps) {
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
         rows={5}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder={props.placeholder ?? `Enter your ${props.label}`}
         value={props.value}
         onChange={handleTextareaChange}

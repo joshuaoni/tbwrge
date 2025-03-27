@@ -117,7 +117,11 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
   </div>
 );
 
-const ApplicationForm = () => (
+const ApplicationForm = ({
+  questions,
+}: {
+  questions: { id: string; text: string }[];
+}) => (
   <div className="bg-white rounded-lg p-6">
     <h2 className="text-xl font-semibold mb-6">Job Application</h2>
     <form className="space-y-4">
@@ -244,42 +248,19 @@ const ApplicationForm = () => (
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Do you have an experience in sales?
-        </label>
-        <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
-          <option value="" className="text-[#6B7280]">
-            Select option
-          </option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Do you have any Managerial experience?
-        </label>
-        <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
-          <option value="" className="text-[#6B7280]">
-            Select option
-          </option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          How conversant are you with technology?
-        </label>
-        <input
-          type="text"
-          placeholder="Type in answer"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+      {/* Job-specific questions */}
+      {questions.map((question) => (
+        <div key={question.id}>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {question.text}
+          </label>
+          <textarea
+            placeholder="Type your answer here"
+            rows={3}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+      ))}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -397,9 +378,10 @@ const JobDetailsPage = () => {
             )}
 
             <Section title="Job Description">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                {job.job_description}
-              </p>
+              <div
+                className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: job.job_description }}
+              />
             </Section>
 
             <Section title="Required Skills">
@@ -464,7 +446,7 @@ const JobDetailsPage = () => {
 
           {/* Right column - Application form */}
           <div className="w-1/2">
-            <ApplicationForm />
+            <ApplicationForm questions={job.questions} />
           </div>
         </div>
       </div>

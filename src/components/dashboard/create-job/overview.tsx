@@ -225,9 +225,10 @@ function CreateJobOverview() {
           )}
 
           <Section title="Job Description">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {ctx.formData.job_description}
-            </p>
+            <div
+              className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
+            />
           </Section>
 
           <Section title="Required Skills">
@@ -416,6 +417,75 @@ function CreateJobOverview() {
               />
             </div>
 
+            {/* Custom Questions Section */}
+            {questions.map((question, i) => (
+              <div key={i} className="my-6">
+                <div className="flex justify-end gap-2">
+                  {editingIndex === i ? (
+                    <div
+                      onClick={() => handleSaveEdit(i)}
+                      className="text-green-600 cursor-pointer"
+                    >
+                      <CheckIcon />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => handleEditQuestion(i)}
+                      className="text-blue-600 cursor-pointer"
+                    >
+                      <EditIcon />
+                    </div>
+                  )}
+                  <div
+                    onClick={() => handleDeleteQuestion(i)}
+                    className="text-red-600 cursor-pointer"
+                  >
+                    <TrashIcon />
+                  </div>
+                </div>
+
+                <div className="w-full space-y-2 relative">
+                  {editingIndex === i ? (
+                    <textarea
+                      value={newQuestion}
+                      onChange={(e) => setNewQuestion(e.target.value)}
+                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                    />
+                  ) : (
+                    <label
+                      onClick={() => handleEditQuestion(i)}
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      {question.title}
+                    </label>
+                  )}
+                  <input
+                    placeholder="Type your answer here"
+                    value={question.answer}
+                    onChange={(e) => handleInputChange(e, i)}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  />
+                </div>
+              </div>
+            ))}
+
+            <div
+              onClick={() => {
+                setQuestions([
+                  ...questions,
+                  {
+                    title: "Enter your question here",
+                    answer: "",
+                  },
+                ]);
+                setEditingIndex(questions.length);
+              }}
+              className="flex items-center gap-2 mt-6 mb-6 justify-center px-4 cursor-pointer"
+            >
+              <PlusCircleIcon />
+              <span className="capitalize font-bold">Add custom question</span>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Upload CV
@@ -449,75 +519,6 @@ function CreateJobOverview() {
               />
             </div>
           </form>
-
-          {/* Custom Questions Section */}
-          {questions.map((question, i) => (
-            <div key={i} className="my-6">
-              <div className="flex justify-end gap-2">
-                {editingIndex === i ? (
-                  <button
-                    onClick={() => handleSaveEdit(i)}
-                    className="text-green-600"
-                  >
-                    <CheckIcon />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleEditQuestion(i)}
-                    className="text-blue-600"
-                  >
-                    <EditIcon />
-                  </button>
-                )}
-                <button
-                  onClick={() => handleDeleteQuestion(i)}
-                  className="text-red-600"
-                >
-                  <TrashIcon />
-                </button>
-              </div>
-
-              <div className="w-full space-y-2 relative">
-                {editingIndex === i ? (
-                  <textarea
-                    value={newQuestion}
-                    onChange={(e) => setNewQuestion(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-                  />
-                ) : (
-                  <label
-                    onClick={() => handleEditQuestion(i)}
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    {question.title}
-                  </label>
-                )}
-                <input
-                  placeholder="Type your answer here"
-                  value={question.answer}
-                  onChange={(e) => handleInputChange(e, i)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-                />
-              </div>
-            </div>
-          ))}
-
-          <button
-            onClick={() => {
-              setQuestions([
-                ...questions,
-                {
-                  title: "Enter your question here",
-                  answer: "",
-                },
-              ]);
-              setEditingIndex(questions.length);
-            }}
-            className="flex items-center gap-2 mt-6 px-4"
-          >
-            <PlusCircleIcon />
-            <span className="capitalize font-bold">Add custom question</span>
-          </button>
         </section>
       </div>
       <div className="w-full py-6 flex items-center justify-center">

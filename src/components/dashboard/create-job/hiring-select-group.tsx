@@ -48,7 +48,7 @@ export function CreateJobHiringSelectGroup(props: SelectGroupProps) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full py-3 px-4 flex justify-between items-center bg-[#EDF2F7] text-[#898989] rounded"
+        className="w-full py-3 px-4 flex justify-between items-center  text-[#898989] rounded bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         {props?.options?.find((o) => o.value === props.value)?.label ??
           props.defaultValue}
