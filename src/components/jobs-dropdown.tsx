@@ -33,21 +33,21 @@ const JobsDropdown = () => {
       title: "Candidate Report Generator",
       icon: "Pro",
     },
-    // {
-    //   link: "/dashboard/job-tools/generate-interview-questions/",
-    //   title: "Ai Interview and Screening Generator",
-    //   icon: "Pro",
-    // },
-    // {
-    //   link: "/dashboard/job-tools/screening-question-assistant/",
-    //   title: "Screening Assistant",
-    //   icon: "Pro",
-    // },
-    // {
-    //   link: "/dashboard/job-tools/ai-prep",
-    //   title: "Prep Guide",
-    //   icon: "Pro",
-    // },
+    {
+      link: "/dashboard/job-tools/generate-interview-questions/",
+      title: "Ai Interview and Screening Generator",
+      icon: "Pro",
+    },
+    {
+      link: "/dashboard/job-tools/screening-question-assistant/",
+      title: "Ai Screening Questions Assistant",
+      icon: "Pro",
+    },
+    {
+      link: "/dashboard/job-tools/ai-prep",
+      title: "Ai Interview Prep",
+      icon: "Pro",
+    },
   ]);
 
   return (

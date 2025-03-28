@@ -1,4 +1,6 @@
 import { useContext, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 
 import { INITIAL_HIRING_FLOW_STATE } from "@/constants/create-job.constant";
 import { CreateJobContext } from "@/providers/job-posting.context";
@@ -9,9 +11,26 @@ import { CreateJobHiringSelectGroup } from "./hiring-select-group";
 import { CreateJobModal } from "./modal";
 import { outfit } from "@/constants/app";
 
-const dummyContent = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum iste
-    nobis beatae soluta. Expedita nesciunt ducimus temporibus,
-    distinctio sunt iusto repellendus ea reiciendis.
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
+
+const modules = {
+  toolbar: [
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["clean"],
+  ],
+};
+
+const formats = ["bold", "italic", "underline", "list", "bullet"];
+
+const dummyContent = `Subject: Congratulations let's schedule your interview
+    <br />
+    <br />
+    <br />
+    Dear [Candidate's name],
     <br />
     <br />
     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
@@ -21,7 +40,13 @@ const dummyContent = `Lorem ipsum dolor sit amet consectetur adipisicing elit. E
     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum
     totam blanditiis, repudiandae corrupti consequuntur fuga quis?
     Tempore, id exercitationem, molestiae hic commodi illo numquam
-    laborum.`;
+    laborum.
+    <br />
+    <br />
+    [Schedule your interview](insert link here)
+    <br />
+    <br />
+    Best Regards [Recruiter's name]`;
 
 function CreateJobHiringFlow() {
   const ctx = useContext(CreateJobContext);
@@ -215,66 +240,45 @@ function CreateJobHiringFlow() {
         >
           <div className="max-w-96 w-full pt-2 px-4">
             <h4 className="font-bold py-2 border-b">{title}</h4>
-            <section className="text-sm text-[#898989] pt-4 min-h-[28rem] space-y-4">
+            <section className="flex flex-col justify-center text-sm text-[#898989] min-h-[28rem] space-y-4">
               {email.isEditing ? (
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Subject
+                      Edit Content
                     </label>
-                    <input
-                      type="text"
-                      value={email.subject}
-                      onChange={(e) =>
-                        setEmail({
-                          ...email,
-                          subject: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Content
-                    </label>
-                    <textarea
-                      value={email.content}
-                      onChange={(e) =>
-                        setEmail({
-                          ...email,
-                          content: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] min-h-[20rem]"
-                    />
+                    <div className="min-h-[20rem] border border-gray-200 rounded-lg overflow-hidden">
+                      <ReactQuill
+                        theme="snow"
+                        value={email.content}
+                        onChange={(value) =>
+                          setEmail({
+                            ...email,
+                            content: value,
+                          })
+                        }
+                        modules={modules}
+                        formats={formats}
+                        className="h-[calc(20rem-42px)]"
+                      />
+                    </div>
                   </div>
                 </>
               ) : (
                 <>
                   <div>
-                    <h5 className=" text-[#898989]">
-                      Subject: <span className="mt-1">{email.subject}</span>
-                    </h5>
-                    <p className="text-[#898989] mt-4">
-                      {"Dear [Candiate's name],"}
-                    </p>
-                  </div>
-                  <div>
-                    {/* <h5 className="font-medium text-[#898989]">Content:</h5> */}
-                    <span
-                      className="mt-1"
+                    <div
+                      className="mt-1 prose prose-sm max-w-none text-[#898989] mb-8"
                       dangerouslySetInnerHTML={{ __html: email.content }}
                     />
                   </div>
                 </>
               )}
-              <p className="text-[#898989]">Best Regards</p>
             </section>
             <div className="flex items-center justify-between gap-6 py-4 border-t">
               <button
                 className="bg-primary text-white text-[12px] px-6 py-3 rounded-[4px] w-full hover:bg-[#007a61] transition-colors"
-                onClick={() => setModal(false)}
+                onClick={() => setEmail({ ...email, isEditing: false })}
               >
                 Save
               </button>

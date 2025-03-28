@@ -426,7 +426,7 @@ function CreateJobOverview() {
                       onClick={() => handleSaveEdit(i)}
                       className="text-green-600 cursor-pointer"
                     >
-                      <CheckIcon />
+                      <CheckIcon className="w-4 h-4" />
                     </div>
                   ) : (
                     <div
@@ -446,15 +446,15 @@ function CreateJobOverview() {
 
                 <div className="w-full space-y-2 relative">
                   {editingIndex === i ? (
-                    <textarea
+                    <input
                       value={newQuestion}
                       onChange={(e) => setNewQuestion(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                      className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                     />
                   ) : (
                     <label
                       onClick={() => handleEditQuestion(i)}
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-gray-700"
                     >
                       {question.title}
                     </label>

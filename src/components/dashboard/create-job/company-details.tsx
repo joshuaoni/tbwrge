@@ -160,13 +160,15 @@ function CreateJobCompanyDetails() {
                       {selectedCompany ? (
                         <div className="flex items-center gap-2">
                           {selectedCompany.logo ? (
-                            <Image
-                              src={selectedCompany.logo}
-                              alt={selectedCompany.name}
-                              width={24}
-                              height={24}
-                              className="rounded-full"
-                            />
+                            <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                              <Image
+                                src={selectedCompany.logo}
+                                alt={selectedCompany.name}
+                                width={24}
+                                height={24}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
                           ) : (
                             <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
                               <span className="text-xs font-medium">
@@ -204,13 +206,15 @@ function CreateJobCompanyDetails() {
                               className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
                             >
                               {company.logo ? (
-                                <Image
-                                  src={company.logo}
-                                  alt={company.name}
-                                  width={24}
-                                  height={24}
-                                  className="rounded-full"
-                                />
+                                <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                  <Image
+                                    src={company.logo}
+                                    alt={company.name}
+                                    width={24}
+                                    height={24}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
                               ) : (
                                 <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
                                   <span className="text-xs font-medium">

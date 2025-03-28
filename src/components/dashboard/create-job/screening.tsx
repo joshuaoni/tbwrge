@@ -234,7 +234,7 @@ function CreateJobScreening() {
                     onClick={() => handleSaveEdit(i)}
                     className="text-green-600"
                   >
-                    <CheckIcon />
+                    <CheckIcon className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
@@ -258,7 +258,7 @@ function CreateJobScreening() {
                     type="text"
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   />
                 ) : (
                   <label className="block text-gray-700 text-sm font-medium">
@@ -267,12 +267,12 @@ function CreateJobScreening() {
                 )}
                 <textarea
                   rows={5}
-                  className="bg-gray-100 py-4 px-6 rounded w-full focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   placeholder="Type your answer here"
                   value={question.answer}
                   onChange={(e) => handleTextareaChange(e, i)}
                 />
-                <span className="absolute top-8 right-6 text-xs font-medium text-gray-500">
+                <span className="absolute bottom-[115px] right-4 text-xs font-medium text-gray-500">
                   {wordCount} / {limit}
                 </span>
               </div>
@@ -290,7 +290,7 @@ function CreateJobScreening() {
               ]);
               setEditingIndex(questions.length);
             }}
-            className="flex items-center gap-2 mt-6 px-4"
+            className="w-full flex items-center justify-center gap-2 mt-6 px-4"
           >
             <PlusCircleIcon />
             <span className="capitalize font-bold">Add custom question</span>

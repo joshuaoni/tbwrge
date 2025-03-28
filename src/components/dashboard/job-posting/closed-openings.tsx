@@ -130,7 +130,7 @@ const ClosedOpenings = () => {
                 />
               </TableCell>
               <TableCell>
-                <div className="flex py-[4px] gap-[10px] items-center justify-center bg-[#F9F9F9] rounded-[6px]">
+                <div className="flex py-[5px] gap-[10px] items-center justify-center bg-[#F9F9F9] rounded-[6px]">
                   <div className="flex items-center justify-center w-[35px] ml-[6px]">
                     {job.company_logo ? (
                       <div className="w-[35px] h-[35px] rounded-full overflow-hidden">

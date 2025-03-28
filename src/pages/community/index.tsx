@@ -309,7 +309,6 @@ const CommunityPage = () => {
                             className="rounded-full md:w-[30px] md:h-[32px]"
                           />
                         </div>
-                        <p className="text-black"> jagajaga</p>
                         <div>
                           <div className="flex items-center gap-1 md:gap-2">
                             <h3 className="text-xs md:text-sm font-medium">

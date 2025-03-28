@@ -43,6 +43,7 @@ const CreatePost = ({ onClose, post }: CreatePostProps) => {
     },
     onSuccess: () => {
       toast.success("Post created successfully");
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       onClose();
     },
     onError: (error: Error) => {
