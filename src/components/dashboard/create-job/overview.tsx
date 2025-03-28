@@ -121,6 +121,8 @@ function CreateJobOverview() {
         company_id: null,
         recruiter_id: userData?.user?.id,
         job_questions: questions.map((q) => q.title),
+        screening_questions: ctx.formData.screening_questions,
+        hiring_flows: ctx.formData.hiring_flows,
       };
 
       if (ctx.formData.job_id) {

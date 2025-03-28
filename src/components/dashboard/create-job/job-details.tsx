@@ -227,8 +227,8 @@ function CreateJobJobDetails() {
                 {ctx.formData.job_description.length}/1000
               </span>
             </div>
-            <div className="border border-gray-200 rounded-lg overflow-hidden h-[200px]">
-              <div className="h-full">
+            <div className="border border-gray-200 rounded-lg overflow-hidden min-h-[300px]">
+              <div className="h-[calc(300px-42px)]">
                 <ReactQuill
                   theme="snow"
                   value={ctx.formData.job_description}
@@ -241,6 +241,7 @@ function CreateJobJobDetails() {
                   formats={formats}
                   className="bg-gray-50 h-full"
                   style={{ height: "100%" }}
+                  placeholder="Write a detailed job description including responsibilities, requirements, and what makes this role unique..."
                 />
               </div>
             </div>

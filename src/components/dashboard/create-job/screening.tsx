@@ -22,15 +22,22 @@ const Section = ({
 );
 
 function CreateJobScreening() {
+  const ctx = useContext(CreateJobContext);
+
   const [questions, setQuestions] = useState<
     { title: string; answer: string }[]
-  >([
-    {
-      title:
-        "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
-      answer: "",
-    },
-  ]);
+  >(() => {
+    // Initialize with existing questions from context or default question
+    return ctx.formData.screening_questions.length > 0
+      ? ctx.formData.screening_questions.map((q) => ({ title: q, answer: "" }))
+      : [
+          {
+            title:
+              "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
+            answer: "",
+          },
+        ];
+  });
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
@@ -66,12 +73,30 @@ function CreateJobScreening() {
     setQuestions(questions.filter((_, i) => i !== index));
   };
 
-  const ctx = useContext(CreateJobContext);
+  const handleSaveScreeningQuestions = () => {
+    // Filter out empty questions and only take the titles
+    const questionTitles = questions
+      .filter((q) => q.title.trim() !== "")
+      .map((q) => q.title);
+
+    if (questionTitles.length === 0) {
+      return toast.error("Please add at least one question");
+    }
+
+    // Update the context with the questions
+    ctx.setFormData("screening_questions", questionTitles);
+    toast.success("Screening questions saved successfully");
+
+    // Navigate back to hiring flow page after 500ms
+    setTimeout(() => {
+      ctx.goTo("hiring");
+    }, 1000);
+  };
 
   return (
     <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.goTo("job")} className="mr-4">
+        <button onClick={() => ctx.goTo("hiring")} className="mr-4">
           <ArrowLeft />
         </button>
         <span>Job Screening</span>
@@ -294,6 +319,13 @@ function CreateJobScreening() {
           >
             <PlusCircleIcon />
             <span className="capitalize font-bold">Add custom question</span>
+          </button>
+
+          <button
+            onClick={handleSaveScreeningQuestions}
+            className="w-full bg-primary text-white py-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors"
+          >
+            Save Screening Questions
           </button>
         </section>
       </div>
