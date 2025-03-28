@@ -134,7 +134,7 @@ function CreateJobOverview() {
       }
     },
     onSuccess: (data) => {
-      const jobLink = `${window.location.origin}/jobs/${data.id}`;
+      const jobLink = `${window.location.origin}/dashboard/job-board/${data.id}`;
       setCreatedJobLink(jobLink);
       setShowSuccessPopup(true);
     },

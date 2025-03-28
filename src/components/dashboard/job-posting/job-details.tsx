@@ -246,25 +246,25 @@ const JobDetails = ({
               <TableHead className="w-[40px] pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 <input type="checkbox" className="rounded-sm" />
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 CANDIDATE NAME
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 ID
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 FIT SCORE
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 YOE
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 KEY SKILLS
               </TableHead>
-              <TableHead className="px-0 pl-[4px] text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+              <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                 APPLICATION DATE
               </TableHead>
-              <TableHead className="pr-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg text-right">
+              <TableHead className=" text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
                 ATTACHMENTS
               </TableHead>
             </TableRow>
@@ -347,9 +347,9 @@ const JobDetails = ({
                     31/10/24
                   </span>
                 </TableCell>
-                <TableCell className="py-4 pr-4 text-sm align-middle text-right">
+                <TableCell className="py-4 text-sm align-middle">
                   <div
-                    className={`flex items-center gap-1 justify-end ${
+                    className={`flex items-center gap-1  ${
                       selectedTab === "rejected" ? "opacity-40" : ""
                     }`}
                   >

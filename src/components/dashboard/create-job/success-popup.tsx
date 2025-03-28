@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { FacebookIcon, Twitter } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface SuccessPopupProps {
   isOpen: boolean;
@@ -22,9 +23,11 @@ export function JobCreatedSuccessPopup({
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      toast.success("Copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
+      toast.error("Failed to copy text");
     }
   };
 
@@ -58,7 +61,7 @@ export function JobCreatedSuccessPopup({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="needed text-gray-400 hover:text-gray-600"
           >
             <X size={20} />
           </button>
@@ -137,10 +140,10 @@ export function JobCreatedSuccessPopup({
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 pt-2">
+          <div className="flex flex-col gap-4 pt-4">
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 text-[#0077B5] border-[#0077B5] hover:bg-[#0077B5] hover:text-white"
+              className="w-full flex items-center justify-center gap-3 py-5 bg-white hover:bg-[#0077B5]/5 text-[#0077B5] border-[#0077B5]/20 hover:border-[#0077B5]/30 transition-all duration-200"
               onClick={() =>
                 window.open(
                   `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
@@ -151,12 +154,12 @@ export function JobCreatedSuccessPopup({
               }
             >
               <LinkedInLogoIcon className="w-5 h-5" />
-              Share to LinkedIn
+              <span className="font-medium">Share on LinkedIn</span>
             </Button>
 
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 text-[#1DA1F2] border-[#1DA1F2] hover:bg-[#1DA1F2] hover:text-white"
+              className="w-full flex items-center justify-center gap-3 py-5 bg-white hover:bg-[#1DA1F2]/5 text-[#1DA1F2] border-[#1DA1F2]/20 hover:border-[#1DA1F2]/30 transition-all duration-200"
               onClick={() =>
                 window.open(
                   `https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -167,15 +170,15 @@ export function JobCreatedSuccessPopup({
               }
             >
               <Twitter className="w-5 h-5" />
-              Share to Twitter
+              <span className="font-medium">Share on Twitter</span>
             </Button>
 
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 text-[#1877F2] border-[#1877F2] hover:bg-[#1877F2] hover:text-white"
+              className="w-full flex items-center justify-center gap-3 py-5 bg-white hover:bg-[#1877F2]/5 text-[#1877F2] border-[#1877F2]/20 hover:border-[#1877F2]/30 transition-all duration-200"
               onClick={() =>
                 window.open(
-                  `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  `https://www.facebook.com/sharer/sharer.php?url=${encodeURIComponent(
                     jobLink
                   )}`,
                   "_blank"
@@ -183,13 +186,13 @@ export function JobCreatedSuccessPopup({
               }
             >
               <FacebookIcon className="w-5 h-5" />
-              Share to Facebook
+              <span className="font-medium">Share on Facebook</span>
             </Button>
           </div>
         </div>
 
         <Button
-          className="w-full bg-[#009379] hover:bg-[#009379]/90 text-white"
+          className="w-full bg-primary hover:bg-primary/90 text-white"
           onClick={() => window.open(jobLink, "_blank")}
         >
           View Posted Job

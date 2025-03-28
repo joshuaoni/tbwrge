@@ -45,6 +45,8 @@ export const API_CONFIG = {
   UPDATE_SETTINGS: `${MAIN_URL}/profile/update-settings/`,
   GET_PROFILE_SETTINGS: `${MAIN_URL}/profile/get-settings/`,
   ADD_TEAM_MEMBER: `${MAIN_URL}/profile/add-team-member/`,
+  DELETE_TEAM_MEMBER: (member_id: string) =>
+    `${MAIN_URL}/profile/remove-member/${member_id}/`,
   GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,

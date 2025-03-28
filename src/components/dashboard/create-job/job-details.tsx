@@ -1,9 +1,9 @@
 import { CreateJobContext } from "@/providers/job-posting.context";
-import { ArrowLeft, PlusCircle, X } from "lucide-react";
-import { useContext, useState } from "react";
+import { ArrowLeft, PlusCircle, X, ChevronDown, Trash2 } from "lucide-react";
+import { useContext, useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addTeamMember } from "@/actions/add-team-member";
 import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
@@ -20,6 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getTeamMembers } from "@/actions/get-team-members";
+import { deleteTeamMember } from "@/actions/delete-team-member";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -97,12 +99,41 @@ const formats = [
   "emoji",
 ];
 
+interface TeamMember {
+  id: string;
+  team: {
+    id: string;
+    name: string;
+    owner: {
+      id: string;
+    };
+  };
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
 function CreateJobJobDetails() {
   const ctx = useContext(CreateJobContext);
   const { userData } = useUserStore();
   const [isTeamMemberDialogOpen, setIsTeamMemberDialogOpen] = useState(false);
   const [teamMemberName, setTeamMemberName] = useState("");
   const [teamMemberEmail, setTeamMemberEmail] = useState("");
+  const [selectedTeamMember, setSelectedTeamMember] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { data: teamMembers } = useQuery({
+    queryKey: ["team-members"],
+    queryFn: async () => {
+      const response = await getTeamMembers(userData?.token);
+      return response as TeamMember[];
+    },
+  });
+
+  const queryClient = useQueryClient();
 
   const addTeamMemberMutation = useMutation({
     mutationFn: async () => {
@@ -121,9 +152,24 @@ function CreateJobJobDetails() {
       setIsTeamMemberDialogOpen(false);
       setTeamMemberName("");
       setTeamMemberEmail("");
+      // Invalidate and refetch team members
+      queryClient.invalidateQueries({ queryKey: ["team-members"] });
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to add team member");
+    },
+  });
+
+  const deleteTeamMemberMutation = useMutation({
+    mutationFn: async (memberId: string) => {
+      return deleteTeamMember(memberId, userData?.token || "");
+    },
+    onSuccess: () => {
+      toast.success("Team member removed successfully");
+      queryClient.invalidateQueries({ queryKey: ["team-members"] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to remove team member");
     },
   });
 
@@ -132,6 +178,33 @@ function CreateJobJobDetails() {
       addTeamMemberMutation.mutate();
     }
   };
+
+  useEffect(() => {
+    if (teamMembers && !ctx.formData.recruiter_id) {
+      const owner = teamMembers.find(
+        (member) => member.user.id === member.team.owner.id
+      );
+      if (owner) {
+        ctx.setFormData("recruiter_id", owner.user.id);
+      }
+    }
+  }, [teamMembers, ctx.formData.recruiter_id]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className={`${outfit.className}`}>
@@ -364,10 +437,10 @@ function CreateJobJobDetails() {
             </div>
           </div>
 
-          <div>
+          <div className="space-y-4">
             <div className="flex justify-between items-end">
               <span className="text-sm font-medium text-gray-700">
-                Recruiter's name
+                Assign recruiter
               </span>
               <button
                 type="button"
@@ -377,6 +450,77 @@ function CreateJobJobDetails() {
                 Add a Team Member
                 <PlusCircle className="w-6 h-6" />
               </button>
+            </div>
+
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-left flex items-center justify-between"
+              >
+                <span
+                  className={
+                    teamMembers?.find(
+                      (m) => m.user.id === ctx.formData.recruiter_id
+                    )?.user.name
+                      ? "text-gray-900"
+                      : "text-gray-400"
+                  }
+                >
+                  {teamMembers?.find(
+                    (m) => m.user.id === ctx.formData.recruiter_id
+                  )?.user.name
+                    ? `${
+                        teamMembers.find(
+                          (m) => m.user.id === ctx.formData.recruiter_id
+                        )?.user.name
+                      } (${
+                        teamMembers.find(
+                          (m) => m.user.id === ctx.formData.recruiter_id
+                        )?.user.email
+                      })`
+                    : "Assign recruiter"}
+                </span>
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                  {teamMembers?.map((member) => (
+                    <div
+                      key={member.user.id}
+                      className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                    >
+                      <div
+                        onClick={() => {
+                          ctx.setFormData("recruiter_id", member.user.id);
+                          setIsDropdownOpen(false);
+                        }}
+                        className="flex-1 text-sm"
+                      >
+                        {member.user.name} ({member.user.email})
+                      </div>
+                      {member.user.id !== member.team.owner.id && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (
+                              window.confirm(
+                                "Are you sure you want to remove this team member?"
+                              )
+                            ) {
+                              deleteTeamMemberMutation.mutate(member.id);
+                            }
+                          }}
+                          className="ml-2 text-gray-400 hover:text-red-500 p-1"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

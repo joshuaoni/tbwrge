@@ -41,6 +41,7 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   job_visibility: true,
   hide_candidates_personal_details: false,
   job_id: null as string | null,
+  recruiter_id: null as string | null,
 };
 
 export const INITIAL_HIRING_FLOW_STATE = {
