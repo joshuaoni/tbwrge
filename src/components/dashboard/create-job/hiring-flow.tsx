@@ -86,11 +86,11 @@ After careful consideration of all applications, we regret to inform you that we
 <br />
 <br />
 We appreciate your interest in [Company Name] and encourage you to apply for future positions that match your skills and experience.
-<br />
-<br />
+    <br />
+    <br />
 We wish you the best in your job search and future career endeavors.
 <br />
-<br />
+    <br />
 Best regards,
 [Recruiter's Name]
 [Company Name]`;
@@ -127,13 +127,22 @@ function CreateJobHiringFlow() {
   const updateHiringFlows = (step: string, stepNumber: number) => {
     if (!step) return;
 
+    console.log("Current minimum_fit_score:", ctx.formData.minimum_fit_score);
+    const screeningValue = 100 - ctx.formData.minimum_fit_score;
+    console.log("Calculated screening value:", screeningValue);
+
     const newFlow = {
       title: (step === "topFitScore"
         ? "screening"
         : step === "topSelected"
         ? "interview"
         : "rejection") as "screening" | "interview" | "rejection",
-      value: step === "topSelected" ? Number(interviewValue) || null : null,
+      value:
+        step === "topFitScore"
+          ? screeningValue
+          : step === "topSelected"
+          ? Number(interviewValue) || null
+          : null,
       step: stepNumber,
       email_template:
         step === "topFitScore"
@@ -142,6 +151,8 @@ function CreateJobHiringFlow() {
           ? interviewEmail.content
           : rejectionEmail.content,
     };
+
+    console.log("New flow:", newFlow);
 
     const existingFlows = [...ctx.formData.hiring_flows];
     const flowIndex = existingFlows.findIndex((f) => f.step === stepNumber);
@@ -157,31 +168,45 @@ function CreateJobHiringFlow() {
 
   // Update fit score when minimum score changes
   const updateFitScore = (score: number) => {
+    console.log("Updating fit score to:", score);
     const existingFlows = [...ctx.formData.hiring_flows];
     const fitScoreFlow = existingFlows.find((f) => f.title === "fit_score");
 
     if (fitScoreFlow) {
       fitScoreFlow.value = score;
-      ctx.setFormData("hiring_flows", existingFlows);
     }
 
+    // Find and update screening flow if it exists
+    const screeningFlow = existingFlows.find((f) => f.title === "screening");
+    if (screeningFlow) {
+      screeningFlow.value = 100 - score;
+      console.log("Updated screening value to:", screeningFlow.value);
+    }
+
+    ctx.setFormData("hiring_flows", existingFlows);
     ctx.setFormData("minimum_fit_score", score);
   };
 
   const stepActions = {
     topFitScore: [
       {
-        label: "view screening email",
+        label: "view & edit screening email",
         onClick: () => setScreeningEmailModal(true),
       },
-      { label: "view screening page", onClick: () => ctx.goTo("screening") },
+      {
+        label: "view & edit screening page",
+        onClick: () => ctx.goTo("screening"),
+      },
     ],
     topSelected: [
-      { label: "view interview email", onClick: () => setInterviewModal(true) },
+      {
+        label: "view & edit interview email",
+        onClick: () => setInterviewModal(true),
+      },
     ],
     topFiltered: [
       {
-        label: "view rejection email",
+        label: "view & edit rejection email",
         onClick: () => setRejectionEmailModal(true),
       },
     ],
@@ -207,17 +232,17 @@ function CreateJobHiringFlow() {
         disabled: isDisabled("topFitScore"),
       },
       {
-        label: "Send Interview Email Top selected Candidates",
+        label: `Send Interview Email Top ${interviewValue || 0} Candidates`,
         value: "topSelected",
         disabled: isDisabled("topSelected"),
       },
       {
-        label: "Send Rejection Email Top filtered Candidates",
+        label: "Send Rejection Email to Filtered Candidates",
         value: "topFiltered",
         disabled: isDisabled("topFiltered"),
       },
     ],
-    [ctx.formData.minimum_fit_score, selectedValues]
+    [ctx.formData.minimum_fit_score, selectedValues, interviewValue]
   );
 
   return (
@@ -287,8 +312,28 @@ function CreateJobHiringFlow() {
                   placeholder="10"
                   value={interviewValue}
                   onChange={(e) => {
-                    setInterviewValue(e.target.value);
-                    updateHiringFlows("topSelected", item.step);
+                    const newValue = e.target.value;
+                    setInterviewValue(newValue);
+                    // Use the new value directly in updateHiringFlows instead of depending on state
+                    const existingFlows = [...ctx.formData.hiring_flows];
+                    const flowIndex = existingFlows.findIndex(
+                      (f) => f.step === item.step
+                    );
+
+                    const newFlow = {
+                      title: "interview" as const,
+                      value: Number(newValue) || null,
+                      step: item.step,
+                      email_template: interviewEmail.content,
+                    };
+
+                    if (flowIndex !== -1) {
+                      existingFlows[flowIndex] = newFlow;
+                    } else {
+                      existingFlows.push(newFlow);
+                    }
+
+                    ctx.setFormData("hiring_flows", existingFlows);
                   }}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />

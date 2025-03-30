@@ -52,7 +52,7 @@ const quillStyles = `
     color: #9CA3AF;
     font-size: 14px;
     position: absolute;
-    content: 'Write job description and responsibilities here...';
+    content: 'Write job description and requirements here...';
     pointer-events: none;
   }
 
@@ -217,11 +217,10 @@ function CreateJobJobDetails() {
       </h3>
       <div className="flex gap-8">
         <section className="w-full space-y-4">
-          <h4 className="font-bold">Job Description & Requirements</h4>
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm font-medium text-gray-700">
-                Job Description & Responsibilities
+                Job Description & Requirements
               </label>
               <span className="text-sm text-gray-500">
                 {ctx.formData.job_description.length}/1000
@@ -241,7 +240,7 @@ function CreateJobJobDetails() {
                   formats={formats}
                   className="bg-gray-50 h-full"
                   style={{ height: "100%" }}
-                  placeholder="Write a detailed job description including responsibilities, requirements, and what makes this role unique..."
+                  placeholder="Write a detailed job description including requirements, and what makes this role unique..."
                 />
               </div>
             </div>
@@ -277,7 +276,7 @@ function CreateJobJobDetails() {
               <input
                 type="text"
                 className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
-                placeholder="Type a skill and press Enter"
+                placeholder="Type a skill and press Enter. e.g, python, sales"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -416,7 +415,7 @@ function CreateJobJobDetails() {
               <input
                 type="text"
                 className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
-                placeholder="Type a tag and press Enter"
+                placeholder="Type a tag and press Enter. e.g, Fintech, AI"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -613,17 +612,18 @@ function CreateJobJobDetails() {
               </label>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2">
               <input
                 type="checkbox"
                 checked={ctx.formData.auto_send_interview_email}
                 onChange={(e) =>
                   ctx.setFormData("auto_send_interview_email", e.target.checked)
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
-              <label className="text-sm text-gray-700">
-                Automatically Send Interview Email
+              <label className="text-sm text-gray-700 flex-1">
+                Automatically Send Interview Email (When the job closes, we will
+                rank them by fit score)
               </label>
             </div>
 

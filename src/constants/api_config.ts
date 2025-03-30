@@ -74,4 +74,5 @@ export const API_CONFIG = {
     `${MAIN_URL}/community/delete-post/${post_id}/`,
   UPDATE_POST: (post_id: string) =>
     `${MAIN_URL}/community/update-post/${post_id}/`,
+  GET_TAGS: (page: number = 0) => `${MAIN_URL}/community/get-tags/${page}/`,
 };

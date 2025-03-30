@@ -1,5 +1,5 @@
 // import { CommunityDashHeader } from "@/components/community-dash-header";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -12,69 +12,8 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { togglePostVote } from "@/actions/upvote-post";
 import { deletePost } from "@/actions/delete-post";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
-
-const popularTags = [
-  {
-    id: 1,
-    name: "#Interview",
-    posts: "82,645",
-    status: "Trending",
-    icon: "/dev.png",
-    bg: "#5A4F43",
-    width: 20,
-    height: 13,
-  },
-  {
-    id: 2,
-    name: "#HR Management",
-    posts: "65,523",
-    status: "Trending",
-    icon: "/bitcoin.png",
-    bg: "#473E3B",
-    width: 20,
-    height: 20,
-  },
-  {
-    id: 3,
-    name: "#design",
-    posts: "51,345",
-    status: "Trending",
-    icon: "/design.png",
-    bg: "#444F5F",
-    width: 20,
-    height: 11,
-  },
-  {
-    id: 4,
-    name: "#innovation",
-    posts: "48,029",
-    status: "Trending",
-    icon: "/innovation.png",
-    bg: "#574D42",
-    width: 20,
-    height: 16,
-  },
-  {
-    id: 5,
-    name: "#tutorial",
-    posts: "51,345",
-    status: "Trending",
-    icon: "/tutorial.png",
-    bg: "#335248",
-    width: 19,
-    height: 20,
-  },
-  {
-    id: 6,
-    name: "#business",
-    posts: "82,645",
-    status: "Trending",
-    icon: "/business.png",
-    bg: "#46475B",
-    width: 18,
-    height: 20,
-  },
-];
+import { getTags } from "@/actions/get-tags";
+import { Tag } from "@/actions/get-tags";
 
 const CommunityPage = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -98,6 +37,28 @@ const CommunityPage = () => {
     },
     enabled: !!userData?.token,
   });
+
+  const { data: tags = [], isLoading: tagsLoading } = useQuery({
+    queryKey: ["tags", currentPage],
+    queryFn: () => {
+      if (!userData?.token) throw new Error("No authentication token found");
+      return getTags(userData.token, currentPage);
+    },
+    enabled: !!userData?.token,
+  });
+
+  const formattedTags = useMemo(() => {
+    return tags.map((tag: Tag) => ({
+      id: tag.id,
+      name: `#${tag.name}`,
+      posts: tag.posts_count.toLocaleString(),
+      status: "Trending",
+      icon: tag.name.charAt(0).toUpperCase(),
+      bg: getRandomColor(),
+      width: 20,
+      height: 20,
+    }));
+  }, [tags]);
 
   const upvoteMutation = useMutation({
     mutationFn: async (postId: string) => {
@@ -152,7 +113,7 @@ const CommunityPage = () => {
             <div className="bg-white rounded-xl p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)]">
               <h2 className="text-lg font-semibold pl-2 mb-4">Popular Tags</h2>
               <div className="space-y-2">
-                {popularTags.map((tag) => (
+                {formattedTags.map((tag) => (
                   <div
                     key={tag.id}
                     className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
@@ -161,12 +122,7 @@ const CommunityPage = () => {
                       className={`w-8 h-8 rounded-lg flex items-center justify-center`}
                       style={{ backgroundColor: tag.bg }}
                     >
-                      <Image
-                        src={tag.icon}
-                        alt={tag.name}
-                        width={tag.width}
-                        height={tag.height}
-                      />
+                      {tag.icon}
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[14px] font-semibold leading-tight">
@@ -188,7 +144,7 @@ const CommunityPage = () => {
             <div className="md:hidden pt-[20px] mb-4">
               <h2 className="text-base font-semibold mb-3">Popular Tags</h2>
               <div className="grid grid-cols-2 gap-2">
-                {popularTags.map((tag) => (
+                {formattedTags.map((tag) => (
                   <div
                     key={tag.id}
                     className="flex items-center gap-2 bg-white p-2.5 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer"
@@ -197,12 +153,7 @@ const CommunityPage = () => {
                       className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0`}
                       style={{ backgroundColor: tag.bg }}
                     >
-                      <Image
-                        src={tag.icon}
-                        alt={tag.name}
-                        width={tag.width * 0.8}
-                        height={tag.height * 0.8}
-                      />
+                      {tag.icon}
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-[13px] font-semibold truncate">
@@ -426,5 +377,24 @@ const CommunityPage = () => {
     </div>
   );
 };
+
+// Helper function to generate a random color for tag backgrounds
+function getRandomColor() {
+  const colors = [
+    "#5A4F43",
+    "#473E3B",
+    "#444F5F",
+    "#574D42",
+    "#335248",
+    "#46475B",
+    "#4A3F3C",
+    "#3E4B5C",
+    "#4C3F3D",
+    "#3A4B5D",
+    "#4D3F3E",
+    "#3B4B5E",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
 
 export default CommunityPage;

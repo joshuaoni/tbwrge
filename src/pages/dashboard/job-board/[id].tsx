@@ -120,7 +120,7 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
 const ApplicationForm = ({
   questions,
 }: {
-  questions: { id: string; text: string }[];
+  questions: { id: string; text: string; is_screening: boolean }[];
 }) => (
   <div className="bg-white rounded-lg p-6">
     <h2 className="text-xl font-semibold mb-6">Job Application</h2>
@@ -249,18 +249,20 @@ const ApplicationForm = ({
       </div>
 
       {/* Job-specific questions */}
-      {questions.map((question) => (
-        <div key={question.id}>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {question.text}
-          </label>
-          <textarea
-            placeholder="Type your answer here"
-            rows={3}
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-          />
-        </div>
-      ))}
+      {questions
+        .filter((question) => !question.is_screening)
+        .map((question) => (
+          <div key={question.id}>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {question.text}
+            </label>
+            <textarea
+              placeholder="Type your answer here"
+              rows={3}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+          </div>
+        ))}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

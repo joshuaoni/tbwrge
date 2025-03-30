@@ -321,12 +321,14 @@ function CreateJobScreening() {
             <span className="capitalize font-bold">Add custom question</span>
           </button>
 
-          <button
-            onClick={handleSaveScreeningQuestions}
-            className="w-full bg-primary text-white py-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors"
-          >
-            Save Screening Questions
-          </button>
+          <div className="flex justify-center">
+            <button
+              onClick={handleSaveScreeningQuestions}
+              className=" bg-primary text-white p-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors"
+            >
+              Save Screening Questions
+            </button>
+          </div>
         </section>
       </div>
     </div>
