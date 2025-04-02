@@ -156,7 +156,7 @@ export const updateJob = async (
   };
   console.log("updatejob", { data });
 
-  // const response = await axios(options);
-  // console.log({ response });
-  // return response.data;
+  const response = await axios(options);
+  console.log({ response });
+  return response.data;
 };

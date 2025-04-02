@@ -190,23 +190,23 @@ function CreateJobHiringFlow() {
   const stepActions = {
     topFitScore: [
       {
-        label: "view & edit screening email",
+        label: "View & edit screening email",
         onClick: () => setScreeningEmailModal(true),
       },
       {
-        label: "view & edit screening page",
+        label: "View & edit screening page",
         onClick: () => ctx.goTo("screening"),
       },
     ],
     topSelected: [
       {
-        label: "view & edit interview email",
+        label: "View & edit interview email",
         onClick: () => setInterviewModal(true),
       },
     ],
     topFiltered: [
       {
-        label: "view & edit rejection email",
+        label: "View & edit rejection email",
         onClick: () => setRejectionEmailModal(true),
       },
     ],
@@ -245,6 +245,18 @@ function CreateJobHiringFlow() {
     [ctx.formData.minimum_fit_score, selectedValues, interviewValue]
   );
 
+  const renderActions = (actions: { label: string; onClick: () => void }[]) => {
+    return actions.map((action, index) => (
+      <button
+        key={index}
+        onClick={action.onClick}
+        className="text-primary hover:text-primary/80"
+      >
+        {action.label}
+      </button>
+    ));
+  };
+
   return (
     <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold pb-10 flex items-center gap-5">
@@ -263,47 +275,132 @@ function CreateJobHiringFlow() {
         </button>
       </h3>
 
-      <section className="w-full grid grid-cols-2 gap-y-4 gap-x-12 pr-8">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Step 1: Minimum Candidate Fit Score (%)
-          </label>
-          <input
-            type="text"
-            placeholder="70"
-            value={
-              ctx.formData.minimum_fit_score === 0
-                ? ""
-                : ctx.formData.minimum_fit_score.toString()
-            }
-            onChange={(e) => updateFitScore(Number(e.target.value))}
-            pattern="[0-9]+"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-          />
+      <div className="grid grid-cols-2 gap-6">
+        {/* Step 1 */}
+        <div className="flex flex-col">
+          <div className="flex-1 flex flex-col">
+            <div className="h-16">
+              {/* Empty space to match action buttons */}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Step 1: Minimum Candidate Fit Score (%)
+              </label>
+              <input
+                type="text"
+                placeholder="70"
+                value={
+                  ctx.formData.minimum_fit_score === 0
+                    ? ""
+                    : ctx.formData.minimum_fit_score.toString()
+                }
+                onChange={(e) => updateFitScore(Number(e.target.value))}
+                pattern="[0-9]+"
+                className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+          </div>
         </div>
 
-        {[
-          { val: secondStep, key: "secondStep", step: 2 },
-          { val: thirdStep, key: "thirdStep", step: 3 },
-          { val: fourthStep, key: "fourthStep", step: 4 },
-        ].map((item, i) => (
-          <div className="space-y-4" key={i}>
+        {/* Step 2 */}
+        <div className="flex flex-col">
+          <div className="flex-1 flex flex-col justify-end">
+            <div className="flex flex-col gap-2 h-16 justify-end">
+              {stepActions[secondStep as keyof typeof stepActions]?.map(
+                (action, index) => (
+                  <button
+                    key={index}
+                    onClick={action.onClick}
+                    className="text-[#009379] hover:text-[#009379]/80 text-right"
+                  >
+                    {action.label}
+                  </button>
+                )
+              )}
+            </div>
             <CreateJobHiringSelectGroup
-              title={"Step " + (i + 2)}
+              title="Step 2"
               options={options}
               defaultValue="Choose the next step of your hiring process"
-              value={item.val}
+              value={secondStep}
               onChange={(val) => {
                 ctx.setHiringFlow((prevSteps) => ({
                   ...prevSteps,
-                  [item.key]: val,
+                  secondStep: val,
                 }));
-                updateHiringFlows(val, item.step);
+                updateHiringFlows(val, 2);
               }}
-              actions={actionsVal(item.val)}
             />
-            {item.val === "topSelected" && (
-              <div className="w-3/5">
+            {secondStep === "topSelected" && (
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Please input the quantity of top candidates
+                </label>
+                <input
+                  type="text"
+                  placeholder="Example: 10"
+                  value={interviewValue}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    setInterviewValue(newValue);
+                    const existingFlows = [...ctx.formData.hiring_flows];
+                    const flowIndex = existingFlows.findIndex(
+                      (f) => f.step === 2
+                    );
+
+                    const newFlow = {
+                      title: "interview" as const,
+                      value: Number(newValue) || null,
+                      step: 2,
+                      email_template: interviewEmail.content,
+                    };
+
+                    if (flowIndex !== -1) {
+                      existingFlows[flowIndex] = newFlow;
+                    } else {
+                      existingFlows.push(newFlow);
+                    }
+
+                    ctx.setFormData("hiring_flows", existingFlows);
+                  }}
+                  className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Step 3 */}
+        <div className="flex flex-col">
+          <div className="flex-1 flex flex-col justify-end">
+            <div className="flex flex-col gap-2 h-16 justify-end">
+              {stepActions[thirdStep as keyof typeof stepActions]?.map(
+                (action, index) => (
+                  <button
+                    key={index}
+                    onClick={action.onClick}
+                    className="text-[#009379] hover:text-[#009379]/80 text-right"
+                  >
+                    {action.label}
+                  </button>
+                )
+              )}
+            </div>
+            <CreateJobHiringSelectGroup
+              title="Step 3"
+              options={options}
+              defaultValue="Choose the next step of your hiring process"
+              value={thirdStep}
+              onChange={(val) => {
+                ctx.setHiringFlow((prevSteps) => ({
+                  ...prevSteps,
+                  thirdStep: val,
+                }));
+                updateHiringFlows(val, 3);
+              }}
+            />
+            {thirdStep === "topSelected" && (
+              <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Please input the quantity of top candidates
                 </label>
@@ -314,16 +411,15 @@ function CreateJobHiringFlow() {
                   onChange={(e) => {
                     const newValue = e.target.value;
                     setInterviewValue(newValue);
-                    // Use the new value directly in updateHiringFlows instead of depending on state
                     const existingFlows = [...ctx.formData.hiring_flows];
                     const flowIndex = existingFlows.findIndex(
-                      (f) => f.step === item.step
+                      (f) => f.step === 3
                     );
 
                     const newFlow = {
                       title: "interview" as const,
                       value: Number(newValue) || null,
-                      step: item.step,
+                      step: 3,
                       email_template: interviewEmail.content,
                     };
 
@@ -340,8 +436,76 @@ function CreateJobHiringFlow() {
               </div>
             )}
           </div>
-        ))}
-      </section>
+        </div>
+
+        {/* Step 4 */}
+        <div className="flex flex-col">
+          <div className="flex-1 flex flex-col justify-end">
+            <div className="flex flex-col gap-2 h-16 justify-end">
+              {stepActions[fourthStep as keyof typeof stepActions]?.map(
+                (action, index) => (
+                  <button
+                    key={index}
+                    onClick={action.onClick}
+                    className="text-[#009379] hover:text-[#009379]/80 text-right"
+                  >
+                    {action.label}
+                  </button>
+                )
+              )}
+            </div>
+            <CreateJobHiringSelectGroup
+              title="Step 4"
+              options={options}
+              defaultValue="Choose the next step of your hiring process"
+              value={fourthStep}
+              onChange={(val) => {
+                ctx.setHiringFlow((prevSteps) => ({
+                  ...prevSteps,
+                  fourthStep: val,
+                }));
+                updateHiringFlows(val, 4);
+              }}
+            />
+            {fourthStep === "topSelected" && (
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Please input the quantity of top candidates
+                </label>
+                <input
+                  type="text"
+                  placeholder="10"
+                  value={interviewValue}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    setInterviewValue(newValue);
+                    const existingFlows = [...ctx.formData.hiring_flows];
+                    const flowIndex = existingFlows.findIndex(
+                      (f) => f.step === 4
+                    );
+
+                    const newFlow = {
+                      title: "interview" as const,
+                      value: Number(newValue) || null,
+                      step: 4,
+                      email_template: interviewEmail.content,
+                    };
+
+                    if (flowIndex !== -1) {
+                      existingFlows[flowIndex] = newFlow;
+                    } else {
+                      existingFlows.push(newFlow);
+                    }
+
+                    ctx.setFormData("hiring_flows", existingFlows);
+                  }}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="w-full py-6 flex items-center justify-center">
         <button

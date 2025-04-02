@@ -36,6 +36,7 @@ export interface IGetJobOpenRes {
   salary_range_max: number | null;
   salary_currency: string | null;
   created_at: string;
+  questions: { id: string; text: string; is_screening: boolean }[];
 }
 
 export function formatDateAndDifference(date: string) {

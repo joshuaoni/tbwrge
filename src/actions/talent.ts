@@ -38,6 +38,7 @@ export const getTalents = async (
     url: `${API_CONFIG.GET_TALENTS}?${queryParams.toString()}`,
     headers: { Authorization: `Bearer ${token}` },
   });
+  console.log({ response });
   return response.data;
 };
 
@@ -47,5 +48,6 @@ export const getTalentItem = async (token: string, talent_id: string) => {
     url: API_CONFIG.GET_TALENT_ITEM(talent_id),
     headers: { Authorization: `Bearer ${token}` },
   });
+  console.log("talent-item", { response });
   return response.data;
 };
