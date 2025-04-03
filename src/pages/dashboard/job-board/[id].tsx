@@ -10,6 +10,12 @@ import { outfit } from "@/constants/app";
 import { useUserStore } from "@/hooks/use-user-store";
 import { JobDetailsSkeleton } from "@/components/job-details-skeleton";
 import { ErrorState } from "@/components/error-state";
+import { countries } from "@/constants/countries";
+import {
+  submitJobApplication,
+  JobApplicationFormData,
+} from "@/actions/submit-job-application";
+import { toast } from "react-hot-toast";
 
 const Section = ({
   title,
@@ -119,195 +125,389 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
 
 const ApplicationForm = ({
   questions,
+  jobId,
 }: {
   questions: { id: string; text: string; is_screening: boolean }[];
-}) => (
-  <div className="bg-white rounded-lg p-6">
-    <h2 className="text-xl font-semibold mb-6">Job Application</h2>
-    <form className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Full Name
-        </label>
-        <input
-          type="text"
-          placeholder="Enter your name"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+  jobId: string;
+}) => {
+  const { userData } = useUserStore();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    linkedinProfile: "",
+    currentCompany: "",
+    currentPosition: "",
+    nationality: "",
+    countryOfResidence: "",
+    relevantExperience: "",
+    skillsSummary: "",
+    cv: null as File | null,
+    coverLetter: null as File | null,
+    voicenote: null as File | null,
+  });
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email
-        </label>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+  const [questionAnswers, setQuestionAnswers] = useState<
+    Record<string, string>
+  >({});
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Phone Number
-        </label>
-        <input
-          type="tel"
-          placeholder="Enter your phone number"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Date of Birth
-        </label>
-        <input
-          type="date"
-          placeholder="mm/dd/yyyy"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
-        />
-      </div>
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: files[0],
+      }));
+    }
+  };
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          LinkedIn Profile Link
-        </label>
-        <input
-          type="url"
-          placeholder="Enter link"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+  const handleQuestionAnswerChange = (questionId: string, value: string) => {
+    setQuestionAnswers((prev) => ({
+      ...prev,
+      [questionId]: value,
+    }));
+  };
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Current Company
-        </label>
-        <input
-          type="text"
-          placeholder="Enter N/A if none"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Current Position
-        </label>
-        <input
-          type="text"
-          placeholder="Manager, etc..."
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+    if (!userData?.token) {
+      toast.error("You must be logged in to submit an application");
+      return;
+    }
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Nationality
-        </label>
-        <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
-          <option value="" className="text-[#6B7280]">
-            Select Nationality
-          </option>
-          {/* Add nationality options */}
-        </select>
-      </div>
+    // Validate required fields
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.relevantExperience ||
+      !formData.skillsSummary
+    ) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Country of Residence
-        </label>
-        <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
-          <option value="" className="text-[#6B7280]">
-            Select Country
-          </option>
-          {/* Add country options */}
-        </select>
-      </div>
+    try {
+      setIsSubmitting(true);
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Relevant Experience (Max 300 words)
-        </label>
-        <textarea
-          placeholder="Describe your past roles"
-          rows={4}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+      // Prepare application data
+      const applicationData: JobApplicationFormData = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        nationality: formData.nationality || undefined,
+        country_of_residence: formData.countryOfResidence || undefined,
+        date_of_birth: formData.dateOfBirth || undefined,
+        linkedin: formData.linkedinProfile || undefined,
+        current_company: formData.currentCompany || undefined,
+        current_position: formData.currentPosition || undefined,
+        experience: formData.relevantExperience,
+        skills: formData.skillsSummary,
+        cv: formData.cv || undefined,
+        cover_letter: formData.coverLetter || undefined,
+        voicenote: formData.voicenote || undefined,
+        job_id: jobId,
+        answers: Object.entries(questionAnswers).map(
+          ([question_id, answer]) => ({
+            question_id,
+            answer,
+          })
+        ),
+      };
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Skills Summary (Max 300 words)
-        </label>
-        <textarea
-          placeholder="Highlight your key skills"
-          rows={4}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-        />
-      </div>
+      // Submit application
+      await submitJobApplication(userData.token, applicationData);
 
-      {/* Job-specific questions */}
-      {questions
-        .filter((question) => !question.is_screening)
-        .map((question) => (
+      toast.success("Application submitted successfully!");
+      router.back(); // Redirect backwards instead of pushing to a specific link
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      toast.error("Failed to submit application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-6">
+      <h2 className="text-xl font-semibold mb-6">Job Application</h2>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Full Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleInputChange}
+            placeholder="Enter your name"
+            required
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="Enter your email"
+            required
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            placeholder="Enter your phone number"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Date of Birth
+          </label>
+          <input
+            type="date"
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            LinkedIn Profile Link
+          </label>
+          <input
+            type="url"
+            name="linkedinProfile"
+            value={formData.linkedinProfile}
+            onChange={handleInputChange}
+            placeholder="Enter link"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Current Company
+          </label>
+          <input
+            type="text"
+            name="currentCompany"
+            value={formData.currentCompany}
+            onChange={handleInputChange}
+            placeholder="Enter N/A if none"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Current Position
+          </label>
+          <input
+            type="text"
+            name="currentPosition"
+            value={formData.currentPosition}
+            onChange={handleInputChange}
+            placeholder="Manager, etc..."
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Nationality
+          </label>
+          <select
+            name="nationality"
+            value={formData.nationality}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+          >
+            <option value="">Select Nationality</option>
+            {countries.map((country) => (
+              <option key={country.code} value={country.nationality}>
+                {country.nationality}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Country of Residence
+          </label>
+          <select
+            name="countryOfResidence"
+            value={formData.countryOfResidence}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+          >
+            <option value="">Select Country</option>
+            {countries.map((country) => (
+              <option key={country.code} value={country.name}>
+                {country.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Relevant Experience <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            name="relevantExperience"
+            value={formData.relevantExperience}
+            onChange={handleInputChange}
+            placeholder="Describe your past roles"
+            required
+            rows={4}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Skills Summary <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            name="skillsSummary"
+            value={formData.skillsSummary}
+            onChange={handleInputChange}
+            placeholder="Highlight your key skills"
+            required
+            rows={4}
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload CV
+          </label>
+          <input
+            type="file"
+            name="cv"
+            onChange={handleFileChange}
+            accept=".pdf,.doc,.docx"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Cover Letter (Optional)
+          </label>
+          <input
+            type="file"
+            name="coverLetter"
+            onChange={handleFileChange}
+            accept=".pdf,.doc,.docx"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Application Video/demo (Optional)
+          </label>
+          <input
+            type="file"
+            name="voicenote"
+            onChange={handleFileChange}
+            accept="video/*"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+          />
+        </div>
+
+        {/* Add screening questions */}
+        {questions.map((question) => (
           <div key={question.id}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {question.text}
             </label>
             <textarea
-              placeholder="Type your answer here"
+              value={questionAnswers[question.id] || ""}
+              onChange={(e) =>
+                handleQuestionAnswerChange(question.id, e.target.value)
+              }
+              placeholder="Enter your answer"
               rows={3}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
         ))}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Upload CV
-        </label>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Upload Cover Letter (Optional)
-        </label>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Upload Application Video/demo (Optional)
-        </label>
-        <input
-          type="file"
-          accept="video/*"
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-        />
-      </div>
-
-      <div className="flex justify-center mt-4">
         <button
           type="submit"
-          className="bg-[#009379] text-[16px] px-[40px] py-[16px] text-white rounded-[20px]"
+          disabled={isSubmitting}
+          className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Submit Application
+          {isSubmitting ? (
+            <span className="flex items-center justify-center">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Submitting...
+            </span>
+          ) : (
+            "Submit Application"
+          )}
         </button>
-      </div>
-    </form>
-  </div>
-);
+      </form>
+    </div>
+  );
+};
 
 const JobDetailsPage = () => {
   const router = useRouter();
@@ -448,7 +648,7 @@ const JobDetailsPage = () => {
 
           {/* Right column - Application form */}
           <div className="w-1/2">
-            <ApplicationForm questions={job.questions} />
+            <ApplicationForm questions={job.questions} jobId={job.id} />
           </div>
         </div>
       </div>

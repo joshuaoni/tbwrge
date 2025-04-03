@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import React, { useState } from "react";
+import { ApplicationItem } from "@/actions/get-application-item";
 
 interface CandidateDetailsProps {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
-  candidate: any;
+  candidate: ApplicationItem;
 }
 
 const CandidateDetails = ({
@@ -12,6 +13,7 @@ const CandidateDetails = ({
   candidate,
 }: CandidateDetailsProps) => {
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
+  const applicant = candidate.applicant;
 
   return (
     <div className="bg-white min-h-screen">
@@ -25,7 +27,7 @@ const CandidateDetails = ({
             >
               <ArrowLeft className="w-4 h-4 text-gray-600" />
             </button>
-            <h1 className="text-xl font-semibold">Babalola Emmanuel</h1>
+            <h1 className="text-xl font-semibold">{applicant.name}</h1>
           </div>
           <div className="flex items-center gap-4">
             <Button
@@ -60,7 +62,7 @@ const CandidateDetails = ({
                     <div className="relative w-16 h-16">
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-[16px] font-bold text-[#009379]">
-                          86%
+                          {candidate.fit_score}%
                         </span>
                       </div>
                       <svg className="w-full h-full" viewBox="0 0 36 36">
@@ -75,7 +77,7 @@ const CandidateDetails = ({
                           fill="none"
                           stroke="#009379"
                           strokeWidth="3"
-                          strokeDasharray="86, 100"
+                          strokeDasharray={`${candidate.fit_score}, 100`}
                           strokeLinecap="round"
                         />
                       </svg>
@@ -87,21 +89,23 @@ const CandidateDetails = ({
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">Email</p>
-                    <p className="text-sm text-gray-500">hello@gmail.com</p>
+                    <p className="text-sm text-gray-500">{applicant.email}</p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">Phone</p>
-                    <p className="text-sm text-gray-500">(123) 456 7890</p>
+                    <p className="text-sm text-gray-500">{applicant.phone}</p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">DOB</p>
-                    <p className="text-sm text-gray-500">06-04-2001</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.date_of_birth || "Not provided"}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -109,7 +113,17 @@ const CandidateDetails = ({
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">LinkedIn</p>
                     <p className="text-sm text-gray-500 cursor-pointer hover:underline">
-                      LinkedIn Profile
+                      {applicant.linkedin ? (
+                        <a
+                          href={applicant.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View Profile
+                        </a>
+                      ) : (
+                        "Not provided"
+                      )}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -119,28 +133,36 @@ const CandidateDetails = ({
                     <p className="text-sm text-black w-[120px]">
                       Current Position
                     </p>
-                    <p className="text-sm text-gray-500">Senior Data Analyst</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.current_position}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">Company</p>
-                    <p className="text-sm text-gray-500">ABC Corp.</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.current_company}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">Nationality</p>
-                    <p className="text-sm text-gray-500">Nigerian</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.nationality}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">Location</p>
-                    <p className="text-sm text-gray-500">New York, NY</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.country_of_residence}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -151,20 +173,7 @@ const CandidateDetails = ({
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <h2 className="text-lg font-semibold mb-4">Profile Summary</h2>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Creative and results-driven Product Designer with over 3 years
-                of experience in developing user-centered digital solutions that
-                engage and delight users. Proven expertise in collaborating with
-                cross-functional teams to craft intuitive and impactful designs,
-                from initial concept through to final implementation. Creative
-                and results-driven Product Designer with over 3 years of
-                experience in developing user-centered digital solutions that
-                engage and delight users. Proven expertise in collaborating with
-                cross-functional teams to craft intuitive and impactful designs,
-                from initial concept through to final implementation.
-                <br />
-                Creative and results-driven Product Designer with over 3 years
-                of experience in developing user-centered digital solutions that
-                engage and delight users.
+                {applicant.professional_summary}
               </p>
             </div>
 
@@ -177,24 +186,19 @@ const CandidateDetails = ({
                 <div>
                   <h3 className="text-sm font-medium mb-2">Key Skills</h3>
                   <p className="text-sm text-gray-600">
-                    High match for skills in data analysis, finance, and
-                    experience with large dataset
+                    {candidate.skills_summary}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">Strengths</h3>
-                  <p className="text-sm text-gray-600">
-                    Proficiency in SQL and Python, effective communication,
-                    strong leadership in project settings.
-                  </p>
+                  <p className="text-sm text-gray-600">{candidate.strength}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">
                     Areas for Development
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Proficiency in SQL and Python, effective communication,
-                    strong leadership in project settings.
+                    {candidate.areas_for_development}
                   </p>
                 </div>
                 <div>
@@ -202,15 +206,12 @@ const CandidateDetails = ({
                     Culture Fit Indicators
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Proficiency in SQL and Python, effective communication,
-                    strong leadership in project settings.
+                    {candidate.culture_fit}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">Languages</h3>
-                  <p className="text-sm text-gray-600">
-                    English (Native), French (Intermediate)
-                  </p>
+                  <p className="text-sm text-gray-600">{candidate.languages}</p>
                 </div>
               </div>
             </div>
@@ -239,28 +240,23 @@ const CandidateDetails = ({
               >
                 <div className="overflow-hidden">
                   <div className="space-y-6">
-                    <div>
-                      <p className="text-sm font-medium mb-2">
-                        Could you describe a project or task you've worked on
-                        that best demonstrate your skills in this role?
+                    {candidate.application_answers &&
+                    candidate.application_answers.length > 0 ? (
+                      candidate.application_answers.map((answer, index) => (
+                        <div key={index}>
+                          <p className="text-sm font-medium mb-2">
+                            {answer.question}
+                          </p>
+                          <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
+                            {answer.answer}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        No questions answered
                       </p>
-                      <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
-                        Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
-                        dolor sit amet dolor sit amet amet dolor sit amet dolor
-                        sit amet amet dolor sit amet dolor sit amet.
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium mb-2">
-                        Tell us about a challenging situation at work and how
-                        you resolved it?
-                      </p>
-                      <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
-                        Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
-                        dolor sit amet dolor sit amet amet dolor sit amet dolor
-                        sit amet amet dolor sit amet dolor sit amet.
-                      </p>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -275,101 +271,14 @@ const CandidateDetails = ({
                 Supporting Documents
               </h2>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
-                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M13.75 2.5V5H16.25"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M7.5 10H12.5"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M7.5 12.5H12.5"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">David CV.pdf</p>
-                    <p className="text-xs text-gray-500">500kb</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
-                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M13.75 2.5V5H16.25"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M7.5 10H12.5"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M7.5 12.5H12.5"
-                        stroke="#FF0000"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">
-                      David Cover Letter.pdf
-                    </p>
-                    <p className="text-xs text-gray-500">500kb</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col border border-gray-200 rounded-xl p-3">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 flex items-center justify-center bg-[#009379]/10 rounded-lg">
+                {candidate.cv && (
+                  <a
+                    href={candidate.cv}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 border border-gray-200 rounded-xl p-3 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
                       <svg
                         width="20"
                         height="20"
@@ -378,15 +287,29 @@ const CandidateDetails = ({
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
-                          stroke="#009379"
+                          d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                          stroke="#FF0000"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
-                          d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
-                          stroke="#009379"
+                          d="M13.75 2.5V5H16.25"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 10H12.5"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 12.5H12.5"
+                          stroke="#FF0000"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -395,24 +318,115 @@ const CandidateDetails = ({
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        Candidate Application Voicenote
+                        {applicant.name}'s CV
                       </p>
-                      <p className="text-xs text-gray-500">5:03</p>
+                      <p className="text-xs text-gray-500">Click to view</p>
+                    </div>
+                  </a>
+                )}
+
+                {candidate.cover_letter && (
+                  <a
+                    href={candidate.cover_letter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 border border-gray-200 rounded-xl p-3 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M13.75 2.5V5H16.25"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 10H12.5"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 12.5H12.5"
+                          stroke="#FF0000"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">
+                        {applicant.name}'s Cover Letter
+                      </p>
+                      <p className="text-xs text-gray-500">Click to view</p>
+                    </div>
+                  </a>
+                )}
+
+                {candidate.voicenote && (
+                  <div className="flex flex-col border border-gray-200 rounded-xl p-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 flex items-center justify-center bg-[#009379]/10 rounded-lg">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
+                            stroke="#009379"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
+                            stroke="#009379"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">
+                          Candidate Application Voicenote
+                        </p>
+                        <p className="text-xs text-gray-500">Click to listen</p>
+                      </div>
+                    </div>
+                    <div className="h-8 flex items-center gap-[2px]">
+                      {Array.from({ length: 40 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 bg-gray-300 rounded-sm"
+                          style={{
+                            height: `${Math.random() * 100}%`,
+                            minWidth: "2px",
+                          }}
+                        ></div>
+                      ))}
                     </div>
                   </div>
-                  <div className="h-8 flex items-center gap-[2px]">
-                    {Array.from({ length: 40 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 bg-gray-300 rounded-sm"
-                        style={{
-                          height: `${Math.random() * 100}%`,
-                          minWidth: "2px",
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -492,7 +506,7 @@ const CandidateDetails = ({
                   <div className="relative w-24 h-24">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-[20px] font-bold text-[#009379]">
-                        86%
+                        {candidate.screening_fit_score}%
                       </span>
                     </div>
                     <svg className="w-full h-full" viewBox="0 0 36 36">
@@ -507,7 +521,7 @@ const CandidateDetails = ({
                         fill="none"
                         stroke="#009379"
                         strokeWidth="3"
-                        strokeDasharray="86, 100"
+                        strokeDasharray={`${candidate.screening_fit_score}, 100`}
                         strokeLinecap="round"
                       />
                     </svg>
@@ -515,28 +529,23 @@ const CandidateDetails = ({
                 </div>
               </div>
               <div className="space-y-6">
-                <div>
-                  <p className="text-sm font-medium mb-2">
-                    Could you describe a project or task you've worked on that
-                    best demonstrate your skills in this role?
+                {candidate.application_answers &&
+                candidate.application_answers.length > 0 ? (
+                  candidate.application_answers.map((answer, index) => (
+                    <div key={index}>
+                      <p className="text-sm font-medium mb-2">
+                        {answer.question}
+                      </p>
+                      <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
+                        {answer.answer}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No screening questions answered
                   </p>
-                  <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                    Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
-                    dolor sit amet dolor sit amet amet dolor sit amet dolor sit
-                    amet amet dolor sit amet dolor sit amet.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">
-                    Tell us about a challenging situation at work and how you
-                    resolved it?
-                  </p>
-                  <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                    Lorem ipsum dolor sit amet dolor sit amet dolor sit amet
-                    dolor sit amet dolor sit amet amet dolor sit amet dolor sit
-                    amet amet dolor sit amet dolor sit amet.
-                  </p>
-                </div>
+                )}
               </div>
             </div>
 
@@ -546,20 +555,8 @@ const CandidateDetails = ({
                 Screening: AI-Powered Insights
               </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Creative and results-driven Product Designer with over 3 years
-                of experience in developing user-centered digital solutions that
-                engage and delight users. Proven expertise in collaborating with
-                cross-functional teams to craft intuitive and impactful designs,
-                from initial concept through to final implementation. Creative
-                and results-driven Product Designer with over 3 years of
-                experience in developing user-centered digital solutions that
-                engage and delight users. Proven expertise in collaborating with
-                cross-functional teams to craft intuitive and impactful designs,
-                from initial concept through to final implementation.
-                <br />
-                Creative and results-driven Product Designer with over 3 years
-                of experience in developing user-centered digital solutions that
-                engage and delight users.
+                {candidate.screening_ai_insights ||
+                  "No AI insights available for screening"}
               </p>
             </div>
           </div>

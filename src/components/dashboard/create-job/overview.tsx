@@ -136,8 +136,8 @@ function CreateJobOverview() {
       }
     },
     onSuccess: (data) => {
-      const jobLink = `${window.location.origin}/dashboard/job-board/${data.id}`;
-      setCreatedJobLink(jobLink);
+      const jobDetailsLink = `${window.location.origin}/dashboard/job-postings?jobId=${data.id}&view=details`;
+      setCreatedJobLink(jobDetailsLink);
       setShowSuccessPopup(true);
     },
     onError: (error) => {

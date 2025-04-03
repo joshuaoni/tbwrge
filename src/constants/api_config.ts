@@ -1,4 +1,5 @@
 export const MAIN_URL = "https://api.candivet.com";
+export const CHAT_URL = "https://chats.candivet.com";
 
 export const API_CONFIG = {
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
@@ -31,13 +32,16 @@ export const API_CONFIG = {
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
   GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
+  GET_APPLICATION_ITEM: (application_id: string) =>
+    `${MAIN_URL}/job/get-application-item/${application_id}/`,
 
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
   UPDATE_JOB: (job_id: string) => `${MAIN_URL}/job/update-job/${job_id}/`,
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
-  SUBMIT_JOB_APPLICATION: `${MAIN_URL}/job/submit-application/`,
+  SUBMIT_JOB_APPLICATION: (job_id: string) =>
+    `${MAIN_URL}/job/submit-application/${job_id}/`,
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
@@ -59,6 +63,10 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+  GET_MESSAGES: (channel_id: string) =>
+    `${CHAT_URL}/chat/get-messages/${channel_id}/`,
+  CREATE_MESSAGE: (channel_id: string) =>
+    `${CHAT_URL}/chat/create-message/${channel_id}/`,
 
   GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
   GET_COMMENTS: (post_id: string) =>

@@ -180,6 +180,8 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   const isActiveRoute =
     item.link === "/dashboard/job-board"
       ? pathName?.includes("/dashboard/job-board") || false
+      : item.link === "/dashboard/talent-pool"
+      ? pathName?.includes("/dashboard/talent-pool") || false
       : pathName === item.link;
 
   const handleClick = () => {

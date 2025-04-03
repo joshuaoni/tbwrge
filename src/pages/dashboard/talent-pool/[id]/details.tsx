@@ -2,13 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/router";
 import { FaFilePdf } from "react-icons/fa";
+import { useState } from "react";
 
 import { getTalentItem, TalentItem } from "@/actions/talent";
+import { startChat } from "@/actions/start-chat";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useUserStore } from "@/hooks/use-user-store";
 
 export default function CandidateProfile() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userData } = useUserStore();
 
@@ -19,6 +22,26 @@ export default function CandidateProfile() {
   });
 
   const data = query.data;
+
+  const handleStartChat = async () => {
+    if (!userData?.token || !router.query.id) return;
+
+    try {
+      setIsLoading(true);
+      const chatResponse = await startChat(
+        userData.token,
+        router.query.id as string
+      );
+
+      // Navigate to the chat page with the chat ID
+      router.push(`/dashboard/talent-pool/chat?chatId=${chatResponse.id}`);
+    } catch (error) {
+      console.error("Failed to start chat:", error);
+      // You could add a toast notification here
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <DashboardWrapper>
@@ -40,10 +63,11 @@ export default function CandidateProfile() {
               Generate Candidate Report
             </span>
             <button
-              className="bg-green-700 px-7 py-2 text-white rounded-3xl font-bold"
-              onClick={() => router.push("/dashboard/talent-pool/chat")}
+              className="bg-[#009379] px-7 py-4 text-sm text-white rounded-3xl disabled:opacity-70"
+              onClick={handleStartChat}
+              disabled={isLoading}
             >
-              Start Chat
+              {isLoading ? "Starting Chat..." : "Start Chat"}
             </button>
           </div>
         </div>
@@ -199,99 +223,14 @@ export default function CandidateProfile() {
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <h2 className="text-lg font-semibold mb-4">Supporting Documents</h2>
             <div className="space-y-3">
-              <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
-                <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M13.75 2.5V5H16.25"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7.5 10H12.5"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7.5 12.5H12.5"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">David CV.pdf</p>
-                  <p className="text-xs text-gray-500">500kb</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 border border-gray-200 rounded-xl p-3">
-                <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M13.75 2.5V5H16.25"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7.5 10H12.5"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7.5 12.5H12.5"
-                      stroke="#FF0000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">David Cover Letter.pdf</p>
-                  <p className="text-xs text-gray-500">500kb</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col border border-gray-200 rounded-xl p-3">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 flex items-center justify-center bg-[#009379]/10 rounded-lg">
+              {data?.cv && (
+                <a
+                  href={data?.cv}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 border border-gray-200 rounded-xl p-3 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
                     <svg
                       width="20"
                       height="20"
@@ -300,15 +239,81 @@ export default function CandidateProfile() {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
-                        stroke="#009379"
+                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                        stroke="#FF0000"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
                       <path
-                        d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
-                        stroke="#009379"
+                        d="M13.75 2.5V5H16.25"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 10H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 12.5H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{data?.name}'s CV</p>
+                    <p className="text-xs text-gray-500">Click to view</p>
+                  </div>
+                </a>
+              )}
+
+              {data?.cover_letter && (
+                <a
+                  href={data?.cover_letter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 border border-gray-200 rounded-xl p-3 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-8 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.75 2.5V5H16.25"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 10H12.5"
+                        stroke="#FF0000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7.5 12.5H12.5"
+                        stroke="#FF0000"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -317,24 +322,12 @@ export default function CandidateProfile() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">
-                      Candidate Application Voicenote
+                      {data?.name}'s Cover Letter
                     </p>
-                    <p className="text-xs text-gray-500">5:03</p>
+                    <p className="text-xs text-gray-500">Click to view</p>
                   </div>
-                </div>
-                <div className="h-8 flex items-center gap-[2px]">
-                  {Array.from({ length: 40 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="flex-1 bg-gray-300 rounded-sm"
-                      style={{
-                        height: `${Math.random() * 100}%`,
-                        minWidth: "2px",
-                      }}
-                    ></div>
-                  ))}
-                </div>
-              </div>
+                </a>
+              )}
             </div>
           </div>
         </div>

@@ -299,7 +299,7 @@ export default function TalentPool() {
     <DashboardWrapper>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <span className="font-bold text-xl">Talent Pool</span>
-      <div className="p-6  min-h-screen">
+      <div className="py-6  min-h-screen">
         <div className=" mx-auto bg-white p-4 rounded-lg ">
           {/* Filters */}
           <div className="flex items-center gap-3">

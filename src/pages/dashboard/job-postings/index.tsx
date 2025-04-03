@@ -14,8 +14,11 @@ import {
 import { outfit } from "@/constants/app";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import Image, { StaticImageData } from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useQuery } from "@tanstack/react-query";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
@@ -23,6 +26,37 @@ const JobPostings = () => {
   const [currentView, setCurrentView] = useState("openings");
   const [selectedJob, setSelectedJob] = useState(null);
   const [applicationId, setApplicationId] = useState("");
+  const searchParams = useSearchParams();
+  const { userData } = useUserStore();
+
+  // Fetch job data if jobId is in URL
+  const { data: jobs } = useQuery({
+    queryKey: ["job-openings"],
+    queryFn: async () => {
+      const response = await getJobOpenings({
+        status: "open",
+        token: userData?.token,
+      });
+      return response;
+    },
+    enabled: !!userData?.token,
+  });
+
+  // Handle URL parameters
+  useEffect(() => {
+    const jobId = searchParams.get("jobId");
+    const view = searchParams.get("view");
+
+    if (jobId && jobs) {
+      const job = jobs.find((j: any) => j.id === jobId);
+      if (job) {
+        setSelectedJob(job);
+        if (view === "details") {
+          setCurrentView("details");
+        }
+      }
+    }
+  }, [searchParams, jobs]);
 
   return (
     <DashboardWrapper>

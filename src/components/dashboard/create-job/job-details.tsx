@@ -574,12 +574,19 @@ function CreateJobJobDetails() {
                 Salary Range Min
               </label>
               <input
-                type="number"
-                value={ctx.formData.salary_range_min}
-                onChange={(e) =>
-                  ctx.setFormData("salary_range_min", Number(e.target.value))
-                }
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={ctx.formData.salary_range_min || ""}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  ctx.setFormData(
+                    "salary_range_min",
+                    value ? Number(value) : 0
+                  );
+                }}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                placeholder="Enter minimum salary"
               />
             </div>
             <div className="flex-1">
@@ -587,12 +594,19 @@ function CreateJobJobDetails() {
                 Salary Range Max
               </label>
               <input
-                type="number"
-                value={ctx.formData.salary_range_max}
-                onChange={(e) =>
-                  ctx.setFormData("salary_range_max", Number(e.target.value))
-                }
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={ctx.formData.salary_range_max || ""}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  ctx.setFormData(
+                    "salary_range_max",
+                    value ? Number(value) : 0
+                  );
+                }}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                placeholder="Enter maximum salary"
               />
             </div>
           </div>
