@@ -136,9 +136,9 @@ const CandidateDetail = ({
               },
             ].map((item, i) => (
               <div
-              onClick={() => {
-                window.open(item.fileName)
-              }}
+                onClick={() => {
+                  window.open(item.fileName);
+                }}
                 key={i}
                 className="border border-[#E7E7E7] p-4 rounded-lg flex items-center gap-2"
               >
@@ -152,9 +152,7 @@ const CandidateDetail = ({
                   <div className="h-6 w-40 bg-gray-200 animate-pulse rounded-lg"></div>
                 ) : (
                   <div className="grid gap-0.5">
-                    <button
-                      className="font-semibold text-[#0B0B0B] text-sm cursor-pointer hover:underline"
-                    >
+                    <button className="font-semibold text-[#0B0B0B] text-sm cursor-pointer hover:underline">
                       {item.fileName?.split("/").pop()}
                     </button>
                     <span className="text-[#6D6D6D] text-xs">

@@ -465,11 +465,11 @@ const JobDetails = ({
                 ? "No candidates have been rejected yet."
                 : "No candidates have been screened yet."}
             </p>
-            {selectedTab === "all" && (
+            {/* {selectedTab === "all" && (
               <button className="mt-4 px-4 py-2 bg-[#009379] text-white rounded-md hover:bg-[#009379]/90 transition-colors">
                 Share Job Link
               </button>
-            )}
+            )} */}
           </div>
         )}
       </div>

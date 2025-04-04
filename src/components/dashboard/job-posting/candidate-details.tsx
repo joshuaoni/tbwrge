@@ -166,6 +166,13 @@ const CandidateDetails = ({
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-black w-[120px]">Salary Range</p>
+                    <p className="text-sm text-gray-500">{"Not provided"}</p>
+                  </div>
+                  <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+                </div>
               </div>
             </div>
 

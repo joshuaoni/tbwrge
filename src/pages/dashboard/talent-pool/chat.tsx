@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaSearch, FaEllipsisH } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import DashboardWrapper from "@/components/dashboard-wrapper";
@@ -13,6 +13,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getChats, ChatResponse } from "@/actions/get-chats";
 import { getMessages, Message } from "@/actions/get-messages";
 import { createMessage } from "@/actions/create-message";
+import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
+import { Smile } from "lucide-react";
 
 interface LastMessage {
   type: string;
@@ -93,6 +95,35 @@ const users: User[] = [
   },
 ];
 
+// Modify the EmojiText component
+const EmojiText = ({ text, size = 16 }: { text: string; size?: number }) => {
+  return (
+    <span className="inline">
+      {text.split(/(\p{Emoji})/gu).map((part, index) => {
+        if (part.match(/\p{Emoji}/gu)) {
+          return (
+            <span
+              key={index}
+              style={{ display: "inline-block", verticalAlign: "middle" }}
+            >
+              <Emoji
+                unified={part.codePointAt(0)?.toString(16) || ""}
+                emojiStyle={EmojiStyle.APPLE}
+                size={size}
+              />
+            </span>
+          );
+        }
+        return (
+          <span key={index} style={{ display: "inline" }}>
+            {part}
+          </span>
+        );
+      })}
+    </span>
+  );
+};
+
 export default function ChatPage() {
   const router = useRouter();
   const { userData } = useUserStore();
@@ -101,6 +132,14 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Fetch user's chats
   const { data: chats, isLoading: isLoadingChats } = useQuery<ChatResponse[]>({
@@ -110,6 +149,7 @@ export default function ChatPage() {
       return await getChats(userData.token);
     },
     enabled: !!userData?.token,
+    refetchInterval: 1000, // Refetch every second
   });
 
   // Fetch messages for the selected chat
@@ -117,10 +157,25 @@ export default function ChatPage() {
     queryKey: ["chat-messages", selectedChatId],
     queryFn: async () => {
       if (!userData?.token || !selectedChatId) return [];
-      return await getMessages(userData.token, selectedChatId);
+      const msgs = await getMessages(userData.token, selectedChatId);
+      return msgs || [];
     },
     enabled: !!userData?.token && !!selectedChatId,
   });
+
+  // Update local messages when query data changes
+  useEffect(() => {
+    if (messages) {
+      setLocalMessages(messages);
+    }
+  }, [messages]);
+
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    if (localMessages.length > 0) {
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [localMessages.length]);
 
   // Set the selected chat ID from URL parameter
   useEffect(() => {
@@ -146,30 +201,134 @@ export default function ChatPage() {
         throw new Error("Missing token or chat ID");
       return await createMessage(userData.token, selectedChatId, text, files);
     },
-    onSuccess: () => {
-      // Invalidate and refetch messages
+    onMutate: async ({ text, files }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: ["chat-messages", selectedChatId],
+      });
+      await queryClient.cancelQueries({ queryKey: ["user-chats"] });
+
+      // Get current query data
+      const previousMessages = queryClient.getQueryData<Message[]>([
+        "chat-messages",
+        selectedChatId,
+      ]);
+      const previousChats = queryClient.getQueryData<ChatResponse[]>([
+        "user-chats",
+      ]);
+
+      // Create optimistic message
+      const optimisticMessage: Message = {
+        id: `temp-${Date.now()}`,
+        reference: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        user: {
+          id: userData?.user?.id || "",
+          reference: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          name: userData?.user?.name || "",
+          email: userData?.user?.email || "",
+          role: userData?.user?.role || "",
+          is_verified: true,
+          channel: "others",
+          last_name: null,
+          country_code: null,
+          phone: null,
+          profile_picture: null,
+          calendly_link: null,
+          google_calender_link: null,
+          username: userData?.user?.username || null,
+          location: null,
+          last_login: new Date().toISOString(),
+        },
+        text,
+        type: "text",
+        media: [],
+      };
+
+      // Update messages optimistically
+      setLocalMessages((prev) => [...prev, optimisticMessage]);
+
+      // Update chat list optimistically
+      if (previousChats) {
+        const updatedChat = {
+          ...previousChats.find((chat) => chat.id === selectedChatId)!,
+          last_message: {
+            id: optimisticMessage.id,
+            text: optimisticMessage.text,
+            type: optimisticMessage.type,
+            reference: optimisticMessage.reference,
+            created_at: optimisticMessage.created_at,
+            updated_at: optimisticMessage.updated_at,
+          },
+          updated_at: new Date().toISOString(),
+        };
+
+        const otherChats = previousChats.filter(
+          (chat) => chat.id !== selectedChatId
+        );
+        const updatedChats = [updatedChat, ...otherChats];
+
+        queryClient.setQueryData(["user-chats"], updatedChats);
+      }
+
+      // Clear input immediately
+      setNewMessage("");
+      setSelectedFiles([]);
+
+      return { previousMessages, previousChats, optimisticMessage };
+    },
+    onError: (err, { text }, context) => {
+      // Revert messages on error
+      if (context?.optimisticMessage) {
+        setLocalMessages((prev) =>
+          prev.filter((msg) => msg.id !== context.optimisticMessage.id)
+        );
+      }
+      // Revert chat list on error
+      if (context?.previousChats) {
+        queryClient.setQueryData(["user-chats"], context.previousChats);
+      }
+      console.error("Failed to send message:", err);
+      setIsSending(false);
+    },
+    onSuccess: async (data) => {
+      // Update local messages with the real message
+      setLocalMessages((prev) => {
+        const tempId = `temp-${Date.now()}`;
+        const newMessage: Message = {
+          ...data,
+          media: Array.isArray(data.media)
+            ? data.media.map((m: any) => m.url || m)
+            : [],
+        };
+        return prev.map((msg) => (msg.id === tempId ? newMessage : msg));
+      });
+
+      setIsSending(false);
+
+      // Force refetch the chat list
+      await queryClient.refetchQueries({
+        queryKey: ["user-chats"],
+        type: "active",
+      });
+
+      // Invalidate queries in the background
       queryClient.invalidateQueries({
         queryKey: ["chat-messages", selectedChatId],
       });
-      // Clear the input and selected files
-      setNewMessage("");
-      setSelectedFiles([]);
-      setIsSending(false);
-    },
-    onError: (error) => {
-      console.error("Failed to send message:", error);
-      setIsSending(false);
-      // You could add a toast notification here
     },
   });
 
   // Handle sending a new message
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedChatId) return;
+    if (!newMessage.trim() || !selectedChatId || isSending) return;
 
     setIsSending(true);
     createMessageMutation.mutate({
-      text: newMessage,
+      text: newMessage.trim(),
       files: selectedFiles,
     });
   };
@@ -185,6 +344,26 @@ export default function ChatPage() {
   // Remove a selected file
   const removeFile = (index: number) => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const onEmojiClick = (emojiObject: any) => {
+    setNewMessage((prev) => prev + emojiObject.emoji);
+    setShowEmojiPicker(false);
   };
 
   return (
@@ -272,11 +451,13 @@ export default function ChatPage() {
                             </span>
                           </div>
                           <div className="flex justify-between items-center mt-1">
-                            <p className="text-sm text-gray-500 truncate pr-2">
-                              {chat.last_message
-                                ? chat.last_message.text
-                                : "No messages yet"}
-                            </p>
+                            <div className="text-sm text-gray-500 truncate pr-2">
+                              {chat.last_message ? (
+                                <EmojiText text={chat.last_message.text} />
+                              ) : (
+                                "No messages yet"
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -352,51 +533,91 @@ export default function ChatPage() {
                   <div className="text-center py-4 text-gray-500">
                     Loading messages...
                   </div>
-                ) : messages && messages.length > 0 ? (
-                  messages.map((message) => {
-                    const isCurrentUser =
-                      message.user.id === userData?.user?.id;
+                ) : localMessages.length > 0 ? (
+                  <>
+                    {localMessages.map((message: Message) => {
+                      const isCurrentUser =
+                        message.user.id === userData?.user?.id;
 
-                    return (
-                      <div
-                        key={message.id}
-                        className={`flex ${isCurrentUser ? "justify-end" : ""}`}
-                      >
+                      return (
                         <div
-                          className={`max-w-[70%] p-3 ${
-                            isCurrentUser
-                              ? "bg-[#145959] text-white rounded-xl rounded-tr-none"
-                              : "bg-white rounded-xl rounded-tl-none"
+                          key={message.id}
+                          className={`flex ${
+                            isCurrentUser ? "justify-end" : ""
                           }`}
                         >
-                          <p>{message.text}</p>
-                          {message.media && message.media.length > 0 && (
-                            <div className="flex gap-2 mt-2">
-                              {message.media.map((media, i) => (
-                                <Image
-                                  key={i}
-                                  src={media}
-                                  width={40}
-                                  height={40}
-                                  alt="attachment"
-                                  className="w-10 h-10 rounded-md"
-                                />
-                              ))}
+                          <div
+                            className={`max-w-[70%] p-3 ${
+                              isCurrentUser
+                                ? "bg-[#145959] text-white rounded-xl rounded-tr-none"
+                                : "bg-white rounded-xl rounded-tl-none"
+                            }`}
+                          >
+                            <div className="whitespace-pre-wrap inline">
+                              {message.text
+                                .split(/(\p{Emoji})/gu)
+                                .map((part, index) => {
+                                  if (part.match(/\p{Emoji}/gu)) {
+                                    return (
+                                      <span
+                                        key={index}
+                                        style={{
+                                          display: "inline-block",
+                                          verticalAlign: "middle",
+                                        }}
+                                      >
+                                        <Emoji
+                                          unified={
+                                            part.codePointAt(0)?.toString(16) ||
+                                            ""
+                                          }
+                                          emojiStyle={EmojiStyle.APPLE}
+                                          size={20}
+                                        />
+                                      </span>
+                                    );
+                                  }
+                                  return (
+                                    <span
+                                      key={index}
+                                      style={{ display: "inline" }}
+                                    >
+                                      {part}
+                                    </span>
+                                  );
+                                })}
                             </div>
-                          )}
-                          <p className="text-xs text-gray-400 mt-1">
-                            {new Date(message.created_at).toLocaleTimeString(
-                              [],
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
+                            {message.media && message.media.length > 0 && (
+                              <div className="flex gap-2 mt-2">
+                                {message.media.map(
+                                  (media: string, i: number) => (
+                                    <Image
+                                      key={i}
+                                      src={media}
+                                      width={40}
+                                      height={40}
+                                      alt="attachment"
+                                      className="w-10 h-10 rounded-md"
+                                    />
+                                  )
+                                )}
+                              </div>
                             )}
-                          </p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(message.created_at).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
+                  </>
                 ) : (
                   <div className="text-center py-4 text-gray-500">
                     No messages yet
@@ -429,67 +650,61 @@ export default function ChatPage() {
 
                 {/* Message Input Row */}
                 <div className="flex items-center gap-2">
-                  <label className="text-gray-400 hover:text-gray-600 flex-shrink-0 cursor-pointer">
-                    <input
-                      type="file"
-                      className="hidden"
-                      multiple
-                      onChange={handleFileSelect}
-                    />
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div className="relative" ref={emojiPickerRef}>
+                    <button
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      className="text-gray-400 hover:text-gray-600 flex-shrink-0 cursor-pointer p-2"
+                      type="button"
                     >
-                      <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M9 9H9.01"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M15 9H15.01"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Write your message..."
-                    className="flex-1 outline-none text-gray-600 placeholder:text-gray-400"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        handleSendMessage();
-                      }
-                    }}
-                    disabled={isSending}
-                  />
+                      <Smile className="w-5 h-5" />
+                    </button>
+                    {showEmojiPicker && (
+                      <div className="absolute bottom-12 left-0 z-50 shadow-lg rounded-lg">
+                        <EmojiPicker
+                          onEmojiClick={onEmojiClick}
+                          theme={Theme.LIGHT}
+                          emojiStyle={EmojiStyle.APPLE}
+                          lazyLoadEmojis={true}
+                          skinTonesDisabled
+                          searchPlaceHolder="Search emoji..."
+                          height={350}
+                          width={300}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
+                      placeholder="Write your message..."
+                      className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px]"
+                      disabled={isSending}
+                    />
+                    <div className="w-full outline-none pointer-events-none min-h-[24px]">
+                      {newMessage ? (
+                        <div className="text-gray-600">
+                          <EmojiText text={newMessage} />
+                        </div>
+                      ) : (
+                        <div className="text-gray-400">
+                          Write your message...
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   <button
-                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 disabled:opacity-50"
+                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 disabled:opacity-50 p-2"
                     onClick={handleSendMessage}
                     disabled={isSending || !newMessage.trim()}
+                    type="button"
                   >
                     {isSending ? (
                       <svg
@@ -513,21 +728,7 @@ export default function ChatPage() {
                         ></path>
                       </svg>
                     ) : (
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21.44 11.05L12.25 20.24C11.1242 21.3658 9.59718 21.9983 8.005 21.9983C6.41282 21.9983 4.88584 21.3658 3.76 20.24C2.63416 19.1142 2.00166 17.5872 2.00166 15.995C2.00166 14.4028 2.63416 12.8758 3.76 11.75L12.95 2.56C13.7006 1.80943 14.7185 1.38777 15.78 1.38777C16.8415 1.38777 17.8594 1.80943 18.61 2.56C19.3606 3.31057 19.7822 4.32855 19.7822 5.39C19.7822 6.45145 19.3606 7.46943 18.61 8.22L9.41 17.41C9.03472 17.7853 8.52577 17.9961 7.995 17.9961C7.46423 17.9961 6.95528 17.7853 6.58 17.41C6.20472 17.0347 5.99389 16.5258 5.99389 15.995C5.99389 15.4642 6.20472 14.9553 6.58 14.58L15.07 6.1"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <IoSend className="w-5 h-5" />
                     )}
                   </button>
                 </div>

@@ -5,4 +5,5 @@ export interface UserResponse {
   createdAt: string;
   updatedAt: string;
   name: string;
+  role: string;
 }

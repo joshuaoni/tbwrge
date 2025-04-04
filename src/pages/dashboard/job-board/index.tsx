@@ -442,18 +442,6 @@ const JobBoardPage = () => {
                         setIsAIDropdownOpen(false);
                       }}
                     >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 2C11.0111 2 10.0444 2.29324 9.22215 2.84265C8.39991 3.39206 7.75904 4.17295 7.3806 5.08658C7.00216 6.00021 6.90315 7.00555 7.09607 7.97545C7.289 8.94536 7.76521 9.83627 8.46447 10.5355C9.16373 11.2348 10.0546 11.711 11.0245 11.9039C11.9945 12.0969 12.9998 11.9978 13.9134 11.6194C14.827 11.241 15.6079 10.6001 16.1573 9.77785C16.7068 8.95561 17 7.98891 17 7C17 5.67392 16.4732 4.40215 15.5355 3.46447C14.5979 2.52678 13.3261 2 12 2Z"
-                          fill="#009379"
-                        />
-                      </svg>
                       Audio Search
                     </button>
                     <button
@@ -463,42 +451,6 @@ const JobBoardPage = () => {
                         setIsAIDropdownOpen(false);
                       }}
                     >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z"
-                          stroke="#009379"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M7 7H17"
-                          stroke="#009379"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M7 12H17"
-                          stroke="#009379"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M7 17H13"
-                          stroke="#009379"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
                       Text Search
                     </button>
                   </div>
@@ -539,7 +491,9 @@ const JobBoardPage = () => {
 
       {/* Text Search Modal */}
       {isTextSearchModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          className={`${outfit.className} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}
+        >
           <div className="bg-white rounded-lg w-[600px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
               <h2 className="text-[16px] font-semibold">Search With AI</h2>
@@ -583,7 +537,9 @@ Language Requirements."
 
       {/* Recording Modal */}
       {isRecordingModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          className={`${outfit.className} fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50`}
+        >
           <div className="bg-white rounded-lg w-[500px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
               <h2 className="text-[16px] font-semibold">Search With AI</h2>

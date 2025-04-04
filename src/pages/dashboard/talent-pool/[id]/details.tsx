@@ -45,7 +45,7 @@ export default function CandidateProfile() {
 
   return (
     <DashboardWrapper>
-      <div className="mx-auto bg-white p-6 rounded-lg shadow">
+      <div className="mx-auto bg-white p-6">
         <div className="flex justify-between mb-4 items-center">
           <div className="flex items-center">
             <ChevronLeft
@@ -160,6 +160,13 @@ export default function CandidateProfile() {
                   <p className="text-sm text-gray-500">
                     {data?.country_of_residence ?? "Not provided"}
                   </p>
+                </div>
+                <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-black w-[120px]">Salary Range</p>
+                  <p className="text-sm text-gray-500">{"Not provided"}</p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>

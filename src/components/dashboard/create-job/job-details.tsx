@@ -125,6 +125,8 @@ function CreateJobJobDetails() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  console.log({ userData });
+
   const { data: teamMembers } = useQuery({
     queryKey: ["team-members"],
     queryFn: async () => {
