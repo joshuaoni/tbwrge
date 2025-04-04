@@ -3,18 +3,18 @@
 import { useState, useEffect, useRef } from "react";
 import { FaSearch, FaEllipsisH } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
+import { Paperclip } from "lucide-react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import { Search, User, UserCircle } from "lucide-react";
+import { Search, User, UserCircle, Smile } from "lucide-react";
 import Image from "next/image";
 import { inter } from "@/constants/app";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getChats, ChatResponse } from "@/actions/get-chats";
-import { getMessages, Message } from "@/actions/get-messages";
+import { getMessages, Message as APIMessage } from "@/actions/get-messages";
 import { createMessage } from "@/actions/create-message";
 import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
-import { Smile } from "lucide-react";
 
 interface LastMessage {
   type: string;
@@ -39,6 +39,60 @@ interface User {
   avatar?: string;
   isOnline?: boolean;
   unreadCount?: number;
+}
+
+interface MediaItem {
+  id: string;
+  reference: string | null;
+  created_at: string;
+  updated_at: string;
+  type: string;
+  url: string;
+}
+
+interface APIMediaItem {
+  id: string;
+  reference: string | null;
+  created_at: string;
+  updated_at: string;
+  type: string;
+  url: string;
+}
+
+interface ExtendedMessage extends Omit<APIMessage, "type" | "media" | "text"> {
+  type: "text" | "media";
+  text: string | null;
+  media: MediaItem[];
+}
+
+interface Message {
+  id: string;
+  reference: string | null;
+  created_at: string;
+  updated_at: string;
+  user: {
+    id: string;
+    reference: string | null;
+    created_at: string;
+    updated_at: string;
+    name: string;
+    email: string;
+    role: string;
+    is_verified: boolean;
+    channel: string;
+    last_name: string | null;
+    country_code: string | null;
+    phone: string | null;
+    profile_picture: string | null;
+    calendly_link: string | null;
+    google_calender_link: string | null;
+    username: string | null;
+    location: string | null;
+    last_login: string;
+  };
+  text: string | null;
+  type: "text" | "media";
+  media: MediaItem[];
 }
 
 // Mock data for demonstration
@@ -96,7 +150,15 @@ const users: User[] = [
 ];
 
 // Modify the EmojiText component
-const EmojiText = ({ text, size = 16 }: { text: string; size?: number }) => {
+const EmojiText = ({
+  text,
+  size = 16,
+}: {
+  text: string | null;
+  size?: number;
+}) => {
+  if (!text) return null;
+
   return (
     <span className="inline">
       {text.split(/(\p{Emoji})/gu).map((part, index) => {
@@ -132,10 +194,14 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+  const [localMessages, setLocalMessages] = useState<ExtendedMessage[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [selectedChatWs, setSelectedChatWs] = useState<WebSocket | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const selectedChatWsRef = useRef<WebSocket | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -153,12 +219,42 @@ export default function ChatPage() {
   });
 
   // Fetch messages for the selected chat
-  const { data: messages, isLoading: isLoadingMessages } = useQuery<Message[]>({
+  const { data: messages, isLoading: isLoadingMessages } = useQuery<
+    ExtendedMessage[]
+  >({
     queryKey: ["chat-messages", selectedChatId],
     queryFn: async () => {
       if (!userData?.token || !selectedChatId) return [];
       const msgs = await getMessages(userData.token, selectedChatId);
-      return msgs || [];
+      return (
+        msgs.map((msg) => ({
+          ...msg,
+          type: msg.type as "text" | "media",
+          media: Array.isArray(msg.media)
+            ? msg.media.map((m) => {
+                if (typeof m === "string") {
+                  return {
+                    id: `temp-${Date.now()}`,
+                    reference: null,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                    type: "image",
+                    url: m,
+                  };
+                }
+                const mediaItem = m as APIMediaItem;
+                return {
+                  id: mediaItem.id,
+                  reference: mediaItem.reference,
+                  created_at: mediaItem.created_at,
+                  updated_at: mediaItem.updated_at,
+                  type: mediaItem.type,
+                  url: mediaItem.url,
+                };
+              })
+            : [],
+        })) || []
+      );
     },
     enabled: !!userData?.token && !!selectedChatId,
   });
@@ -199,7 +295,16 @@ export default function ChatPage() {
     mutationFn: async ({ text, files }: { text: string; files: File[] }) => {
       if (!userData?.token || !selectedChatId)
         throw new Error("Missing token or chat ID");
-      return await createMessage(userData.token, selectedChatId, text, files);
+      const response = await createMessage(
+        userData.token,
+        selectedChatId,
+        text,
+        files
+      );
+      return {
+        ...response,
+        type: response.type as "text" | "media",
+      };
     },
     onMutate: async ({ text, files }) => {
       // Cancel any outgoing refetches
@@ -209,7 +314,7 @@ export default function ChatPage() {
       await queryClient.cancelQueries({ queryKey: ["user-chats"] });
 
       // Get current query data
-      const previousMessages = queryClient.getQueryData<Message[]>([
+      const previousMessages = queryClient.getQueryData<ExtendedMessage[]>([
         "chat-messages",
         selectedChatId,
       ]);
@@ -218,7 +323,7 @@ export default function ChatPage() {
       ]);
 
       // Create optimistic message
-      const optimisticMessage: Message = {
+      const optimisticMessage: ExtendedMessage = {
         id: `temp-${Date.now()}`,
         reference: null,
         created_at: new Date().toISOString(),
@@ -243,9 +348,19 @@ export default function ChatPage() {
           location: null,
           last_login: new Date().toISOString(),
         },
-        text,
-        type: "text",
-        media: [],
+        text: text || null,
+        type: files.length > 0 ? "media" : "text",
+        media:
+          files.length > 0
+            ? files.map((file) => ({
+                id: `temp-${Date.now()}-${file.name}`,
+                reference: null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                type: "image",
+                url: URL.createObjectURL(file),
+              }))
+            : [],
       };
 
       // Update messages optimistically
@@ -274,10 +389,6 @@ export default function ChatPage() {
         queryClient.setQueryData(["user-chats"], updatedChats);
       }
 
-      // Clear input immediately
-      setNewMessage("");
-      setSelectedFiles([]);
-
       return { previousMessages, previousChats, optimisticMessage };
     },
     onError: (err, { text }, context) => {
@@ -298,13 +409,9 @@ export default function ChatPage() {
       // Update local messages with the real message
       setLocalMessages((prev) => {
         const tempId = `temp-${Date.now()}`;
-        const newMessage: Message = {
-          ...data,
-          media: Array.isArray(data.media)
-            ? data.media.map((m: any) => m.url || m)
-            : [],
-        };
-        return prev.map((msg) => (msg.id === tempId ? newMessage : msg));
+        return prev.map((msg) =>
+          msg.id === tempId ? (data as ExtendedMessage) : msg
+        );
       });
 
       setIsSending(false);
@@ -324,19 +431,34 @@ export default function ChatPage() {
 
   // Handle sending a new message
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedChatId || isSending) return;
+    if (
+      (!newMessage.trim() && selectedFiles.length === 0) ||
+      !selectedChatId ||
+      isSending
+    )
+      return;
 
     setIsSending(true);
-    createMessageMutation.mutate({
-      text: newMessage.trim(),
-      files: selectedFiles,
-    });
+    createMessageMutation.mutate(
+      {
+        text: newMessage.trim(),
+        files: selectedFiles,
+      },
+      {
+        onSuccess: () => {
+          setNewMessage("");
+          setSelectedFiles([]);
+        },
+      }
+    );
   };
 
   // Handle file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
+      const filesArray = Array.from(e.target.files).filter((file) =>
+        file.type.startsWith("image/")
+      );
       setSelectedFiles((prev) => [...prev, ...filesArray]);
     }
   };
@@ -364,6 +486,160 @@ export default function ChatPage() {
   const onEmojiClick = (emojiObject: any) => {
     setNewMessage((prev) => prev + emojiObject.emoji);
     setShowEmojiPicker(false);
+  };
+
+  // General WebSocket connection for all chats
+  useEffect(() => {
+    if (userData?.token) {
+      // Close existing connection if any
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+
+      // Create new WebSocket connection
+      const socket = new WebSocket(
+        `wss://chats.candivet.com/chat/message-feed/ws?auth_token=${userData.token}`
+      );
+
+      socket.onopen = () => {
+        console.log("General WebSocket connection established");
+        setWs(socket);
+        wsRef.current = socket;
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          handleNewMessage(message);
+        } catch (error) {
+          console.error("Error parsing WebSocket message:", error);
+        }
+      };
+
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      socket.onclose = () => {
+        console.log("General WebSocket connection closed");
+        setWs(null);
+        wsRef.current = null;
+      };
+
+      // Cleanup function
+      return () => {
+        if (socket) {
+          socket.close();
+        }
+      };
+    }
+  }, [userData?.token]);
+
+  // Selected chat WebSocket connection
+  useEffect(() => {
+    if (selectedChatId && userData?.token) {
+      // Close existing connection if any
+      if (selectedChatWsRef.current) {
+        selectedChatWsRef.current.close();
+      }
+
+      // Create new WebSocket connection for selected chat
+      const socket = new WebSocket(
+        `wss://chats.candivet.com/chat/message-feed/${selectedChatId}/ws?auth_token=${userData.token}`
+      );
+
+      socket.onopen = () => {
+        console.log("Selected chat WebSocket connection established");
+        setSelectedChatWs(socket);
+        selectedChatWsRef.current = socket;
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          console.log("Selected chat message received:", message);
+
+          // Update local messages for the selected chat
+          setLocalMessages((prev) => {
+            // Check if message already exists
+            const messageExists = prev.some((msg) => msg.id === message.id);
+            if (!messageExists) {
+              return [...prev, message];
+            }
+            return prev;
+          });
+
+          // Scroll to bottom
+          setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        } catch (error) {
+          console.error("Error parsing WebSocket message:", error);
+        }
+      };
+
+      socket.onerror = (error) => {
+        console.error("Selected chat WebSocket error:", error);
+      };
+
+      socket.onclose = (event) => {
+        console.log(
+          "Selected chat WebSocket connection closed:",
+          event.code,
+          event.reason
+        );
+        setSelectedChatWs(null);
+        selectedChatWsRef.current = null;
+      };
+
+      // Cleanup function
+      return () => {
+        if (socket) {
+          socket.close();
+        }
+      };
+    }
+  }, [selectedChatId, userData?.token]);
+
+  // Handle incoming WebSocket messages for chat list updates
+  const handleNewMessage = (message: any) => {
+    console.log("General WebSocket message received:", message);
+
+    // Update chat list
+    queryClient.setQueryData<ChatResponse[]>(["user-chats"], (old) => {
+      if (!old) return [];
+
+      const updatedChats = old.map((chat) => {
+        if (chat.id === message.chat_id) {
+          return {
+            ...chat,
+            last_message: {
+              id: message.id,
+              text: message.text,
+              type: message.type,
+              reference: message.reference,
+              created_at: message.created_at,
+              updated_at: message.updated_at,
+            },
+            updated_at: new Date().toISOString(),
+          };
+        }
+        return chat;
+      });
+
+      // Move the updated chat to the top
+      const updatedChat = updatedChats.find(
+        (chat) => chat.id === message.chat_id
+      );
+      if (updatedChat) {
+        const otherChats = updatedChats.filter(
+          (chat) => chat.id !== message.chat_id
+        );
+        return [updatedChat, ...otherChats];
+      }
+
+      return updatedChats;
+    });
   };
 
   return (
@@ -453,7 +729,11 @@ export default function ChatPage() {
                           <div className="flex justify-between items-center mt-1">
                             <div className="text-sm text-gray-500 truncate pr-2">
                               {chat.last_message ? (
-                                <EmojiText text={chat.last_message.text} />
+                                chat.last_message.type === "text" ? (
+                                  <EmojiText text={chat.last_message.text} />
+                                ) : (
+                                  "Shared media"
+                                )
                               ) : (
                                 "No messages yet"
                               )}
@@ -535,7 +815,7 @@ export default function ChatPage() {
                   </div>
                 ) : localMessages.length > 0 ? (
                   <>
-                    {localMessages.map((message: Message) => {
+                    {localMessages.map((message: ExtendedMessage) => {
                       const isCurrentUser =
                         message.user.id === userData?.user?.id;
 
@@ -553,54 +833,60 @@ export default function ChatPage() {
                                 : "bg-white rounded-xl rounded-tl-none"
                             }`}
                           >
-                            <div className="whitespace-pre-wrap inline">
-                              {message.text
-                                .split(/(\p{Emoji})/gu)
-                                .map((part, index) => {
-                                  if (part.match(/\p{Emoji}/gu)) {
+                            {message.type === "text" && message.text && (
+                              <div className="whitespace-pre-wrap inline">
+                                {message.text
+                                  .split(/(\p{Emoji})/gu)
+                                  .map((part, index) => {
+                                    if (part.match(/\p{Emoji}/gu)) {
+                                      return (
+                                        <span
+                                          key={index}
+                                          style={{
+                                            display: "inline-block",
+                                            verticalAlign: "middle",
+                                          }}
+                                        >
+                                          <Emoji
+                                            unified={
+                                              part
+                                                .codePointAt(0)
+                                                ?.toString(16) || ""
+                                            }
+                                            emojiStyle={EmojiStyle.APPLE}
+                                            size={20}
+                                          />
+                                        </span>
+                                      );
+                                    }
                                     return (
                                       <span
                                         key={index}
-                                        style={{
-                                          display: "inline-block",
-                                          verticalAlign: "middle",
-                                        }}
+                                        style={{ display: "inline" }}
                                       >
-                                        <Emoji
-                                          unified={
-                                            part.codePointAt(0)?.toString(16) ||
-                                            ""
-                                          }
-                                          emojiStyle={EmojiStyle.APPLE}
-                                          size={20}
-                                        />
+                                        {part}
                                       </span>
                                     );
-                                  }
-                                  return (
-                                    <span
-                                      key={index}
-                                      style={{ display: "inline" }}
-                                    >
-                                      {part}
-                                    </span>
-                                  );
-                                })}
-                            </div>
+                                  })}
+                              </div>
+                            )}
                             {message.media && message.media.length > 0 && (
-                              <div className="flex gap-2 mt-2">
-                                {message.media.map(
-                                  (media: string, i: number) => (
-                                    <Image
-                                      key={i}
-                                      src={media}
-                                      width={40}
-                                      height={40}
-                                      alt="attachment"
-                                      className="w-10 h-10 rounded-md"
-                                    />
-                                  )
-                                )}
+                              <div className="flex flex-wrap gap-2">
+                                {message.media.map((media: any, i: number) => (
+                                  <Image
+                                    key={i}
+                                    src={media.url || media}
+                                    width={200}
+                                    height={200}
+                                    alt={`Media ${i + 1}`}
+                                    className="rounded-md max-w-[200px] h-auto object-cover"
+                                  />
+                                ))}
+                              </div>
+                            )}
+                            {message.type === "media" && !message.text && (
+                              <div className="text-sm text-gray-500">
+                                Shared media
                               </div>
                             )}
                             <p className="text-xs text-gray-400 mt-1">
@@ -632,17 +918,24 @@ export default function ChatPage() {
                   <div className="flex flex-wrap gap-2 mb-2">
                     {selectedFiles.map((file, index) => (
                       <div key={index} className="relative">
-                        <div className="bg-gray-100 p-2 rounded-md flex items-center">
-                          <span className="text-xs truncate max-w-[100px]">
-                            {file.name}
-                          </span>
+                        <div className="relative group">
+                          <Image
+                            src={URL.createObjectURL(file)}
+                            alt={file.name}
+                            width={100}
+                            height={100}
+                            className="rounded-md object-cover"
+                          />
                           <button
                             onClick={() => removeFile(index)}
-                            className="ml-2 text-red-500 hover:text-red-700"
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 focus:outline-none"
                           >
                             ×
                           </button>
                         </div>
+                        <span className="text-xs text-gray-500 mt-1 block truncate max-w-[100px]">
+                          {file.name}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -700,37 +993,58 @@ export default function ChatPage() {
                       )}
                     </div>
                   </div>
-                  <button
-                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 disabled:opacity-50 p-2"
-                    onClick={handleSendMessage}
-                    disabled={isSending || !newMessage.trim()}
-                    type="button"
-                  >
-                    {isSending ? (
-                      <svg
-                        className="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
+                  <div className="flex items-center gap-2">
+                    <label
+                      className={`text-gray-400 hover:text-gray-600 flex-shrink-0 cursor-pointer p-2 transition-transform duration-200 ${
+                        newMessage.trim() || selectedFiles.length > 0
+                          ? "-translate-x-1"
+                          : ""
+                      }`}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileSelect}
+                        disabled={isSending}
+                      />
+                      <Paperclip className="w-5 h-5" />
+                    </label>
+                    {(newMessage.trim() || selectedFiles.length > 0) && (
+                      <button
+                        className="text-gray-400 hover:text-gray-600 flex-shrink-0 disabled:opacity-50 p-2 transition-opacity duration-200"
+                        onClick={handleSendMessage}
+                        disabled={isSending}
+                        type="button"
                       >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <IoSend className="w-5 h-5" />
+                        {isSending ? (
+                          <svg
+                            className="animate-spin h-5 w-5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        ) : (
+                          <IoSend className="w-5 h-5" />
+                        )}
+                      </button>
                     )}
-                  </button>
+                  </div>
                 </div>
               </div>
             </>

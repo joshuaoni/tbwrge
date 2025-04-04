@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import AirBnB from "../../../../../public/images/airbnb.png";
 import Microsoft from "../../../../../public/images/microsoft.png";
 import Google from "../../../../../public/images/google.png";
@@ -19,21 +18,6 @@ const Partners = () => {
     { image: FedEx, alt: "fedex" },
     { image: hubspot, alt: "hubspot" },
   ];
-
-  // Framer Motion Variants for scrolling animation
-  const marqueeVariants = {
-    animate: {
-      x: [0, -1020],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 30,
-          ease: "linear",
-        },
-      },
-    },
-  };
 
   if (isMobile) {
     return (
@@ -61,43 +45,41 @@ const Partners = () => {
 
   return (
     <div className="overflow-hidden pt-16 pb-10 border-b bg-white">
-      <div className="max-w-[1020px] mx-auto">
-        <motion.div
-          className="flex items-center"
-          variants={marqueeVariants}
-          animate="animate"
-        >
-          <div className="flex shrink-0">
+      <div className="relative w-full">
+        <div className="w-[200%] inline-flex items-center">
+          <div className="w-1/2 flex justify-around items-center animate-scroll">
             {partners.map((partner, index) => (
               <div
-                className="flex flex-col items-center justify-center w-[170px]"
-                key={index}
+                key={`first-${index}`}
+                className="flex items-center justify-center"
               >
                 <Image
                   src={partner.image}
                   alt={partner.alt}
                   width={70}
                   height={70}
+                  className="min-w-[70px]"
                 />
               </div>
             ))}
           </div>
-          <div className="flex shrink-0">
+          <div className="w-1/2 flex justify-around items-center animate-scroll">
             {partners.map((partner, index) => (
               <div
-                className="flex flex-col items-center justify-center w-[170px]"
-                key={`duplicate-${index}`}
+                key={`second-${index}`}
+                className="flex items-center justify-center"
               >
                 <Image
                   src={partner.image}
                   alt={partner.alt}
                   width={70}
                   height={70}
+                  className="min-w-[70px]"
                 />
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

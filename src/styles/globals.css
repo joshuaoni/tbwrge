@@ -42,18 +42,29 @@
   box-shadow: 29.16px 24.79px 40.44px 0px #3366ff0d;
 }
 
-
-
 /* sidebar */
-.sidebar::-webkit-scrollbar{
+.sidebar::-webkit-scrollbar {
   border-radius: 50px;
   background: #ffffff;
   width: 8px;
 }
-.sidebar::-webkit-scrollbar-thumb{
+.sidebar::-webkit-scrollbar-thumb {
   cursor: pointer;
   background: black;
   height: 50px;
   border-radius: 50px;
   width: 1px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
 }
