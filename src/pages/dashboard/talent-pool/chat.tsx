@@ -186,6 +186,29 @@ const EmojiText = ({
   );
 };
 
+// Add formatMessageTime helper function
+const formatMessageTime = (timestamp: string) => {
+  const now = new Date();
+  const messageDate = new Date(timestamp);
+  const diffInMinutes = Math.floor(
+    (now.getTime() - messageDate.getTime()) / (1000 * 60)
+  );
+  const diffInHours = Math.floor(diffInMinutes / 60);
+
+  if (diffInMinutes < 1) {
+    return "Just now";
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes}m`;
+  } else if (diffInHours < 24) {
+    return `${diffInHours}h`;
+  } else {
+    return messageDate.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+  }
+};
+
 export default function ChatPage() {
   const router = useRouter();
   const { userData } = useUserStore();
@@ -289,6 +312,118 @@ export default function ChatPage() {
       ? selectedChat.user_2
       : selectedChat.user_1
     : null;
+
+  // Selected chat WebSocket connection
+  useEffect(() => {
+    if (selectedChatId && userData?.token) {
+      // Close existing connection if any
+      if (selectedChatWsRef.current) {
+        selectedChatWsRef.current.close();
+      }
+
+      // Create new WebSocket connection for selected chat
+      const socket = new WebSocket(
+        `wss://chats.candivet.com/chat/message-feed/${selectedChatId}/ws?auth_token=${userData.token}`
+      );
+
+      socket.onopen = () => {
+        console.log("Selected chat WebSocket connection established");
+        setSelectedChatWs(socket);
+        selectedChatWsRef.current = socket;
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          console.log("Selected chat message received:", message);
+
+          // Only update messages if it's not an optimistic message
+          if (!message.id.startsWith("temp-")) {
+            setLocalMessages((prev) => {
+              // Check if message already exists
+              const messageExists = prev.some((msg) => msg.id === message.id);
+              if (!messageExists) {
+                return [...prev, message];
+              }
+              return prev;
+            });
+
+            // Scroll to bottom
+            setTimeout(() => {
+              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+          }
+        } catch (error) {
+          console.error("Error parsing WebSocket message:", error);
+        }
+      };
+
+      socket.onerror = (error) => {
+        console.error("Selected chat WebSocket error:", error);
+      };
+
+      socket.onclose = (event) => {
+        console.log(
+          "Selected chat WebSocket connection closed:",
+          event.code,
+          event.reason
+        );
+        setSelectedChatWs(null);
+        selectedChatWsRef.current = null;
+      };
+
+      // Cleanup function
+      return () => {
+        if (socket) {
+          socket.close();
+        }
+      };
+    }
+  }, [selectedChatId, userData?.token]);
+
+  // Handle incoming WebSocket messages for chat list updates
+  const handleNewMessage = (message: any) => {
+    // Skip optimistic messages in general websocket
+    if (message.id.startsWith("temp-")) return;
+
+    console.log("General WebSocket message received:", message);
+
+    // Update chat list
+    queryClient.setQueryData<ChatResponse[]>(["user-chats"], (old) => {
+      if (!old) return [];
+
+      const updatedChats = old.map((chat) => {
+        if (chat.id === message.chat_id) {
+          return {
+            ...chat,
+            last_message: {
+              id: message.id,
+              text: message.text,
+              type: message.type,
+              reference: message.reference,
+              created_at: message.created_at,
+              updated_at: message.updated_at,
+            },
+            updated_at: new Date().toISOString(),
+          };
+        }
+        return chat;
+      });
+
+      // Move the updated chat to the top
+      const updatedChat = updatedChats.find(
+        (chat) => chat.id === message.chat_id
+      );
+      if (updatedChat) {
+        const otherChats = updatedChats.filter(
+          (chat) => chat.id !== message.chat_id
+        );
+        return [updatedChat, ...otherChats];
+      }
+
+      return updatedChats;
+    });
+  };
 
   // Create message mutation
   const createMessageMutation = useMutation({
@@ -405,26 +540,22 @@ export default function ChatPage() {
       console.error("Failed to send message:", err);
       setIsSending(false);
     },
-    onSuccess: async (data) => {
-      // Update local messages with the real message
+    onSuccess: (data) => {
+      // Remove the optimistic message and add the real one
       setLocalMessages((prev) => {
-        const tempId = `temp-${Date.now()}`;
-        return prev.map((msg) =>
-          msg.id === tempId ? (data as ExtendedMessage) : msg
+        const withoutOptimistic = prev.filter(
+          (msg) => !msg.id.startsWith("temp-")
         );
+        return [...withoutOptimistic, data as ExtendedMessage];
       });
 
       setIsSending(false);
+      setNewMessage("");
+      setSelectedFiles([]);
 
       // Force refetch the chat list
-      await queryClient.refetchQueries({
-        queryKey: ["user-chats"],
-        type: "active",
-      });
-
-      // Invalidate queries in the background
       queryClient.invalidateQueries({
-        queryKey: ["chat-messages", selectedChatId],
+        queryKey: ["user-chats"],
       });
     },
   });
@@ -535,113 +666,6 @@ export default function ChatPage() {
     }
   }, [userData?.token]);
 
-  // Selected chat WebSocket connection
-  useEffect(() => {
-    if (selectedChatId && userData?.token) {
-      // Close existing connection if any
-      if (selectedChatWsRef.current) {
-        selectedChatWsRef.current.close();
-      }
-
-      // Create new WebSocket connection for selected chat
-      const socket = new WebSocket(
-        `wss://chats.candivet.com/chat/message-feed/${selectedChatId}/ws?auth_token=${userData.token}`
-      );
-
-      socket.onopen = () => {
-        console.log("Selected chat WebSocket connection established");
-        setSelectedChatWs(socket);
-        selectedChatWsRef.current = socket;
-      };
-
-      socket.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          console.log("Selected chat message received:", message);
-
-          // Update local messages for the selected chat
-          setLocalMessages((prev) => {
-            // Check if message already exists
-            const messageExists = prev.some((msg) => msg.id === message.id);
-            if (!messageExists) {
-              return [...prev, message];
-            }
-            return prev;
-          });
-
-          // Scroll to bottom
-          setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 100);
-        } catch (error) {
-          console.error("Error parsing WebSocket message:", error);
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error("Selected chat WebSocket error:", error);
-      };
-
-      socket.onclose = (event) => {
-        console.log(
-          "Selected chat WebSocket connection closed:",
-          event.code,
-          event.reason
-        );
-        setSelectedChatWs(null);
-        selectedChatWsRef.current = null;
-      };
-
-      // Cleanup function
-      return () => {
-        if (socket) {
-          socket.close();
-        }
-      };
-    }
-  }, [selectedChatId, userData?.token]);
-
-  // Handle incoming WebSocket messages for chat list updates
-  const handleNewMessage = (message: any) => {
-    console.log("General WebSocket message received:", message);
-
-    // Update chat list
-    queryClient.setQueryData<ChatResponse[]>(["user-chats"], (old) => {
-      if (!old) return [];
-
-      const updatedChats = old.map((chat) => {
-        if (chat.id === message.chat_id) {
-          return {
-            ...chat,
-            last_message: {
-              id: message.id,
-              text: message.text,
-              type: message.type,
-              reference: message.reference,
-              created_at: message.created_at,
-              updated_at: message.updated_at,
-            },
-            updated_at: new Date().toISOString(),
-          };
-        }
-        return chat;
-      });
-
-      // Move the updated chat to the top
-      const updatedChat = updatedChats.find(
-        (chat) => chat.id === message.chat_id
-      );
-      if (updatedChat) {
-        const otherChats = updatedChats.filter(
-          (chat) => chat.id !== message.chat_id
-        );
-        return [updatedChat, ...otherChats];
-      }
-
-      return updatedChats;
-    });
-  };
-
   return (
     <DashboardWrapper>
       <div className="h-[calc(100vh-80px)] flex overflow-hidden">
@@ -670,80 +694,85 @@ export default function ChatPage() {
                   Loading chats...
                 </li>
               ) : chats && chats.length > 0 ? (
-                chats.map((chat) => {
-                  // Determine the other user in the chat
-                  const otherUser =
-                    chat.user_1.id === userData?.user?.id
-                      ? chat.user_2
-                      : chat.user_1;
+                [...chats]
+                  .sort((a, b) => {
+                    const aTime = a.last_message
+                      ? new Date(a.last_message.updated_at).getTime()
+                      : new Date(a.updated_at).getTime();
+                    const bTime = b.last_message
+                      ? new Date(b.last_message.updated_at).getTime()
+                      : new Date(b.updated_at).getTime();
+                    return bTime - aTime;
+                  })
+                  .map((chat) => {
+                    const otherUser =
+                      chat.user_1.id === userData?.user?.id
+                        ? chat.user_2
+                        : chat.user_1;
 
-                  return (
-                    <li
-                      key={chat.id}
-                      className={`px-6 py-4 hover:bg-gray-50 cursor-pointer ${
-                        chat.id === selectedChatId ? "bg-gray-50" : ""
-                      }`}
-                      onClick={() => {
-                        setSelectedChatId(chat.id);
-                        router.push(
-                          `/dashboard/talent-pool/chat?chatId=${chat.id}`,
-                          undefined,
-                          { shallow: true }
-                        );
-                      }}
-                    >
-                      <div className="flex w-full items-center gap-3">
-                        <div className="relative flex-shrink-0">
-                          <Image
-                            src={otherUser.profile_picture || "/Mask.png"}
-                            alt={otherUser.name}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10 rounded-full object-cover border border-gray-200"
-                          />
-                          {chat.unread > 0 && (
-                            <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                              {chat.unread}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-medium text-gray-900 truncate">
-                              {otherUser.name} {otherUser.last_name || ""}
-                            </h3>
-                            <span className="text-sm text-gray-500 flex-shrink-0">
-                              {chat.last_message
-                                ? new Date(
-                                    chat.last_message.updated_at
-                                  ).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                : new Date(chat.updated_at).toLocaleTimeString(
-                                    [],
-                                    { hour: "2-digit", minute: "2-digit" }
-                                  )}
-                            </span>
+                    return (
+                      <li
+                        key={chat.id}
+                        className={`px-6 py-4 hover:bg-gray-50 cursor-pointer ${
+                          chat.id === selectedChatId ? "bg-gray-50" : ""
+                        }`}
+                        onClick={() => {
+                          setSelectedChatId(chat.id);
+                          router.push(
+                            `/dashboard/talent-pool/chat?chatId=${chat.id}`,
+                            undefined,
+                            { shallow: true }
+                          );
+                        }}
+                      >
+                        <div className="flex w-full items-center gap-3">
+                          <div className="relative flex-shrink-0">
+                            <Image
+                              src={otherUser.profile_picture || "/Mask.png"}
+                              alt={otherUser.name}
+                              width={40}
+                              height={40}
+                              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                            />
                           </div>
-                          <div className="flex justify-between items-center mt-1">
-                            <div className="text-sm text-gray-500 truncate pr-2">
-                              {chat.last_message ? (
-                                chat.last_message.type === "text" ? (
-                                  <EmojiText text={chat.last_message.text} />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-center">
+                              <h3 className="font-medium text-gray-900 truncate">
+                                {otherUser.name} {otherUser.last_name || ""}
+                              </h3>
+                              <span className="text-sm text-gray-500 flex-shrink-0">
+                                {chat.last_message
+                                  ? formatMessageTime(
+                                      chat.last_message.updated_at
+                                    )
+                                  : formatMessageTime(chat.updated_at)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center mt-1">
+                              <div className="text-sm text-gray-500 truncate max-w-[200px]">
+                                {chat.last_message ? (
+                                  chat.last_message.type === "text" ? (
+                                    <EmojiText text={chat.last_message.text} />
+                                  ) : (
+                                    "Shared media"
+                                  )
                                 ) : (
-                                  "Shared media"
-                                )
-                              ) : (
-                                "No messages yet"
+                                  "No messages yet"
+                                )}
+                              </div>
+                              {chat.unread > 0 && (
+                                <div className="flex items-center">
+                                  <span className="w-[20px] h-[20px] bg-[#ED4F9D] text-white text-[11px] rounded-full flex items-center justify-center">
+                                    {chat.unread}
+                                  </span>
+                                </div>
                               )}
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  );
-                })
+                      </li>
+                    );
+                  })
               ) : (
                 <li className="px-6 py-4 text-center text-gray-500">
                   No chats found
@@ -768,7 +797,6 @@ export default function ChatPage() {
                       height={36}
                       className="w-9 h-9 rounded-full object-cover border border-gray-200"
                     />
-                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                   </div>
                   <h3 className="text-lg font-semibold">
                     {otherUser.name} {otherUser.last_name || ""}
