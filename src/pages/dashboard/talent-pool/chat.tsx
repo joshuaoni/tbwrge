@@ -209,6 +209,41 @@ const formatMessageTime = (timestamp: string) => {
   }
 };
 
+// Add this helper function to format the date for the separator
+const formatDateSeparator = (date: Date) => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  } else if (date.toDateString() === yesterday.toDateString()) {
+    return "Yesterday";
+  } else {
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+};
+
+// Add this function to group messages by date
+const groupMessagesByDate = (messages: ExtendedMessage[]) => {
+  const groups: { [key: string]: ExtendedMessage[] } = {};
+
+  messages.forEach((message) => {
+    const date = new Date(message.created_at).toDateString();
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(message);
+  });
+
+  return groups;
+};
+
 export default function ChatPage() {
   const router = useRouter();
   const { userData } = useUserStore();
@@ -668,7 +703,7 @@ export default function ChatPage() {
 
   return (
     <DashboardWrapper>
-      <div className="h-[calc(100vh-80px)] flex overflow-hidden">
+      <div className="h-[calc(100vh-150px)] flex overflow-hidden">
         {/* Chat List Sidebar */}
         <div className="w-[360px] bg-white flex flex-col min-h-0">
           {/* Search - Fixed at top */}
@@ -843,93 +878,110 @@ export default function ChatPage() {
                   </div>
                 ) : localMessages.length > 0 ? (
                   <>
-                    {localMessages.map((message: ExtendedMessage) => {
-                      const isCurrentUser =
-                        message.user.id === userData?.user?.id;
-
-                      return (
-                        <div
-                          key={message.id}
-                          className={`flex ${
-                            isCurrentUser ? "justify-end" : ""
-                          }`}
-                        >
-                          <div
-                            className={`max-w-[70%] p-3 ${
-                              isCurrentUser
-                                ? "bg-[#145959] text-white rounded-xl rounded-tr-none"
-                                : "bg-white rounded-xl rounded-tl-none"
-                            }`}
-                          >
-                            {message.type === "text" && message.text && (
-                              <div className="whitespace-pre-wrap inline">
-                                {message.text
-                                  .split(/(\p{Emoji})/gu)
-                                  .map((part, index) => {
-                                    if (part.match(/\p{Emoji}/gu)) {
-                                      return (
-                                        <span
-                                          key={index}
-                                          style={{
-                                            display: "inline-block",
-                                            verticalAlign: "middle",
-                                          }}
-                                        >
-                                          <Emoji
-                                            unified={
-                                              part
-                                                .codePointAt(0)
-                                                ?.toString(16) || ""
-                                            }
-                                            emojiStyle={EmojiStyle.APPLE}
-                                            size={20}
-                                          />
-                                        </span>
-                                      );
-                                    }
-                                    return (
-                                      <span
-                                        key={index}
-                                        style={{ display: "inline" }}
-                                      >
-                                        {part}
-                                      </span>
-                                    );
-                                  })}
-                              </div>
-                            )}
-                            {message.media && message.media.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {message.media.map((media: any, i: number) => (
-                                  <Image
-                                    key={i}
-                                    src={media.url || media}
-                                    width={200}
-                                    height={200}
-                                    alt={`Media ${i + 1}`}
-                                    className="rounded-md max-w-[200px] h-auto object-cover"
-                                  />
-                                ))}
-                              </div>
-                            )}
-                            {message.type === "media" && !message.text && (
-                              <div className="text-sm text-gray-500">
-                                Shared media
-                              </div>
-                            )}
-                            <p className="text-xs text-gray-400 mt-1">
-                              {new Date(message.created_at).toLocaleTimeString(
-                                [],
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                }
-                              )}
-                            </p>
+                    {Object.entries(groupMessagesByDate(localMessages))
+                      .sort(
+                        ([dateA], [dateB]) =>
+                          new Date(dateA).getTime() - new Date(dateB).getTime()
+                      )
+                      .map(([date, messages]) => (
+                        <div key={date} className="space-y-4">
+                          <div className="flex items-center justify-center">
+                            <div className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full">
+                              {formatDateSeparator(new Date(date))}
+                            </div>
                           </div>
+                          {messages.map((message: ExtendedMessage) => {
+                            const isCurrentUser =
+                              message.user.id === userData?.user?.id;
+
+                            return (
+                              <div
+                                key={message.id}
+                                className={`flex ${
+                                  isCurrentUser ? "justify-end" : ""
+                                }`}
+                              >
+                                <div
+                                  className={`max-w-[70%] p-3 ${
+                                    isCurrentUser
+                                      ? "bg-[#145959] text-white rounded-xl rounded-tr-none"
+                                      : "bg-white rounded-xl rounded-tl-none"
+                                  }`}
+                                >
+                                  {message.type === "text" && message.text && (
+                                    <div className="whitespace-pre-wrap inline">
+                                      {message.text
+                                        .split(/(\p{Emoji})/gu)
+                                        .map((part, index) => {
+                                          if (part.match(/\p{Emoji}/gu)) {
+                                            return (
+                                              <span
+                                                key={index}
+                                                style={{
+                                                  display: "inline-block",
+                                                  verticalAlign: "middle",
+                                                }}
+                                              >
+                                                <Emoji
+                                                  unified={
+                                                    part
+                                                      .codePointAt(0)
+                                                      ?.toString(16) || ""
+                                                  }
+                                                  emojiStyle={EmojiStyle.APPLE}
+                                                  size={20}
+                                                />
+                                              </span>
+                                            );
+                                          }
+                                          return (
+                                            <span
+                                              key={index}
+                                              style={{ display: "inline" }}
+                                            >
+                                              {part}
+                                            </span>
+                                          );
+                                        })}
+                                    </div>
+                                  )}
+                                  {message.media &&
+                                    message.media.length > 0 && (
+                                      <div className="flex flex-wrap gap-2">
+                                        {message.media.map(
+                                          (media: any, i: number) => (
+                                            <Image
+                                              key={i}
+                                              src={media.url || media}
+                                              width={200}
+                                              height={200}
+                                              alt={`Media ${i + 1}`}
+                                              className="rounded-md max-w-[200px] h-auto object-cover"
+                                            />
+                                          )
+                                        )}
+                                      </div>
+                                    )}
+                                  {message.type === "media" &&
+                                    !message.text && (
+                                      <div className="text-sm text-gray-500">
+                                        Shared media
+                                      </div>
+                                    )}
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    {new Date(
+                                      message.created_at
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
+                      ))}
                     <div ref={messagesEndRef} />
                   </>
                 ) : (

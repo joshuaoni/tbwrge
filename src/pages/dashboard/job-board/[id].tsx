@@ -16,6 +16,7 @@ import {
   JobApplicationFormData,
 } from "@/actions/submit-job-application";
 import { toast } from "react-hot-toast";
+import { submitQuestionAnswers } from "@/actions/submit-question-answers";
 
 const Section = ({
   title,
@@ -185,56 +186,44 @@ const ApplicationForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!userData?.token) {
-      toast.error("You must be logged in to submit an application");
-      return;
-    }
-
-    // Validate required fields
-    if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.relevantExperience ||
-      !formData.skillsSummary
-    ) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+    setIsSubmitting(true);
 
     try {
-      setIsSubmitting(true);
-
-      // Prepare application data
-      const applicationData: JobApplicationFormData = {
+      // Submit job application
+      const applicationResponse = await submitJobApplication(userData?.token!, {
+        job_id: jobId as string,
         name: formData.fullName,
         email: formData.email,
         phone: formData.phone || undefined,
-        nationality: formData.nationality || undefined,
-        country_of_residence: formData.countryOfResidence || undefined,
         date_of_birth: formData.dateOfBirth || undefined,
         linkedin: formData.linkedinProfile || undefined,
         current_company: formData.currentCompany || undefined,
         current_position: formData.currentPosition || undefined,
+        nationality: formData.nationality || undefined,
+        country_of_residence: formData.countryOfResidence || undefined,
         experience: formData.relevantExperience,
         skills: formData.skillsSummary,
         cv: formData.cv || undefined,
         cover_letter: formData.coverLetter || undefined,
         voicenote: formData.voicenote || undefined,
-        job_id: jobId,
-        answers: Object.entries(questionAnswers).map(
-          ([question_id, answer]) => ({
-            question_id,
-            answer,
-          })
-        ),
-      };
+      });
 
-      // Submit application
-      await submitJobApplication(userData.token, applicationData);
+      // Submit question answers if there are any
+      if (questions.length > 0) {
+        const formattedAnswers = questions.map((question) => ({
+          question_id: question.id,
+          text: questionAnswers[question.id] || "",
+        }));
+
+        await submitQuestionAnswers(
+          userData?.token!,
+          applicationResponse.id,
+          formattedAnswers
+        );
+      }
 
       toast.success("Application submitted successfully!");
-      router.back(); // Redirect backwards instead of pushing to a specific link
+      router.back();
     } catch (error) {
       console.error("Error submitting application:", error);
       toast.error("Failed to submit application. Please try again.");

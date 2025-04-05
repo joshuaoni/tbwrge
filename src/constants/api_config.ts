@@ -42,6 +42,8 @@ export const API_CONFIG = {
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
   SUBMIT_JOB_APPLICATION: (job_id: string) =>
     `${MAIN_URL}/job/submit-application/${job_id}/`,
+  SUBMIT_APPLICATION_QUESTION_ANSWERS: (application_id: string) =>
+    `${MAIN_URL}/job/submit-application-answers/${application_id}/`,
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,

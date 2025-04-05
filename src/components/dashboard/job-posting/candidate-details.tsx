@@ -15,6 +15,8 @@ const CandidateDetails = ({
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
   const applicant = candidate.applicant;
 
+  console.log({ candidate });
+
   return (
     <div className="bg-white min-h-screen">
       <div className="px-6 py-4">
@@ -252,10 +254,10 @@ const CandidateDetails = ({
                       candidate.application_answers.map((answer, index) => (
                         <div key={index}>
                           <p className="text-sm font-medium mb-2">
-                            {answer.question}
+                            {answer.question?.text || "Question not available"}
                           </p>
                           <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
-                            {answer.answer}
+                            {answer.text || "No answer provided"}
                           </p>
                         </div>
                       ))
@@ -541,10 +543,10 @@ const CandidateDetails = ({
                   candidate.application_answers.map((answer, index) => (
                     <div key={index}>
                       <p className="text-sm font-medium mb-2">
-                        {answer.question}
+                        {answer.question?.text || "Question not available"}
                       </p>
                       <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                        {answer.answer}
+                        {answer.text || "No answer provided"}
                       </p>
                     </div>
                   ))

@@ -111,6 +111,7 @@ export const submitJobApplication = async (
 
     // Get the correct API endpoint URL by passing the job_id
     const apiUrl = API_CONFIG.SUBMIT_JOB_APPLICATION(formData.job_id);
+    console.log({ apiUrl });
 
     const response = await axios.post(apiUrl, data, {
       headers: {
