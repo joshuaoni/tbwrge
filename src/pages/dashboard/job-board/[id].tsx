@@ -17,6 +17,8 @@ import {
 } from "@/actions/submit-job-application";
 import { toast } from "react-hot-toast";
 import { submitQuestionAnswers } from "@/actions/submit-question-answers";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 
 const Section = ({
   title,
@@ -125,15 +127,17 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
 );
 
 const ApplicationForm = ({
-  questions,
   jobId,
+  questions,
 }: {
-  questions: { id: string; text: string; is_screening: boolean }[];
   jobId: string;
+  questions: any[];
+  onClose?: () => void;
 }) => {
-  const { userData } = useUserStore();
   const router = useRouter();
+  const { userData } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -222,8 +226,7 @@ const ApplicationForm = ({
         );
       }
 
-      toast.success("Application submitted successfully!");
-      router.back();
+      setShowSuccessPopup(true);
     } catch (error) {
       console.error("Error submitting application:", error);
       toast.error("Failed to submit application. Please try again.");
@@ -233,7 +236,7 @@ const ApplicationForm = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6">
+    <div className="bg-white p-6 rounded-lg">
       <h2 className="text-xl font-semibold mb-6">Job Application</h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
@@ -494,6 +497,57 @@ const ApplicationForm = ({
           )}
         </button>
       </form>
+
+      <Dialog
+        open={showSuccessPopup}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowSuccessPopup(false);
+            router.back();
+          }
+        }}
+      >
+        <DialogContent className="bg-white p-6 max-w-[500px] space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.6667 3.5L5.25 9.91667L2.33333 7"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-semibold">
+                Application Submitted Successfully!
+              </h2>
+            </div>
+            <button
+              onClick={() => {
+                setShowSuccessPopup(false);
+                router.back();
+              }}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <p className="text-gray-600">
+            Thank you for applying! We will review your application and get back
+            to you soon.
+          </p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
@@ -637,7 +691,7 @@ const JobDetailsPage = () => {
 
           {/* Right column - Application form */}
           <div className="w-1/2">
-            <ApplicationForm questions={job.questions} jobId={job.id} />
+            <ApplicationForm jobId={job.id} questions={job.questions} />
           </div>
         </div>
       </div>

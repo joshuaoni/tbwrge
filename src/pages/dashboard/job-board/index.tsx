@@ -3,7 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { FiMic, FiSquare, FiPlay, FiTrash2, FiPause } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
-
 import {
   formatDateAndDifference,
   getJobOpen,

@@ -109,6 +109,22 @@ function CreateJobCompanyDetails() {
     setIsDropdownOpen(false);
   };
 
+  const isFormValid = () => {
+    if (!ctx.formData.job_title?.trim()) return false;
+
+    if (showNewCompanyForm) {
+      // If adding a new company, check all company fields
+      return !!(
+        ctx.formData.company_name?.trim() &&
+        ctx.formData.company_website?.trim() &&
+        ctx.formData.company_description?.trim()
+      );
+    } else {
+      // If selecting existing company, check if one is selected
+      return !!selectedCompany;
+    }
+  };
+
   return (
     <section
       className={`${outfit.className} max-w-screen-sm mx-auto space-y-6`}
@@ -263,14 +279,15 @@ function CreateJobCompanyDetails() {
           <button
             type="button"
             onClick={() => ctx.goTo("job")}
-            className="px-4 py-3 bg-primary text-white font-medium rounded-[10px]"
+            disabled={!isFormValid()}
+            className="px-4 py-3 bg-primary text-white font-medium rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
           >
             Write your own job post
           </button>
 
           <button
             type="button"
-            disabled={createJobAiMutation.isPending}
+            disabled={!isFormValid() || createJobAiMutation.isPending}
             onClick={() => createJobAiMutation.mutate()}
             className="p-3 border-2 border-[#006F5C] text-black rounded-[10px] flex items-center justify-center gap-2 hover:bg-[#006F5C] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >

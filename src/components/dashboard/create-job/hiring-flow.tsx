@@ -257,6 +257,30 @@ function CreateJobHiringFlow() {
     ));
   };
 
+  const isFormValid = () => {
+    // Check if minimum fit score is valid
+    if (
+      !ctx.formData.minimum_fit_score ||
+      ctx.formData.minimum_fit_score <= 0
+    ) {
+      return false;
+    }
+
+    // Check if any step has "topSelected" but no valid interview value
+    const steps = [secondStep, thirdStep, fourthStep];
+    const hasInvalidInterviewStep = steps.some(
+      (step) =>
+        step === "topSelected" &&
+        (!interviewValue || Number(interviewValue) <= 0)
+    );
+
+    if (hasInvalidInterviewStep) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold pb-10 flex items-center gap-5">
@@ -338,11 +362,14 @@ function CreateJobHiringFlow() {
                 </label>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="Example: 10"
                   value={interviewValue}
                   onChange={(e) => {
-                    const newValue = e.target.value;
-                    setInterviewValue(newValue);
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    const numValue = value ? Number(value) : 0;
+                    setInterviewValue(value);
                     const existingFlows = [...ctx.formData.hiring_flows];
                     const flowIndex = existingFlows.findIndex(
                       (f) => f.step === 2
@@ -350,7 +377,7 @@ function CreateJobHiringFlow() {
 
                     const newFlow = {
                       title: "interview" as const,
-                      value: Number(newValue) || null,
+                      value: numValue,
                       step: 2,
                       email_template: interviewEmail.content,
                     };
@@ -363,8 +390,17 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className={`px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                    !interviewValue || Number(interviewValue) <= 0
+                      ? "border-red-500"
+                      : ""
+                  }`}
                 />
+                {(!interviewValue || Number(interviewValue) <= 0) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Please enter a valid number greater than 0
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -406,11 +442,14 @@ function CreateJobHiringFlow() {
                 </label>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="10"
                   value={interviewValue}
                   onChange={(e) => {
-                    const newValue = e.target.value;
-                    setInterviewValue(newValue);
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    const numValue = value ? Number(value) : 0;
+                    setInterviewValue(value);
                     const existingFlows = [...ctx.formData.hiring_flows];
                     const flowIndex = existingFlows.findIndex(
                       (f) => f.step === 3
@@ -418,7 +457,7 @@ function CreateJobHiringFlow() {
 
                     const newFlow = {
                       title: "interview" as const,
-                      value: Number(newValue) || null,
+                      value: numValue,
                       step: 3,
                       email_template: interviewEmail.content,
                     };
@@ -431,8 +470,17 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                    !interviewValue || Number(interviewValue) <= 0
+                      ? "border-red-500"
+                      : ""
+                  }`}
                 />
+                {(!interviewValue || Number(interviewValue) <= 0) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Please enter a valid number greater than 0
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -474,11 +522,14 @@ function CreateJobHiringFlow() {
                 </label>
                 <input
                   type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="10"
                   value={interviewValue}
                   onChange={(e) => {
-                    const newValue = e.target.value;
-                    setInterviewValue(newValue);
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    const numValue = value ? Number(value) : 0;
+                    setInterviewValue(value);
                     const existingFlows = [...ctx.formData.hiring_flows];
                     const flowIndex = existingFlows.findIndex(
                       (f) => f.step === 4
@@ -486,7 +537,7 @@ function CreateJobHiringFlow() {
 
                     const newFlow = {
                       title: "interview" as const,
-                      value: Number(newValue) || null,
+                      value: numValue,
                       step: 4,
                       email_template: interviewEmail.content,
                     };
@@ -499,18 +550,28 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                    !interviewValue || Number(interviewValue) <= 0
+                      ? "border-red-500"
+                      : ""
+                  }`}
                 />
+                {(!interviewValue || Number(interviewValue) <= 0) && (
+                  <p className="mt-1 text-xs text-red-500">
+                    Please enter a valid number greater than 0
+                  </p>
+                )}
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="w-full py-6 flex items-center justify-center">
+      <div className="w-full py-6 flex items-center justify-center gap-2">
         <button
           onClick={() => ctx.goTo("overview")}
-          className="bg-[#009379] text-white px-8 py-2 rounded-lg"
+          disabled={!isFormValid()}
+          className="bg-[#009379] text-white px-8 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#009379]/90 transition-colors"
         >
           Publish & View Job Post
         </button>

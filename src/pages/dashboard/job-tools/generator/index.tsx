@@ -19,13 +19,16 @@ import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
+import { outfit } from "@/constants/app";
 
 const Generator = () => {
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [audioVisualization, setAudioVisualization] = useState<number[]>([]);
   const durationIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,6 +39,7 @@ const Generator = () => {
   const [prompts, setPrompts] = useState<any>([]);
   const [summary, setSummary] = useState("");
   const { userData } = useUserStore();
+  const [currentTime, setCurrentTime] = useState(0);
 
   // Format duration to MM:SS
   const formatDuration = (seconds: number) => {
@@ -207,14 +211,46 @@ const Generator = () => {
     }
   };
 
+  const handlePlayRecording = () => {
+    if (audioRef.current && audioUrl) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      };
+
+      audioRef.current.ontimeupdate = () => {
+        setCurrentTime(Math.floor(audioRef.current?.currentTime || 0));
+      };
+    }
+  }, [audioUrl]);
+
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">Job Post Generator</span>
-      <section className="flex h-screen space-x-4 ">
+      <span className={`${outfit.className} font-bold text-xl`}>
+        Job Post Generator
+      </span>
+      <section className={`${outfit.className} flex h-screen space-x-4 `}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">Describe Job Post</span>
+              <span className="font-bold">
+                Please Describe the Job Below{" "}
+                <span className="text-xs text-gray-500">
+                  (you can add up to 20 prompts)
+                </span>
+              </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
@@ -232,7 +268,7 @@ const Generator = () => {
                 onChange={setValue}
                 modules={modules}
                 formats={formats}
-                placeholder="Input Prompt"
+                placeholder="Detailed Job Description"
                 className="h-32"
               />
             </div>
@@ -258,56 +294,132 @@ const Generator = () => {
           </div>
 
           <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
-            <div className="flex items-center justify-between">
-              <span className="font-light text-sm">Record Voicenote </span>
+            <div className="mb-4">
+              <span className="font-medium text-base">Record Voicenote</span>
             </div>
 
-            <div className="h-12 bg-[#EDF2F7] w-full rounded-md flex items-center justify-between px-3 my-4 border">
-              <div className="flex items-center space-x-3 flex-1">
-                <span className="text-xs font-light">
-                  {isRecording
-                    ? "Recording..."
-                    : audioBlob
-                    ? "Recording complete"
-                    : "Record Voicenote"}
+            {!audioBlob ? (
+              <div
+                className="h-[60px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-4 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
+                onClick={
+                  !isRecording ? handleStartRecording : handleStopRecording
+                }
+              >
+                <span className="text-gray-500 flex-1">
+                  {isRecording ? "Recording..." : "Record"}
                 </span>
-                {(isRecording || audioBlob) && (
-                  <span className="text-xs text-gray-500">
-                    {formatDuration(recordingDuration)}
-                  </span>
-                )}
-                {isRecording && (
-                  <div className="flex items-center space-x-1 flex-1 max-w-[200px]">
-                    {audioVisualization.map((value, index) => (
-                      <div
-                        key={index}
-                        className="w-1 bg-blue-500"
-                        style={{
-                          height: `${Math.max(4, value * 20)}px`,
-                          transition: "height 0.1s ease",
-                        }}
-                      />
-                    ))}
-                  </div>
+                {isRecording ? (
+                  <>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-1 h-8">
+                        {audioVisualization.map((value, index) => (
+                          <div
+                            key={index}
+                            className="w-1 bg-[#009379]"
+                            style={{
+                              height: `${Math.max(4, value * 32)}px`,
+                              transition: "height 0.1s ease",
+                            }}
+                          />
+                        ))}
+                        {/* Fill remaining space with placeholder bars */}
+                        {Array.from({
+                          length: Math.max(0, 50 - audioVisualization.length),
+                        }).map((_, index) => (
+                          <div
+                            key={`placeholder-${index}`}
+                            className="w-1 bg-[#009379] opacity-20"
+                            style={{
+                              height: "4px",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500 min-w-[48px] ml-2">
+                      {formatDuration(recordingDuration)}
+                    </span>
+                    <StopCircleIcon
+                      color="red"
+                      className="animate-pulse ml-2"
+                    />
+                  </>
+                ) : (
+                  <Image
+                    src={RecordIcon}
+                    alt="Record"
+                    width={24}
+                    height={24}
+                    className="text-[#009379]"
+                  />
                 )}
               </div>
-              {isRecording ? (
-                <StopCircleIcon
-                  color="red"
-                  onClick={handleStopRecording}
-                  className="animate-pulse cursor-pointer"
-                />
-              ) : (
-                <Image
-                  onClick={handleStartRecording}
-                  className="cursor-pointer"
-                  src={RecordIcon}
-                  alt=""
-                  width={20}
-                  height={20}
-                />
-              )}
-            </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handlePlayRecording}
+                    className="text-gray-600 hover:text-gray-800"
+                  >
+                    {isPlaying ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    )}
+                  </button>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 h-8">
+                      {Array.from({ length: 50 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className="w-1 bg-[#009379]"
+                          style={{
+                            height: `${Math.max(4, Math.random() * 32)}px`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-500 min-w-[48px]">
+                    {isPlaying
+                      ? formatDuration(currentTime)
+                      : formatDuration(recordingDuration)}
+                  </span>
+                  <button
+                    onClick={clearRecording}
+                    className="text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash size={20} />
+                  </button>
+                </div>
+              </div>
+            )}
+            <audio ref={audioRef} src={audioUrl || ""} />
           </div>
 
           <div className="flex items-center h-fit mt-12 justify-between">

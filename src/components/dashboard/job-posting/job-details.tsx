@@ -65,6 +65,7 @@ const JobDetails = ({
   useEffect(() => {
     if (applicationsData) {
       setApplicants(applicationsData);
+      console.log(applicationsData);
     }
   }, [applicationsData]);
 
@@ -323,13 +324,35 @@ const JobDetails = ({
                     />
                   </TableCell>
                   <TableCell className="py-4 align-middle">
-                    <span
-                      className={`font-medium text-sm ${
-                        selectedTab === "rejected" ? "opacity-40" : ""
-                      }`}
-                    >
-                      {candidate.applicant.name}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <div className="relative group">
+                        {candidate.status !== "all" &&
+                          candidate.status !== "pending" && (
+                            <div
+                              className={`w-[10px] h-[10px] rounded-full border ${
+                                candidate.status === "shortlisted"
+                                  ? "bg-[#009379] border-[#009379]/20"
+                                  : candidate.status === "rejected"
+                                  ? "bg-red border-red/20"
+                                  : candidate.status === "screened"
+                                  ? "bg-[#2B95D7] border-[#2B95D7]/20"
+                                  : "bg-gray-400 border-gray-400/20"
+                              }`}
+                            />
+                          )}
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                          {candidate.status.charAt(0).toUpperCase() +
+                            candidate.status.slice(1)}
+                        </div>
+                      </div>
+                      <span
+                        className={`font-medium text-sm ${
+                          selectedTab === "rejected" ? "opacity-40" : ""
+                        }`}
+                      >
+                        {candidate.applicant.name}
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="py-4 text-sm align-middle">
                     <span
