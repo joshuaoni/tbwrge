@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, Plus, StopCircleIcon, Trash, X } from "lucide-react";
+import { Loader2, Plus, StopCircleIcon, Trash, X, Mic } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -28,6 +28,7 @@ const Generator = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [audioVisualization, setAudioVisualization] = useState<number[]>([]);
@@ -50,6 +51,7 @@ const Generator = () => {
       .padStart(2, "0")}`;
   };
 
+  // Clean up timers and audio resources when component unmounts
   useEffect(() => {
     return () => {
       if (durationIntervalRef.current) {
@@ -85,6 +87,7 @@ const Generator = () => {
     setSummary("");
   };
 
+  // Update audio visualization
   const updateAudioVisualization = () => {
     if (analyzerRef.current) {
       const dataArray = new Uint8Array(analyzerRef.current.frequencyBinCount);
@@ -102,10 +105,15 @@ const Generator = () => {
     }
   };
 
+  // Start recording with visualization and timer
   const handleStartRecording = async () => {
+    audioChunksRef.current = [];
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      // Set up audio context for visualization
       const audioContext = new AudioContext();
       const source = audioContext.createMediaStreamSource(stream);
       const analyzer = audioContext.createAnalyser();
@@ -113,16 +121,23 @@ const Generator = () => {
       source.connect(analyzer);
       analyzerRef.current = analyzer;
 
-      const chunks: BlobPart[] = [];
-
-      mediaRecorder.ondataavailable = (event: BlobEvent) => {
-        chunks.push(event.data);
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: "audio/webm" });
-        setAudioBlob(blob);
-        setAudioUrl(URL.createObjectURL(blob));
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        setAudioBlob(audioBlob);
+        setAudioUrl(URL.createObjectURL(audioBlob));
+
+        // Reset recording state
+        setIsRecording(false);
+
+        // Stop timers and visualization
         if (durationIntervalRef.current) {
           clearInterval(durationIntervalRef.current);
         }
@@ -133,7 +148,6 @@ const Generator = () => {
       };
 
       mediaRecorder.start();
-      mediaRecorderRef.current = mediaRecorder;
       setIsRecording(true);
       setRecordingDuration(0);
 
@@ -150,6 +164,7 @@ const Generator = () => {
     }
   };
 
+  // Clear recording function
   const clearRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
@@ -207,7 +222,12 @@ const Generator = () => {
   const handleStopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
+      // Stop all tracks on the stream
+      if (mediaRecorderRef.current.stream) {
+        mediaRecorderRef.current.stream
+          .getTracks()
+          .forEach((track) => track.stop());
+      }
     }
   };
 
@@ -299,73 +319,67 @@ const Generator = () => {
             </div>
 
             {!audioBlob ? (
-              <div
-                className="h-[60px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-4 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
-                onClick={
-                  !isRecording ? handleStartRecording : handleStopRecording
-                }
-              >
-                <span className="text-gray-500 flex-1">
-                  {isRecording ? "Recording..." : "Record"}
-                </span>
-                {isRecording ? (
-                  <>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-1 h-8">
-                        {audioVisualization.map((value, index) => (
+              isRecording ? (
+                <div className="bg-gray-50 rounded-lg p-2 mt-2">
+                  <div className="flex items-center w-full">
+                    <span className="text-xs text-gray-600 mr-1 whitespace-nowrap shrink-0">
+                      Recording...
+                    </span>
+                    <div className="flex-1 mx-1 overflow-hidden">
+                      <div className="flex items-center gap-[1px] justify-between">
+                        {Array.from({ length: 30 }).map((_, index) => (
                           <div
                             key={index}
-                            className="w-1 bg-[#009379]"
+                            className="w-[1px] bg-[#009379]"
                             style={{
-                              height: `${Math.max(4, value * 32)}px`,
-                              transition: "height 0.1s ease",
-                            }}
-                          />
-                        ))}
-                        {/* Fill remaining space with placeholder bars */}
-                        {Array.from({
-                          length: Math.max(0, 50 - audioVisualization.length),
-                        }).map((_, index) => (
-                          <div
-                            key={`placeholder-${index}`}
-                            className="w-1 bg-[#009379] opacity-20"
-                            style={{
-                              height: "4px",
+                              height:
+                                index < audioVisualization.length * 5
+                                  ? `${Math.max(
+                                      3,
+                                      audioVisualization[
+                                        index % audioVisualization.length
+                                      ] * 16
+                                    )}px`
+                                  : "3px",
+                              opacity:
+                                index < audioVisualization.length * 5 ? 1 : 0.2,
                             }}
                           />
                         ))}
                       </div>
                     </div>
-                    <span className="text-sm text-gray-500 min-w-[48px] ml-2">
+                    <span className="text-xs text-gray-500 ml-1 mr-1 whitespace-nowrap shrink-0">
                       {formatDuration(recordingDuration)}
                     </span>
-                    <StopCircleIcon
-                      color="red"
-                      className="animate-pulse ml-2"
-                    />
-                  </>
-                ) : (
-                  <Image
-                    src={RecordIcon}
-                    alt="Record"
-                    width={24}
-                    height={24}
-                    className="text-[#009379]"
-                  />
-                )}
-              </div>
+                    <button
+                      onClick={handleStopRecording}
+                      className="shrink-0 text-red-500 hover:text-red-600"
+                    >
+                      <StopCircleIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="h-[38px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-3 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
+                  onClick={handleStartRecording}
+                >
+                  <span className="text-sm text-gray-500 flex-1">Record</span>
+                  <Mic className="w-4 h-4 text-[#009379]" />
+                </div>
+              )
             ) : (
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
+              <div className="mt-2">
+                <div className="flex items-center bg-gray-50 rounded-lg p-2 w-full">
                   <button
                     onClick={handlePlayRecording}
-                    className="text-gray-600 hover:text-gray-800"
+                    className="shrink-0 text-gray-600 hover:text-gray-800 mr-1"
                   >
                     {isPlaying ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
+                        width="18"
+                        height="18"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -379,8 +393,8 @@ const Generator = () => {
                     ) : (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
+                        width="18"
+                        height="18"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -392,29 +406,29 @@ const Generator = () => {
                       </svg>
                     )}
                   </button>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-1 h-8">
-                      {Array.from({ length: 50 }).map((_, index) => (
+                  <div className="flex-1 overflow-hidden mx-1">
+                    <div className="flex items-center gap-0 justify-between">
+                      {Array.from({ length: 30 }).map((_, index) => (
                         <div
                           key={index}
-                          className="w-1 bg-[#009379]"
+                          className="w-[1px] bg-[#009379]"
                           style={{
-                            height: `${Math.max(4, Math.random() * 32)}px`,
+                            height: `${Math.max(3, Math.random() * 12)}px`,
                           }}
                         />
                       ))}
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500 min-w-[48px]">
+                  <span className="text-xs text-gray-500 ml-1 mr-1 whitespace-nowrap shrink-0">
                     {isPlaying
                       ? formatDuration(currentTime)
                       : formatDuration(recordingDuration)}
                   </span>
                   <button
                     onClick={clearRecording}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    className="shrink-0 text-gray-400 hover:text-red-500 transition-colors"
                   >
-                    <Trash size={20} />
+                    <Trash size={14} />
                   </button>
                 </div>
               </div>

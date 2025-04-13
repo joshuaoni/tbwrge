@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
 import TrashIcon from "@/components/icons/trash";
 import { CreateJobContext } from "@/providers/job-posting.context";
-import { ArrowLeft, CheckIcon } from "lucide-react";
+import { ArrowLeft, CheckIcon, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { outfit } from "@/constants/app";
@@ -23,26 +23,44 @@ const Section = ({
 
 function CreateJobScreening() {
   const ctx = useContext(CreateJobContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [questions, setQuestions] = useState<
     { title: string; answer: string }[]
-  >(() => {
-    // Initialize with existing questions from context or default question
-    return ctx.formData.screening_questions.length > 0
-      ? ctx.formData.screening_questions.map((q) => ({ title: q, answer: "" }))
-      : [
-          {
-            title:
-              "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
-            answer: "",
-          },
-        ];
-  });
+  >([]);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
   const [wordCount, setWordCount] = useState(0);
   const limit = 500;
+
+  // Initialize questions from context when component mounts
+  useEffect(() => {
+    setIsLoading(true);
+
+    if (
+      ctx.formData.screening_questions &&
+      ctx.formData.screening_questions.length > 0
+    ) {
+      // Map the string array to the required format
+      const formattedQuestions = ctx.formData.screening_questions.map((q) => ({
+        title: q,
+        answer: "",
+      }));
+      setQuestions(formattedQuestions);
+    } else {
+      // Use default question if no questions are available
+      setQuestions([
+        {
+          title:
+            "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
+          answer: "",
+        },
+      ]);
+    }
+
+    setIsLoading(false);
+  }, [ctx.formData.screening_questions]);
 
   const handleTextareaChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -92,6 +110,14 @@ function CreateJobScreening() {
       ctx.goTo("hiring");
     }, 1000);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[#009379]" />
+      </div>
+    );
+  }
 
   return (
     <div className={`${outfit.className}`}>

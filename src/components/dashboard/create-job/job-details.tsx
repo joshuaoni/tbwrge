@@ -1,5 +1,12 @@
 import { CreateJobContext } from "@/providers/job-posting.context";
-import { ArrowLeft, PlusCircle, X, ChevronDown, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  PlusCircle,
+  X,
+  ChevronDown,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { useContext, useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
@@ -22,6 +29,10 @@ import {
 } from "@/components/ui/dialog";
 import { getTeamMembers } from "@/actions/get-team-members";
 import { deleteTeamMember } from "@/actions/delete-team-member";
+import {
+  createScreeningQuestions,
+  ScreeningQuestionsResponse,
+} from "@/actions/create-screening-questions";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -124,6 +135,7 @@ function CreateJobJobDetails() {
   const [selectedTeamMember, setSelectedTeamMember] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
 
   const { data: teamMembers } = useQuery({
     queryKey: ["team-members"],
@@ -240,6 +252,45 @@ function CreateJobJobDetails() {
         (value) => value !== undefined && value !== null && value !== ""
       ) && isSalaryValid
     );
+  };
+
+  // Mutation for generating screening questions
+  const screeningQuestionsMutation = useMutation({
+    mutationFn: async () => {
+      return createScreeningQuestions(userData?.token || undefined, {
+        job_title: ctx.formData.job_title || "",
+        job_description: ctx.formData.job_description || "",
+        required_skills: ctx.formData.required_skills || "",
+        educational_requirements: ctx.formData.educational_requirements || "",
+      });
+    },
+    onSuccess: (data: ScreeningQuestionsResponse) => {
+      // Update context with the generated questions
+      ctx.setFormData("screening_questions", data);
+
+      // Navigate to screening page
+      ctx.goTo("hiring");
+    },
+    onError: (error: Error) => {
+      toast.error("Failed to generate screening questions. Please try again.");
+      console.error("Screening questions error:", error);
+
+      // Navigate to hiring page anyway, but without generated questions
+      ctx.goTo("hiring");
+    },
+  });
+
+  const handleNextClick = async () => {
+    if (!isFormValid()) return;
+
+    try {
+      setIsGeneratingQuestions(true);
+      await screeningQuestionsMutation.mutateAsync();
+    } catch (error) {
+      console.error("Failed to generate screening questions:", error);
+    } finally {
+      setIsGeneratingQuestions(false);
+    }
   };
 
   return (
@@ -798,13 +849,18 @@ function CreateJobJobDetails() {
 
       <div className="w-full py-6 flex items-center justify-center gap-2">
         <button
-          onClick={() => {
-            ctx.goTo("hiring");
-          }}
-          disabled={!isFormValid()}
-          className="bg-[#009379] text-white px-8 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#009379]/90 transition-colors"
+          onClick={handleNextClick}
+          disabled={!isFormValid() || isGeneratingQuestions}
+          className="bg-[#009379] text-white px-8 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#009379]/90 transition-colors flex items-center gap-2"
         >
-          Next
+          {isGeneratingQuestions ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Generating Questions...
+            </>
+          ) : (
+            "Next"
+          )}
         </button>
         {/* {!isFormValid() && (
           <span className="text-sm text-red-500">

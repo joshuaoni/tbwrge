@@ -219,6 +219,7 @@ const ApplicationForm = ({
           text: questionAnswers[question.id] || "",
         }));
 
+        console.log("applicationResponse", applicationResponse);
         await submitQuestionAnswers(
           userData?.token!,
           applicationResponse.id,
@@ -226,7 +227,8 @@ const ApplicationForm = ({
         );
       }
 
-      setShowSuccessPopup(true);
+      // setShowSuccessPopup(true);
+      // router.back();
     } catch (error) {
       console.error("Error submitting application:", error);
       toast.error("Failed to submit application. Please try again.");
@@ -445,23 +447,29 @@ const ApplicationForm = ({
           />
         </div>
 
-        {/* Add screening questions */}
-        {questions.map((question) => (
-          <div key={question.id}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {question.text}
-            </label>
-            <textarea
-              value={questionAnswers[question.id] || ""}
-              onChange={(e) =>
-                handleQuestionAnswerChange(question.id, e.target.value)
-              }
-              placeholder="Enter your answer"
-              rows={3}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-            />
-          </div>
-        ))}
+        {/* Add application questions */}
+        {questions
+          .filter(
+            (question) =>
+              question.is_screening === false ||
+              question.is_screening === undefined
+          )
+          .map((question) => (
+            <div key={question.id}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {question.text}
+              </label>
+              <textarea
+                value={questionAnswers[question.id] || ""}
+                onChange={(e) =>
+                  handleQuestionAnswerChange(question.id, e.target.value)
+                }
+                placeholder="Enter your answer"
+                rows={3}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              />
+            </div>
+          ))}
 
         <button
           type="submit"

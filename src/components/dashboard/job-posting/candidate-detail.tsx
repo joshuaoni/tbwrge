@@ -175,31 +175,34 @@ const CandidateDetail = ({
               <span className="w-2/12">date</span>
               <span>notes</span>
             </div>
-            {[
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-            ].map(() => (
-              <div className="flex gap-4 px-5 tracking-[5%] font-medium">
-                <span className="w-2/12">31/10/2024</span>
-                <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Soluta, eius.
-                </span>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
               </div>
-            ))}
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
           </div>
         </div>
       </section>

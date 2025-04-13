@@ -47,6 +47,7 @@ export const API_CONFIG = {
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
+  CREATE_SCREENING_QUESTIONS: `${MAIN_URL}/job/create-screening-questions/`,
   UPDATE_PROFILE: `${MAIN_URL}/profile/update-profile/`,
   UPDATE_SETTINGS: `${MAIN_URL}/profile/update-settings/`,
   GET_PROFILE_SETTINGS: `${MAIN_URL}/profile/get-settings/`,
@@ -56,6 +57,11 @@ export const API_CONFIG = {
   GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
+
+  GET_NOTES: (application_id: string) =>
+    `${MAIN_URL}/job/get-notes/${application_id}/`,
+  CREATE_NOTE: (application_id: string) =>
+    `${MAIN_URL}/job/create-note/${application_id}/`,
 
   GET_TALENTS: `${MAIN_URL}/talent/get-talents/`,
   GET_TALENT_ITEM: (talent_id: string) =>
@@ -69,6 +75,12 @@ export const API_CONFIG = {
     `${CHAT_URL}/chat/get-messages/${channel_id}/`,
   CREATE_MESSAGE: (channel_id: string) =>
     `${CHAT_URL}/chat/create-message/${channel_id}/`,
+  TRANSCRIBE_AUDIO: `${MAIN_URL}/talent/transcribe-audio/`,
+  JOIN_TALENT_POOL: `${MAIN_URL}/talent/join-talent-pool/`,
+  GET_TALENT_PROFILE: `${MAIN_URL}/talent/get-talent-profile/`,
+  UPDATE_TALENT_PROFILE: `${MAIN_URL}/talent/update-profile/`,
+  TALENT_AI_SEARCH: (page: number = 0) =>
+    `${MAIN_URL}/talent/ai-search/${page}/`,
 
   GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
   GET_COMMENTS: (post_id: string) =>

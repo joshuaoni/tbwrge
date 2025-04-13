@@ -6,4 +6,5 @@ export interface UserResponse {
   updatedAt: string;
   name: string;
   role: string;
+  joined_talent_pool: boolean;
 }

@@ -1,7 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, Check, Plus } from "lucide-react";
 import React, { useState } from "react";
 import { ApplicationItem } from "@/actions/get-application-item";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getNotes } from "@/actions/get-notes";
+import { format } from "date-fns";
+import { createNote } from "@/actions/create-note";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
 
 interface CandidateDetailsProps {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
@@ -13,7 +26,40 @@ const CandidateDetails = ({
   candidate,
 }: CandidateDetailsProps) => {
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [newNoteText, setNewNoteText] = useState("");
+  const { userData } = useUserStore();
+  const queryClient = useQueryClient();
   const applicant = candidate.applicant;
+
+  const { data: notes, isLoading: isLoadingNotes } = useQuery({
+    queryKey: ["candidate-notes", candidate.id],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getNotes(userData.token, candidate.id);
+    },
+    enabled: !!userData?.token && !!candidate.id,
+  });
+
+  const createNoteMutation = useMutation({
+    mutationFn: async (text: string) => {
+      if (!userData?.token) throw new Error("No token available");
+      return await createNote(userData.token, candidate.id, text);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["candidate-notes", candidate.id],
+      });
+      setIsAddingNote(false);
+      setNewNoteText("");
+    },
+  });
+
+  const handleAddNote = () => {
+    if (newNoteText.trim()) {
+      createNoteMutation.mutate(newNoteText.trim());
+    }
+  };
 
   console.log({ candidate });
 
@@ -443,23 +489,35 @@ const CandidateDetails = ({
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">Add Notes</h2>
-                <button className="w-7 h-7 rounded-full border-2 border-gray-900 flex items-center justify-center">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7 1V13M1 7H13"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                <button
+                  onClick={() => {
+                    if (isAddingNote) {
+                      handleAddNote();
+                    } else {
+                      setIsAddingNote(true);
+                    }
+                  }}
+                  className="w-7 h-7 rounded-full border-2 border-gray-900 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  disabled={isAddingNote && !newNoteText.trim()}
+                >
+                  {isAddingNote ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Plus className="w-4 h-4" />
+                  )}
                 </button>
               </div>
+              {isAddingNote && (
+                <div className="mb-4">
+                  <Textarea
+                    placeholder="Enter your note here..."
+                    value={newNoteText}
+                    onChange={(e) => setNewNoteText(e.target.value)}
+                    className="min-h-[100px] w-full bg-gray-100"
+                    autoFocus
+                  />
+                </div>
+              )}
               <div className="overflow-hidden">
                 <div className="grid rounded-xl grid-cols-[120px_1fr] bg-gray-200">
                   <div className="p-3 text-sm font-medium text-gray-600">
@@ -470,34 +528,24 @@ const CandidateDetails = ({
                   </div>
                 </div>
                 <div className="divide-y divide-gray-200">
-                  <div className="grid grid-cols-[120px_1fr]">
-                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
-                    <div className="p-3 text-sm">
-                      Impressive Skills in finance analytics. Consider for next
-                      interview
+                  {isLoadingNotes ? (
+                    <div className="p-3 text-center text-sm text-gray-500">
+                      Loading notes...
                     </div>
-                  </div>
-                  <div className="grid grid-cols-[120px_1fr]">
-                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
-                    <div className="p-3 text-sm">
-                      Impressive Skills in finance analytics. Consider for next
-                      interview
+                  ) : !notes?.length ? (
+                    <div className="p-3 text-center text-sm text-gray-500">
+                      No notes available
                     </div>
-                  </div>
-                  <div className="grid grid-cols-[120px_1fr]">
-                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
-                    <div className="p-3 text-sm">
-                      Impressive Skills in finance analytics. Consider for next
-                      interview
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-[120px_1fr]">
-                    <div className="p-3 text-sm text-gray-500">31/10/24</div>
-                    <div className="p-3 text-sm">
-                      Impressive Skills in finance analytics. Consider for next
-                      interview
-                    </div>
-                  </div>
+                  ) : (
+                    notes.map((note) => (
+                      <div key={note.id} className="grid grid-cols-[120px_1fr]">
+                        <div className="p-3 text-sm text-gray-500">
+                          {format(new Date(note.created_at), "dd/MM/yy")}
+                        </div>
+                        <div className="p-3 text-sm">{note.text}</div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

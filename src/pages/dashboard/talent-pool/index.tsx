@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import { FiMic, FiSquare, FiPlay, FiTrash2, FiPause } from "react-icons/fi";
@@ -6,8 +6,10 @@ import { FaFilePdf, FaSearch } from "react-icons/fa";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 import { getTalents, TalentItem } from "@/actions/talent";
+import { talentAISearch, TalentAISearchItem } from "@/actions/talent-ai-search";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
 import { useUserStore } from "@/hooks/use-user-store";
@@ -23,6 +25,7 @@ import {
 import { User } from "@/interfaces/job";
 import { MessageUser } from "@/actions/get-messages";
 import { outfit } from "@/constants/app";
+import { transcribeAudio } from "@/actions/transcribe-audio";
 
 const styles = `
   @keyframes recording-pulse {
@@ -87,19 +90,43 @@ export default function TalentPool() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<TalentItem[] | null>(null);
+  const [isAISearchActive, setIsAISearchActive] = useState(false);
 
   const { userData } = useUserStore();
   const isJobSeeker = userData?.user?.role === "job_seeker";
 
   const query = useQuery<TalentItem[]>({
-    queryKey: ["get-talents", page, searchValDebounce, type],
+    queryKey: ["get-talents", page, searchValDebounce, type, isAISearchActive],
     queryFn: async () => {
+      // If AI search is active, return the search results
+      if (isAISearchActive) {
+        return searchResults || [];
+      }
+
       const response = await getTalents(userData?.token ?? "", {
         page: page.toString(),
         text: searchValDebounce,
         search_type: type,
       });
       return response;
+    },
+    enabled: !!userData?.token, // Always enabled if we have a token
+  });
+
+  const aiSearchMutation = useMutation({
+    mutationFn: async (text: string) => {
+      return talentAISearch(userData?.token ?? "", { text }, page);
+    },
+    onSuccess: (data) => {
+      console.log("AI search successful", data);
+      setSearchResults(data as unknown as TalentItem[]);
+      setIsAISearchActive(true);
+    },
+    onError: (error) => {
+      console.error("AI search failed", error);
+      toast.error("Failed to perform AI search. Please try again.");
     },
   });
 
@@ -304,6 +331,66 @@ export default function TalentPool() {
     }
   };
 
+  const handleSearchWithAudio = async () => {
+    if (!audioURL || !userData?.token) return;
+
+    try {
+      // Get the audio blob from the URL
+      const response = await fetch(audioURL);
+      const audioBlob = await response.blob();
+
+      // Download the audio file to local machine for debugging
+      const downloadLink = document.createElement("a");
+      downloadLink.href = audioURL;
+      downloadLink.download = "audio-recording.wav";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+      // Transcribe the audio
+      const transcribedText = await transcribeAudio(userData.token, audioBlob);
+
+      // Close recording modal and open text search modal with transcribed text
+      setIsRecordingModalOpen(false);
+      setIsTextSearchModalOpen(true);
+      setTextSearchInput(transcribedText);
+
+      // Clean up
+      deleteRecording();
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+    }
+  };
+
+  const handleTextSearch = async () => {
+    if (!textSearchInput.trim() || !userData?.token) {
+      toast.error("Please enter search text");
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      await aiSearchMutation.mutateAsync(textSearchInput.trim());
+
+      // Close the modal
+      setIsTextSearchModalOpen(false);
+
+      // Clear the search input
+      setTextSearchInput("");
+    } catch (error) {
+      console.error("Text search failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Add function to clear search results
+  const clearAISearch = () => {
+    setSearchResults(null);
+    setIsAISearchActive(false);
+  };
+
   useEffect(() => {
     return () => {
       if (animationFrameRef.current) {
@@ -322,25 +409,70 @@ export default function TalentPool() {
         className={`${outfit.className} flex items-center justify-between mb-6`}
       >
         <h1 className="text-2xl font-semibold">Talent Pool</h1>
-        {isJobSeeker && (
-          <Link
-            href="/join-talent-pool"
-            className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
-          >
-            <span>Join our Talent Pool</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        {isJobSeeker ? (
+          <>
+            {!userData?.user?.joined_talent_pool ? (
+              <Link
+                href="/join-talent-pool"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+              >
+                <span>Join our Talent Pool</span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 8H15M15 8L8 1M15 8L8 15" />
+                </svg>
+              </Link>
+            ) : (
+              <Link
+                href="/dashboard/talent-pool/edit-profile"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+              >
+                <span>Edit Talent Pool Profile</span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 8H15M15 8L8 1M15 8L8 15" />
+                </svg>
+              </Link>
+            )}
+          </>
+        ) : (
+          // Show the Clear AI Search button when AI search is active
+          isAISearchActive && (
+            <button
+              onClick={clearAISearch}
+              className="text-primary hover:text-primary/90 font-medium text-[16px] flex items-center gap-2"
             >
-              <path d="M1 8H15M15 8L8 1M15 8L8 15" />
-            </svg>
-          </Link>
+              <span>Clear AI Search</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 15L1 1M15 1L1 15" />
+              </svg>
+            </button>
+          )
         )}
       </div>
       <div
@@ -360,6 +492,10 @@ export default function TalentPool() {
                   className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-full py-[10px] px-2 rounded-lg outline-none focus:outline-none text-sm"
                   value={type === "text" ? searchVal : ""}
                   onChange={(e) => {
+                    // Clear AI search when using regular filter
+                    if (isAISearchActive) {
+                      clearAISearch();
+                    }
                     setType("text");
                     setSearchVal(e.target.value);
                   }}
@@ -373,6 +509,10 @@ export default function TalentPool() {
                     className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
                     value={type === "location" ? searchVal : ""}
                     onChange={(e) => {
+                      // Clear AI search when using regular filter
+                      if (isAISearchActive) {
+                        clearAISearch();
+                      }
                       setType("location");
                       setSearchVal(e.target.value);
                     }}
@@ -391,6 +531,10 @@ export default function TalentPool() {
                           {skill.trim()}
                           <button
                             onClick={() => {
+                              // Clear AI search when modifying skills
+                              if (isAISearchActive) {
+                                clearAISearch();
+                              }
                               const newSkills = searchVal
                                 .split(",")
                                 .filter((_, i) => i !== index)
@@ -415,12 +559,20 @@ export default function TalentPool() {
                       }
                       value={skillInput}
                       onChange={(e) => {
+                        // Clear AI search when typing in skills
+                        if (isAISearchActive) {
+                          clearAISearch();
+                        }
                         setType("skills");
                         setSkillInput(e.target.value);
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && skillInput.trim()) {
                           e.preventDefault();
+                          // Clear AI search when adding skills
+                          if (isAISearchActive) {
+                            clearAISearch();
+                          }
                           const newSkill = skillInput.trim();
                           setType("skills");
                           setSearchVal((prev) =>
@@ -497,6 +649,31 @@ export default function TalentPool() {
               </div>
             </div>
 
+            {/* Show a banner when AI search is active */}
+            {/* {isAISearchActive && (
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/ai-technology.png"
+                    alt="AI"
+                    width={20}
+                    height={20}
+                    className="opacity-80"
+                  />
+                  <span className="text-sm font-medium">
+                    Showing AI search results. Using any regular filter will
+                    clear AI search results.
+                  </span>
+                </div>
+                <button
+                  onClick={clearAISearch}
+                  className="text-sm text-primary hover:text-primary/80"
+                >
+                  Clear AI Search
+                </button>
+              </div>
+            )} */}
+
             <div className={`${outfit.className} bg-[#F0F0F0] rounded-lg p-4`}>
               <Table>
                 <TableHeader>
@@ -522,7 +699,7 @@ export default function TalentPool() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {query.isLoading ? (
+                  {isSearching || query.isLoading ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-4">
                         <Loader2 className="animate-spin mx-auto" />
@@ -531,14 +708,16 @@ export default function TalentPool() {
                   ) : query.data?.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-4">
-                        No Talent at this moment
+                        {isAISearchActive
+                          ? "No candidates match your AI search criteria"
+                          : "No Talent at this moment"}
                       </TableCell>
                     </TableRow>
                   ) : (
                     query.data?.map((candidate, index) => (
                       <TableRow
                         key={index}
-                        className="bg-[#F0F0F0] border-b border-white hover:bg-[#F0F0F0]/80 cursor-pointer  hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
+                        className="bg-[#F0F0F0] border-b border-white hover:bg-[#F0F0F0]/80 cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
                         onClick={() =>
                           router.push(
                             `/dashboard/talent-pool/${candidate.id}/details`
@@ -675,13 +854,18 @@ Language Requirements."
               />
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
-                onClick={() => {
-                  // Handle text search
-                  setIsTextSearchModalOpen(false);
-                }}
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors flex items-center gap-2"
+                onClick={handleTextSearch}
+                disabled={isSearching || !textSearchInput.trim()}
               >
-                Search
+                {isSearching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </>
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
           </div>
@@ -800,10 +984,8 @@ Language Requirements."
 
               <button
                 className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
-                onClick={() => {
-                  // Handle search with recorded audio
-                  setIsRecordingModalOpen(false);
-                }}
+                onClick={handleSearchWithAudio}
+                disabled={!audioURL}
               >
                 Search
               </button>
