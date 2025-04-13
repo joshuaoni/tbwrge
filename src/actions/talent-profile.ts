@@ -1,5 +1,5 @@
 import { API_CONFIG } from "@/constants/api_config";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export interface TalentProfile {
   id: string;
@@ -101,33 +101,65 @@ export const updateTalentProfileWithFormData = async (
     if (data.name !== undefined) formData.append("name", data.name);
     if (data.email !== undefined) formData.append("email", data.email);
     if (data.phone !== undefined) formData.append("phone", data.phone);
-    if (data.date_of_birth !== undefined)
+    if (
+      data.date_of_birth !== undefined &&
+      data.date_of_birth !== "null" &&
+      data.date_of_birth !== ""
+    ) {
       formData.append("date_of_birth", data.date_of_birth);
-    if (data.linkedin !== undefined) formData.append("linkedin", data.linkedin);
+    }
+    if (data.linkedin !== undefined)
+      formData.append(
+        "linkedin",
+        data.linkedin === "null" ? "" : data.linkedin
+      );
 
     // Handle fields that can be null
     if (data.current_company !== undefined) {
-      formData.append("current_company", data.current_company || "");
+      formData.append(
+        "current_company",
+        data.current_company === "null" ? "" : data.current_company || ""
+      );
     }
     if (data.current_position !== undefined) {
-      formData.append("current_position", data.current_position || "");
+      formData.append(
+        "current_position",
+        data.current_position === "null" ? "" : data.current_position || ""
+      );
     }
     if (data.nationality !== undefined) {
-      formData.append("nationality", data.nationality || "");
+      formData.append(
+        "nationality",
+        data.nationality === "null" ? "" : data.nationality || ""
+      );
     }
     if (data.country_of_residence !== undefined) {
-      formData.append("country_of_residence", data.country_of_residence || "");
+      formData.append(
+        "country_of_residence",
+        data.country_of_residence === "null"
+          ? ""
+          : data.country_of_residence || ""
+      );
     }
 
     // Handle summary fields
     if (data.professional_summary !== undefined) {
-      formData.append("professional_summary", data.professional_summary);
+      formData.append(
+        "professional_summary",
+        data.professional_summary === "null" ? "" : data.professional_summary
+      );
     }
     if (data.experience_summary !== undefined) {
-      formData.append("experience_summary", data.experience_summary || "");
+      formData.append(
+        "experience_summary",
+        data.experience_summary === "null" ? "" : data.experience_summary || ""
+      );
     }
     if (data.skills_summary !== undefined) {
-      formData.append("skills_summary", data.skills_summary || "");
+      formData.append(
+        "skills_summary",
+        data.skills_summary === "null" ? "" : data.skills_summary || ""
+      );
     }
 
     // Handle salary fields
@@ -137,13 +169,13 @@ export const updateTalentProfileWithFormData = async (
     if (data.salary_range_min !== undefined) {
       formData.append(
         "salary_range_min",
-        data.salary_range_min?.toString() || ""
+        data.salary_range_min !== null ? data.salary_range_min.toString() : ""
       );
     }
     if (data.salary_range_max !== undefined) {
       formData.append(
         "salary_range_max",
-        data.salary_range_max?.toString() || ""
+        data.salary_range_max !== null ? data.salary_range_max.toString() : ""
       );
     }
 
@@ -168,8 +200,20 @@ export const updateTalentProfileWithFormData = async (
     });
 
     return response.data as TalentProfile;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error updating talent profile with form data:", error);
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        console.error("Response status:", axiosError.response.status);
+        console.error("Response data:", axiosError.response.data);
+        console.error("Response headers:", axiosError.response.headers);
+      } else if (axiosError.request) {
+        console.error("No response received:", axiosError.request);
+      }
+    } else {
+      console.error("Error message:", String(error));
+    }
     throw error;
   }
 };

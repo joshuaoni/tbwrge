@@ -227,7 +227,7 @@ const ApplicationForm = ({
         );
       }
 
-      // setShowSuccessPopup(true);
+      setShowSuccessPopup(true);
       // router.back();
     } catch (error) {
       console.error("Error submitting application:", error);

@@ -856,7 +856,7 @@ function CreateJobJobDetails() {
           {isGeneratingQuestions ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              Generating Questions...
+              Please wait...
             </>
           ) : (
             "Next"

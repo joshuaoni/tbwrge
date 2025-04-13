@@ -233,7 +233,19 @@ export default function EditTalentPool() {
       updatedData.name = tempData.name;
       updatedData.email = tempData.email;
       updatedData.phone = tempData.phone;
-      updatedData.date_of_birth = tempData.date_of_birth;
+
+      // Only set date_of_birth if it's a valid date string and not "null"
+      if (
+        tempData.date_of_birth &&
+        tempData.date_of_birth !== "null" &&
+        tempData.date_of_birth.trim() !== ""
+      ) {
+        updatedData.date_of_birth = tempData.date_of_birth;
+      } else {
+        // Ensure we're not sending "null" string
+        delete updatedData.date_of_birth;
+      }
+
       updatedData.linkedin = tempData.linkedin;
       updatedData.current_position = tempData.current_position;
       updatedData.current_company = tempData.current_company;

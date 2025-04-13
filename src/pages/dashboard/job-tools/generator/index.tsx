@@ -2,14 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2, Plus, StopCircleIcon, Trash, X, Mic } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-
-// Import React Quill dynamically to avoid SSR issues
-const ReactQuill = dynamic(() => import("react-quill"), {
-  ssr: false,
-  loading: () => <p>Loading Editor...</p>,
-});
-import "react-quill/dist/quill.snow.css";
 
 import { generateJob } from "@/actions/job-tools/generator";
 import DashboardWrapper from "@/components/dashboard-wrapper";
@@ -62,26 +54,6 @@ const Generator = () => {
       }
     };
   }, []);
-
-  // Quill modules configuration
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-  ];
 
   const handleClearSummary = () => {
     setSummary("");
@@ -258,12 +230,12 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <h2 className={`${outfit.className} font-bold text-[24px]`}>
         Job Post Generator
-      </span>
-      <section className={`${outfit.className} flex h-screen space-x-4 `}>
+      </h2>
+      <section className={`${outfit.className} flex space-x-4 `}>
         <div className="w-[50%] flex flex-col">
-          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
                 Please Describe the Job Below{" "}
@@ -281,39 +253,39 @@ const Generator = () => {
                 }}
               />
             </div>
-            <div className="my-7 bg-white mb-24">
-              <ReactQuill
-                theme="snow"
+            <div className="my-7 bg-white">
+              <textarea
                 value={value}
-                onChange={setValue}
-                modules={modules}
-                formats={formats}
+                onChange={(e) => setValue(e.target.value)}
                 placeholder="Detailed Job Description"
-                className="h-32"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none"
               />
             </div>
 
             <div className="">
-              {prompts.map((prompt: string) => {
-                return (
-                  <div className="flex justify-between my-2">
-                    <div dangerouslySetInnerHTML={{ __html: prompt }} />
-                    <Trash
-                      className="cursor-pointer"
-                      onClick={() =>
-                        setPrompts((prevState: string[]) =>
-                          prevState.filter((p: string) => p !== prompt)
-                        )
-                      }
-                      size={20}
-                    />
+              {prompts.map((prompt: string, index: number) => (
+                <div
+                  key={index}
+                  className="flex justify-between my-2 bg-gray-50 p-2 rounded-lg"
+                >
+                  <div className="whitespace-pre-wrap break-words max-w-[90%]">
+                    {prompt}
                   </div>
-                );
-              })}
+                  <Trash
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setPrompts((prevState: string[]) =>
+                        prevState.filter((_, i) => i !== index)
+                      )
+                    }
+                    size={20}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
               <span className="font-medium text-base">Record Voicenote</span>
             </div>
@@ -326,14 +298,14 @@ const Generator = () => {
                       Recording...
                     </span>
                     <div className="flex-1 mx-1 overflow-hidden">
-                      <div className="flex items-center gap-[1px] justify-between">
-                        {Array.from({ length: 30 }).map((_, index) => (
+                      <div className="flex items-center gap-0 justify-between">
+                        {Array.from({ length: 100 }).map((_, index) => (
                           <div
                             key={index}
                             className="w-[1px] bg-[#009379]"
                             style={{
                               height:
-                                index < audioVisualization.length * 5
+                                index < audioVisualization.length * 10
                                   ? `${Math.max(
                                       3,
                                       audioVisualization[
@@ -342,7 +314,9 @@ const Generator = () => {
                                     )}px`
                                   : "3px",
                               opacity:
-                                index < audioVisualization.length * 5 ? 1 : 0.2,
+                                index < audioVisualization.length * 10
+                                  ? 1
+                                  : 0.2,
                             }}
                           />
                         ))}
@@ -355,7 +329,7 @@ const Generator = () => {
                       onClick={handleStopRecording}
                       className="shrink-0 text-red-500 hover:text-red-600"
                     >
-                      <StopCircleIcon className="w-5 h-5" />
+                      <StopCircleIcon className="text-red w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -408,7 +382,7 @@ const Generator = () => {
                   </button>
                   <div className="flex-1 overflow-hidden mx-1">
                     <div className="flex items-center gap-0 justify-between">
-                      {Array.from({ length: 30 }).map((_, index) => (
+                      {Array.from({ length: 100 }).map((_, index) => (
                         <div
                           key={index}
                           className="w-[1px] bg-[#009379]"
@@ -436,7 +410,7 @@ const Generator = () => {
             <audio ref={audioRef} src={audioUrl || ""} />
           </div>
 
-          <div className="flex items-center h-fit mt-12 justify-between">
+          <div className="flex items-center h-fit mt-4 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
                 Select Output language
@@ -454,7 +428,7 @@ const Generator = () => {
                 onClick={() => {
                   generateJobMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px] text-white"
+                className="self-center bg-primary min-w-[100px] text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -466,12 +440,12 @@ const Generator = () => {
           </div>
         </div>
 
-        <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl mt-4 p-6">
+        <div className="w-[50%] mb-12">
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Post Generator</span>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center rounded-[4px] border border-gray-100 p-2 mt-4">
               {isSuccess && <JobPost {...data} />}
             </div>
           </div>
