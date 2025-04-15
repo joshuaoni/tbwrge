@@ -133,7 +133,7 @@ const InterviewScreeningGenerator = () => {
       <br />
       <div className=" mx-auto space-y-6">
         <div className="cont flex flex-col lg:flex-row gap-6">
-          <div className="grid shadow-xl border-[1px] p-4 rounded-md pb-8 w-full lg:w-[70%]">
+          <div className="grid border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] p-4 rounded-md pb-8 w-full lg:w-[70%]">
             {/* File Upload Section */}
             <div className="rounded-xl h-fit flex flex-col p-6 ">
               <span className="font-bold text-xl">Document Upload</span>
@@ -146,9 +146,20 @@ const InterviewScreeningGenerator = () => {
                   type="file"
                   multiple
                   accept=".pdf, .doc, .docx, .txt"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                 />
-                <div className="border-dotted flex flex-col space-y-5 border-[2px] border-[#065844] cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
+                <div
+                  className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
+                  style={{
+                    borderRadius: "12px",
+                    border: "none",
+                    background: "white",
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23285C44' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")",
+                    backgroundPosition: "center",
+                    backgroundSize: "100% 100%",
+                  }}
+                >
                   <Image
                     className="w-fit h-8 object-cover"
                     src={uploadIcon}
@@ -158,40 +169,48 @@ const InterviewScreeningGenerator = () => {
                     Drag your file(s) or{" "}
                     <span className="font-bold">browse</span>
                   </span>
-                  <span className="text-gray-500 text-sm">
+                  <span className="text-textgray text-sm">
                     Max 10MB files are allowed
                   </span>
                 </div>
+                <span className="text-textgray mt-3 text-sm">
+                  Only supports .pdf, .doc, .docx, and .txt
+                </span>
               </div>
 
               {/* File List */}
               {files.length > 0 && (
                 <div className="mt-6 space-y-2">
-                  {files.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex h-14 w-full px-4 border rounded-lg justify-between items-center"
-                    >
-                      <div className="flex items-start">
-                        <Image
-                          className="w-10 h-10 object-cover"
-                          src={pdfIcon}
-                          alt="File Icon"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-sm">{file.name}</span>
-                          <span className="text-sm text-gray-500">
-                            {(file.size / (1024 * 1024)).toFixed(2)} MB
-                          </span>
+                  {files.map((file, index) => {
+                    const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                    return (
+                      <div
+                        key={index}
+                        className="flex h-14 w-full px-4 pl-2 border rounded-lg justify-between items-center space-x-2"
+                      >
+                        <div className="flex items-center">
+                          <Image
+                            className="w-8 h-8 mr-2 object-cover"
+                            src={pdfIcon}
+                            alt="File Icon"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-sm text-black">
+                              {file.name}
+                            </span>
+                            <span className="text-sm text-textgray">
+                              {fileSizeInMB} MB
+                            </span>
+                          </div>
                         </div>
+                        <CircleXIcon
+                          onClick={() => removeFile(index)}
+                          color="black"
+                          size={14}
+                        />
                       </div>
-                      <CircleXIcon
-                        onClick={() => removeFile(index)}
-                        className="cursor-pointer"
-                        size={14}
-                      />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -203,7 +222,7 @@ const InterviewScreeningGenerator = () => {
             </div>
 
             {/* Job Description Editor */}
-            <div className="rounded-xl shadow-md h-fit flex flex-col p-6">
+            <div className="rounded-xl h-fit flex flex-col p-6">
               <span className="font-bold text-xl">
                 Paste Your Job description here
               </span>

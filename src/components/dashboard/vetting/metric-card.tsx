@@ -91,48 +91,43 @@ export const MetricScore = (
 };
 
 export const MetricCardsLoading = () => {
-  return ["relevance", "grammar", "formatting", "completeness"].map(
-    (item, i) => (
-      <div key={i} className="flex items-center gap-6">
+  const metrics = ["Relevance", "Grammar", "Formatting", "Completeness"];
+
+  return (
+    <div className="space-y-6 mt-4">
+      {metrics.map((metric, i) => (
         <div
-          className={classNames(
-            "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
-            inter.className,
-            metricStyles[item]?.className ?? metricStyles.fallback.className
-          )}
+          key={i}
+          className="bg-white rounded-lg p-5 shadow-sm border border-gray-100 animate-pulse"
         >
-          <span className="w-fit p-3 rounded-full border border-white">
-            <MetricIcon
-              metric={item}
-              size={32}
-              color="white"
-              className={classNames({
-                "rotate-12": item == "Relevance",
-              })}
-            />
-          </span>
-          <h6 className="text-xl capitalize w-40">{item}</h6>
-          <p className="font-bold text-4xl">
-            <Skeleton className="inline-block bg-white/60 h-7 w-8 rounded-full" />
-            %
-          </p>
+          <div className="flex items-start gap-4">
+            {/* Left side - Metric score card */}
+            <div
+              className={`w-40 h-40 rounded-lg flex flex-col items-center justify-center ${
+                metricStyles[metric.toLowerCase()]?.className ??
+                metricStyles.fallback.className
+              }`}
+            >
+              <div className="w-10 h-10 rounded-full bg-white/30 mb-2"></div>
+              <div className="h-5 w-24 rounded-md bg-white/30 mb-3"></div>
+              <div className="h-8 w-16 rounded-md bg-white/30"></div>
+            </div>
+
+            {/* Right side - Analysis content */}
+            <div className="flex-1 pt-1">
+              <div className="h-6 w-32 bg-gray-200 rounded-md mb-5"></div>
+              <div className="space-y-2">
+                <div className="h-3 w-full bg-gray-200 rounded-full"></div>
+                <div className="h-3 w-[90%] bg-gray-200 rounded-full"></div>
+                <div className="h-3 w-[85%] bg-gray-200 rounded-full"></div>
+                <div className="h-3 w-[80%] bg-gray-200 rounded-full"></div>
+                <div className="h-3 w-[75%] bg-gray-200 rounded-full"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="text-[#747474] space-y-4">
-          <h6 className="text-xl font-semibold capitalize">{item}</h6>
-          <p className="space-y-1.5">
-            {[...new Array(8)].map((_, i) => (
-              <Skeleton
-                key={i}
-                className="h-2.5 w-80 rounded-full"
-                style={{
-                  width: `${20 - i}rem`,
-                }}
-              />
-            ))}
-          </p>
-        </div>
-      </div>
-    )
+      ))}
+    </div>
   );
 };
 

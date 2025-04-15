@@ -253,12 +253,12 @@ const Generator = () => {
                 }}
               />
             </div>
-            <div className="my-7 bg-white">
+            <div className="my-5 bg-white">
               <textarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Detailed Job Description"
-                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
 
