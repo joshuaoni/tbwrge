@@ -12,7 +12,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { COUNTRIES } from "@/constants/countries";
+import { countries } from "@/constants/countries";
 
 const ResidenceDropDown = ({
   onSelect,
@@ -30,7 +30,7 @@ const ResidenceDropDown = ({
           style={{ position: "relative" }}
         >
           {value
-            ? COUNTRIES.find((country) => country.label === value)?.label
+            ? countries.find((country) => country.name === value)?.name
             : "Select country..."}
         </div>
       </PopoverTrigger>
@@ -43,21 +43,21 @@ const ResidenceDropDown = ({
           <CommandInput placeholder="Search country..." />
           <CommandEmpty>No country found.</CommandEmpty>
           <CommandGroup>
-            {COUNTRIES.map((country) => (
+            {countries.map((country) => (
               <CommandItem
                 className="text-black"
-                key={country.label}
-                value={country.label}
+                key={country.code}
+                value={country.name}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
-                  onSelect?.(country.label);
+                  onSelect?.(country.name);
                   setOpen(false);
                 }}
               >
-                {country.label === value && (
+                {country.name === value && (
                   <Check className="mr-2 h-4 w-4" color="#065844" />
                 )}
-                {country.label}
+                {country.name}
               </CommandItem>
             ))}
           </CommandGroup>

@@ -78,6 +78,8 @@ const Vetting = () => {
         language = "pt";
       }
 
+      // prompts.push(jobDescription);
+
       const response = await vetJob(
         files,
         language,
@@ -114,7 +116,7 @@ const Vetting = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">Job Ad Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
+              Add your Job Description here, you can upload up to 5 files max
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -190,8 +192,8 @@ const Vetting = () => {
             )}
           </div>
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job description here</span>
-            <div className="my-5 bg-white">
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
@@ -204,7 +206,7 @@ const Vetting = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?
+                Want to customize your results?{" "}
                 <span className="text-sm font-medium">
                   &#40;Add up to 20 prompts&#41;
                 </span>
@@ -259,12 +261,12 @@ const Vetting = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={files.length === 0}
+                disabled={files.length === 0 && jobDescription === ""}
                 variant="default"
                 onClick={() => {
                   vetJobMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px] text-white"
+                className="self-center bg-primary min-w-[100px] text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -280,7 +282,7 @@ const Vetting = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job post Vetting</span>
-              <X onClick={() => null} size={20} />
+              {/* <X onClick={() => null} size={20} /> */}
             </div>
             <div className="grid gap-6">
               {isPending && <MetricCardsLoading />}

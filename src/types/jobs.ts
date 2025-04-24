@@ -25,4 +25,7 @@ export interface IGetJobOpenRes {
   salary_currency: string | null;
   created_at: string;
   questions: { id: string; text: string; is_screening: boolean }[];
+  require_cv: boolean;
+  require_cover_letter: boolean;
+  require_voicenote: boolean;
 }

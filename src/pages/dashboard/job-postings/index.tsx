@@ -44,6 +44,8 @@ const JobPostings = () => {
 
   // Handle URL parameters
   useEffect(() => {
+    if (!searchParams) return;
+
     const jobId = searchParams.get("jobId");
     const view = searchParams.get("view");
 

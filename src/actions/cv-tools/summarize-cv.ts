@@ -6,7 +6,8 @@ export const summarizeCV = async (
   cv: any[],
   language: string,
   token: string,
-  prompts: string[]
+  prompts: string[],
+  jobDescription: string
 ) => {
   const formData = new FormData();
   if (cv) {
@@ -21,6 +22,9 @@ export const summarizeCV = async (
     stringifiedPrompts.forEach((tag: any) => {
       formData.append("prompts[]", tag);
     });
+  }
+  if (jobDescription) {
+    formData.append("job_ad", jobDescription);
   }
   try {
     const response = await axios({

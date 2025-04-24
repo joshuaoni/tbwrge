@@ -64,7 +64,7 @@ export default function JoinTalentPool() {
       }
 
       toast.success("Successfully joined talent pool!");
-      router.push("/dashboard/talent-pool");
+      router.push("/dashboard/talent-pool/edit-profile");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to join talent pool");

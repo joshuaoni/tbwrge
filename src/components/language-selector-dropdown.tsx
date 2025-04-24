@@ -11,9 +11,9 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { COUNTRIES } from "@/constants/countries";
 import translateImage from "../../public/images/translate.png";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const LanguageSelectorDropDown = ({
   onSelect,
@@ -61,14 +61,16 @@ const LanguageSelectorDropDown = ({
       <PopoverContent
         align="start"
         side="bottom"
-        className="p-0 bg-white w-full max-h-[200px] overflow-y-scroll z-50"
+        className="p-0 bg-white w-[200px] shadow-lg border border-gray-100 rounded-lg overflow-hidden"
       >
-        <Command>
-          <CommandInput placeholder="Search language..." />
-          <CommandGroup>
+        <Command className="bg-white">
+          <CommandInput
+            placeholder="Search language..."
+            className="h-11 px-4 border-b border-gray-100"
+          />
+          <CommandGroup className="max-h-[200px] overflow-y-auto py-2">
             {languages.map((language) => (
               <CommandItem
-                className="text-black"
                 key={language}
                 value={language}
                 onSelect={(currentValue) => {
@@ -77,11 +79,15 @@ const LanguageSelectorDropDown = ({
                   setOpen(false);
                   setLanguage(language);
                 }}
+                className="px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-800 cursor-pointer data-[selected=true]:bg-emerald-50 data-[selected=true]:text-emerald-800 transition-colors flex items-center gap-2"
               >
-                {language === value && (
-                  <Check className="mr-2 h-4 w-4" color="#065844" />
-                )}
-                {language}
+                <Check
+                  className={cn(
+                    "h-4 w-4",
+                    language === value ? "text-emerald-600" : "opacity-0"
+                  )}
+                />
+                <span>{language}</span>
               </CommandItem>
             ))}
           </CommandGroup>

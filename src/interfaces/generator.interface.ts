@@ -16,5 +16,8 @@ export interface CoverLetterProps {
 }
 
 export interface TemplateWrapperProps {
-  template: ForwardRefExoticComponent<RefAttributes<HTMLDivElement>>;
+  template: ForwardRefExoticComponent<
+    { data?: CoverLetterGenerator } & RefAttributes<HTMLDivElement>
+  >;
+  data?: CoverLetterGenerator;
 }

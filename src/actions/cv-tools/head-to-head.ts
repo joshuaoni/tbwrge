@@ -9,7 +9,6 @@ export const headToHead = async (
   prompts: string[],
   jobDescription: string
 ) => {
-  console.log(cv, language, token, prompts);
   const formData = new FormData();
   if (cv) {
     for (let i = 0; i < cv.length; i++) {
@@ -20,11 +19,18 @@ export const headToHead = async (
   formData.append("language", language);
   formData.append("job_description", jobDescription);
   if (prompts.length !== 0) {
+    console.log("prompts", prompts);
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
-      formData.append("prompts[]", tag);
+      formData.append("additional_info", tag);
     });
+  } else {
+    formData.append("additional_info", "");
   }
+  console.log("additional_info", formData.get("additional_info"));
+  console.log("job_description", formData.get("job_description"));
+  console.log("language", formData.get("language"));
+  console.log("uploaded_files", formData.get("uploaded_files"));
   try {
     const response = await axios({
       method: "POST",
@@ -34,6 +40,7 @@ export const headToHead = async (
       },
       data: formData,
     });
+    console.log(response.data);
     return response.data;
   } catch (error: any) {
     if (error.response) {

@@ -165,7 +165,7 @@ const CurrentOpenings = ({
                     )}
                   </div>
                   <div className="flex flex-col w-[217px]  gap-[4px]">
-                    <h3 className="font-medium tracking-[0%] truncate text-[12px] leading-[15px] text-black">
+                    <h3 className="font-medium tracking-[0%] truncate text-[14px] leading-[15px] text-black">
                       {job.job_title}
                     </h3>
                     <div className="text-[12px] tracking-[0%] truncate leading-[15px] text-gray-500">

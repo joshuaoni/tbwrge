@@ -78,6 +78,7 @@ function CreateJobOverview() {
   };
 
   const ctx = useContext(CreateJobContext);
+  console.log({ ctx }, ctx.formData);
 
   const { userData } = useUserStore();
 
@@ -488,38 +489,47 @@ function CreateJobOverview() {
               <span className="capitalize font-bold">Add custom question</span>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload CV
-              </label>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-              />
-            </div>
+            {ctx.formData.require_cv && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Upload CV
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  required={ctx.formData.require_cv}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                />
+              </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Cover Letter (Optional)
-              </label>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-              />
-            </div>
+            {ctx.formData.require_cover_letter && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Upload Cover Letter
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  required={ctx.formData.require_cover_letter}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                />
+              </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Application Video/demo (Optional)
-              </label>
-              <input
-                type="file"
-                accept="video/*"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-              />
-            </div>
+            {ctx.formData.voicenote_recording && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Upload Application Video/demo
+                </label>
+                <input
+                  type="file"
+                  accept="video/*"
+                  required={ctx.formData.voicenote_recording}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                />
+              </div>
+            )}
           </form>
         </section>
       </div>

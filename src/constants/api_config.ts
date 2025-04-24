@@ -26,11 +26,13 @@ export const API_CONFIG = {
   TRANSLATE_COVER_LETTER: `${MAIN_URL}/cl/translate-cl/`,
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
+  GENERATE_JOB_NEW: `${MAIN_URL}/job/generate-job-post/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
   INTERVIEW_QUESTION_GEN: `${MAIN_URL}/job/interview-questions-gen/`,
   SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  INTERVIEW_PREP: `${MAIN_URL}/job/interview-prep/`,
   GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
   GET_APPLICATION_ITEM: (application_id: string) =>
     `${MAIN_URL}/job/get-application-item/${application_id}/`,

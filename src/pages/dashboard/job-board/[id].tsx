@@ -127,9 +127,11 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
 );
 
 const ApplicationForm = ({
+  job,
   jobId,
   questions,
 }: {
+  job: IGetJobOpenRes;
   jobId: string;
   questions: any[];
   onClose?: () => void;
@@ -408,44 +410,55 @@ const ApplicationForm = ({
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Upload CV
-          </label>
-          <input
-            type="file"
-            name="cv"
-            onChange={handleFileChange}
-            accept=".pdf,.doc,.docx"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-          />
-        </div>
+        {job.require_cv && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload CV{" "}
+              {job.require_cv && <span className="text-red-500">*</span>}
+            </label>
+            <input
+              type="file"
+              name="cv"
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx"
+              required={job.require_cv}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+            />
+          </div>
+        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Upload Cover Letter (Optional)
-          </label>
-          <input
-            type="file"
-            name="coverLetter"
-            onChange={handleFileChange}
-            accept=".pdf,.doc,.docx"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-          />
-        </div>
+        {job.require_cover_letter && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Cover Letter <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="file"
+              name="coverLetter"
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx"
+              required={job.require_cover_letter}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+            />
+          </div>
+        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Upload Application Video/demo (Optional)
-          </label>
-          <input
-            type="file"
-            name="voicenote"
-            onChange={handleFileChange}
-            accept="video/*"
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
-          />
-        </div>
+        {job.require_voicenote && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Application Video/demo{" "}
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="file"
+              name="voicenote"
+              onChange={handleFileChange}
+              accept="video/*"
+              required={job.require_voicenote}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+            />
+          </div>
+        )}
 
         {/* Add application questions */}
         {questions
@@ -699,7 +712,11 @@ const JobDetailsPage = () => {
 
           {/* Right column - Application form */}
           <div className="w-1/2">
-            <ApplicationForm jobId={job.id} questions={job.questions} />
+            <ApplicationForm
+              job={job}
+              jobId={job.id}
+              questions={job.questions}
+            />
           </div>
         </div>
       </div>

@@ -1,9 +1,22 @@
-import { useMutation } from "@tanstack/react-query";
-import { Loader2, Plus, StopCircleIcon, Trash, X, Mic } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Loader2,
+  Plus,
+  StopCircleIcon,
+  Trash,
+  X,
+  Mic,
+  PlusCircle,
+  Download,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { z } from "zod";
+import DocumentDownloadIcon from "@/components/icons/document-download";
 import { generateJob } from "@/actions/job-tools/generator";
+import { Company, getCompanies } from "@/actions/get-companies";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import JobPost from "@/components/dashboard/job-tools/job-post";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
@@ -12,6 +25,8 @@ import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
 import { outfit } from "@/constants/app";
+import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const Generator = () => {
   const [value, setValue] = useState("");
@@ -34,6 +49,28 @@ const Generator = () => {
   const { userData } = useUserStore();
   const [currentTime, setCurrentTime] = useState(0);
 
+  // Company selection state
+  const [showNewCompanyForm, setShowNewCompanyForm] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openDropdownUpward, setOpenDropdownUpward] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownTriggerRef = useRef<HTMLDivElement>(null);
+  const [companyName, setCompanyName] = useState("");
+  const [companyWebsite, setCompanyWebsite] = useState("");
+  const [companyDescription, setCompanyDescription] = useState("");
+  const [companyLogo, setCompanyLogo] = useState<File | null>(null);
+  const jobPostRef = useRef<HTMLDivElement>(null);
+
+  const jobFormSchema = z.object({
+    // ... existing code ...
+  });
+
+  const [showForm, setShowForm] = useState(true);
+  const [jobPost, setJobPost] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
   // Format duration to MM:SS
   const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -55,9 +92,45 @@ const Generator = () => {
     };
   }, []);
 
-  const handleClearSummary = () => {
-    setSummary("");
-  };
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        isDropdownOpen &&
+        dropdownRef.current &&
+        dropdownTriggerRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !dropdownTriggerRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDropdownOpen]);
+
+  // Calculate dropdown position when opening
+  useEffect(() => {
+    if (isDropdownOpen && dropdownTriggerRef.current) {
+      const triggerElement = dropdownTriggerRef.current;
+      const triggerRect = triggerElement.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Check if there's enough space below (need at least 200px for dropdown)
+      const spaceBelow = viewportHeight - triggerRect.bottom;
+
+      // If there's not enough space below, open upward
+      setOpenDropdownUpward(spaceBelow < 200);
+    }
+  }, [isDropdownOpen]);
+
+  // Fetch companies
+  const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
+    queryKey: ["companies"],
+    queryFn: () => getCompanies(userData?.token ?? ""),
+    enabled: !!userData?.token,
+  });
 
   // Update audio visualization
   const updateAudioVisualization = () => {
@@ -74,6 +147,132 @@ const Generator = () => {
       animationFrameRef.current = requestAnimationFrame(
         updateAudioVisualization
       );
+    }
+  };
+
+  // Company selection handler
+  const handleCompanySelect = (company: Company) => {
+    setSelectedCompany(company);
+    setCompanyName(company.name);
+    setCompanyWebsite(company.website);
+    setCompanyDescription(company.description);
+    setIsDropdownOpen(false);
+  };
+
+  // Handle company logo file upload
+  const handleCompanyLogoUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setCompanyLogo(event.target.files[0]);
+    }
+  };
+
+  // Function to download job post as PDF
+  const downloadJobPostAsPDF = async () => {
+    try {
+      setIsGeneratingPDF(true);
+      const toastId = toast.loading("Generating PDF...");
+
+      if (!jobPostRef.current) {
+        toast.error("Cannot generate PDF - content not available", {
+          id: toastId,
+        });
+        setIsGeneratingPDF(false);
+        return;
+      }
+
+      // Use html2canvas to take a screenshot of the job post
+      const canvas = await html2canvas(jobPostRef.current as HTMLElement, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true, // To handle cross-origin images
+        logging: false,
+        backgroundColor: "#ffffff",
+      });
+
+      // Calculate PDF dimensions (A4 format)
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Create PDF
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Add title
+      pdf.setFontSize(16);
+      const jobTitle = data?.job_title || "Job Post";
+      pdf.text(jobTitle, 105, 15, { align: "center" });
+
+      // Add company name
+      if (data?.company_name) {
+        pdf.setFontSize(12);
+        pdf.text(data.company_name, 105, 22, { align: "center" });
+      }
+
+      // Add date
+      pdf.setFontSize(10);
+      pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 28, {
+        align: "center",
+      });
+
+      // Add horizontal line
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(20, 30, 190, 30);
+
+      // Add image content with pagination support
+      const imgData = canvas.toDataURL("image/png");
+
+      // Position for the image (after our header)
+      let position = 35;
+
+      // Handle multi-page content
+      if (imgHeight > pageHeight - position) {
+        // Content spans multiple pages
+        let heightLeft = imgHeight;
+        let page = 1;
+
+        // Add first page content
+        pdf.addImage(
+          imgData,
+          "PNG",
+          0,
+          position - page * pageHeight,
+          imgWidth,
+          imgHeight
+        );
+        heightLeft -= pageHeight - position;
+
+        // Add subsequent pages
+        while (heightLeft > 0) {
+          pdf.addPage();
+          page++;
+          pdf.addImage(
+            imgData,
+            "PNG",
+            0,
+            -(position + pageHeight - page * pageHeight),
+            imgWidth,
+            imgHeight
+          );
+          heightLeft -= pageHeight;
+        }
+      } else {
+        // Content fits on one page
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      }
+
+      // Save the PDF
+      const fileName = `${data?.job_title || "Job_Post"}_${new Date()
+        .toISOString()
+        .slice(0, 10)}.pdf`;
+      pdf.save(fileName);
+
+      toast.success("PDF generated successfully", { id: toastId });
+      setIsGeneratingPDF(false);
+    } catch (error) {
+      console.error("Failed to generate PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -157,11 +356,32 @@ const Generator = () => {
     setAudioVisualization([]);
   };
 
+  // Check if form is valid for job generation
+  const isFormValid = () => {
+    const baseValidation = prompts.length !== 0 || audioBlob !== null;
+
+    // Additional company validation
+    if (showNewCompanyForm) {
+      // If adding a new company, check all company fields
+      return (
+        baseValidation &&
+        !!(
+          companyName.trim() &&
+          companyWebsite.trim() &&
+          companyDescription.trim()
+        )
+      );
+    } else {
+      // If selecting existing company, check if one is selected
+      return baseValidation && !!selectedCompany;
+    }
+  };
+
   const {
     mutate: generateJobMutation,
     data,
     isPending,
-    isSuccess,
+    isSuccess: mutationIsSuccess,
     reset: resetMutation,
   } = useMutation<JobPostGeneratorResponse>({
     mutationKey: ["generateCV"],
@@ -181,10 +401,28 @@ const Generator = () => {
         language = "pt";
       }
 
+      // Add company info to prompts
+      let companyPrompts = [...prompts];
+
+      // Add company information to prompts
+      if (showNewCompanyForm) {
+        // Using new company details
+        companyPrompts.push(`Company Name: ${companyName}`);
+        companyPrompts.push(`Company Website: ${companyWebsite}`);
+        companyPrompts.push(`Company Description: ${companyDescription}`);
+      } else if (selectedCompany) {
+        // Using selected company details
+        companyPrompts.push(`Company Name: ${selectedCompany.name}`);
+        companyPrompts.push(`Company Website: ${selectedCompany.website}`);
+        companyPrompts.push(
+          `Company Description: ${selectedCompany.description}`
+        );
+      }
+
       const response = await generateJob(
         audioBlob,
         userData?.token,
-        prompts,
+        companyPrompts,
         language
       );
       return response;
@@ -239,8 +477,8 @@ const Generator = () => {
             <div className="flex items-center justify-between">
               <span className="font-bold">
                 Please Describe the Job Below{" "}
-                <span className="text-xs text-gray-500">
-                  (you can add up to 20 prompts)
+                <span className="font-normal text-xs">
+                  (You can add up to 20 prompts)
                 </span>
               </span>
               <Plus
@@ -253,7 +491,7 @@ const Generator = () => {
                 }}
               />
             </div>
-            <div className="my-5 bg-white">
+            <div className="mt-5 bg-white">
               <textarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -410,6 +648,214 @@ const Generator = () => {
             <audio ref={audioRef} src={audioUrl || ""} />
           </div>
 
+          {/* Add Company Information Section */}
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
+            <div className="mb-4">
+              <span className="font-medium text-base">Company Information</span>
+            </div>
+
+            {!showNewCompanyForm ? (
+              <>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-500">
+                    Select a company
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNewCompanyForm(true);
+                      setIsDropdownOpen(false);
+                      setCompanyName("");
+                      setCompanyWebsite("");
+                      setCompanyDescription("");
+                      setCompanyLogo(null);
+                    }}
+                    className="text-sm text-primary flex items-center hover:underline"
+                  >
+                    <PlusCircle className="w-4 h-4 mr-1" />
+                    Add New Company
+                  </button>
+                </div>
+
+                <div className="relative">
+                  <div
+                    ref={dropdownTriggerRef}
+                    className="h-[38px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-3 cursor-pointer hover:bg-[#F0F2FF] transition-colors justify-between"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    {selectedCompany ? (
+                      <div className="flex items-center gap-2">
+                        {selectedCompany.logo ? (
+                          <div className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center">
+                            <Image
+                              src={selectedCompany.logo}
+                              alt={selectedCompany.name}
+                              width={20}
+                              height={20}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-xs">
+                              {selectedCompany.name[0]}
+                            </span>
+                          </div>
+                        )}
+                        <span className="text-sm">{selectedCompany.name}</span>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-500">
+                        Select a company
+                      </span>
+                    )}
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+
+                  {isDropdownOpen && (
+                    <div
+                      ref={dropdownRef}
+                      className={`absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-md ${
+                        openDropdownUpward
+                          ? "bottom-full mb-1"
+                          : "top-full mt-1"
+                      }`}
+                    >
+                      {isLoadingCompanies ? (
+                        <div className="p-2 text-sm text-center text-gray-500">
+                          Loading companies...
+                        </div>
+                      ) : companies.length > 0 ? (
+                        <div
+                          className="overflow-y-auto"
+                          style={{ maxHeight: "200px" }}
+                        >
+                          {companies.map((company) => (
+                            <div
+                              key={company.id}
+                              className="p-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2"
+                              onClick={() => handleCompanySelect(company)}
+                            >
+                              {company.logo ? (
+                                <div className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center">
+                                  <Image
+                                    src={company.logo}
+                                    alt={company.name}
+                                    width={20}
+                                    height={20}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center">
+                                  <span className="text-xs">
+                                    {company.name[0]}
+                                  </span>
+                                </div>
+                              )}
+                              <span className="text-sm">{company.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="p-2 text-sm text-center text-gray-500">
+                          No companies found
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder="Enter company name"
+                    className="h-[38px] w-full bg-[#F8F9FF] border border-gray-200 rounded-lg px-3 focus:outline-none focus:ring-1 focus:ring-[#009379]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">
+                    Company Website
+                  </label>
+                  <input
+                    type="text"
+                    value={companyWebsite}
+                    onChange={(e) => setCompanyWebsite(e.target.value)}
+                    placeholder="Enter company website"
+                    className="h-[38px] w-full bg-[#F8F9FF] border border-gray-200 rounded-lg px-3 focus:outline-none focus:ring-1 focus:ring-[#009379]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">
+                    Company Description
+                  </label>
+                  <textarea
+                    value={companyDescription}
+                    onChange={(e) => setCompanyDescription(e.target.value)}
+                    placeholder="Enter company description"
+                    className="w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-[#009379] resize-none h-24"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-500 mb-1">
+                    Company Logo (optional)
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCompanyLogoUpload}
+                      className="hidden"
+                      id="company-logo-upload"
+                    />
+                    <label
+                      htmlFor="company-logo-upload"
+                      className="cursor-pointer h-[38px] px-3 flex items-center bg-[#F8F9FF] border border-gray-200 rounded-lg hover:bg-[#F0F2FF]"
+                    >
+                      Choose File
+                    </label>
+                    <span className="ml-3 text-sm text-gray-500">
+                      {companyLogo ? companyLogo.name : "No file chosen"}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowNewCompanyForm(false);
+                    setSelectedCompany(null);
+                  }}
+                  className="text-sm text-primary hover:underline mt-2"
+                >
+                  ← Back to selecting a company
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className="flex items-center h-fit mt-4 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
@@ -423,7 +869,7 @@ const Generator = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={prompts.length === 0}
+                disabled={!isFormValid()}
                 variant="default"
                 onClick={() => {
                   generateJobMutation();
@@ -433,20 +879,44 @@ const Generator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Job "
+                  "Generate Job Post"
                 )}
               </Button>
             </div>
           </div>
         </div>
 
+        {/* Right Side */}
         <div className="w-[50%] mb-12">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Job Post Generator</span>
+              {mutationIsSuccess && (
+                <div className="relative download-button-container group">
+                  <button
+                    onClick={downloadJobPostAsPDF}
+                    className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all flex items-center justify-center"
+                    aria-label="Download job post as PDF"
+                    disabled={isGeneratingPDF}
+                  >
+                    {isGeneratingPDF ? (
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                    ) : (
+                      <DocumentDownloadIcon />
+                    )}
+                  </button>
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    Download job post as PDF
+                    <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex items-center rounded-[4px] border border-gray-100 p-2 mt-4">
-              {isSuccess && <JobPost {...data} />}
+            <div
+              className="flex items-center rounded-[4px] border border-gray-100 p-2 mt-4"
+              ref={mutationIsSuccess ? jobPostRef : null}
+            >
+              {mutationIsSuccess && <JobPost {...data} />}
             </div>
           </div>
         </div>

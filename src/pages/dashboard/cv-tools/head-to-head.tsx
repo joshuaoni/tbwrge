@@ -4,7 +4,7 @@ import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { inter } from "@/constants/app";
+import { inter, outfit } from "@/constants/app";
 import { useUserStore } from "@/hooks/use-user-store";
 import { includeKeys } from "@/lib/common";
 import { useMutation } from "@tanstack/react-query";
@@ -92,15 +92,17 @@ const HeadToHead = () => {
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Head to Head</span>
-      <section className="flex h-screen space-x-4">
+      <span className={`${outfit.className} font-bold text-xl`}>
+        CV Head to Head
+      </span>
+      <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+            <span className="font-bold">CV Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 2 files max
+              Add your CVs here, and you can upload up to 2 files max
             </span>
-            <div className="relative w-full px-4 mt-3 flex flex-col items-start rounded-lg">
+            <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
                 onChange={handleFileChange}
                 name="cv"
@@ -165,32 +167,34 @@ const HeadToHead = () => {
               </div>
             ))}
           </div>
+
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Post Job Ad</span>
-            <Textarea
-              placeholder="Input Job Description"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="my-3 bg-white border"
-            />
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Detailed Job Description"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+              />
+            </div>
           </div>
 
+          {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
+                Want to customize your results?{" "}
                 <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
+                  &#40;Add up to 20 prompts&#41;
                 </span>
               </span>
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
-                  if (prompts.length < 20) {
+                  if (value && prompts.length < 20) {
                     setPrompts((prev) => [...prev, value]);
                     setValue("");
-                  } else {
-                    alert("You can add a maximum of 20 prompts.");
                   }
                 }}
               />
@@ -198,14 +202,15 @@ const HeadToHead = () => {
             <Input
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
             />
+
             <div>
               {prompts.map((prompt, index) => (
                 <div
                   key={index}
-                  className="flex justify-between my-2 items-center"
+                  className="flex justify-between my-2 bg-gray-50 p-2 rounded-lg"
                 >
                   <span>{prompt}</span>
                   <Trash
@@ -233,12 +238,12 @@ const HeadToHead = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={files.length === 0}
+                disabled={files.length === 0 || jobDescription === ""}
                 variant="default"
                 onClick={() => {
                   headToHeadMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-primary min-w-[100px]  text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -254,45 +259,56 @@ const HeadToHead = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] min-h-[200px] mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Head To Head</span>
-              <X size={20} />
             </div>
             <div className="flex flex-col items-center justify-center gap-4 h-full mt-4">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess &&
                 Object.keys(
                   includeKeys(H2H.candidates_info[0], [
+                    "overall_score",
                     "relevance_of_experience",
+                    "skills_alignment",
                     "educational_background",
                     "industry_experience",
-                    "skills_alignment",
+                    "project_portfolio_quality",
+                    "certifications",
+                    "soft_skills",
+                    "technical_competencies",
+                    "career_progression",
+                    "cultural_fit",
+                    "accomplishments_and_impact",
+                    "longevity_and_stability",
                   ])
                 ).map((item, i) => (
                   <div
                     key={i}
                     className={classNames(
                       "flex items-center gap-6 px-5 py-4 min-w-96 bg-[#065844] text-white rounded-xl",
-                      inter.className
+                      outfit.className,
+                      item === "overall_score" ? "bg-[#009379]" : "bg-[#065844]"
                     )}
                   >
-                    <span className="w-fit h-fit p-3 rounded-full border border-white">
-                      <TbCircles
-                        size={32}
-                        color="white"
-                        className="rotate-12"
-                      />
-                    </span>
+                    <div className="w-[100px] flex justify-end">
+                      <span className="w-[70px] h-[70px] flex items-center justify-center p-3 rounded-full border border-white/50">
+                        <TbCircles
+                          size={32}
+                          color="white"
+                          className="rotate-12"
+                        />
+                      </span>
+                    </div>
 
-                    <div className="flex flex-col gap-6">
-                      <span className="text-xl capitalize">
+                    <div className="flex flex-col gap-6 flex-1">
+                      <span className={`${inter.className} text-xl capitalize`}>
                         {item.replaceAll("_", " ")}
                       </span>
                       <div className="flex gap-6">
                         {H2H.candidates_info.map((cand, i) => (
                           <div key={i} className="space-y-2">
-                            <p className="text-[#EBEBEB]">
+                            <p className="text-[#747474]">
                               {cand.candidate_name}
                             </p>
-                            <p className="font-bold text-4xl">
+                            <p className="font-bold text-[50px]">
                               {cand[item as keyof CandidateInfo]}%
                             </p>
                           </div>

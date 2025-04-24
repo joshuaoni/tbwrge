@@ -9,15 +9,19 @@ import { MetricCardProps } from "../../../interfaces/vetting.interface";
 
 const metricStyles: Record<string, Record<string, string | IconType>> = {
   relevance: { className: "bg-[#065844]", icon: TbCircles },
-  completeness: {
+  skills: {
     className: "bg-[#0BAA12]",
     icon: TbSquareCheck,
   },
+  formatting: { className: "bg-[#0BAA12]", icon: TbSquareCheck },
   grammar: { className: "bg-[#34A853]", icon: TbUserCheck },
-  formatting: {
+  culture_fit: {
     className: "bg-[#307F4B]",
     icon: TbSquareCheck,
   },
+  quality: { className: "bg-[#307F4B]", icon: TbSquareCheck },
+  clarity: { className: "bg-[#307F4B]", icon: TbSquareCheck },
+  completeness: { className: "bg-[#065844]", icon: TbSquareCheck },
   fallback: { className: "bg-[#065844]", icon: TbSquareCheck },
 };
 
@@ -30,9 +34,9 @@ const MetricIcon = (props: { metric: string } & IconBaseProps) => {
 
 const MetricCard = (props: MetricCardProps) => {
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-6 rounded-lg shadow-sm">
       <MetricScore {...props} />
-      <div className="text-[#747474] space-y-4">
+      <div className="text-[#747474] space-y-4 flex-1 h-full flex flex-col justify-center">
         <h6 className="text-xl font-semibold capitalize">{props.Metric}</h6>
         <p>{props.Recommendation}</p>
       </div>
@@ -51,11 +55,12 @@ export const MetricScore = (
     };
   }
 ) => {
+  console.log({ metric: props.Metric });
   return (
     <div
       className={twMerge(
         classNames(
-          "w-full text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg",
+          "min-w-[150px] w-[150px] h-[180px] text-white flex flex-col gap-2 py-4 px-2 items-center justify-center text-center rounded-lg shrink-0",
           inter.className,
           metricStyles[props.Metric]?.className ??
             metricStyles.fallback.className
@@ -74,14 +79,17 @@ export const MetricScore = (
           size={props.size?.iconSize ?? 32}
           color="white"
           className={classNames({
-            "rotate-12": props.Metric == "Relevance",
+            "rotate-12": props.Metric == "relevance",
           })}
         />
       </span>
       <h6
-        className={twMerge("text-xl capitalize w-40", props.size?.metricClass)}
+        className={twMerge(
+          "text-xl capitalize w-full px-2 flex justify-center",
+          props.size?.metricClass
+        )}
       >
-        {props.Metric}
+        {props.Metric === "culture_fit" ? "Culture Fit" : props.Metric}
       </h6>
       <p className={twMerge("font-bold text-4xl", props.size?.scoreClass)}>
         {props.Score}%
@@ -96,14 +104,11 @@ export const MetricCardsLoading = () => {
   return (
     <div className="space-y-6 mt-4">
       {metrics.map((metric, i) => (
-        <div
-          key={i}
-          className="bg-white rounded-lg p-5 shadow-sm border border-gray-100 animate-pulse"
-        >
+        <div key={i} className="bg-white rounded-lg shadow-sm animate-pulse">
           <div className="flex items-start gap-4">
             {/* Left side - Metric score card */}
             <div
-              className={`w-40 h-40 rounded-lg flex flex-col items-center justify-center ${
+              className={`w-[150px] h-[180px] rounded-lg flex flex-col items-center justify-center shrink-0 ${
                 metricStyles[metric.toLowerCase()]?.className ??
                 metricStyles.fallback.className
               }`}

@@ -9,21 +9,21 @@ export const screenInterviewQuestions = async (
   jobAd: string
 ) => {
   const formData = new FormData();
-  
+
   // Append files if they exist
   if (files.length > 0) {
     files.forEach((file) => {
-      formData.append("files", file);
+      formData.append("cv", file);
     });
   }
 
   // Remove any HTML tags from the rich text editor content
-  const cleanScreeningQuestions = screeningQuestions.replace(/<[^>]*>/g, '');
-  const cleanJobAd = jobAd.replace(/<[^>]*>/g, '');
+  const cleanScreeningQuestions = screeningQuestions.replace(/<[^>]*>/g, "");
+  const cleanJobAd = jobAd.replace(/<[^>]*>/g, "");
 
   // Append other data
   formData.append("language", language);
-  formData.append("screening_questions", cleanScreeningQuestions);
+  formData.append("questions", cleanScreeningQuestions);
   formData.append("job_ad", cleanJobAd);
 
   try {
@@ -37,6 +37,7 @@ export const screenInterviewQuestions = async (
       data: formData,
     });
 
+    console.log({ response });
     if (!response.data) {
       throw new Error("No data received from server");
     }
@@ -45,7 +46,8 @@ export const screenInterviewQuestions = async (
   } catch (error: any) {
     if (error.response) {
       // Server responded with an error
-      const errorMessage = error.response.data?.message || "Server error occurred";
+      const errorMessage =
+        error.response.data?.message || "Server error occurred";
       throw new Error(errorMessage);
     } else if (error.request) {
       // Request was made but no response received

@@ -29,17 +29,17 @@ const JobsDropdown = () => {
       icon: "Pro",
     },
     {
-      link: "/dashboard/job-tools/report-generator/",
+      link: "/dashboard/job-tools/report-generator",
       title: "Candidate Report Generator",
       icon: "Pro",
     },
     {
-      link: "/dashboard/job-tools/generate-interview-questions/",
+      link: "/dashboard/job-tools/generate-interview-questions",
       title: "Ai Interview and Screening Generator",
       icon: "Pro",
     },
     {
-      link: "/dashboard/job-tools/screening-question-assistant/",
+      link: "/dashboard/job-tools/screening-question-assistant",
       title: "Ai Screening Questions Assistant",
       icon: "Pro",
     },

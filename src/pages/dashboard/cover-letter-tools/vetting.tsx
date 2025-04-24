@@ -14,6 +14,7 @@ import uploadIcon from "../../../../public/images/icons/upload.png";
 import { MetricCardsLoading } from "../../../components/dashboard/vetting/metric-card";
 import VettingWrapper from "../../../components/dashboard/vetting/vetting-wrapper";
 import { VettingResponse } from "../../../interfaces/vetting.interface";
+import { outfit } from "@/constants/app";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -76,15 +77,17 @@ const Vetting = () => {
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">Cover Letter Vetting</span>
-      <section className="flex h-screen space-x-4">
+      <span className={`${outfit.className} font-bold text-xl`}>
+        Cover Letter Vetting
+      </span>
+      <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">Cover Letter Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
+              Add your Cover Letter here, you can upload up to 5 files max
             </span>
-            <div className="relative w-full px-4 mt-3 flex flex-col items-start rounded-lg">
+            <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
                 onChange={handleFileChange}
                 name="cv"
@@ -158,20 +161,22 @@ const Vetting = () => {
             )}
           </div>
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job description here</span>
-            <Textarea
-              placeholder="Input Job Description"
-              value={jobDescription}
-              rows={8}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="my-3 bg-white border"
-            />
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Detailed Job Description"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+              />
+            </div>
           </div>
 
+          {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?
+                Want to customize your results?{" "}
                 <span className="text-sm font-medium">
                   &#40;Add up to 20 prompts&#41;
                 </span>
@@ -189,13 +194,16 @@ const Vetting = () => {
             <Input
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
             />
 
             <div>
               {prompts.map((prompt, index) => (
-                <div key={index} className="flex justify-between my-2">
+                <div
+                  key={index}
+                  className="flex justify-between my-2 bg-gray-50 p-2 rounded-lg"
+                >
                   <span>{prompt}</span>
                   <Trash
                     className="cursor-pointer"
@@ -222,12 +230,12 @@ const Vetting = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={files.length === 0}
+                disabled={files.length === 0 || jobDescription === ""}
                 variant="default"
                 onClick={() => {
                   vetClMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-primary min-w-[100px]  text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />

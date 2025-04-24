@@ -10,6 +10,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
+import { outfit } from "@/constants/app";
 
 interface UploadedFile {
   file: File;
@@ -21,6 +22,7 @@ const Summarizer: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<string[]>([]);
+  const [jobDescription, setJobDescription] = useState("");
   const { userData } = useUserStore();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +69,8 @@ const Summarizer: React.FC = () => {
         files,
         language,
         userData?.token as string,
-        prompts
+        prompts,
+        jobDescription
       );
       return response;
     },
@@ -79,15 +82,17 @@ const Summarizer: React.FC = () => {
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">CV Summarizer</span>
-      <section className="flex h-screen space-x-4">
+      <span className={`${outfit.className} font-bold text-xl`}>
+        CV Summarizer
+      </span>
+      <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+            <span className="font-bold">CV Upload</span>
             <span className="font-light text-xs">
-              Add your documents here. You can upload up to 5 files max.
+              Add your CVs here, you can upload up to 5 files max
             </span>
-            <div className="relative w-full px-4 mt-3 justify-between flex flex-col items-start rounded-lg">
+            <div className="relative w-full justify-between flex flex-col items-start rounded-lg">
               <input
                 onChange={handleFileChange}
                 name="cv"
@@ -155,42 +160,56 @@ const Summarizer: React.FC = () => {
             ))}
           </div>
 
+          {/* Job Description Section */}
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Detailed Job Description"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+              />
+            </div>
+          </div>
+
           {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Prompts{" "}
+                Want to customize your results?{" "}
                 <span className="text-sm font-medium">
-                  (Add up to 20 prompts)
+                  &#40;Add up to 20 prompts&#41;
                 </span>
               </span>
-            </div>
-            <div className="border rounded-xl mt-4  h-fit flex items-center pr-4 ">
-              <Input
-                placeholder="Input Prompt"
-                value={value}
-                className="my-3 border-none"
-                onChange={(e) => setValue(e.target.value)}
-              />
               <Plus
                 className="cursor-pointer"
                 onClick={() => {
-                  setPrompts((prevState) => [...prevState, value]);
-                  setValue("");
+                  if (value && prompts.length < 20) {
+                    setPrompts((prev) => [...prev, value]);
+                    setValue("");
+                  }
                 }}
               />
             </div>
+            <Input
+              placeholder="Input Prompt"
+              value={value}
+              className="my-3 bg-[#F8F9FF]"
+              onChange={(e) => setValue(e.target.value)}
+            />
 
             <div>
               {prompts.map((prompt, index) => (
-                <div key={index} className="flex justify-between my-2">
+                <div
+                  key={index}
+                  className="flex justify-between my-2 bg-gray-50 p-2 rounded-lg"
+                >
                   <span>{prompt}</span>
                   <Trash
                     className="cursor-pointer"
                     onClick={() =>
-                      setPrompts((prevState) =>
-                        prevState.filter((_, i) => i !== index)
-                      )
+                      setPrompts((prev) => prev.filter((_, i) => i !== index))
                     }
                     size={20}
                   />
@@ -218,7 +237,7 @@ const Summarizer: React.FC = () => {
                 onClick={() => {
                   summarizeCvMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-primary min-w-[100px]  text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -235,13 +254,14 @@ const Summarizer: React.FC = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] min-h-[200px] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Summary</span>
-              <X onClick={() => null} size={20} />
             </div>
             <div className="flex items-center flex-col justify-center flex-1 h-full">
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : summaries === undefined ? (
-                <div>Your summary will appear here</div>
+                <div className="text-center text-sm text-gray-500 pt-10">
+                  Your summary will appear here
+                </div>
               ) : (
                 summaries?.map(
                   (summary: { summarized_cv: string; name: string }) => (

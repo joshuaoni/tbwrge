@@ -108,7 +108,7 @@ const JobDetails = ({
         </div>
         <div className="w-[217px] h-[37px] gap-[4px] flex flex-col">
           <div className="w-[217px] h-[18px] flex items-center">
-            <p className="font-inter font-medium text-[12px] leading-[15px] tracking-[0%] truncate text-[#333333]">
+            <p className="font-inter font-medium text-[14px] leading-[15px] tracking-[0%] truncate text-[#333333]">
               {title}
             </p>
           </div>
@@ -187,7 +187,7 @@ const formatJobType = (type: string) => {
 const JobType = ({ type }: { type: string }) => {
   return (
     <div className="w-full h-[19px] flex items-center justify-start">
-      <p className="font-inter font-normal text-[16px] leading-[100%] tracking-[5%] text-black">
+      <p className="font-inter font-normal text-[14px] leading-[100%] tracking-[5%] text-black">
         {formatJobType(type)}
       </p>
     </div>

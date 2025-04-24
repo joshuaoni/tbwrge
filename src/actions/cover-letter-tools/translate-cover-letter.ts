@@ -5,7 +5,8 @@ import axios from "axios";
 export const translateCoverLetter = async (
   cv: File[],
   language: string,
-  token: any
+  token: any,
+  jobDescription: string
 ) => {
   let formData = new FormData();
   if (cv) {
@@ -15,6 +16,9 @@ export const translateCoverLetter = async (
     }
   }
   formData.append("language", language);
+  if (jobDescription) {
+    formData.append("text", jobDescription);
+  }
 
   try {
     const options = {

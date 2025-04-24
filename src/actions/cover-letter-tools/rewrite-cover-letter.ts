@@ -6,7 +6,7 @@ import axios from "axios";
 export const rewriteCoverLetter = async (
   cv: File[],
   language: string,
-  prompts: string[],
+  jobDescription: string,
   token: any
 ) => {
   let formData = new FormData();
@@ -17,11 +17,8 @@ export const rewriteCoverLetter = async (
     }
   }
   formData.append("language", language);
-  if (prompts.length !== 0) {
-    let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
-    stringifiedPrompts.forEach((tag: any) => {
-      formData.append("job_ad", tag);
-    });
+  if (jobDescription) {
+    formData.append("job_ad", jobDescription);
   }
 
   try {
@@ -35,6 +32,7 @@ export const rewriteCoverLetter = async (
       data: formData,
     };
     const response = await axios(options);
+    console.log({ response });
     return response.data; // Return only the response data for convenience
   } catch (error: any) {
     // Handle errors and return meaningful information
