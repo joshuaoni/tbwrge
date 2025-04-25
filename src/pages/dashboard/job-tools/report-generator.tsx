@@ -627,17 +627,17 @@ const Generator = () => {
                             </div>
                           </div>
                           {/* <div className="h-8 flex items-center gap-[2px]">
-                            {Array.from({ length: 40 }).map((_, i) => (
-                              <div
-                                key={i}
-                                className="flex-1 bg-gray-300 rounded-sm"
-                                style={{
-                                  height: `${Math.random() * 100}%`,
-                                  minWidth: "2px",
-                                }}
-                              ></div>
-                            ))}
-                          </div> */}
+                        {Array.from({ length: 40 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex-1 bg-gray-300 rounded-sm"
+                            style={{
+                              height: `${Math.random() * 100}%`,
+                              minWidth: "2px",
+                            }}
+                          ></div>
+                        ))}
+                      </div> */}
                         </div>
 
                         {/* Names CV */}

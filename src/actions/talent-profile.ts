@@ -42,6 +42,7 @@ export const getTalentProfile = async (token: string) => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
+    console.log("Talent profile response:", response.data);
     return response.data as TalentProfile;
   } catch (error) {
     console.error("Error fetching talent profile:", error);
