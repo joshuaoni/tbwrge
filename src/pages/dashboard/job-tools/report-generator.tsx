@@ -24,6 +24,7 @@ export interface JobReportGenerator {
   professional_summary: string;
   years_of_experience: number;
   fit_score: string | null;
+  culture_fit_score: string | null;
   skills_summary: string;
   strength: string;
   areas_for_development: string | null;
@@ -272,11 +273,13 @@ const Generator = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 space-y-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Report Generator</span>
-              <X size={20} />
             </div>
             <div className="">
+              <h3 className="text-xl">
+                {isSuccess ? report[0].candidate_name : ""}
+              </h3>
               {isPending ? (
-                <div className="animate-pulse space-y-4">
+                <div className="animate-pulse space-y-4 mt-4">
                   {/* Name skeleton */}
                   <div className="h-6 bg-gray-200 rounded w-1/3"></div>
 
@@ -302,331 +305,329 @@ const Generator = () => {
                   {/* Supporting documents skeleton */}
                   <div className="h-[100px] bg-gray-200 rounded-lg"></div>
                 </div>
-              ) : (
-                <>
-                  <h3 className="text-xl">
-                    {isSuccess && report[0].candidate_name}
-                  </h3>
-                  <div className="flex flex-col space-y-6 h-full mt-4">
-                    <div className="flex space-x-6">
-                      {/* Profile Overview */}
-                      <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
-                        <div className="flex items-start justify-between mb-4">
-                          <h2 className="text-[12px] font-semibold">
-                            Profile Overview
-                          </h2>
-                          <div className="flex flex-col items-center gap-2">
-                            <h2 className="text-[12px] font-semibold">
-                              Fit Score
-                            </h2>
-                            <div className="flex items-center justify-center">
-                              <div className="relative w-16 h-16">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <span className="text-[16px] font-bold text-[#009379]">
-                                    {isSuccess ? report[0].fit_score ?? 0 : 0}%
-                                  </span>
-                                </div>
-                                <svg
-                                  className="w-full h-full"
-                                  viewBox="0 0 36 36"
-                                >
-                                  <path
-                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="#E5E7EB"
-                                    strokeWidth="3"
-                                  />
-                                  <path
-                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                    fill="none"
-                                    stroke="#009379"
-                                    strokeWidth="3"
-                                    strokeDasharray={`${
-                                      isSuccess ? report[0].fit_score ?? 0 : 0
-                                    }, 100`}
-                                    strokeLinecap="round"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          {[
-                            { title: "Email", value_key: "email" },
-                            { title: "Phone", value_key: "phone" },
-                            { title: "DOB", value_key: "date_of_birth" },
-                            { title: "LinkedIn", value_key: "linkedin" },
-                            {
-                              title: "Current Position",
-                              value_key: "current_position",
-                            },
-                            { title: "Company", value_key: "current_company" },
-                            { title: "Nationality", value_key: "nationality" },
-                            {
-                              title: "Location",
-                              value_key: "location",
-                            },
-                          ].map((item, i) => (
-                            <div key={i}>
-                              <div className="flex items-center justify-between">
-                                <p className="text-[10px] text-black">
-                                  {item.title}
-                                </p>
-                                <p className="text-[10px] text-gray-500">
-                                  {isSuccess &&
-                                  report[0][
-                                    item.value_key as keyof JobReportGenerator
-                                  ]
-                                    ? report[0][
-                                        item.value_key as keyof JobReportGenerator
-                                      ]
-                                    : "Not provided"}
-                                </p>
-                              </div>
-                              <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Profile Summary */}
-                      <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
-                        <h2 className="text-[12px] font-semibold mb-4">
-                          Professional Summary
+              ) : isSuccess ? (
+                <div className="flex flex-col space-y-6 h-full mt-4">
+                  <div className="flex space-x-6">
+                    {/* Profile Overview */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
+                      <div className="flex items-start justify-between mb-4">
+                        <h2 className="text-[12px] font-semibold">
+                          Profile Overview
                         </h2>
-                        <p className="text-[10px] text-gray-600 leading-relaxed">
-                          {isSuccess
-                            ? report[0].professional_summary
-                            : "Not available"}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex space-x-6">
-                      {/* AI-Powered Insights */}
-                      <div className="flex w-full gap-6">
-                        <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
-                          <h2 className="text-[12px] font-semibold mb-4">
-                            AI-Powered Insights
+                        <div className="flex flex-col items-center gap-2">
+                          <h2 className="text-[12px] font-semibold">
+                            Fit Score
                           </h2>
-                          <div className="space-y-2">
-                            <div>
-                              <h3 className="text-[10px] font-medium mb-2">
-                                Key Skills
-                              </h3>
-                              <p className="text-[10px] text-gray-600">
-                                {isSuccess
-                                  ? report[0].key_skills
-                                  : "Not available"}
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="text-[10px] font-medium mb-2">
-                                Strengths
-                              </h3>
-                              <p className="text-[10px] text-gray-600">
-                                {isSuccess
-                                  ? report[0].strength
-                                  : "Not available"}
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="text-[10px] font-medium mb-2">
-                                Areas for Development
-                              </h3>
-                              <p className="text-[10px] text-gray-600">
-                                {isSuccess
-                                  ? report[0].areas_for_development
-                                  : "Not available"}
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="text-[10px] font-medium mb-2">
-                                Culture Fit Indicators
-                              </h3>
-                              <p className="text-[10px] text-gray-600">
-                                {isSuccess
-                                  ? report[0].culture_fit
-                                  : "Not available"}
-                              </p>
-                            </div>
-                            <div>
-                              <h3 className="text-[10px] font-medium mb-2">
-                                Languages
-                              </h3>
-                              <p className="text-[10px] text-gray-600">
-                                {isSuccess
-                                  ? report[0].languages
-                                  : "Not available"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Score Cards */}
-                        <div className="w-1/2 grid grid-cols-2 gap-4">
-                          <div className="bg-[#004D40] text-white rounded-lg p-4 flex flex-col items-center">
-                            <div className="rounded-full border border-white/20 p-2 mb-2">
+                          <div className="flex items-center justify-center">
+                            <div className="relative w-16 h-16">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-[16px] font-bold text-[#009379]">
+                                  {isSuccess ? report[0].fit_score ?? 0 : 0}%
+                                </span>
+                              </div>
                               <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                              </svg>
-                            </div>
-                            <span className="text-xs mb-1">Relevance</span>
-                            <span className="text-xl font-semibold">
-                              {isSuccess
-                                ? `${report[0].relevance}%`
-                                : "Not available"}
-                            </span>
-                          </div>
-
-                          <div className="bg-[#00C853] text-white rounded-lg p-4 flex flex-col items-center">
-                            <div className="rounded-full border border-white/20 p-2 mb-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                              </svg>
-                            </div>
-                            <span className="text-xs mb-1">Skills</span>
-                            <span className="text-xl font-semibold">
-                              {isSuccess
-                                ? `${report[0].key_skills}%`
-                                : "Not available"}
-                            </span>
-                          </div>
-
-                          <div className="bg-[#2E7D32] text-white rounded-lg p-4 flex flex-col items-center">
-                            <div className="rounded-full border border-white/20 p-2 mb-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                              </svg>
-                            </div>
-                            <span className="text-xs mb-1">Grammar</span>
-                            <span className="text-xl font-semibold">
-                              {isSuccess
-                                ? `${report[0].grammer}%`
-                                : "Not available"}
-                            </span>
-                          </div>
-
-                          <div className="bg-[#1B5E20] text-white rounded-lg p-4 flex flex-col items-center">
-                            <div className="rounded-full border border-white/20 p-2 mb-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                              </svg>
-                            </div>
-                            <span className="text-xs mb-1">Culture Fit</span>
-                            <span className="text-xl font-semibold">79%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-2 border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] border rounded-xl p-4">
-                      <div className="flex justify-between">
-                        <h6 className="font-bold text-[12px]">
-                          Supporting Documents
-                        </h6>
-                        <a
-                          href="#"
-                          className="font-medium text-[12px] flex items-center gap-1"
-                        >
-                          <svg
-                            width="12"
-                            height="12"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                          Portfolio Link
-                        </a>
-                      </div>
-                      <div className="flex gap-4 mt-4">
-                        {/* Candiate Application voice note */}
-                        <div className="flex flex-col border border-gray-200 rounded-xl p-3">
-                          <div className="flex items-center gap-1 mb-2">
-                            <div className="w-5 h-8 flex items-center justify-center rounded-lg">
-                              <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-full h-full"
+                                viewBox="0 0 36 36"
                               >
                                 <path
-                                  d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
-                                  stroke="#009379"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
+                                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none"
+                                  stroke="#E5E7EB"
+                                  strokeWidth="3"
                                 />
                                 <path
-                                  d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
+                                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  fill="none"
                                   stroke="#009379"
-                                  strokeWidth="1.5"
+                                  strokeWidth="3"
+                                  strokeDasharray={`${
+                                    isSuccess ? report[0].fit_score ?? 0 : 0
+                                  }, 100`}
                                   strokeLinecap="round"
-                                  strokeLinejoin="round"
                                 />
                               </svg>
                             </div>
-                            <div className="flex-1">
-                              <p className="text-[10px] font-medium">
-                                Candidate Application Voicenote
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        {[
+                          { title: "Email", value_key: "email" },
+                          { title: "Phone", value_key: "phone" },
+                          { title: "DOB", value_key: "date_of_birth" },
+                          { title: "LinkedIn", value_key: "linkedin" },
+                          {
+                            title: "Current Position",
+                            value_key: "current_position",
+                          },
+                          { title: "Company", value_key: "current_company" },
+                          { title: "Nationality", value_key: "nationality" },
+                          {
+                            title: "Location",
+                            value_key: "location",
+                          },
+                        ].map((item, i) => (
+                          <div key={i}>
+                            <div className="flex items-center justify-between">
+                              <p className="text-[10px] text-black">
+                                {item.title}
                               </p>
                               <p className="text-[10px] text-gray-500">
-                                Click to listen
+                                {isSuccess &&
+                                report[0][
+                                  item.value_key as keyof JobReportGenerator
+                                ]
+                                  ? report[0][
+                                      item.value_key as keyof JobReportGenerator
+                                    ]
+                                  : "Not provided"}
                               </p>
                             </div>
+                            <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                           </div>
-                          {/* <div className="h-8 flex items-center gap-[2px]">
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Profile Summary */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
+                      <h2 className="text-[12px] font-semibold mb-4">
+                        Professional Summary
+                      </h2>
+                      <p className="text-[10px] text-gray-600 leading-relaxed">
+                        {isSuccess
+                          ? report[0].professional_summary
+                          : "Not available"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-6">
+                    {/* AI-Powered Insights */}
+                    <div className="flex w-full gap-6">
+                      <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] w-1/2">
+                        <h2 className="text-[12px] font-semibold mb-4">
+                          AI-Powered Insights
+                        </h2>
+                        <div className="space-y-2">
+                          <div>
+                            <h3 className="text-[10px] font-medium mb-2">
+                              Key Skills
+                            </h3>
+                            <p className="text-[10px] text-gray-600">
+                              {isSuccess
+                                ? report[0].key_skills
+                                : "Not available"}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-[10px] font-medium mb-2">
+                              Strengths
+                            </h3>
+                            <p className="text-[10px] text-gray-600">
+                              {isSuccess ? report[0].strength : "Not available"}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-[10px] font-medium mb-2">
+                              Areas for Development
+                            </h3>
+                            <p className="text-[10px] text-gray-600">
+                              {isSuccess
+                                ? report[0].areas_for_development
+                                : "Not available"}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-[10px] font-medium mb-2">
+                              Culture Fit Indicators
+                            </h3>
+                            <p className="text-[10px] text-gray-600">
+                              {isSuccess
+                                ? report[0].culture_fit
+                                : "Not available"}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-[10px] font-medium mb-2">
+                              Languages
+                            </h3>
+                            <p className="text-[10px] text-gray-600">
+                              {isSuccess
+                                ? report[0].languages
+                                : "Not available"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Score Cards */}
+                      <div className="w-1/2 grid grid-cols-2 gap-4">
+                        <div className="bg-[#004D40] text-white rounded-lg p-4 flex flex-col items-center">
+                          <div className="rounded-full border border-white/20 p-2 mb-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                              <circle cx="9" cy="7" r="4"></circle>
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                          </div>
+                          <span className="text-xs mb-1">Relevance</span>
+                          <span className="text-xl font-semibold">
+                            {isSuccess
+                              ? `${report[0].relevance}%`
+                              : "Not available"}
+                          </span>
+                        </div>
+
+                        <div className="bg-[#00C853] text-white rounded-lg p-4 flex flex-col items-center">
+                          <div className="rounded-full border border-white/20 p-2 mb-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                          </div>
+                          <span className="text-xs mb-1">Skills</span>
+                          <span className="text-xl font-semibold">
+                            {isSuccess
+                              ? `${report[0].key_skills}%`
+                              : "Not available"}
+                          </span>
+                        </div>
+
+                        <div className="bg-[#2E7D32] text-white rounded-lg p-4 flex flex-col items-center">
+                          <div className="rounded-full border border-white/20 p-2 mb-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                          </div>
+                          <span className="text-xs mb-1">Grammar</span>
+                          <span className="text-xl font-semibold">
+                            {isSuccess
+                              ? `${report[0].grammer}%`
+                              : "Not available"}
+                          </span>
+                        </div>
+
+                        <div className="bg-[#1B5E20] text-white rounded-lg p-4 flex flex-col items-center">
+                          <div className="rounded-full border border-white/20 p-2 mb-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                          </div>
+                          <span className="text-xs mb-1">Culture Fit</span>
+                          <span className="text-xl font-semibold">
+                            {isSuccess
+                              ? `${report[0].culture_fit_score}%`
+                              : "Not available"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="col-span-2 border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] border rounded-xl p-4">
+                    <div className="flex justify-between">
+                      <h6 className="font-bold text-[12px]">
+                        Supporting Documents
+                      </h6>
+                      <a
+                        href="#"
+                        className="font-medium text-[12px] flex items-center gap-1"
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        Portfolio Link
+                      </a>
+                    </div>
+                    <div className="flex gap-4 mt-4">
+                      {/* Candiate Application voice note */}
+                      <div className="flex flex-col border border-gray-200 rounded-xl p-3">
+                        <div className="flex items-center gap-1 mb-2">
+                          <div className="w-5 h-8 flex items-center justify-center rounded-lg">
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
+                                stroke="#009379"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
+                                stroke="#009379"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-[10px] font-medium">
+                              Candidate Application Voicenote
+                            </p>
+                            <p className="text-[10px] text-gray-500">
+                              Click to listen
+                            </p>
+                          </div>
+                        </div>
+                        {/* <div className="h-8 flex items-center gap-[2px]">
                         {Array.from({ length: 40 }).map((_, i) => (
                           <div
                             key={i}
@@ -638,120 +639,119 @@ const Generator = () => {
                           ></div>
                         ))}
                       </div> */}
-                        </div>
-
-                        {/* Names CV */}
-                        <a
-                          href="/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M13.75 2.5V5H16.25"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M7.5 10H12.5"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M7.5 12.5H12.5"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[10px] font-medium">Names CV</p>
-                            <p className="text-[10px] text-gray-500">
-                              Click to view
-                            </p>
-                          </div>
-                        </a>
-
-                        {/* Cover Letter */}
-                        <a
-                          href="/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M13.75 2.5V5H16.25"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M7.5 10H12.5"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M7.5 12.5H12.5"
-                                stroke="#FF0000"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[10px] font-medium">
-                              Cover Letter
-                            </p>
-                            <p className="text-[10px] text-gray-500">
-                              Click to view
-                            </p>
-                          </div>
-                        </a>
                       </div>
+
+                      {/* Names CV */}
+                      <a
+                        href="/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M13.75 2.5V5H16.25"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M7.5 10H12.5"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M7.5 12.5H12.5"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[10px] font-medium">Names CV</p>
+                          <p className="text-[10px] text-gray-500">
+                            Click to view
+                          </p>
+                        </div>
+                      </a>
+
+                      {/* Cover Letter */}
+                      <a
+                        href="/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M13.75 2.5V5H16.25"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M7.5 10H12.5"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M7.5 12.5H12.5"
+                              stroke="#FF0000"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[10px] font-medium">
+                            Cover Letter
+                          </p>
+                          <p className="text-[10px] text-gray-500">
+                            Click to view
+                          </p>
+                        </div>
+                      </a>
                     </div>
                   </div>
-                </>
-              )}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

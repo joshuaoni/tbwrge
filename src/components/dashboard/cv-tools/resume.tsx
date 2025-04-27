@@ -54,10 +54,10 @@ const Resume = forwardRef<HTMLDivElement, ResumeProps>(
                     rel="noopener noreferrer"
                     className="hover:underline"
                   >
-                    {contactInfo.linkedin.replace(
+                    {contactInfo.linkedin?.replace(
                       "https://linkedin.com/in/",
                       ""
-                    )}
+                    ) || ""}
                   </a>
                 </div>
                 <div className="flex items-center gap-2">

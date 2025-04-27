@@ -260,7 +260,7 @@ const HeadToHead = () => {
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Head To Head</span>
             </div>
-            <div className="flex flex-col items-center justify-center gap-4 h-full mt-4">
+            <div className="flex flex-col items-center justify-center gap-4  h-full mt-4">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess &&
                 Object.keys(
@@ -298,13 +298,13 @@ const HeadToHead = () => {
                       </span>
                     </div>
 
-                    <div className="flex flex-col gap-6 flex-1">
+                    <div className="flex flex-col gap-2 flex-1">
                       <span className={`${inter.className} text-xl capitalize`}>
                         {item.replaceAll("_", " ")}
                       </span>
                       <div className="flex gap-6">
                         {H2H.candidates_info.map((cand, i) => (
-                          <div key={i} className="space-y-2">
+                          <div key={i} className="">
                             <p className="text-[#747474]">
                               {cand.candidate_name}
                             </p>

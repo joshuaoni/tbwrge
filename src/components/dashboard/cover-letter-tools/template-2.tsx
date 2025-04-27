@@ -18,7 +18,7 @@ const CoverLetterTemplate = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         className="bg-gray-50 border border-gray-200 text-xs flex items-center justify-center"
       >
-        <div className="bg-white p-8 shadow-lg rounded-lg max-w-3xl w-full">
+        <div className="bg-white p-8 rounded-lg max-w-3xl w-full">
           <div className="flex justify-between items-start border-b border-[#16153D] pb-2">
             {/* Left Section */}
             <div>

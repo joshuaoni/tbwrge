@@ -22,6 +22,8 @@ export const generateCandidateReport = async (
     stringifiedPrompts.forEach((tag: any) => {
       formData.append("prompts", tag);
     });
+  } else {
+    formData.append("prompts", "");
   }
   formData.append("language", language);
   formData.append("job_ad", jobAd);

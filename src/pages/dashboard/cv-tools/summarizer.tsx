@@ -255,7 +255,7 @@ const Summarizer: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="font-bold">CV Summary</span>
             </div>
-            <div className="flex items-center flex-col justify-center flex-1 h-full">
+            <div className="flex mt-2 items-center justify-center flex-col flex-1 h-full p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] rounded-2xl">
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : summaries === undefined ? (

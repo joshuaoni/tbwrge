@@ -403,7 +403,7 @@ const Translator = () => {
                     </div>
                     <div
                       ref={template1Ref}
-                      className="bg-white w-full rounded-lg min-h-[500px] overflow-hidden template-container"
+                      className="bg-white w-full rounded-lg overflow-hidden template-container"
                     >
                       <CoverLetterTemplate1 data={translated} />
                     </div>
@@ -432,7 +432,7 @@ const Translator = () => {
                     </div>
                     <div
                       ref={template2Ref}
-                      className="bg-white w-full rounded-lg min-h-[500px] overflow-hidden template-container"
+                      className="bg-white w-full rounded-lg overflow-hidden template-container"
                     >
                       <CoverLetterTemplate data={translated} />
                     </div>
@@ -461,7 +461,7 @@ const Translator = () => {
                     </div>
                     <div
                       ref={template3Ref}
-                      className="bg-white w-full rounded-lg min-h-[500px] overflow-hidden template-container"
+                      className="bg-white w-full rounded-lg overflow-hidden template-container"
                     >
                       <CoverLetterTemplate2 data={translated} />
                     </div>

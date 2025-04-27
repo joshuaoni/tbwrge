@@ -645,7 +645,7 @@ const Generator = () => {
             <div className="h-full">
               {isPending && <Loader2 className="animate-spin" />}
               {isSuccess && (
-                <div className="space-y-6 mt-4 h-[70vh] overflow-y-auto overflow-x-hidden">
+                <div className="space-y-6 mt-4 h-[100vh] overflow-y-auto overflow-x-hidden">
                   {resumeComponents.map((ResumeComponent, index) => {
                     return (
                       <div key={index} className="flex items-start">

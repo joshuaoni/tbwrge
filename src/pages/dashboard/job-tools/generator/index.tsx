@@ -204,9 +204,9 @@ const Generator = () => {
       pdf.text(jobTitle, 105, 15, { align: "center" });
 
       // Add company name
-      if (data?.company_name) {
+      if (data?.company) {
         pdf.setFontSize(12);
-        pdf.text(data.company_name, 105, 22, { align: "center" });
+        pdf.text(data.company, 105, 22, { align: "center" });
       }
 
       // Add date

@@ -338,7 +338,7 @@ const Translator = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={files.length === 0}
+                disabled={files.length === 0 || jobAd === ""}
                 variant="default"
                 onClick={() => {
                   rewriterMutation.mutate();
