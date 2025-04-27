@@ -188,7 +188,10 @@ const index = () => {
     }
   };
   const handleSubmitJobApplication = async () => {
-    const response = await submitJobApplication({
+    if (!id || typeof id !== "string") return;
+    if (!userData?.token) return;
+
+    const response = await submitJobApplication(userData.token, {
       job_id: id,
       email: detail.email,
       name: detail.fullname,
@@ -199,11 +202,12 @@ const index = () => {
       skills: detail.skills,
       cv: detail.cv,
       cover_letter: detail.coverletter,
-      voicenote: audioBlob,
+      voicenote: audioBlob
+        ? new File([audioBlob], "audio.webm", { type: "audio/webm" })
+        : undefined,
       answers: jobDetails?.questions.map(
         (question: any) => detail[question.text]
       ),
-      token: userData?.token,
     });
   };
 
