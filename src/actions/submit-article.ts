@@ -42,7 +42,7 @@ export const submitArticle = async (
   if (data.article_upload)
     formData.append("article_upload", data.article_upload);
 
-  if (data.voicenote) formData.append("voicenote", data.voicenote);
+  // if (data.voicenote) formData.append("voicenote", data.voicenote);
 
   const response = await axios({
     method: "POST",
@@ -52,5 +52,6 @@ export const submitArticle = async (
     },
     data: formData,
   });
+  console.log({ response });
   return response.data;
 };

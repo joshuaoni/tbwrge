@@ -37,7 +37,7 @@ function CreateJobFileGroup({ label, onChange }: FileGroupProps) {
             </div>
           ) : (
             <>
-              <span>Upload Logo</span>
+              <span>{label}</span>
               <Image
                 src="/images/icons/upload.png"
                 alt="upload icon"

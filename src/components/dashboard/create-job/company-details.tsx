@@ -12,6 +12,7 @@ import { DashboardInputGroup, DashboardTextareaGroup } from "../input-group";
 import CreateJobFileGroup from "./file-group";
 import { cn } from "@/lib/utils";
 import { outfit } from "@/constants/app";
+
 function CreateJobCompanyDetails() {
   const ctx = useContext(CreateJobContext);
   const { userData } = useUserStore();
