@@ -83,6 +83,7 @@ export const API_CONFIG = {
   UPDATE_TALENT_PROFILE: `${MAIN_URL}/talent/update-profile/`,
   TALENT_AI_SEARCH: (page: number = 0) =>
     `${MAIN_URL}/talent/ai-search/${page}/`,
+  GET_PROFILE_STATS: `${MAIN_URL}/talent/get-profile-stats/`,
 
   GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
   GET_COMMENTS: (post_id: string) =>

@@ -51,3 +51,47 @@ export const getTalentItem = async (token: string, talent_id: string) => {
   console.log("talent-item", { response });
   return response.data;
 };
+
+interface ProfileStatsRequest {
+  start: string;
+  end: string;
+  token: string;
+}
+
+interface ProfileStatsResponse {
+  search: number;
+  profile_view: number;
+  cv_view: number;
+  cover_letter_view: number;
+  audio_play: number;
+  visibility_score: number;
+  profile_recommendations: string;
+  viewer_position: string[];
+  viewer_location: string[];
+  ai_tool_suggestions: string[];
+}
+
+export const getProfileStats = async (
+  data: ProfileStatsRequest
+): Promise<ProfileStatsResponse> => {
+  console.log({ data });
+  try {
+    const response = await fetch(API_CONFIG.GET_PROFILE_STATS, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${data.token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile stats");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching profile stats:", error);
+    throw error;
+  }
+};

@@ -1,45 +1,16 @@
 import { ArrowLeft, BriefcaseBusiness, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnalyticInfoCard } from "@/components/analytics/analytic-info-card";
 import { outfit } from "@/constants/app";
-
-// Dummy data
-const statsData = {
-  candidateName: "Babalola Emmanuel",
-  searchAppearance: 12,
-  totalProfileViews: 89,
-  totalCVViews: 23,
-  totalCoverLetterViews: 21,
-  totalIntroductionAudioPlays: 10,
-  visibilityScore: 21,
-  viewers: ["HR Manager", "CEO", "CFO"],
-  viewerLocations: ["Barcelona, Spain", "London, UK", "Sao Paolo, Brasil"],
-  aiRecommendations: {
-    keySkills:
-      "High match for skills in data analysis, finance, and experience with large dataset",
-    strengths:
-      "Proficiency in SQL and Python, effective communicator, strong leadership in project settings.",
-    areasForDevelopment:
-      "Proficiency in SQL and Python, effective communicator, strong leadership in project settings.",
-    cultureFitIndicators:
-      "Proficiency in SQL and Python, effective communicator, strong leadership in project settings.",
-    languages: "English, French",
-  },
-  aiTools: [
-    {
-      name: "CV Rewriter",
-      description:
-        "High match for skills in data analysis, finance, and experience",
-    },
-    {
-      name: "CV Rewriter",
-      description:
-        "High match for skills in data analysis, finance, and experience",
-    },
-  ],
-};
+import { useMutation } from "@tanstack/react-query";
+import { getProfileStats } from "@/actions/talent";
+import { toast } from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useRouter } from "next/router";
 
 // Icons as components for better reusability
 const SearchIcon = () => (
@@ -196,7 +167,39 @@ const BookmarkIcon = () => (
 );
 
 export default function TalentPoolStats() {
-  const [dateRange, setDateRange] = useState("22/12/2024 - 22/12/2024");
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    new Date(),
+    new Date(),
+  ]);
+  const [startDate, endDate] = dateRange;
+  const { userData } = useUserStore();
+  const router = useRouter();
+
+  const profileStatsMutation = useMutation({
+    mutationFn: async () => {
+      if (!startDate || !endDate || !userData?.token) return null;
+      return await getProfileStats({
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+        token: userData?.token,
+      });
+    },
+    onError: (error: any) => {
+      if (error.response?.data?.detail) {
+        error.response.data.detail.forEach((err: any) => {
+          toast.error(`${err.loc.join(" ")} ${err.msg}`);
+        });
+      } else {
+        toast.error(error.message || "Failed to fetch profile stats");
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (startDate && endDate && userData?.token) {
+      profileStatsMutation.mutate();
+    }
+  }, [startDate, endDate, userData?.token]);
 
   return (
     <DashboardWrapper>
@@ -209,20 +212,29 @@ export default function TalentPoolStats() {
             <ArrowLeft className="w-4 h-4 text-gray-600" />
           </Link>
           <div className="text-xl flex items-center font-medium ml-2">
-            <h2 className="text-2xl font-semibold">
-              {statsData.candidateName} - Talent Pool Stats
-            </h2>
+            <h2 className="text-2xl font-semibold">Talent Pool Stats</h2>
           </div>
         </div>
 
         <div className="mb-6">
           <p className="text-sm mb-2">Select Date Range</p>
-          <input
-            type="text"
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
-            className="border border-gray-300 rounded p-2 text-sm"
-          />
+          <div className="inline-block">
+            <DatePicker
+              selectsRange={true}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={(update) => {
+                setDateRange(update);
+              }}
+              className="border border-gray-300 rounded p-2 text-sm w-[300px]"
+              dateFormat="MMM d, yyyy"
+              placeholderText="Select date range"
+              isClearable={true}
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-[2fr_1fr] gap-4">
@@ -231,32 +243,32 @@ export default function TalentPoolStats() {
             <div className="grid grid-cols-2 gap-4">
               <AnalyticInfoCard
                 title="Search Appearance"
-                value={statsData.searchAppearance}
+                value={profileStatsMutation.data?.search ?? 0}
                 icon={<BriefcaseBusiness size={20} className="text-primary" />}
               />
               <AnalyticInfoCard
                 title="Total Profile Views"
-                value={statsData.totalProfileViews}
+                value={profileStatsMutation.data?.profile_view ?? 0}
                 icon={<BriefcaseBusiness size={20} className="text-primary" />}
               />
               <AnalyticInfoCard
                 title="Total CV Views"
-                value={statsData.totalCVViews}
+                value={profileStatsMutation.data?.cv_view ?? 0}
                 icon={<BriefcaseBusiness size={20} className="text-primary" />}
               />
               <AnalyticInfoCard
                 title="Total Cover Letter Views"
-                value={statsData.totalCoverLetterViews}
+                value={profileStatsMutation.data?.cover_letter_view ?? 0}
                 icon={<DocumentIcon />}
               />
               <AnalyticInfoCard
                 title="Total Introduction Audio Plays"
-                value={statsData.totalIntroductionAudioPlays}
+                value={profileStatsMutation.data?.audio_play ?? 0}
                 icon={<AudioIcon />}
               />
               <AnalyticInfoCard
                 title="Visibility Score (in %)"
-                value={`${statsData.visibilityScore}%`}
+                value={`${profileStatsMutation.data?.visibility_score ?? 0}%`}
                 icon={<BriefcaseBusiness size={20} className="text-primary" />}
               />
             </div>
@@ -269,11 +281,17 @@ export default function TalentPoolStats() {
                   Who is viewing your profile?
                 </h3>
                 <div className="space-y-3">
-                  {statsData.viewers.map((viewer, index) => (
-                    <div key={index} className="text-sm">
-                      {viewer}
-                    </div>
-                  ))}
+                  {profileStatsMutation.data?.viewer_position.map(
+                    (viewer, index) => (
+                      <div key={index} className="text-sm">
+                        {viewer}
+                      </div>
+                    )
+                  )}
+                  {(!profileStatsMutation.data?.viewer_position ||
+                    profileStatsMutation.data.viewer_position.length === 0) && (
+                    <div className="text-sm text-gray-500">No viewers yet</div>
+                  )}
                 </div>
               </div>
 
@@ -283,11 +301,19 @@ export default function TalentPoolStats() {
                   Where are people viewing your profile from?
                 </h3>
                 <div className="space-y-3">
-                  {statsData.viewerLocations.map((location, index) => (
-                    <div key={index} className="text-sm">
-                      {location}
+                  {profileStatsMutation.data?.viewer_location.map(
+                    (location, index) => (
+                      <div key={index} className="text-sm">
+                        {location}
+                      </div>
+                    )
+                  )}
+                  {(!profileStatsMutation.data?.viewer_location ||
+                    profileStatsMutation.data.viewer_location.length === 0) && (
+                    <div className="text-sm text-gray-500">
+                      No locations yet
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -301,37 +327,10 @@ export default function TalentPoolStats() {
               </h2>
               <div className="space-y-2">
                 <div>
-                  <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                  <h3 className="text-sm font-medium mb-2">Recommendations</h3>
                   <p className="text-sm text-gray-600">
-                    {statsData.aiRecommendations.keySkills}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Strengths</h3>
-                  <p className="text-sm text-gray-600">
-                    {statsData.aiRecommendations.strengths}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">
-                    Areas for Development
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {statsData.aiRecommendations.areasForDevelopment}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">
-                    Culture Fit Indicators
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {statsData.aiRecommendations.cultureFitIndicators}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Languages</h3>
-                  <p className="text-sm text-gray-600">
-                    {statsData.aiRecommendations.languages}
+                    {profileStatsMutation.data?.profile_recommendations ||
+                      "No recommendations available"}
                   </p>
                 </div>
               </div>
@@ -341,17 +340,42 @@ export default function TalentPoolStats() {
             <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <h3 className="font-medium mb-4">AI-Powered Recommended Tools</h3>
               <div className="space-y-4">
-                {statsData.aiTools.map((tool, index) => (
-                  <div key={index}>
-                    <h4 className="text-sm font-medium">{tool.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {tool.description}
-                    </p>
-                    <button className="mt-2 px-3 py-1 bg-[#009379] text-white text-sm rounded-full">
-                      Use Tool
-                    </button>
+                {profileStatsMutation.data?.ai_tool_suggestions.map(
+                  (tool, index) => {
+                    const toolConfig = {
+                      cv: {
+                        name: "CV Rewriter",
+                        path: "/dashboard/cv-tools/rewriter",
+                      },
+                      cover_letter: {
+                        name: "Cover Letter Rewriter",
+                        path: "/dashboard/cover-letter-tools/rewriter",
+                      },
+                    }[tool];
+
+                    if (!toolConfig) return null;
+
+                    return (
+                      <div key={index}>
+                        <h4 className="text-sm font-medium">
+                          {toolConfig.name}
+                        </h4>
+                        <Link href={toolConfig.path}>
+                          <button className="mt-2 px-3 py-1 bg-[#009379] text-white text-sm rounded-full hover:bg-[#009379]/90 transition-colors">
+                            Use Tool
+                          </button>
+                        </Link>
+                      </div>
+                    );
+                  }
+                )}
+                {(!profileStatsMutation.data?.ai_tool_suggestions ||
+                  profileStatsMutation.data.ai_tool_suggestions.length ===
+                    0) && (
+                  <div className="text-sm text-gray-500">
+                    No tool suggestions available
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
