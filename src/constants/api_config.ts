@@ -73,6 +73,11 @@ export const API_CONFIG = {
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
 
+  CREATE_BLOG: `${MAIN_URL}/blog/create-post/`,
+  GET_BLOGS: `${MAIN_URL}/blog/get-posts/`,
+  GET_ONE_BLOG: (post_id: string) => `${MAIN_URL}/blog/get-post/${post_id}/`,
+  UPDATE_BLOG: (post_id: string) => `${MAIN_URL}/blog/update-post/${post_id}/`,
+
   GET_NOTES: (application_id: string) =>
     `${MAIN_URL}/job/get-notes/${application_id}/`,
   CREATE_NOTE: (application_id: string) =>
