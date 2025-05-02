@@ -2,6 +2,19 @@ export const MAIN_URL = "https://api.candivet.com";
 export const CHAT_URL = "https://chats.candivet.com";
 
 export const API_CONFIG = {
+  GET_ADMIN_STATS: `${MAIN_URL}/admin/admin-stats/`,
+  GET_ADMIN_USERS: (search_term: string) =>
+    `${MAIN_URL}/admin/get-users/?search_term=${search_term}`,
+  DELETE_USER_ADMIN: (user_id: string) =>
+    `${MAIN_URL}/admin/delete-users/${user_id}/`,
+  UPDATE_USER_ADMIN: (user_id: string) =>
+    `${MAIN_URL}/admin/update-user/${user_id}/`,
+  GET_TICKETS: `${MAIN_URL}/admin/get-tickets/`,
+  CLOSE_TICKET: (ticket_id: string) =>
+    `${MAIN_URL}/admin/close-ticket/${ticket_id}/`,
+  DELETE_TICKET: (ticket_id: string) =>
+    `${MAIN_URL}/admin/delete-ticket/${ticket_id}/`,
+
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
   VERIFY_EMAIL: `${MAIN_URL}/auth/verify-account/`,
   LOGIN_USER: `${MAIN_URL}/auth/login/`,
@@ -73,10 +86,15 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+
+  MANAGE_CHAT: (feedback_id: string) =>
+    `${CHAT_URL}/chat/manage-chat/${feedback_id}/`,
+  GET_CHATS: `${CHAT_URL}/chat/get-chats/`,
   GET_MESSAGES: (channel_id: string) =>
     `${CHAT_URL}/chat/get-messages/${channel_id}/`,
   CREATE_MESSAGE: (channel_id: string) =>
     `${CHAT_URL}/chat/create-message/${channel_id}/`,
+
   TRANSCRIBE_AUDIO: `${MAIN_URL}/talent/transcribe-audio/`,
   JOIN_TALENT_POOL: `${MAIN_URL}/talent/join-talent-pool/`,
   GET_TALENT_PROFILE: `${MAIN_URL}/talent/get-talent-profile/`,

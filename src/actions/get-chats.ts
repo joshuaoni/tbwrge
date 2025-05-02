@@ -60,7 +60,9 @@ export interface ChatResponse {
   unread: number;
 }
 
-export const getChats = async (token: string): Promise<ChatResponse[]> => {
+export const getTalentChats = async (
+  token: string
+): Promise<ChatResponse[]> => {
   try {
     const response = await axios({
       method: "GET",

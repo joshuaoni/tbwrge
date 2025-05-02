@@ -11,10 +11,11 @@ import { inter } from "@/constants/app";
 import { useRouter } from "next/router";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getTalentChats, ChatResponse } from "@/actions/get-chats";
+import { getAdminChats } from "@/actions/chat";
 import { getMessages, Message as APIMessage } from "@/actions/get-messages";
 import { createMessage } from "@/actions/create-message";
 import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
+import { ChatResponse as ImportedChatResponse } from "@/actions/get-chats";
 
 interface LastMessage {
   type: string;
@@ -25,8 +26,39 @@ interface LastMessage {
   id: string;
 }
 
-interface ExtendedChatResponse extends ChatResponse {
-  chat_status: string | null;
+interface ChatResponse {
+  id: string;
+  reference: string | null;
+  created_at: string;
+  updated_at: string;
+  user: {
+    id: string;
+    reference: string | null;
+    created_at: string;
+    updated_at: string;
+    name: string;
+    email: string;
+    role: string;
+    is_verified: boolean;
+    channel: string;
+    last_name: string | null;
+    country_code: string | null;
+    phone: string | null;
+    profile_picture: string | null;
+    calendly_link: string | null;
+    google_calender_link: string | null;
+    username: string | null;
+    location: string | null;
+    last_login: string;
+  };
+  type: string;
+  category: string;
+  subject: string;
+  details: string;
+  image: string | null;
+  preferred_contact: string;
+  open: boolean;
+  chat_status: string;
   last_message: LastMessage | null;
   unread: number;
 }
@@ -266,11 +298,13 @@ export default function ChatPage() {
   };
 
   // Fetch user's chats
-  const { data: chats, isLoading: isLoadingChats } = useQuery<ChatResponse[]>({
-    queryKey: ["user-chats"],
+  const { data: chats = [], isLoading: isLoadingChats } = useQuery<
+    ChatResponse[]
+  >({
+    queryKey: ["admin-chats"],
     queryFn: async () => {
       if (!userData?.token) return [];
-      return await getTalentChats(userData.token);
+      return await getAdminChats(userData.token);
     },
     enabled: !!userData?.token,
     refetchInterval: 1000, // Refetch every second
@@ -342,11 +376,7 @@ export default function ChatPage() {
   const selectedChat = chats?.find((chat) => chat.id === selectedChatId);
 
   // Get the other user in the chat (not the current user)
-  const otherUser = selectedChat
-    ? selectedChat.user_1.id === userData?.user?.id
-      ? selectedChat.user_2
-      : selectedChat.user_1
-    : null;
+  const otherUser = selectedChat ? selectedChat.user : null;
 
   // Selected chat WebSocket connection
   useEffect(() => {
@@ -424,7 +454,7 @@ export default function ChatPage() {
     console.log("General WebSocket message received:", message);
 
     // Update chat list
-    queryClient.setQueryData<ChatResponse[]>(["user-chats"], (old) => {
+    queryClient.setQueryData<ChatResponse[]>(["admin-chats"], (old) => {
       if (!old) return [];
 
       const updatedChats = old.map((chat) => {
@@ -481,7 +511,7 @@ export default function ChatPage() {
       await queryClient.cancelQueries({
         queryKey: ["chat-messages", selectedChatId],
       });
-      await queryClient.cancelQueries({ queryKey: ["user-chats"] });
+      await queryClient.cancelQueries({ queryKey: ["admin-chats"] });
 
       // Get current query data
       const previousMessages = queryClient.getQueryData<ExtendedMessage[]>([
@@ -489,7 +519,7 @@ export default function ChatPage() {
         selectedChatId,
       ]);
       const previousChats = queryClient.getQueryData<ChatResponse[]>([
-        "user-chats",
+        "admin-chats",
       ]);
 
       // Create optimistic message
@@ -556,7 +586,7 @@ export default function ChatPage() {
         );
         const updatedChats = [updatedChat, ...otherChats];
 
-        queryClient.setQueryData(["user-chats"], updatedChats);
+        queryClient.setQueryData(["admin-chats"], updatedChats);
       }
 
       return { previousMessages, previousChats, optimisticMessage };
@@ -570,7 +600,7 @@ export default function ChatPage() {
       }
       // Revert chat list on error
       if (context?.previousChats) {
-        queryClient.setQueryData(["user-chats"], context.previousChats);
+        queryClient.setQueryData(["admin-chats"], context.previousChats);
       }
       console.error("Failed to send message:", err);
       setIsSending(false);
@@ -590,7 +620,7 @@ export default function ChatPage() {
 
       // Force refetch the chat list
       queryClient.invalidateQueries({
-        queryKey: ["user-chats"],
+        queryKey: ["admin-chats"],
       });
     },
   });
@@ -740,10 +770,7 @@ export default function ChatPage() {
                     return bTime - aTime;
                   })
                   .map((chat) => {
-                    const otherUser =
-                      chat.user_1.id === userData?.user?.id
-                        ? chat.user_2
-                        : chat.user_1;
+                    const otherUser = chat.user;
 
                     return (
                       <li
@@ -754,7 +781,7 @@ export default function ChatPage() {
                         onClick={() => {
                           setSelectedChatId(chat.id);
                           router.push(
-                            `/dashboard/talent-pool/chat?chatId=${chat.id}`,
+                            `/admin/chat?chatId=${chat.id}`,
                             undefined,
                             { shallow: true }
                           );
