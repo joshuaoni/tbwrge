@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { manageChat } from "@/actions/chat";
+import { outfit } from "@/constants/app";
 
 const AdminFeedbackPage = () => {
   const [tab, setTab] = useState("Open Feedbacks");
@@ -79,7 +80,9 @@ const AdminFeedbackPage = () => {
 
   return (
     <AdminDashboardLayout>
-      <section className="w-full flex items-start justify-between">
+      <section
+        className={`${outfit.className} w-full flex items-start justify-between`}
+      >
         <AdminDashboardSearchBox
           placeholder="Search for any feedback"
           onSearch={setSearchTerm}
@@ -114,7 +117,7 @@ const AdminFeedbackPage = () => {
         </div>
       </section>
 
-      <section className="mt-10 space-y-10">
+      <section className={`${outfit.className} mt-10 space-y-10`}>
         <div className="flex items-center gap-6">
           {["Open Feedbacks", "Closed Feedbacks"].map((item, i) => (
             <button
@@ -133,10 +136,24 @@ const AdminFeedbackPage = () => {
           <table className="w-full bg-white border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
-                <th className="py-3 px-6 text-left rounded-tl-xl">Subject</th>
-                <th className="py-3 px-6 text-center">Status</th>
-                <th className="py-3 px-6 text-center">Name & Email</th>
-                <th className="py-3 px-6 text-left rounded-tr-xl">Actions</th>
+                <th
+                  className="py-3 px-6 text-left rounded-tl-xl rounded-bl-xl"
+                  style={{ width: "17.22%" }}
+                >
+                  Subject
+                </th>
+                <th className="py-3 px-6 text-left" style={{ width: "11.11%" }}>
+                  Status
+                </th>
+                <th className="py-3 px-6 text-left" style={{ width: "11.11%" }}>
+                  Name & Email
+                </th>
+                <th
+                  className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl"
+                  style={{ width: "38.33%" }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -154,8 +171,11 @@ const AdminFeedbackPage = () => {
                 </tr>
               ) : (
                 filteredTickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-gray-100">
-                    <td className="py-3 px-6 text-left flex items-center space-x-2">
+                  <tr key={ticket.id} className="hover:bg-gray-100 w-full">
+                    <td
+                      className="py-3 px-6 text-left"
+                      style={{ width: "17.22%" }}
+                    >
                       <div>
                         <p className="font-medium text-sm text-[#333]">
                           {ticket.subject}
@@ -165,7 +185,10 @@ const AdminFeedbackPage = () => {
                         </p>
                       </div>
                     </td>
-                    <td className="py-3 px-6 text-center">
+                    <td
+                      className="py-3 px-6 text-left"
+                      style={{ width: "11.11%" }}
+                    >
                       <span
                         className={`p-1.5 text-xs rounded-md ${
                           ticket.open
@@ -176,7 +199,10 @@ const AdminFeedbackPage = () => {
                         {ticket.open ? "Open" : "Closed"}
                       </span>
                     </td>
-                    <td className="py-3 px-6 text-center flex items-center justify-center space-x-2">
+                    <td
+                      className="py-3 px-6 text-left"
+                      style={{ width: "11.11%" }}
+                    >
                       <div>
                         <p className="font-medium text-sm text-[#333]">
                           {ticket.user?.name}
@@ -186,7 +212,10 @@ const AdminFeedbackPage = () => {
                         </p>
                       </div>
                     </td>
-                    <td className="py-3 px-6 space-x-6">
+                    <td
+                      className="py-3 px-6 space-x-6"
+                      style={{ width: "38.33%" }}
+                    >
                       <button
                         className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold"
                         onClick={() => setTicketToView(ticket)}
@@ -294,7 +323,7 @@ const AdminFeedbackPage = () => {
           }}
         >
           <div className="w-full flex justify-between items-center mb-8">
-            <h2 className="font-bold text-xl">Ticket Details</h2>
+            <h2 className="font-bold text-xl">Feedback Details</h2>
             <button
               className="text-[#16A34A] font-medium text-sm"
               onClick={() => setTicketToView(null)}
@@ -303,7 +332,7 @@ const AdminFeedbackPage = () => {
             </button>
           </div>
           {ticketToView && (
-            <div className="w-full flex flex-col gap-6">
+            <div className="w-full flex flex-col gap-6 p-4">
               <div>
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   User
@@ -369,7 +398,7 @@ const AdminFeedbackPage = () => {
               </div>
             </div>
           )}
-          <div className="w-full flex justify-start">
+          <div className="w-full flex justify-start pl-4">
             <button
               className="mt-10 px-8 py-2 bg-primary text-white rounded-md font-semibold text-base"
               style={{ minWidth: "140px" }}

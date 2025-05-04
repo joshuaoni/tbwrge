@@ -4,12 +4,12 @@ import AdminDashboardSidebar from "./sidebar";
 
 const AdminDashboardLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className="flex w-full">
+    <div className="flex">
       <AdminDashboardSidebar />
-      <div className="overflow-y-scroll w-10/12">
+      <main className="flex-1 ml-[300px]">
         <AdmindashboardHeader />
         <div className="p-6">{children}</div>
-      </div>
+      </main>
     </div>
   );
 };

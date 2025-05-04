@@ -2,12 +2,17 @@ import AdminDashboardLayout from "@/components/admin/layout";
 import {
   FeedbackSupportFileGroup,
   FeedbackSupportInputGroup,
-  FeedbackSupportTextareaGroup,
 } from "@/components/dashboard/feedback-support/input-group";
 import SubmitArticleFileGroup from "@/components/dashboard/submit-article/file-group";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getBlogs, createBlog, updateBlog, getBlogItem } from "@/actions/blog";
+import {
+  getBlogs,
+  createBlog,
+  updateBlog,
+  getBlogItem,
+  deleteBlog,
+} from "@/actions/blog";
 import { useUserStore } from "@/hooks/use-user-store";
 import { BlogItem } from "@/actions/blog";
 import { useState } from "react";
@@ -21,6 +26,85 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+import "@/styles/quillOverrides.css";
+import { outfit } from "@/constants/app";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
+
+const quillStyles = `
+  .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-container.ql-snow {
+    border: none;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-editor {
+    background-color: #F9FAFB;
+    font-family: 'Outfit', sans-serif;
+    min-height: 200px;
+  }
+
+  .ql-editor.ql-blank::before {
+    font-style: normal;
+    font-family: 'Outfit', sans-serif;
+    color: #9CA3AF;
+    font-size: 14px;
+    position: absolute;
+    content: 'Write your article content here...';
+    pointer-events: none;
+  }
+
+  .ql-toolbar button {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ql-editor p,
+  .ql-editor ol,
+  .ql-editor ul,
+  .ql-editor pre,
+  .ql-editor blockquote,
+  .ql-editor h1,
+  .ql-editor h2,
+  .ql-editor h3,
+  .ql-editor h4,
+  .ql-editor h5,
+  .ql-editor h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+`;
+
+const modules = {
+  toolbar: [
+    ["bold", "italic", "underline"],
+    [{ size: ["small", false, "large"] }],
+    [{ align: [] }],
+    ["list", "bullet"],
+    ["link", "emoji"],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "bold",
+  "italic",
+  "underline",
+  "size",
+  "align",
+  "list",
+  "bullet",
+  "link",
+  "emoji",
+];
 
 const formatTimeAgo = (dateString: string) => {
   const date = new Date(dateString);
@@ -53,6 +137,7 @@ const PostABlogPage = () => {
   const [image, setImage] = useState<File | null>(null);
   const [blogToApprove, setBlogToApprove] = useState<BlogItem | null>(null);
   const [blogToView, setBlogToView] = useState<BlogItem | null>(null);
+  const [blogToDelete, setBlogToDelete] = useState<BlogItem | null>(null);
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs"],
@@ -94,6 +179,21 @@ const PostABlogPage = () => {
     },
   });
 
+  const deleteBlogMutation = useMutation({
+    mutationFn: async (blogId: string) => {
+      if (!userData?.token) throw new Error("No token available");
+      return await deleteBlog(userData.token, blogId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      setBlogToDelete(null);
+      toast.success("Blog post deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete blog post");
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
@@ -107,26 +207,56 @@ const PostABlogPage = () => {
 
   return (
     <AdminDashboardLayout>
-      <h2 className="font-bold text-xl mb-6">Article Details</h2>
+      <h2 className={`${outfit.className} font-bold text-xl mb-6`}>
+        Article Details
+      </h2>
 
-      <form onSubmit={handleSubmit} className="w-4/5 flex items-start gap-10">
+      <form
+        onSubmit={handleSubmit}
+        className={`${outfit.className} w-full flex items-start gap-16`}
+      >
         <div className="w-full space-y-6">
-          <FeedbackSupportInputGroup
-            label="Article Title"
-            value={title}
-            onChange={setTitle}
-          />
-          <FeedbackSupportTextareaGroup
-            label="Article Content"
-            value={content}
-            onChange={setContent}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Article Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              placeholder="Enter article title"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Article Content <span className="text-red-500">*</span>
+            </label>
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                modules={modules}
+                formats={formats}
+                className="bg-gray-50"
+                placeholder="Write your article content here..."
+              />
+            </div>
+          </div>
         </div>
         <div className="w-full flex items-center justify-center flex-col gap-20">
-          <FeedbackSupportFileGroup
-            label="Upload Article Image"
-            onChange={(file) => setImage(file)}
-          />
+          <div className="w-full">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Article Image
+            </label>
+            <input
+              type="file"
+              onChange={(e) => setImage(e.target.files?.[0] || null)}
+              accept=".pdf,.doc,.docx"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+            />
+          </div>
           <button
             type="submit"
             disabled={createBlogMutation.isPending || !title || !content}
@@ -137,13 +267,17 @@ const PostABlogPage = () => {
         </div>
       </form>
 
-      <div className="overflow-hidden rounded-xl">
-        <table className="w-full bg-white border-separate border-spacing-0">
+      <div className={`${outfit.className} overflow-hidden rounded-xl`}>
+        <table className="w-full bg-white border-separate border-spacing-0 mt-10">
           <thead>
             <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
-              <th className="py-3 px-6 text-left rounded-tl-xl">User</th>
-              <th className="py-3 px-6 text-center">Author & Email</th>
-              <th className="py-3 px-6 text-left rounded-tr-xl">Actions</th>
+              <th className="py-3 px-6 text-left rounded-tl-xl rounded-bl-xl flex-1">
+                User
+              </th>
+              <th className="py-3 px-6 text-left w-1/5">Author & Email</th>
+              <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl w-2/5">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -155,29 +289,21 @@ const PostABlogPage = () => {
               </tr>
             ) : (
               blogs?.map((blog) => (
-                <tr key={blog.id} className="hover:bg-gray-100">
-                  <td className="py-3 px-6 text-left flex items-center space-x-2">
-                    <Image
-                      src={
-                        blog.user.photo ||
-                        "https://ui-avatars.com/api/?background=random&rounded=true"
-                      }
-                      alt={blog.user.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
+                <tr key={blog.id} className="">
+                  <td className="py-3 px-6 text-left flex items-center space-x-2 flex-1">
                     <div>
                       <p className="font-medium text-sm text-[#333]">
-                        {blog.user.name}
+                        {blog.title}
                       </p>
                       <p className="text-xs text-gray-500">
                         Submitted: {formatTimeAgo(blog.created_at)}
                       </p>
                     </div>
                   </td>
-                  <td className="py-3 px-6 text-center">{blog.user.name}</td>
-                  <td className="py-3 px-6 space-x-6">
+                  <td className="py-3 px-6 text-left w-1/5">
+                    {blog.user.name}
+                  </td>
+                  <td className="py-3 px-6 space-x-6 w-2/5">
                     <button
                       className="bg-primary text-white px-10 py-2 rounded-3xl text-sm font-semibold"
                       onClick={() => setBlogToView(blog)}
@@ -190,7 +316,10 @@ const PostABlogPage = () => {
                     >
                       Approve
                     </button>
-                    <button className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold">
+                    <button
+                      className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                      onClick={() => setBlogToDelete(blog)}
+                    >
                       Delete
                     </button>
                   </td>
@@ -306,6 +435,37 @@ const PostABlogPage = () => {
               disabled={approveBlogMutation.isPending}
             >
               {approveBlogMutation.isPending ? "Approving..." : "Approve"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Blog Confirmation Dialog */}
+      <Dialog open={!!blogToDelete} onOpenChange={() => setBlogToDelete(null)}>
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Delete Blog Post</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this blog post? This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setBlogToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                blogToDelete && deleteBlogMutation.mutate(blogToDelete.id)
+              }
+              disabled={deleteBlogMutation.isPending}
+            >
+              {deleteBlogMutation.isPending ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

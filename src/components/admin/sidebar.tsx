@@ -9,33 +9,41 @@ import DiagramIcon from "../icons/diagram";
 import HealthIcon from "../icons/health";
 import MenuBoardIcon from "../icons/menu-board";
 import MoreIcon from "../icons/more";
+import { UserCircle } from "lucide-react";
+import { useUserStore } from "@/hooks/use-user-store";
+import { outfit } from "@/constants/app";
 
 function AdminDashboardSidebar() {
   const pathname = usePathname();
-
+  const { userData } = useUserStore();
   return (
-    <aside className="bg-[#F5F5F5] w-2/12 pt-6 px-3.5 h-screen">
-      <Link href="/admin" className="flex items-center px-2.5">
-        <Image
-          src="/images/candivet-logo.png"
-          alt="logo"
-          width={50}
-          height={50}
-        />
-        <h1 className="text-3xl font-bold">Candivet</h1>
+    <aside
+      className={`${outfit.className} bg-[#F5F5F5] w-[300px] pt-2 px-3.5 pl-4 h-screen fixed left-0 top-0 overflow-y-auto`}
+    >
+      <Link href="/admin" className="flex ml-4 items-center px-2.5">
+        <div className="flex items-center cursor-pointer justify-center">
+          <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
+            <Image
+              src="/header-final.png"
+              alt=""
+              width={32}
+              height={29.2}
+              className="w-[32px] h-[29.2px] md:w-[32px] md:h-[29.2px]"
+            />
+          </div>
+          <h1
+            className={`${outfit.className} ml-2 text-black text-xl md:text-3xl font-bold`}
+          >
+            Candivet
+          </h1>
+        </div>
       </Link>
 
       <div className="flex items-center justify-center gap-3 mt-12">
-        <Image
-          src="https://ui-avatars.com/api/?background=random&rounded=true"
-          alt="david admin"
-          width={52}
-          height={52}
-          className="rounded-full w-12 h-12"
-        />
+        <UserCircle size={40} className="text-black" />
         <div className="mr-6">
-          <h1 className="text-lg font-bold">David Admin</h1>
-          <p className="text-[#A4A4A4] text-sm">Admin</p>
+          <h1 className="text-lg font-bold">{userData?.user?.name}</h1>
+          <p className="text-[#A4A4A4] text-sm">{userData?.user?.role}</p>
         </div>
         <MoreIcon />
       </div>
@@ -56,7 +64,7 @@ function AdminDashboardSidebar() {
             <Link
               href={item.path}
               className={classNames(
-                "flex relative items-center w-full transition-all pl-6 gap-x-4 mb-3 cursor-pointer",
+                "flex relative items-center w-full transition-all pl-8 gap-x-4 mb-3 cursor-pointer",
                 "before:h-9 before:w-[6px] before:absolute before:-left-[1px] before:rounded-r",
                 {
                   "before:bg-white": item.path === pathname,

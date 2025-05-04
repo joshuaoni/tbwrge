@@ -24,6 +24,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import {
+  UserCircle,
+  FileText,
+  DollarSign,
+  MessageSquare,
+  ThumbsUp,
+  TrendingDown,
+} from "lucide-react";
 
 const initialEditState = {
   name: "",
@@ -35,6 +43,29 @@ const initialEditState = {
   google_calender_link: "",
   username: "",
   location: "",
+};
+
+const formatTimeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  if (diffInSeconds < 60) {
+    return "just now";
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes}m ago`;
+  } else if (diffInHours < 24) {
+    return `${diffInHours}h ago`;
+  } else {
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  }
 };
 
 const AdminDashboardPage = () => {
@@ -137,23 +168,37 @@ const AdminDashboardPage = () => {
   };
 
   const statBoxes = [
-    { title: "Total Users", value: stats?.users ?? 0 },
-    { title: "Total Documents", value: stats?.docs ?? 0 },
-    { title: "Open Support", value: stats?.open_support ?? 0 },
-    { title: "Open Feedback", value: stats?.open_feedback ?? 0 },
-    { title: "Churn Rate", value: `${stats?.churn ?? 0}%` },
-    { title: "Revenue", value: `$${stats?.revenue ?? 0}` },
+    {
+      title: "Active Users",
+      value: stats?.users ?? 0,
+      icon: <UserCircle size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Docs Processed",
+      value: stats?.docs ?? 0,
+      icon: <FileText size={24} className="text-primary" />,
+    },
+    {
+      title: "Monthly Revenue",
+      value: `$${stats?.revenue ?? 0}`,
+      icon: <DollarSign size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Support Tickets",
+      value: stats?.support ?? 0,
+      icon: <MessageSquare size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Feedbacks Received",
+      value: stats?.feedback ?? 0,
+      icon: <ThumbsUp size={24} className="text-primary" />,
+    },
+    {
+      title: "Churn Rate",
+      value: `${stats?.churn ?? 0}%`,
+      icon: <TrendingDown size={24} className="text-primary" />,
+    },
   ];
-
-  const formatLastLogin = (date: string | null) => {
-    if (!date) return "Never";
-    const loginDate = new Date(date);
-    const now = new Date();
-    const diffMinutes = Math.floor(
-      (now.getTime() - loginDate.getTime()) / 60000
-    );
-    return `${diffMinutes} mins ago`;
-  };
 
   return (
     <AdminDashboardLayout>
@@ -329,7 +374,7 @@ const AdminDashboardPage = () => {
             }}
           >
             <div className="flex items-end gap-3">
-              <BriefcaseIcon />
+              {stat.icon}
               <span className="text-sm">{stat.title}</span>
             </div>
 
@@ -369,19 +414,26 @@ const AdminDashboardPage = () => {
                 users?.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-100">
                     <td className="py-3 px-6 text-left flex items-center space-x-2">
-                      <Image
-                        src="https://ui-avatars.com/api/?background=random&rounded=true"
-                        alt="user"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
+                      {user.profile_picture ? (
+                        <Image
+                          src={user.profile_picture}
+                          alt="user"
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <UserCircle size={40} className="text-gray-400" />
+                      )}
                       <div>
                         <p className="font-medium text-sm text-[#333]">
                           {user.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Last Login: {formatLastLogin(user.last_login)}
+                          Last Login:{" "}
+                          {user.last_login
+                            ? formatTimeAgo(user.last_login)
+                            : "Never"}
                         </p>
                       </div>
                     </td>
@@ -412,7 +464,7 @@ const AdminDashboardPage = () => {
                         Suspend
                       </button>
                       <button
-                        className="bg-[#FF3737] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                        className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
                         onClick={() => setUserToDelete(user)}
                       >
                         Delete

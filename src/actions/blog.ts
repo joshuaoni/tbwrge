@@ -72,3 +72,12 @@ export const updateBlog = async (
   });
   return response.data;
 };
+
+export const deleteBlog = async (token: string, blog_id: string) => {
+  const response = await axios({
+    method: "DELETE",
+    url: API_CONFIG.DELETE_BLOG(blog_id),
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};

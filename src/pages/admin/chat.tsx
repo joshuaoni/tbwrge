@@ -16,6 +16,7 @@ import { getMessages, Message as APIMessage } from "@/actions/get-messages";
 import { createMessage } from "@/actions/create-message";
 import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
 import { ChatResponse as ImportedChatResponse } from "@/actions/get-chats";
+import AdminDashboardLayout from "@/components/admin/layout";
 
 interface LastMessage {
   type: string;
@@ -648,7 +649,7 @@ export default function ChatPage() {
   }, [userData?.token]);
 
   return (
-    <DashboardWrapper>
+    <AdminDashboardLayout>
       <div className="h-[calc(100vh-150px)] flex overflow-hidden">
         {/* Chat List Sidebar */}
         <div className="w-[360px] bg-white flex flex-col min-h-0">
@@ -1103,6 +1104,6 @@ export default function ChatPage() {
           )}
         </div>
       </div>
-    </DashboardWrapper>
+    </AdminDashboardLayout>
   );
 }
