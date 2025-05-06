@@ -4,7 +4,7 @@ import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
 export interface UpdateProfilePayload {
-  profile_pic?: string | undefined; // URL or base64 string for profile picture
+  profile_pic?: string | File | undefined; // Allow File type for profile picture
   name?: string;
   last_name?: string; // Fixed type from `any` to `string`
   country_code?: string;
@@ -59,20 +59,48 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
   try {
     const options = {
       method: "PUT",
-      url: API_CONFIG.UPDATE_PROFILE, // Replace with your API endpoint
+      url: API_CONFIG.UPDATE_PROFILE,
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
       data: form,
     };
 
+    // Log all form data
+    console.log("=== Form Data ===");
+    console.log("Profile Picture:", form.get("profile_pic"));
+    console.log("Name:", form.get("name"));
+    console.log("Last Name:", form.get("last_name"));
+    console.log("Country Code:", form.get("country_code"));
+    console.log("Old Password:", form.get("old_password"));
+    console.log("New Password:", form.get("new_password"));
+    console.log("Active Team ID:", form.get("active_team_id"));
+    console.log("Calendly Link:", form.get("calendly_link"));
+    console.log("Google Calendar Link:", form.get("google_calendar_link"));
+    console.log("Location:", form.get("location"));
+    console.log("Username:", form.get("username"));
+    console.log("Email:", form.get("email"));
+    console.log("Phone:", form.get("phone"));
+    console.log("=================");
+
     const response = await axios(options);
+    console.log("settings profile response", { response });
     return response.data; // Return only the response data for convenience
   } catch (error: any) {
     // Handle and throw meaningful errors
     if (error.response) {
       console.error("Error Response:", error.response.data);
-      throw new Error(error.response.data.message || "Server error occurred");
+
+      // Handle structured validation errors
+      if (Array.isArray(error.response.data.detail)) {
+        throw new Error(
+          error.response.data.detail[0].msg || "Server error occurred"
+        );
+      }
+
+      // Handle regular string error messages
+      throw new Error(error.response.data.detail || "Server error occurred");
     } else if (error.request) {
       console.error("Error Request:", error.request);
       throw new Error("No response from server. Please try again.");

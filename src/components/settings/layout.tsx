@@ -1,4 +1,5 @@
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { outfit } from "@/constants/app";
 import classNames from "classnames";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
@@ -11,14 +12,16 @@ const DashboardSettingsLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <DashboardWrapper>
-      <header className="flex items-center gap-6 mb-10">
+      <header
+        className={`${outfit.className} flex pl-6 items-center gap-6 mb-10`}
+      >
         {[
           { name: "Profile Settings", route: "/profile" },
           { name: "Notifications Settings", route: "/notifications" },
           { name: "Teams and collaboration", route: "/teams" },
           { name: "Privacy & Security", route: "/privacy" },
           { name: "Billing & Subscription", route: "/billing" },
-          { name: "Integration", route: "/integration" },
+          { name: "Integrations", route: "/integration" },
         ].map((tab, i) => (
           <button
             key={i}

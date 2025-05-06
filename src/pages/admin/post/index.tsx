@@ -27,8 +27,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
-import "@/styles/quillOverrides.css";
 import { outfit } from "@/constants/app";
 
 const ReactQuill = dynamic(() => import("react-quill"), {

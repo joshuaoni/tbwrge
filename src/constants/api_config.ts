@@ -64,6 +64,7 @@ export const API_CONFIG = {
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
   CREATE_SCREENING_QUESTIONS: `${MAIN_URL}/job/create-screening-questions/`,
   UPDATE_PROFILE: `${MAIN_URL}/profile/update-profile/`,
+  GET_PROFILE: `${MAIN_URL}/profile/get-profile/`,
   UPDATE_SETTINGS: `${MAIN_URL}/profile/update-settings/`,
   GET_PROFILE_SETTINGS: `${MAIN_URL}/profile/get-settings/`,
   ADD_TEAM_MEMBER: `${MAIN_URL}/profile/add-team-member/`,
