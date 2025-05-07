@@ -1,4 +1,5 @@
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { outfit } from "@/constants/app";
 import classNames from "classnames";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
@@ -15,7 +16,9 @@ const DashboardFeedbackSupportLayout = ({
 
   return (
     <DashboardWrapper>
-      <header className="flex items-center gap-6 mb-10">
+      <header
+        className={`${outfit.className} pl-6 flex items-center gap-6 mb-10`}
+      >
         {[
           { name: "Feedback", route: "/feedback" },
           { name: "Support", route: "/support" },

@@ -65,8 +65,8 @@ const Index = () => {
         }
       }
     },
-    onError: (err) => {
-      toast.error("Login failed");
+    onError: (err: any) => {
+      toast.error(err.message || "Login failed");
     },
   });
   const signInWithGoogleMutation = useMutation({

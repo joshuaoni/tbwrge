@@ -35,7 +35,7 @@ const DashboardSettingsLayout = ({ children }: { children: ReactNode }) => {
         ))}
       </header>
 
-      <div className="px-6">{children}</div>
+      <div className={`${outfit.className} px-6`}>{children}</div>
     </DashboardWrapper>
   );
 };

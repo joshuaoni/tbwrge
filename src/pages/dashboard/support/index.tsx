@@ -19,6 +19,7 @@ import {
 import DashboardFeedbackSupportLayout from "@/components/dashboard/feedback-support/layout";
 import { useForm } from "@/hooks/form";
 import { useUserStore } from "@/hooks/use-user-store";
+import { outfit } from "@/constants/app";
 
 const DashboardSupportPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,17 +40,17 @@ const DashboardSupportPage = () => {
 
   return (
     <DashboardFeedbackSupportLayout>
-      <p className="text-textgray">
+      <p className={`${outfit.className} text-textgray`}>
         You can contact us today! We are dedicated to solving your problems
       </p>
 
-      <section className="flex gap-10 items-start ">
+      <section className={`${outfit.className} flex gap-10 items-start my-6`}>
         <form
           className="w-full my-6 space-y-7 max-w-md"
           onSubmit={form.handleSubmit}
         >
-          <FeedbackSupportInputGroup label="Name (Optional)" />
-          <FeedbackSupportInputGroup label="Email (Optional)" />
+          <FeedbackSupportInputGroup label="Name" />
+          <FeedbackSupportInputGroup label="Email" />
           <FeedbackSupportSelectGroup
             title="Support Category"
             defaultValue="General Inquiry"
@@ -71,11 +72,23 @@ const DashboardSupportPage = () => {
             value={form.formData.details}
             onChange={(val) => form.setFormField("details", val)}
           />
-          <FeedbackSupportFileGroup
-            label="Attach Screenshot (Optional)"
-            file={form.formData.image}
-            onChange={(file) => form.setFormField("image", file)}
-          />
+          <div>
+            <label className="block text-sm  text-gray-700 mb-1">
+              Attach Screenshot
+            </label>
+            <input
+              type="file"
+              name="image"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  form.setFormField("image", file);
+                }
+              }}
+              accept=".png,.jpg,.jpeg"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+            />
+          </div>
           <FeedbackSupportSelectGroup
             title="Preferred Contact Method"
             defaultValue="Email"
@@ -86,7 +99,7 @@ const DashboardSupportPage = () => {
             onChange={(val) => form.setFormField("preferred_contact", val)}
           />
 
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-center">
             <FeedbackSupportButton
               onClick={() => {
                 form.setFormField("type", "support");

@@ -10,7 +10,7 @@ function FeedbackSupportButton(props: FeedbackSupportButtonProps) {
     <button
       type="submit"
       disabled={props.isLoading}
-      className="bg-lightgreen text-white py-3 px-6 text-xs font-medium rounded-lg w-fit flex items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
+      className="bg-primary text-white py-3 px-6 text-xs font-medium rounded-lg w-fit flex items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
       onClick={props.onClick}
     >
       {props.isLoading && <Loader2 className="animate-spin" />}
