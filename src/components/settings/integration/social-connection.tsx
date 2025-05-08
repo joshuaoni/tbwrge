@@ -20,7 +20,7 @@ function SocialConnection(props: SocialConnectionProps) {
       <span className="pr-10 pl-2 text-[#4A5568] font-medium">
         {props.name}
       </span>
-      <span className="text-[#4A5568] font-medium">
+      {/* <span className="text-[#4A5568] font-medium">
         Status:&nbsp;&nbsp;&nbsp;
       </span>
       <span
@@ -40,7 +40,7 @@ function SocialConnection(props: SocialConnectionProps) {
         )}
       >
         {props.isConnected ? "Disconnect" : "Connect"}
-      </button>
+      </button> */}
     </div>
   );
 }

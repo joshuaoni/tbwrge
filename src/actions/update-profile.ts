@@ -12,7 +12,7 @@ export interface UpdateProfilePayload {
   new_password?: string;
   active_team_id?: string;
   calendly_link?: string;
-  google_calendar_link?: string;
+  google_calender_link?: string;
   location?: string;
   username?: string;
   email?: string;
@@ -30,7 +30,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     new_password,
     active_team_id,
     calendly_link,
-    google_calendar_link,
+    google_calender_link,
     location,
     username,
     email,
@@ -49,12 +49,18 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
   if (new_password) form.append("new_password", new_password);
   if (active_team_id) form.append("active_team_id", active_team_id);
   if (calendly_link) form.append("calendly_link", calendly_link);
-  if (google_calendar_link)
-    form.append("google_calendar_link", google_calendar_link);
+  if (google_calender_link)
+    form.append("google_calender_link", google_calender_link);
   if (location) form.append("location", location);
   if (username) form.append("username", username);
   if (email) form.append("email", email);
   if (phone) form.append("phone", phone);
+
+  console.log(
+    "calendar: ",
+    form.get("google_calender_link"),
+    form.get("calendly_link")
+  );
 
   try {
     const options = {
@@ -77,7 +83,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     console.log("New Password:", form.get("new_password"));
     console.log("Active Team ID:", form.get("active_team_id"));
     console.log("Calendly Link:", form.get("calendly_link"));
-    console.log("Google Calendar Link:", form.get("google_calendar_link"));
+    console.log("Google Calendar Link:", form.get("google_calender_link"));
     console.log("Location:", form.get("location"));
     console.log("Username:", form.get("username"));
     console.log("Email:", form.get("email"));
