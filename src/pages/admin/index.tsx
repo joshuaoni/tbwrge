@@ -32,6 +32,7 @@ import {
   ThumbsUp,
   TrendingDown,
 } from "lucide-react";
+import classNames from "classnames";
 
 const initialEditState = {
   name: "",
@@ -68,6 +69,14 @@ const formatTimeAgo = (dateString: string) => {
   }
 };
 
+// Minimal inline loader
+const Loader = ({ size = 20, className = "" }) => (
+  <span
+    className={`inline-block animate-spin border-2 border-gray-300 border-t-[#2563EB] rounded-full ${className}`}
+    style={{ width: size, height: size, borderTopColor: "#2563EB" }}
+  />
+);
+
 const AdminDashboardPage = () => {
   const { userData } = useUserStore();
   const [searchTerm, setSearchTerm] = useState("");
@@ -76,6 +85,7 @@ const AdminDashboardPage = () => {
   const [editForm, setEditForm] = useState(initialEditState);
   const queryClient = useQueryClient();
   const [userToSuspend, setUserToSuspend] = useState<AdminUser | null>(null);
+  const [activeTab, setActiveTab] = useState("Active Users");
 
   const { data: stats, isLoading: isLoadingStats } = useQuery({
     queryKey: ["adminStats"],
@@ -167,6 +177,13 @@ const AdminDashboardPage = () => {
     setUserToSuspend(user);
   };
 
+  const handleUnsuspend = (user: AdminUser) => {
+    editMutation.mutate({
+      userId: user.id,
+      data: { suspend: false },
+    });
+  };
+
   const statBoxes = [
     {
       title: "Active Users",
@@ -199,6 +216,20 @@ const AdminDashboardPage = () => {
       icon: <TrendingDown size={24} className="text-primary" />,
     },
   ];
+
+  const filteredUsers =
+    users?.filter((user) => {
+      switch (activeTab) {
+        case "Active Users":
+          return !user.suspend && !user.deleted;
+        case "Suspended Users":
+          return user.suspend && !user.deleted;
+        case "Deleted Users":
+          return user.deleted;
+        default:
+          return true;
+      }
+    }) || [];
 
   return (
     <AdminDashboardLayout>
@@ -378,21 +409,38 @@ const AdminDashboardPage = () => {
               <span className="text-sm">{stat.title}</span>
             </div>
 
-            <p className="text-2xl font-bold">
-              {isLoadingStats ? "Loading..." : stat.value}
+            <p className="text-2xl font-bold flex items-center">
+              {isLoadingStats ? (
+                <Loader size={20} className="mr-2" />
+              ) : (
+                stat.value
+              )}
             </p>
           </div>
         ))}
       </section>
 
-      <section className={`${outfit.className} mt-10`}>
-        <div className="flex justify-between items-center my-6">
-          <h3 className="text-xl font-semibold">User Management</h3>
+      <section className={`${outfit.className} mt-10 space-y-10`}>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-6">
+            {["Active Users", "Suspended Users", "Deleted Users"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={classNames("font-medium", {
+                  "text-[#2563EB]": activeTab === tab,
+                })}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
           <AdminDashboardSearchBox
             placeholder="Search for any user"
             onSearch={(term) => setSearchTerm(term)}
           />
         </div>
+
         <div className="overflow-hidden rounded-xl">
           <table className="w-full bg-white border-separate border-spacing-0">
             <thead>
@@ -410,9 +458,20 @@ const AdminDashboardPage = () => {
                     Loading users...
                   </td>
                 </tr>
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center">
+                    No users found in this category.
+                  </td>
+                </tr>
               ) : (
-                users?.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-100">
+                filteredUsers.map((user) => (
+                  <tr
+                    key={user.id}
+                    className={classNames("hover:bg-gray-100", {
+                      "opacity-50": user.deleted,
+                    })}
+                  >
                     <td className="py-3 px-6 text-left flex items-center space-x-2">
                       {user.profile_picture ? (
                         <Image
@@ -420,7 +479,8 @@ const AdminDashboardPage = () => {
                           alt="user"
                           width={40}
                           height={40}
-                          className="rounded-full"
+                          className="rounded-full object-cover"
+                          style={{ width: 40, height: 40 }}
                         />
                       ) : (
                         <UserCircle size={40} className="text-gray-400" />
@@ -450,25 +510,39 @@ const AdminDashboardPage = () => {
                     </td>
                     <td className="py-3 px-6 text-left">{user.email}</td>
                     <td className="py-3 px-6 space-x-6">
-                      <button
-                        className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold"
-                        onClick={() => setUserToEdit(user)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
-                        onClick={() => handleSuspend(user)}
-                        disabled={editMutation.isPending}
-                      >
-                        Suspend
-                      </button>
-                      <button
-                        className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
-                        onClick={() => setUserToDelete(user)}
-                      >
-                        Delete
-                      </button>
+                      {!user.deleted && (
+                        <>
+                          <button
+                            className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setUserToEdit(user)}
+                          >
+                            Edit
+                          </button>
+                          {user.suspend ? (
+                            <button
+                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              onClick={() => handleUnsuspend(user)}
+                              disabled={editMutation.isPending}
+                            >
+                              Unsuspend
+                            </button>
+                          ) : (
+                            <button
+                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              onClick={() => handleSuspend(user)}
+                              disabled={editMutation.isPending}
+                            >
+                              Suspend
+                            </button>
+                          )}
+                          <button
+                            className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setUserToDelete(user)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))

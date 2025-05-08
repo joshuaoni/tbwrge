@@ -14,11 +14,12 @@ export interface AdminStats {
   closed_feedback: number;
 }
 
-export interface AdminUser {
+export type AdminUser = {
   id: string;
   reference: string | null;
   created_at: string;
   updated_at: string;
+  deleted: boolean;
   name: string;
   last_name: string | null;
   profile_picture: string | null;
@@ -34,7 +35,8 @@ export interface AdminUser {
   location: string | null;
   last_login: string | null;
   joined_talent_pool: boolean;
-}
+  suspend: boolean;
+};
 
 export interface UpdateAdminUserRequest {
   name?: string;

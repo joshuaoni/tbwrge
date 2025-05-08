@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { outfit } from "@/constants/app";
+import classNames from "classnames";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -136,6 +137,7 @@ const PostABlogPage = () => {
   const [blogToApprove, setBlogToApprove] = useState<BlogItem | null>(null);
   const [blogToView, setBlogToView] = useState<BlogItem | null>(null);
   const [blogToDelete, setBlogToDelete] = useState<BlogItem | null>(null);
+  const [activeTab, setActiveTab] = useState("Pending Approval");
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs"],
@@ -203,6 +205,18 @@ const PostABlogPage = () => {
     createBlogMutation.mutate(formData);
   };
 
+  const filteredBlogs =
+    blogs?.filter((blog) => {
+      switch (activeTab) {
+        case "Approved":
+          return blog.approved;
+        case "Pending Approval":
+          return !blog.approved;
+        default:
+          return true;
+      }
+    }) || [];
+
   return (
     <AdminDashboardLayout>
       <h2 className={`${outfit.className} font-bold text-xl mb-6`}>
@@ -265,67 +279,91 @@ const PostABlogPage = () => {
         </div>
       </form>
 
-      <div className={`${outfit.className} overflow-hidden rounded-xl`}>
-        <table className="w-full bg-white border-separate border-spacing-0 mt-10">
-          <thead>
-            <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
-              <th className="py-3 px-6 text-left rounded-tl-xl rounded-bl-xl flex-1">
-                User
-              </th>
-              <th className="py-3 px-6 text-left w-1/5">Author & Email</th>
-              <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl w-2/5">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={3} className="py-4 text-center">
-                  Loading...
-                </td>
+      <div className={`${outfit.className} mt-10 space-y-10`}>
+        <div className="flex items-center gap-6">
+          {["Pending Approval", "Approved"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={classNames("font-medium", {
+                "text-primary": activeTab === tab,
+              })}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div className="overflow-hidden rounded-xl">
+          <table className="w-full bg-white border-separate border-spacing-0">
+            <thead>
+              <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
+                <th className="py-3 px-6 text-left rounded-tl-xl rounded-bl-xl flex-1">
+                  User
+                </th>
+                <th className="py-3 px-6 text-left w-1/5">Author & Email</th>
+                <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl w-2/5">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              blogs?.map((blog) => (
-                <tr key={blog.id} className="">
-                  <td className="py-3 px-6 text-left flex items-center space-x-2 flex-1">
-                    <div>
-                      <p className="font-medium text-sm text-[#333]">
-                        {blog.title}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Submitted: {formatTimeAgo(blog.created_at)}
-                      </p>
-                    </div>
-                  </td>
-                  <td className="py-3 px-6 text-left w-1/5">
-                    {blog.user.name}
-                  </td>
-                  <td className="py-3 px-6 space-x-6 w-2/5">
-                    <button
-                      className="bg-primary text-white px-10 py-2 rounded-3xl text-sm font-semibold"
-                      onClick={() => setBlogToView(blog)}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
-                      onClick={() => setBlogToApprove(blog)}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
-                      onClick={() => setBlogToDelete(blog)}
-                    >
-                      Delete
-                    </button>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={3} className="py-4 text-center">
+                    Loading...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : filteredBlogs.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-4 text-center">
+                    No blogs found in this category.
+                  </td>
+                </tr>
+              ) : (
+                filteredBlogs.map((blog) => (
+                  <tr key={blog.id} className="hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left flex items-center space-x-2 flex-1">
+                      <div>
+                        <p className="font-medium text-sm text-[#333]">
+                          {blog.title}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Submitted: {formatTimeAgo(blog.created_at)}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="py-3 px-6 text-left w-1/5">
+                      {blog.user.name}
+                    </td>
+                    <td className="py-3 px-6 space-x-6 w-2/5">
+                      <button
+                        className="bg-primary text-white px-10 py-2 rounded-3xl text-sm font-semibold"
+                        onClick={() => setBlogToView(blog)}
+                      >
+                        View
+                      </button>
+                      {!blog.approved && (
+                        <button
+                          className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                          onClick={() => setBlogToApprove(blog)}
+                        >
+                          Approve
+                        </button>
+                      )}
+                      <button
+                        className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                        onClick={() => setBlogToDelete(blog)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* View Blog Dialog */}

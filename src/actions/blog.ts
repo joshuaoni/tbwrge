@@ -8,19 +8,25 @@ export interface BlogUser {
   company: string | null;
 }
 
-export interface BlogItem {
+export type BlogItem = {
   id: string;
   reference: string | null;
   created_at: string;
   updated_at: string;
-  user: BlogUser;
+  user: {
+    name: string;
+    photo: string | null;
+    job_title: string | null;
+    company: string | null;
+  };
   title: string;
   slug: string;
-  content: string;
-  image: string;
+  content: string | null;
+  image: string | null;
   views: number;
   shares: number;
-}
+  approved: boolean;
+};
 
 export const getBlogs = async (token: string) => {
   const response = await axios({
