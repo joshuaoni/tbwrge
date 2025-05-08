@@ -64,12 +64,6 @@ const LeftSideBar = () => {
       link: "/community",
       active: false,
     },
-    {
-      title: "Training",
-      icon: <BookOpen size={20} />,
-      link: "/training",
-      active: false,
-    },
   ]);
   const [userLeftSideItems, setUserLeftSideItems] = React.useState([
     {
@@ -118,24 +112,34 @@ const LeftSideBar = () => {
         </div>
         {leftSideItems.map((item) => {
           return (
-            <LeftSideBarItem
-              key={item.title}
-              item={item}
-              setLeftSideItems={setLeftSideItems}
-            />
+            <React.Fragment key={item.title}>
+              <LeftSideBarItem
+                item={item}
+                setLeftSideItems={setLeftSideItems}
+              />
+              {item.title === "Dashboard" && (
+                <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+              )}
+            </React.Fragment>
           );
         })}
-        <div className="h-[1px] w-full bg-[#A6CCB8] my-2 mb-8" />
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ml-8 ">
-          <div className="space-y-4">
-            <JobsDropdown />
-            <CoverLetterDropDown />
-            <CvDropDown />
+          <div className="">
+            <div className="py-3">
+              <JobsDropdown />
+            </div>
+            <div className="py-3">
+              <CoverLetterDropDown />
+            </div>
+            <div className="py-3">
+              <CvDropDown />
+            </div>
           </div>
         </div>
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
-          <div className="space-y-2 mb-2 w-full ">
+          <div className="mb-2 w-full ">
             {extras.map((item) => {
               if (item.title === "Logout") {
                 return <LogoutModal />;
@@ -154,7 +158,7 @@ const LeftSideBar = () => {
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
           <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>
-          <div className="space-y-2 mb-24 w-full">
+          <div className="mb-24 w-full">
             {userLeftSideItems.map((item) => {
               if (item.title === "Logout") {
                 return <LogoutModal />;
@@ -199,7 +203,7 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
     <div
       onClick={() => handleClick()}
       className={`flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  ${
-        item.title === "Dashboard" ? "mb-8" : "mb-3"
+        item.title === "Dashboard" ? "mb-2" : "mb-0"
       } cursor-pointer ${
         isActiveRoute
           ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"
