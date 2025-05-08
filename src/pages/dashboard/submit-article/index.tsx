@@ -28,54 +28,6 @@ const ReactQuill = dynamic(() => import("react-quill"), {
   loading: () => <p>Loading Editor...</p>,
 });
 
-// Add custom styles for ReactQuill
-const quillStyles = `
-  .ql-toolbar.ql-snow {
-    border: none;
-    border-bottom: 1px solid #e5e7eb;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-container.ql-snow {
-    border: none;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor {
-    background-color: #F9FAFB;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor.ql-blank::before {
-    font-style: normal;
-    font-family: 'Outfit', sans-serif;
-    color: #9CA3AF;
-    font-size: 14px;
-    position: absolute;
-    content: 'Write article content here...';
-    pointer-events: none;
-  }
-
-  .ql-toolbar button {
-    font-family: 'Outfit', sans-serif;
-  }
-
-  /* Apply Outfit font to all text in the editor */
-  .ql-editor p,
-  .ql-editor ol,
-  .ql-editor ul,
-  .ql-editor pre,
-  .ql-editor blockquote,
-  .ql-editor h1,
-  .ql-editor h2,
-  .ql-editor h3,
-  .ql-editor h4,
-  .ql-editor h5,
-  .ql-editor h6 {
-    font-family: 'Outfit', sans-serif;
-  }
-`;
-
 const modules = {
   toolbar: [
     ["bold", "italic", "underline"],
@@ -145,14 +97,13 @@ const DashboardSubmitArticlePage = () => {
   return (
     <DashboardWrapper>
       <div className={`${outfit.className} bg-white p-6 rounded-lg`}>
-        <style>{quillStyles}</style>
         <h2
           className={classNames(urbanist.className, "text-3xl font-bold mb-6")}
         >
           Submit an Article
         </h2>
 
-        <div className="flex gap-8">
+        <div className={`${outfit.className} flex gap-8`}>
           <section className="w-1/2">
             <h3 className="text-lg font-semibold mb-4">Article Details</h3>
             <div className="space-y-4">

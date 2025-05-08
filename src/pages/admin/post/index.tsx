@@ -35,53 +35,6 @@ const ReactQuill = dynamic(() => import("react-quill"), {
   loading: () => <p>Loading Editor...</p>,
 });
 
-const quillStyles = `
-  .ql-toolbar.ql-snow {
-    border: none;
-    border-bottom: 1px solid #e5e7eb;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-container.ql-snow {
-    border: none;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor {
-    background-color: #F9FAFB;
-    font-family: 'Outfit', sans-serif;
-    min-height: 200px;
-  }
-
-  .ql-editor.ql-blank::before {
-    font-style: normal;
-    font-family: 'Outfit', sans-serif;
-    color: #9CA3AF;
-    font-size: 14px;
-    position: absolute;
-    content: 'Write your article content here...';
-    pointer-events: none;
-  }
-
-  .ql-toolbar button {
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor p,
-  .ql-editor ol,
-  .ql-editor ul,
-  .ql-editor pre,
-  .ql-editor blockquote,
-  .ql-editor h1,
-  .ql-editor h2,
-  .ql-editor h3,
-  .ql-editor h4,
-  .ql-editor h5,
-  .ql-editor h6 {
-    font-family: 'Outfit', sans-serif;
-  }
-`;
-
 const modules = {
   toolbar: [
     ["bold", "italic", "underline"],

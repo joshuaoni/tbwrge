@@ -76,6 +76,7 @@ export const API_CONFIG = {
 
   CREATE_BLOG: `${MAIN_URL}/blog/create-post/`,
   GET_BLOGS: `${MAIN_URL}/blog/get-posts/`,
+  GET_BLOGS_ADMIN: `${MAIN_URL}/blog/get-posts-admin/`,
   GET_ONE_BLOG: (post_id: string) => `${MAIN_URL}/blog/get-post/${post_id}/`,
   UPDATE_BLOG: (post_id: string) => `${MAIN_URL}/blog/update-post/${post_id}/`,
   DELETE_BLOG: (post_id: string) => `${MAIN_URL}/blog/delete-post/${post_id}/`,

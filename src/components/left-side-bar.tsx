@@ -19,6 +19,7 @@ import JobsDropdown from "./jobs-dropdown";
 import LogoutModal from "./logout-modal";
 import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
+import { outfit } from "@/constants/app";
 
 const LeftSideBar = () => {
   const router = useRouter();
@@ -99,7 +100,9 @@ const LeftSideBar = () => {
   ]);
 
   return (
-    <div className="h-screen pt-6 bg-[#F5F5F5] overflow-hidden sidebar">
+    <div
+      className={`${outfit.className} h-screen pt-6 bg-[#F5F5F5] overflow-hidden sidebar`}
+    >
       <div className="w-full h-full pt-4 bg-[#F5F5F5] pl-[16px] pr-[6px] overflow-y-auto sidebar [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F5F5F5] [&::-webkit-scrollbar-thumb]:bg-[#A6CCB8] [&::-webkit-scrollbar-thumb]:rounded-full">
         <div className="flex mb-[36px] items-center ml-8">
           <UserCircle size={40} className="mr-2" />
@@ -202,7 +205,9 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   return (
     <div
       onClick={() => handleClick()}
-      className={`flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  ${
+      className={`${
+        outfit.className
+      } flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  ${
         item.title === "Dashboard" ? "mb-2" : "mb-0"
       } cursor-pointer ${
         isActiveRoute
@@ -218,7 +223,7 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       <div className={`${isActiveRoute ? "text-white" : "text-primary"}`}>
         {item.icon}
       </div>
-      <div className="text-[16px]">{item.title}</div>
+      <div className={`${outfit.className} text-[16px]`}>{item.title}</div>
     </div>
   );
 };

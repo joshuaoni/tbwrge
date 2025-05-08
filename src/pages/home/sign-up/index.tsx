@@ -14,6 +14,7 @@ import GOOGLEICON from "../../../../public/images/icons/google-icon.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -57,7 +58,11 @@ const SignUpPage = () => {
   const registerUserMutation = useMutation({
     mutationFn: async () => await registerUser(data),
     onSuccess: () => {
+      toast.success("Successful. Verify your email");
       router.push("/home/verify-email");
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Registration failed");
     },
   });
 

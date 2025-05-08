@@ -31,7 +31,7 @@ export type BlogItem = {
 export const getBlogs = async (token: string) => {
   const response = await axios({
     method: "POST",
-    url: API_CONFIG.GET_BLOGS,
+    url: API_CONFIG.GET_BLOGS_ADMIN,
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;

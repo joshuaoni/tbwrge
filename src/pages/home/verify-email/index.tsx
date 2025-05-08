@@ -10,6 +10,7 @@ import OR from "../../../../public/images/OR.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -41,7 +42,11 @@ const VerifyEmailPage = () => {
   const verifyEmailMutation = useMutation({
     mutationFn: async () => await verifyEmail(code),
     onSuccess: () => {
+      toast.success("Email verified successfully");
       router.push("/home/sign-in");
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Verification failed");
     },
   });
 
