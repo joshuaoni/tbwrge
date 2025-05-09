@@ -367,9 +367,10 @@ const PostABlogPage = () => {
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   Content
                 </div>
-                <div className="text-sm text-[#222] whitespace-pre-line">
-                  {blogToView.content}
-                </div>
+                <div
+                  className="text-sm text-[#222] whitespace-pre-line"
+                  dangerouslySetInnerHTML={{ __html: blogToView.content || "" }}
+                />
               </div>
               <div className="flex justify-start mt-2">
                 {blogToView.image ? (

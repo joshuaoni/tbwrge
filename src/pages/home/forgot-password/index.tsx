@@ -14,6 +14,7 @@ import { forgotPassword } from "@/actions/forgot-password";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -45,7 +46,11 @@ const ForgotPassword = () => {
   const forgotPasswordMutation = useMutation({
     mutationFn: async () => await forgotPassword(email),
     onSuccess: () => {
+      toast.success("Password reset email sent");
       router.push("/home/reset-password");
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to reset password");
     },
   });
 

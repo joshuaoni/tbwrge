@@ -15,6 +15,7 @@ import { resetPassword } from "@/actions/reset-password";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -51,7 +52,11 @@ const ResetPassword = () => {
         new_password: password,
       }),
     onSuccess: () => {
+      toast.success("Password reset successful");
       router.push("/home/sign-in");
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to reset password");
     },
   });
 

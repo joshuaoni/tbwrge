@@ -41,18 +41,18 @@ export const getBlogsAdmin = async (
   return response.data;
 };
 
-// export const getBlogs = async (
-//   token: string,
-//   filter?: { approved?: boolean }
-// ) => {
-//   const response = await axios({
-//     method: "POST",
-//     url: API_CONFIG.GET_BLOGS,
-//     headers: { Authorization: `Bearer ${token}` },
-//     data: filter,
-//   });
-//   return response.data;
-// };
+export const getBlogs = async (
+  token: string,
+  filter?: { approved?: boolean }
+) => {
+  const response = await axios({
+    method: "POST",
+    url: API_CONFIG.GET_BLOGS,
+    headers: { Authorization: `Bearer ${token}` },
+    data: filter,
+  });
+  return response.data;
+};
 
 export const getBlogItem = async (token: string, blog_id: string) => {
   const response = await axios({

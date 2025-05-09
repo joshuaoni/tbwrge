@@ -5,9 +5,23 @@ import { ChevronLeft, ChevronRight, User2, UserCircle2 } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import { getBlogs } from "@/actions/blog";
+import { useUserStore } from "@/hooks/use-user-store";
+import { BlogItem } from "@/actions/blog";
 
 const BlogPosts = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { userData } = useUserStore();
+
+  const { data: blogs, isLoading } = useQuery<BlogItem[]>({
+    queryKey: ["blogs", { approved: true }],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getBlogs(userData.token, { approved: true });
+    },
+    enabled: !!userData?.token,
+  });
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % 8);
@@ -35,13 +49,15 @@ const BlogPosts = () => {
             className="flex transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
-            {Array(8)
-              .fill(null)
-              .map((_, index) => (
-                <div key={index} className="w-full flex-shrink-0">
-                  <BlogCard />
+            {isLoading ? (
+              <div className="w-full text-center">Loading...</div>
+            ) : (
+              blogs?.map((blog) => (
+                <div key={blog.id} className="w-full flex-shrink-0">
+                  <BlogCard blog={blog} />
                 </div>
-              ))}
+              ))
+            )}
           </div>
         </div>
         <button
@@ -60,16 +76,22 @@ const BlogPosts = () => {
 
       {/* Desktop/Tablet Grid View */}
       <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
+        {isLoading ? (
+          <div className="col-span-4 text-center">Loading...</div>
+        ) : (
+          blogs
+            ?.slice(0, 4)
+            .map((blog) => <BlogCard key={blog.id} blog={blog} />)
+        )}
       </div>
       <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
+        {isLoading ? (
+          <div className="col-span-4 text-center">Loading...</div>
+        ) : (
+          blogs
+            ?.slice(4, 8)
+            .map((blog) => <BlogCard key={blog.id} blog={blog} />)
+        )}
       </div>
 
       <Button className="text-[12px] self-center mt-8 bg-[#009379] py-4 text-white">
@@ -82,7 +104,17 @@ const BlogPosts = () => {
 export const BlogPostsWithPagination = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const { userData } = useUserStore();
   const postsPerPage = 8;
+
+  const { data: blogs, isLoading } = useQuery<BlogItem[]>({
+    queryKey: ["blogs", { approved: true }],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getBlogs(userData.token, { approved: true });
+    },
+    enabled: !!userData?.token,
+  });
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % 8);
@@ -90,6 +122,15 @@ export const BlogPostsWithPagination = () => {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + 8) % 8);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
   return (
@@ -110,13 +151,15 @@ export const BlogPostsWithPagination = () => {
             className="flex transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
-            {Array(8)
-              .fill(null)
-              .map((_, index) => (
-                <div key={index} className="w-full flex-shrink-0">
-                  <BlogCard />
+            {isLoading ? (
+              <div className="w-full text-center">Loading...</div>
+            ) : (
+              blogs?.map((blog) => (
+                <div key={blog.id} className="w-full flex-shrink-0">
+                  <BlogCard blog={blog} />
                 </div>
-              ))}
+              ))
+            )}
           </div>
         </div>
         <button
@@ -134,15 +177,12 @@ export const BlogPostsWithPagination = () => {
       </div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="tatata hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {[1, 2, 3, 4].map((_, index) => (
-          <BlogCard key={index} />
-        ))}
-      </div>
       <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {[1, 2, 3, 4].map((_, index) => (
-          <BlogCard key={index} />
-        ))}
+        {isLoading ? (
+          <div className="col-span-4 text-center">Loading...</div>
+        ) : (
+          blogs?.map((blog) => <BlogCard key={blog.id} blog={blog} />)
+        )}
       </div>
 
       {/* Pagination */}
@@ -153,45 +193,60 @@ export const BlogPostsWithPagination = () => {
   );
 };
 
-export const BlogCard = () => {
+export const BlogCard = ({ blog }: { blog: BlogItem }) => {
   const router = useRouter();
   return (
     <div
-      onClick={() => router.push("/blog/1")}
-      className="flex cursor-pointer flex-col border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full"
+      onClick={() => router.push(`/blog/${blog.id}`)}
+      className="flex flex-col h-[500px] border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full cursor-pointer"
     >
       <div
         className="w-full h-[200px] bg-cover bg-center rounded-t-[20px]"
-        style={{ backgroundImage: "url('/unsplash_Tyg0rVhOTrE.png')" }}
+        style={{
+          backgroundImage: blog.image
+            ? `url(${blog.image})`
+            : "url('/unsplash_Tyg0rVhOTrE.png')",
+        }}
       >
         {/* Content goes here */}
       </div>
 
-      <div className="p-4">
+      <div className="p-4 flex-1">
         <div className="my-2 w-[72px] text-center h-[25px] bg-[#E2D8FD] rounded-[20px]">
           <span>Article</span>
         </div>
 
-        <h1 className="text-xl font-bold">
-          Lobortis egestas odio pharetra enim ut
-        </h1>
-        <p className="text-sm text-[#2D2D2D] mt-2">
-          Fermentum aliquam turpis ultricies semper maecenas habitant gravida
-          dictumst. Tellus congue est morbi nulla integer. Elementum, lorem quis
-          in consequat amet, venenatis.
-        </p>
+        <h1 className="text-xl font-bold">{blog.title}</h1>
+        <div
+          className="text-sm text-[#2D2D2D] mt-2 max-h-32 overflow-hidden relative"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(180deg, #000 60%, transparent 100%)",
+          }}
+          dangerouslySetInnerHTML={{
+            __html: blog.content || "No content available",
+          }}
+        />
       </div>
-      <div className="flex items-center space-x-2 p-4">
+      <div className="flex items-center space-x-2 p-4 mt-auto">
         <div
           className="w-[45px] h-[45px] bg-cover bg-center rounded-full"
-          style={{ backgroundImage: "url('/unsplash_c_GmwfHBDzk.png')" }}
+          style={{
+            backgroundImage: blog.user?.photo
+              ? `url(${blog.user.photo})`
+              : "url('/unsplash_c_GmwfHBDzk.png')",
+          }}
         />
         <div className="flex flex-col">
           <span className="text-sm underline decoration-[#b9b9b9] underline-offset-[5px]">
-            Admin
+            {blog.user?.name || "Anonymous"}
           </span>
           <span className="text-[8px] mt-[2px] text-[#b9b9b9]">
-            March 15th, 2021
+            {new Date(blog.created_at).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
           </span>
         </div>
       </div>
