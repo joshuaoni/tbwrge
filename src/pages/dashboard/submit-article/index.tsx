@@ -65,13 +65,22 @@ const DashboardSubmitArticlePage = () => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
 
+  function isContentEmpty(content: string) {
+    // Remove HTML tags and whitespace
+    return content.replace(/<(.|\n)*?>/g, "").trim() === "";
+  }
+
   const isFormValid = () => {
+    const hasContent = !isContentEmpty(formData.content);
+    const hasUpload = !!formData.article_upload;
+    // Only one of content or upload must be present, but not both
+    const onlyOne = (hasContent || hasUpload) && !(hasContent && hasUpload);
     return (
       tc &&
       formData.name.trim() !== "" &&
       formData.email.trim() !== "" &&
       formData.title.trim() !== "" &&
-      formData.content.trim() !== ""
+      onlyOne
     );
   };
 
@@ -124,7 +133,10 @@ const DashboardSubmitArticlePage = () => {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="block text-sm font-medium text-gray-700">
-                    Article Content <span className="text-red-500">*</span>
+                    Article Content
+                    <span className="text-xs text-gray-400 ml-2">
+                      (Optional if uploading article file. Only one allowed.)
+                    </span>
                   </label>
                   <span className="text-sm text-gray-500">
                     {formData.content.length}/2000
@@ -151,7 +163,7 @@ const DashboardSubmitArticlePage = () => {
               </div>
 
               <ArticleFileGroup
-                label="Upload Article"
+                label="Upload Article (Optional if using content above. Only one allowed.)"
                 onChange={(file) => handleSetFormData("article_upload", file)}
               />
             </div>
