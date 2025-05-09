@@ -7,7 +7,7 @@ import SubmitArticleFileGroup from "@/components/dashboard/submit-article/file-g
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getBlogs,
+  getBlogsAdmin,
   createBlog,
   updateBlog,
   getBlogItem,
@@ -92,11 +92,14 @@ const PostABlogPage = () => {
   const [blogToDelete, setBlogToDelete] = useState<BlogItem | null>(null);
   const [activeTab, setActiveTab] = useState("Pending Approval");
 
+  const approvedFilter =
+    activeTab === "Approved" ? { approved: true } : { approved: false };
+
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
-    queryKey: ["blogs"],
+    queryKey: ["blogs", approvedFilter],
     queryFn: async () => {
       if (!userData?.token) return [];
-      return await getBlogs(userData.token);
+      return await getBlogsAdmin(userData.token, approvedFilter);
     },
     enabled: !!userData?.token,
   });
@@ -158,17 +161,7 @@ const PostABlogPage = () => {
     createBlogMutation.mutate(formData);
   };
 
-  const filteredBlogs =
-    blogs?.filter((blog) => {
-      switch (activeTab) {
-        case "Approved":
-          return blog.approved;
-        case "Pending Approval":
-          return !blog.approved;
-        default:
-          return true;
-      }
-    }) || [];
+  const blogsSafe = blogs ?? [];
 
   return (
     <AdminDashboardLayout>
@@ -267,14 +260,14 @@ const PostABlogPage = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : filteredBlogs.length === 0 ? (
+              ) : blogsSafe.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="py-4 text-center">
                     No blogs found in this category.
                   </td>
                 </tr>
               ) : (
-                filteredBlogs.map((blog) => (
+                blogsSafe.map((blog) => (
                   <tr key={blog.id} className="hover:bg-gray-100">
                     <td className="py-3 px-6 text-left flex items-center space-x-2 flex-1">
                       <div>
@@ -287,7 +280,7 @@ const PostABlogPage = () => {
                       </div>
                     </td>
                     <td className="py-3 px-6 text-left w-1/5">
-                      {blog.user.name}
+                      {blog.user?.name}
                     </td>
                     <td className="py-3 px-6 space-x-6 w-2/5">
                       <button
@@ -347,7 +340,7 @@ const PostABlogPage = () => {
                   Author
                 </div>
                 <div className="font-bold text-base">
-                  {blogToView.user.name}
+                  {blogToView.user?.name}
                 </div>
               </div>
               <div>
