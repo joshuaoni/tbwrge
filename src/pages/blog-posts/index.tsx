@@ -229,14 +229,16 @@ export const BlogCard = ({ blog }: { blog: BlogItem }) => {
         />
       </div>
       <div className="flex items-center space-x-2 p-4 mt-auto">
-        <div
-          className="w-[45px] h-[45px] bg-cover bg-center rounded-full"
-          style={{
-            backgroundImage: blog.user?.photo
-              ? `url(${blog.user.photo})`
-              : "url('/unsplash_c_GmwfHBDzk.png')",
-          }}
-        />
+        <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center">
+          {blog.user?.photo ? (
+            <div
+              className="w-full h-full bg-cover bg-center rounded-full"
+              style={{ backgroundImage: `url(${blog.user.photo})` }}
+            />
+          ) : (
+            <UserCircle2 className="w-8 h-8 text-black" />
+          )}
+        </div>
         <div className="flex flex-col">
           <span className="text-sm underline decoration-[#b9b9b9] underline-offset-[5px]">
             {blog.user?.name || "Anonymous"}

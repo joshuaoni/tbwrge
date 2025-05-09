@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { BlogCard } from "@/pages/blog-posts";
 import LandingFooter from "@/pages/home/components/wrapper/landing-footer";
 import LandingHeader from "@/pages/home/components/wrapper/landing-header";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, UserCircle2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, RefObject, useState } from "react";
@@ -100,14 +100,18 @@ const BlogPostDetail = () => {
                 </div>
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-white">
-                <Image
-                  src={blog.user?.photo || "/unsplash_c_GmwfHBDzk.png"}
-                  alt="Author"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-12 h-12 rounded-full bg-black  flex items-center justify-center">
+                {blog.user?.photo ? (
+                  <Image
+                    src={blog.user.photo}
+                    alt="Author"
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <UserCircle2 className="w-10 h-10 text-white" />
+                )}
               </div>
             )}
             {!isMobile && (
