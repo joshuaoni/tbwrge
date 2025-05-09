@@ -43,7 +43,7 @@ export const getBlogsAdmin = async (
 
 export const getBlogs = async (
   token: string,
-  filter?: { approved?: boolean }
+  filter?: { approved?: boolean; page?: number }
 ) => {
   const response = await axios({
     method: "POST",

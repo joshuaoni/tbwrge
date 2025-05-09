@@ -53,7 +53,7 @@ const BlogPosts = () => {
               <div className="w-full text-center">Loading...</div>
             ) : (
               blogs?.map((blog) => (
-                <div key={blog.id} className="w-full flex-shrink-0">
+                <div key={blog.id} className="w-full h-full flex-shrink-0">
                   <BlogCard blog={blog} />
                 </div>
               ))
@@ -103,15 +103,18 @@ const BlogPosts = () => {
 
 export const BlogPostsWithPagination = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const { userData } = useUserStore();
   const postsPerPage = 8;
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
-    queryKey: ["blogs", { approved: true }],
+    queryKey: ["blogs", { approved: true, page: currentPage }],
     queryFn: async () => {
       if (!userData?.token) return [];
-      return await getBlogs(userData.token, { approved: true });
+      return await getBlogs(userData.token, {
+        approved: true,
+        page: currentPage,
+      });
     },
     enabled: !!userData?.token,
   });
@@ -124,14 +127,13 @@ export const BlogPostsWithPagination = () => {
     setCurrentSlide((prev) => (prev - 1 + 8) % 8);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setCurrentSlide(0); // Reset slide when changing pages
   };
+
+  // Check if there are more items to load
+  const hasMore = blogs ? blogs.length === postsPerPage : false;
 
   return (
     <div
@@ -155,7 +157,7 @@ export const BlogPostsWithPagination = () => {
               <div className="w-full text-center">Loading...</div>
             ) : (
               blogs?.map((blog) => (
-                <div key={blog.id} className="w-full flex-shrink-0">
+                <div key={blog.id} className="w-full h-full flex-shrink-0">
                   <BlogCard blog={blog} />
                 </div>
               ))
@@ -187,7 +189,11 @@ export const BlogPostsWithPagination = () => {
 
       {/* Pagination */}
       <div className="mt-8">
-        <BlogsPagination />
+        <BlogsPagination
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          hasMore={hasMore}
+        />
       </div>
     </div>
   );
@@ -198,24 +204,20 @@ export const BlogCard = ({ blog }: { blog: BlogItem }) => {
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="flex flex-col h-[500px] border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full cursor-pointer"
+      className="flex flex-col h-full border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full cursor-pointer bg-white"
     >
       <div
-        className="w-full h-[200px] bg-cover bg-center rounded-t-[20px]"
+        className="w-full h-[200px] bg-cover bg-center rounded-t-[20px] flex-shrink-0"
         style={{
           backgroundImage: blog.image
             ? `url(${blog.image})`
             : "url('/unsplash_Tyg0rVhOTrE.png')",
         }}
-      >
-        {/* Content goes here */}
-      </div>
-
-      <div className="p-4 flex-1">
-        <div className="my-2 w-[72px] text-center h-[25px] bg-[#E2D8FD] rounded-[20px]">
+      />
+      <div className="p-4 flex-1 flex flex-col">
+        <div className="my-2 w-fit px-4 py-1 text-center bg-[#E2D8FD] rounded-[20px] text-sm font-medium self-start">
           <span>Article</span>
         </div>
-
         <h1 className="text-xl font-bold">{blog.title}</h1>
         <div
           className="text-sm text-[#2D2D2D] mt-2 max-h-32 overflow-hidden relative"
@@ -229,7 +231,7 @@ export const BlogCard = ({ blog }: { blog: BlogItem }) => {
         />
       </div>
       <div className="flex items-center space-x-2 p-4 mt-auto">
-        <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center">
+        <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center bg-gray-100 overflow-hidden">
           {blog.user?.photo ? (
             <div
               className="w-full h-full bg-cover bg-center rounded-full"
