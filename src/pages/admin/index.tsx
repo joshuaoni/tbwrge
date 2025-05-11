@@ -149,10 +149,16 @@ const AdminDashboardPage = () => {
       if (!userData?.token) throw new Error("No token available");
       return updateAdminUser(userData.token, userId, data);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
       setUserToEdit(null);
-      toast.success("User updated successfully");
+      if (variables.data.suspend === true) {
+        toast.success("User suspended successfully");
+      } else if (variables.data.suspend === false) {
+        toast.success("User unsuspended successfully");
+      } else {
+        toast.success("User updated successfully");
+      }
     },
     onError: () => {
       toast.error("Failed to update user");

@@ -82,7 +82,7 @@ const LeftSideBar = () => {
     {
       title: "Settings",
       icon: <Settings size={20} />,
-      link: "/dashboard/settings",
+      link: "/dashboard/settings/profile",
       active: false,
     },
     {
