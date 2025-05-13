@@ -4,6 +4,14 @@ import { twMerge } from "tailwind-merge";
 
 import VisaPaymentLogo from "@/components/icons/visa-logo";
 import { BillingContext } from "@/providers/billing.context";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+} from "@/components/ui/table";
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);
@@ -63,57 +71,100 @@ function BillingManageView() {
         <h3 className="font-medium text-xl">Invoices</h3>
         <span className="text-textgray">Manage invoice and new receipts</span>
 
-        <section
-          aria-roledescription="table"
-          className="w-full p-4 bg-[#F0F0F0] rounded-xl my-4"
-        >
-          <div className="w-full bg-[#D6D6D6] text-textgray font-bold py-3 px-5 rounded-[7px] flex gap-6 items-end">
-            {["DATE", "Amount", "Plan", "Reciept"].map((text, i) => (
-              <span
-                key={i}
-                className={twMerge(
-                  "w-full block text-center",
-                  i == 0 && "text-left"
-                )}
-              >
-                {text}
-              </span>
-            ))}
-          </div>
-
-          <div className="divide-y divide-white">
-            {[
-              {
-                date: "2023-01-01",
-                amount: "$10.00",
-                plan: "Basic",
-                receipt: "12345",
-              },
-              {
-                date: "2023-02-01",
-                amount: "$20.00",
-                plan: "Pro",
-                receipt: "67890",
-              },
-            ].map((invoice, index) => (
-              <div
-                key={index}
-                className="cursor-pointer w-full flex gap-4 px-5 py-3"
-              >
-                <span className="w-full block text-left">{invoice.date}</span>
-                <span className="w-full block text-center">
-                  {invoice.amount}
-                </span>
-                <span className="w-full block text-center">{invoice.plan}</span>
-                <span className="w-full flex items-center justify-center">
-                  <button className="border border-black text-[#87909E] py-0.5 px-1">
-                    Download Reciept
-                  </button>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="bg-[#F0F0F0] rounded-xl p-4 mt-4">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow className="bg-[#D6D6D6] h-[39.292px]">
+                <TableHead className="pl-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-left first:rounded-l-xl last:rounded-r-xl">
+                  DATE
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                  AMOUNT
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                  PLAN
+                </TableHead>
+                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                  RECEIPT
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[
+                {
+                  date: "2023-01-01",
+                  amount: "$10.00",
+                  plan: "Basic",
+                  receipt: "12345",
+                },
+                {
+                  date: "2023-02-01",
+                  amount: "$20.00",
+                  plan: "Pro",
+                  receipt: "67890",
+                },
+              ].map((invoice, index) => (
+                <TableRow
+                  key={index}
+                  className="bg-[#F0F0F0] border-b border-white hover:bg-[#F0F0F0]/80 cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
+                >
+                  <TableCell className="pl-6 py-4 text-sm align-middle text-left">
+                    {invoice.date}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm align-middle text-center">
+                    {invoice.amount}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm align-middle text-center">
+                    {invoice.plan}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm align-middle text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
+                          stroke="#1F2937"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M13.75 2.5V5H16.25"
+                          stroke="#1F2937"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 10H12.5"
+                          stroke="#1F2937"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M7.5 12.5H12.5"
+                          stroke="#1F2937"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <button className="text-gray-600 hover:text-[#009379] hover:underline">
+                        Download Receipt
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </section>
     </div>
   );

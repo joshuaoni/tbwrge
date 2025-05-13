@@ -8,9 +8,11 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 const JobsDropdown = () => {
-  const [showJobsDropdown, setShowJobsDropdown] = React.useState(false);
   const router = useRouter();
   const pathName = router.asPath;
+  const [showJobsDropdown, setShowJobsDropdown] = React.useState(() =>
+    pathName.includes("/dashboard/job-tools")
+  );
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
@@ -65,7 +67,7 @@ const JobsDropdown = () => {
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showJobsDropdown || pathName.includes("/dashboard/job-tools")
+          showJobsDropdown
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}

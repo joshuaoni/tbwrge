@@ -3,10 +3,12 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 const CoverLetterDropDown = () => {
-  const [showCoverLetterDropDown, setShowCoverLetterDropDown] =
-    React.useState(false);
   const router = useRouter();
   const pathName = router.asPath;
+
+  const [showCoverLetterDropDown, setShowCoverLetterDropDown] = React.useState(
+    () => pathName.includes("/dashboard/cover-letter-tools")
+  );
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
@@ -55,8 +57,7 @@ const CoverLetterDropDown = () => {
       </div>
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showCoverLetterDropDown ||
-          pathName.includes("/dashboard/cover-letter-tools")
+          showCoverLetterDropDown
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}

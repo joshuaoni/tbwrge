@@ -20,7 +20,6 @@ const DashboardSettingsLayout = ({ children }: { children: ReactNode }) => {
           { name: "Notifications Settings", route: "/notifications" },
           { name: "Teams and collaboration", route: "/teams" },
           { name: "Privacy & Security", route: "/privacy" },
-          { name: "Billing & Subscription", route: "/billing" },
           { name: "Integrations", route: "/integration" },
         ].map((tab, i) => (
           <button

@@ -71,6 +71,8 @@ export const API_CONFIG = {
   DELETE_TEAM_MEMBER: (member_id: string) =>
     `${MAIN_URL}/profile/remove-member/${member_id}/`,
   GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
+  UPDATE_TEAM_MEMBER: (member_id: string) =>
+    `${MAIN_URL}/profile/update-member/${member_id}/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
 

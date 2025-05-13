@@ -100,10 +100,13 @@ const LandingHeader = ({
             <div className="space-y-1 border-b pb-2">
               {[
                 { title: "Home", link: "/home" },
-                { title: "About", ref: aboutUsSectionRef },
-                { title: "Tools", ref: toolsSectionRef },
-                { title: "Pricing", ref: pricingSectionRef },
-                { title: "Blog", ref: blogSectionRef },
+                { title: "About", link: "/home/about", ref: aboutUsSectionRef },
+                {
+                  title: "Pricing",
+                  link: "/home/pricing",
+                  ref: pricingSectionRef,
+                },
+                { title: "Blog", link: "/home/blog", ref: blogSectionRef },
                 { title: "Community", link: "/community" },
               ].map((item, index) => (
                 <button
@@ -181,11 +184,6 @@ const NavigationHeader = ({
       link: "/home/about",
     },
     {
-      ref: toolsSectionRef,
-      title: "Tools",
-      link: "/home/tools",
-    },
-    {
       ref: pricingSectionRef,
       title: "Pricing",
       link: "/home/pricing",
@@ -218,7 +216,9 @@ const NavigationHeader = ({
 const NavItem = ({ title, link }: any) => {
   const router = useRouter();
   const pathName = usePathname();
-  const path = pathName.split("/")[pathName.split("/").length - 1];
+  const path = (pathName ?? "").split("/")[
+    (pathName ?? "").split("/").length - 1
+  ];
   console.log("path", path, link);
   const isActive = path === link.split("/")[link.split("/").length - 1];
   const onClick = () => {

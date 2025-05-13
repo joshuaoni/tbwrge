@@ -70,7 +70,7 @@ const LeftSideBar = () => {
     {
       title: "Billings & Subscription",
       icon: <CreditCard size={20} />,
-      link: "/dashboard/billings",
+      link: "/dashboard/billing",
       active: false,
     },
     // {

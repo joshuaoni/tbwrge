@@ -3,9 +3,12 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 const CvDropDown = () => {
-  const [showCvDropDown, setShowCvDropDown] = React.useState(false);
   const router = useRouter();
   const pathName = router.asPath;
+
+  const [showCvDropDown, setShowCvDropDown] = React.useState(() =>
+    pathName.includes("/dashboard/cv-tools")
+  );
 
   const [dropDownItems, setDropDownItems] = React.useState([
     {
@@ -60,7 +63,7 @@ const CvDropDown = () => {
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out transform ${
-          showCvDropDown || pathName.includes("/dashboard/cv-tools")
+          showCvDropDown
             ? "max-h-96 opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95"
         }`}
