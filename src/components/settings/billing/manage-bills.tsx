@@ -1,5 +1,5 @@
 import { PlusCircle } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 import VisaPaymentLogo from "@/components/icons/visa-logo";
@@ -12,9 +12,13 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
+import InvoiceTemplate from "./invoice-template";
+import { useDownloadPDF } from "@/hooks/download-pdf";
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);
+  const invoiceRef = useRef<HTMLDivElement>(null);
+  const { downloadPDF } = useDownloadPDF(invoiceRef, "invoice");
 
   return (
     <div>
@@ -155,7 +159,10 @@ function BillingManageView() {
                           strokeLinejoin="round"
                         />
                       </svg>
-                      <button className="text-gray-600 hover:text-[#009379] hover:underline">
+                      <button
+                        className="text-gray-600 hover:text-[#009379] hover:underline"
+                        onClick={downloadPDF}
+                      >
                         Download Receipt
                       </button>
                     </div>
@@ -166,6 +173,11 @@ function BillingManageView() {
           </Table>
         </div>
       </section>
+
+      {/* Hidden invoice for PDF generation */}
+      <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
+        <InvoiceTemplate ref={invoiceRef} />
+      </div>
     </div>
   );
 }
