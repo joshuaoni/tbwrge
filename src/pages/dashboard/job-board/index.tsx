@@ -14,6 +14,7 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
 import Table from "./components/Table/Table";
 import { outfit } from "@/constants/app";
+import Link from "next/link";
 
 const JOB_TYPE = {
   full_time: "Full Time",
@@ -313,6 +314,24 @@ const JobBoardPage = () => {
     <DashboardWrapper searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className={`${outfit.className} min-h-screen bg-white`}>
+        <Link
+          href="/dashboard/applications"
+          className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+        >
+          <span>View Applications</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M1 8H15M15 8L8 1M15 8L8 15" />
+          </svg>
+        </Link>
         <div className="w-full mx-auto">
           {/* Filters */}
           <div className="w-full max-w-screen-lg flex flex-wrap gap-4 mt-4">

@@ -3,6 +3,9 @@ import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { IGetJobOpenRes } from "@/types/jobs";
 import { formatDistanceToNow } from "date-fns";
+import { useEffect, useState } from "react";
+import { getAppliedJobItems } from "@/actions/get-applied-job-items";
+import { useUserStore } from "@/hooks/use-user-store";
 
 interface TableProps {
   data: IGetJobOpenRes[];
@@ -79,12 +82,14 @@ const JobDetails = ({
   title,
   timeAgo,
   companyLogo,
+  applied,
 }: {
   company: string;
   location: string;
   title: string;
   timeAgo: string;
   companyLogo?: string;
+  applied?: boolean;
 }) => {
   return (
     <div className="h-[51px] rounded-[10px] p-[4px] pl-0 gap-[10px] flex items-center">
@@ -108,9 +113,16 @@ const JobDetails = ({
         </div>
         <div className="w-[217px] h-[37px] gap-[4px] flex flex-col">
           <div className="w-[217px] h-[18px] flex items-center">
-            <p className="font-inter font-medium text-[14px] leading-[15px] tracking-[0%] truncate text-[#333333]">
-              {title}
-            </p>
+            <div className="flex items-center gap-2 w-full">
+              <span className="font-inter font-medium text-[14px] leading-[15px] tracking-[0%] truncate text-[#333333]">
+                {title}
+              </span>
+              {applied && (
+                <span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700 font-medium flex-shrink-0">
+                  Applied
+                </span>
+              )}
+            </div>
           </div>
           <div className="w-[217px] h-[18px] flex items-center">
             <p className="font-inter font-normal text-[12px] leading-[15px] tracking-[0%] truncate text-[#8F8F8F]">
@@ -230,6 +242,21 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
   const timeAgo = formatDistanceToNow(new Date(job.created_at), {
     addSuffix: true,
   });
+  const { userData } = useUserStore();
+  const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchApplied = async () => {
+      if (!userData?.token) return;
+      try {
+        const ids = await getAppliedJobItems(userData.token);
+        setAppliedJobIds(ids);
+      } catch {}
+    };
+    fetchApplied();
+  }, [userData?.token]);
+
+  const isApplied = appliedJobIds.includes(job.id);
 
   const handleClick = () => {
     router.push(`/dashboard/job-board/${job.id}`);
@@ -244,7 +271,16 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
     >
       <div className="md:hidden p-4" data-testid="table-row-mobile">
         <div className="space-y-2">
-          <h3 className="font-medium text-base text-black">{job.job_title}</h3>
+          <div className="flex items-center gap-2 w-full">
+            <span className="font-medium text-base text-black truncate">
+              {job.job_title}
+            </span>
+            {isApplied && (
+              <span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700 font-medium flex-shrink-0">
+                Applied
+              </span>
+            )}
+          </div>
           <p className="text-sm text-gray-600">{job.company_name}</p>
           <div className="flex flex-wrap gap-2 text-xs text-gray-500">
             <span>{job.job_location_name}</span>
@@ -284,6 +320,7 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
           title={job.job_title}
           timeAgo={timeAgo}
           companyLogo={job.company_logo}
+          applied={isApplied}
         />
         <JobType type={job.job_type} />
         <JobSkills skills={job.required_skills} />
