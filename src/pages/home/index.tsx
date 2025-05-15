@@ -2,6 +2,7 @@ import BlogPosts from "../blog-posts";
 import AboutUs from "./components/about-us";
 import Community from "./components/community";
 import Expertise from "./components/expertise";
+import JobOpportunities from "./components/job-opportunities";
 import LandingHeroSection from "./components/landing-hero";
 import Partners from "./components/partners";
 import PricingPlans from "./components/pricing-plans";
@@ -13,8 +14,9 @@ const HomePage = () => {
   return (
     <LandingWrapper>
       <LandingHeroSection />
-      <Partners />
+      {/* <Partners /> */}
       <AboutUs />
+      <JobOpportunities />
       <Tools />
       <RightCandidate />
       <PricingPlans />

@@ -1,4 +1,4 @@
-import { RefObject, useState } from "react";
+import { RefObject, useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -6,7 +6,8 @@ import { useRouter } from "next/router";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { poppins } from "@/constants/app";
 import { outfit } from "@/constants/app";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const LandingHeader = ({
   scrollToSection,
@@ -29,7 +30,7 @@ const LandingHeader = ({
 
   return (
     <>
-      <div className="w-full px-4 md:px-16 z-20 fixed flex items-center justify-between bg-white top-0 border py-4">
+      <div className="w-full px-4 md:px-16 z-20 fixed flex items-center text-white justify-between bg-transparent top-0 py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-8">
             <div
@@ -72,7 +73,7 @@ const LandingHeader = ({
               </Button>
               <Button
                 onClick={() => router.push("/home/sign-up")}
-                className="bg-[#009379] text-white"
+                className="bg-transparent hover:bg-white/20 text-white border border-white rounded-full"
               >
                 Sign Up
               </Button>
@@ -173,20 +174,24 @@ const NavigationHeader = ({
   blogSectionRef: RefObject<HTMLDivElement>;
   CommunitySectionRef: RefObject<HTMLDivElement>;
 }) => {
+  const { userData } = useUserStore();
+  const userRole = userData?.user?.role;
+  const [showDropdown, setShowDropdown] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const recruiterMenu = ["Job Posting", "Job Tools", "Job Board"];
+  const jobSeekerMenu = [
+    "Talent Pool",
+    "Job Board",
+    "Job Applications",
+    "CV Tools",
+    "Cover Letter Tools",
+  ];
   const Navs = [
     {
-      title: "Home",
-      link: "/home",
-    },
-    {
-      ref: aboutUsSectionRef,
-      title: "About",
-      link: "/home/about",
-    },
-    {
-      ref: pricingSectionRef,
-      title: "Pricing",
-      link: "/home/pricing",
+      ref: toolsSectionRef,
+      title: "Tools",
+      link: "/home/tools",
+      isTools: true,
     },
     {
       ref: blogSectionRef,
@@ -194,21 +199,79 @@ const NavigationHeader = ({
       link: "/home/blog",
     },
     {
+      ref: pricingSectionRef,
+      title: "Pricing",
+      link: "/home/pricing",
+    },
+    {
       ref: CommunitySectionRef,
       title: "Community",
       link: "/community",
     },
+    // {
+    //   ref: aboutUsSectionRef,
+    //   title: "About",
+    //   link: "/home/about",
+    // },
     {
-      title: "Apply for jobs",
+      title: "Apply for a jobs",
+      link: "home/sign-in",
+    },
+    {
+      title: "Post a job",
+      link: "home/sign-in",
+    },
+    {
+      title: "Join talent pool",
       link: "home/sign-in",
     },
   ];
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setShowDropdown(true);
+  };
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setShowDropdown(false), 120);
+  };
   return (
     <div>
       <div className="flex items-center text-[14px] space-x-12 ml-12">
-        {Navs.map((nav, index) => (
-          <NavItem scrollToSection={scrollToSection} {...nav} key={index} />
-        ))}
+        {Navs.map((nav, index) =>
+          nav.isTools ? (
+            <div
+              key={nav.title}
+              className="relative flex items-center"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <span
+                className={`${outfit.className} text-white cursor-pointer flex items-center`}
+              >
+                {nav.title}
+                <ChevronDown className="ml-1 w-4 h-4" />
+              </span>
+              {showDropdown && (
+                <div className="absolute top-8 left-0 bg-white p-0 rounded shadow-lg z-50 min-w-[180px]">
+                  <div className="rounded p-2 flex flex-col gap-2">
+                    {(userRole === "recruiter"
+                      ? recruiterMenu
+                      : jobSeekerMenu
+                    ).map((item) => (
+                      <div
+                        key={item}
+                        className="text-black text-[15px] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <NavItem scrollToSection={scrollToSection} {...nav} key={index} />
+          )
+        )}
       </div>
     </div>
   );
@@ -231,9 +294,9 @@ const NavItem = ({ title, link }: any) => {
       }}
       className={`${
         isActive
-          ? "text-primary font-bold underline underline-offset-2 transform transition-all"
-          : "text-black"
-      } ${poppins.className} cursor-pointer`}
+          ? "font-bold underline underline-offset-2 transform transition-all"
+          : ""
+      } ${outfit.className}text-white  cursor-pointer`}
     >
       {title}
     </span>

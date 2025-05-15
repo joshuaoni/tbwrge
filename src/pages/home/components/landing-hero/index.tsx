@@ -32,17 +32,14 @@ const LandingHeroSection = () => {
   }, [currentIndex, delay, fullText]);
 
   return (
-    <div className="relative h-fit bg-[#065844] pt-24 md:pt-0 flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16">
-      {/* Top-right circle */}
-      {!isMobile && (
-        <div className="absolute top-[0px] right-[0px] w-[80px] h-[80px] md:w-[120px] md:h-[120px] bg-[#FDB833] border-[15px] md:border-[25px] border-[#009379] rounded-full"></div>
-      )}
-
-      {/* Bottom-left circle */}
-      {!isMobile && (
-        <div className="absolute bottom-[0px] left-[0px] w-[60px] h-[60px] md:w-[80px] md:h-[80px] bg-[#FDB833] border-[15px] md:border-[25px] border-[#FF6250] rounded-full"></div>
-      )}
-
+    <div
+      className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16"
+      style={{
+        backgroundImage: "url(/hero-bg.jpg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {/* Main Content */}
       <div className="flex items-center justify-center w-full">
         <div className="flex flex-col items-start md:items-center justify-center w-full md:w-2/3 md:h-[600px] py-[40px] md:py-0 md:px-4">
@@ -50,25 +47,26 @@ const LandingHeroSection = () => {
             <p
               className={`${poppins.className} text-4xl md:text-[50px] text-start md:text-center leading-[1.3] capitalize`}
             >
-              a simple <span className="text-[#FDB833]">candidate</span>
+              hire <span className="text-[#FDB833]">smarter</span>
               <br />
-              management platform
+              get hired <span className="text-[#FDB833]">faster</span>
             </p>
           </div>
 
           <p
-            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base`}
+            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[20px] !leading-[31px] md:text-base`}
           >
-            A comprehensive suite of tools to simplify the recruitment journey
-            for both recruiters and job seekers. Our AI-powered platform makes
-            every step of the process faster, smarter, and more effective.
+            Candivet is the #1 global AI-powered platform designed to simplify
+            hiring for recruiters and job seekers alike. Whether you're looking
+            to find top talent or land your dream job, we optimize every step of
+            the process.
           </p>
           <div
-            className={`${poppins.className} flex flex-col w-full items-start md:justify-center md:flex-row md:items-center space-y-4 md:space-y-0 mt-6 md:mt-8 md:space-x-4`}
+            className={`${poppins.className} flex flex-col w-full items-start md:justify-center md:flex-row md:items-center space-y-4 md:space-y-0 mt-6 md:mt-16 md:space-x-4`}
           >
-            <Button className="bg-[#009379] text-[12px] px-[40px] py-[25px] md:max-w-40 text-white rounded-[20px]">
+            <Button className="w-[220px] bg-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 text-primary rounded-[20px]">
               <Image
-                src={RocketIcon}
+                src="/RocketLaunch.png"
                 alt=""
                 width={16}
                 height={16}
@@ -76,10 +74,13 @@ const LandingHeroSection = () => {
               />
               Get Started
             </Button>
-            <Button className="bg-white text-[12px] px-[40px] py-[25px] rounded-[20px] md:max-w-40 text-primary">
-              How it works
-            </Button>
           </div>
+          <p
+            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base mt-16`}
+          >
+            Used by 15,000+ Recruiters & over 1 Million Candidates in our Talent
+            Pool
+          </p>
         </div>
       </div>
     </div>

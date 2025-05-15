@@ -21,7 +21,7 @@ const LandingWrapper = ({ children }: { children: React.ReactNode }) => {
         CommunitySectionRef={CommunitySectionRef}
         scrollToSection={scrollToSection}
       />
-      <main className="md:pt-[74px]">{children}</main>
+      <main className="">{children}</main>
       <LandingFooter />
     </div>
   );
