@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { poppins } from "@/constants/app";
 import { outfit } from "@/constants/app";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { useUserStore } from "@/hooks/use-user-store";
 
 const LandingHeader = ({
@@ -27,6 +27,34 @@ const LandingHeader = ({
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { userData } = useUserStore();
+
+  const recruiterMenu = [
+    { title: "Job Posting", path: "/dashboard/job-postings" },
+    { title: "Job Tools", path: "/dashboard/job-tools/generator" },
+    { title: "Job Board", path: "/dashboard/job-board" },
+  ];
+
+  const jobSeekerMenu = [
+    { title: "Talent Pool", path: "/dashboard/talent-pool" },
+    { title: "Job Board", path: "/dashboard/job-board" },
+    { title: "Job Applications", path: "/dashboard/applications" },
+    { title: "CV Tools", path: "/dashboard/cv-tools/summarizer" },
+    {
+      title: "Cover Letter Tools",
+      path: "/dashboard/cover-letter-tools/summarizer",
+    },
+  ];
+
+  const handleMenuClick = (path: string) => {
+    if (!userData?.token) {
+      // If not logged in, redirect to login with the intended destination
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      // If logged in, go directly to the page
+      router.push(path);
+    }
+  };
 
   return (
     <>
@@ -175,17 +203,40 @@ const NavigationHeader = ({
   CommunitySectionRef: RefObject<HTMLDivElement>;
 }) => {
   const { userData } = useUserStore();
+  const router = useRouter();
   const userRole = userData?.user?.role;
+  const isLoggedIn = !!userData?.token;
   const [showDropdown, setShowDropdown] = useState(false);
+  const [hoveredRole, setHoveredRole] = useState<
+    "recruiter" | "job_seeker" | null
+  >(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const recruiterMenu = ["Job Posting", "Job Tools", "Job Board"];
-  const jobSeekerMenu = [
-    "Talent Pool",
-    "Job Board",
-    "Job Applications",
-    "CV Tools",
-    "Cover Letter Tools",
+
+  const recruiterMenu = [
+    { title: "Job Posting", path: "/dashboard/job-postings" },
+    { title: "Job Tools", path: "/dashboard/job-tools/generator" },
+    { title: "Job Board", path: "/dashboard/job-board" },
   ];
+
+  const jobSeekerMenu = [
+    { title: "Talent Pool", path: "/dashboard/talent-pool" },
+    { title: "Job Board", path: "/dashboard/job-board" },
+    { title: "Job Applications", path: "/dashboard/applications" },
+    { title: "CV Tools", path: "/dashboard/cv-tools/summarizer" },
+    {
+      title: "Cover Letter Tools",
+      path: "/dashboard/cover-letter-tools/summarizer",
+    },
+  ];
+
+  const handleMenuClick = (path: string) => {
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   const Navs = [
     {
       ref: toolsSectionRef,
@@ -231,7 +282,10 @@ const NavigationHeader = ({
     setShowDropdown(true);
   };
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setShowDropdown(false), 120);
+    timeoutRef.current = setTimeout(() => {
+      setShowDropdown(false);
+      setHoveredRole(null);
+    }, 120);
   };
   return (
     <div>
@@ -252,19 +306,58 @@ const NavigationHeader = ({
               </span>
               {showDropdown && (
                 <div className="absolute top-8 left-0 bg-white p-0 rounded shadow-lg z-50 min-w-[180px]">
-                  <div className="rounded p-2 flex flex-col gap-2">
-                    {(userRole === "recruiter"
-                      ? recruiterMenu
-                      : jobSeekerMenu
-                    ).map((item) => (
+                  {!isLoggedIn ? (
+                    <div
+                      className="flex flex-col relative bg-white rounded border shadow min-w-[160px]"
+                      onMouseEnter={() => setHoveredRole(hoveredRole)}
+                      onMouseLeave={() => setHoveredRole(null)}
+                    >
                       <div
-                        key={item}
-                        className="text-black text-[15px] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
+                        className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
+                        onMouseEnter={() => setHoveredRole("recruiter")}
                       >
-                        {item}
+                        For Recruiters <ChevronRight className="ml-2 w-4 h-4" />
                       </div>
-                    ))}
-                  </div>
+                      <div
+                        className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
+                        onMouseEnter={() => setHoveredRole("job_seeker")}
+                      >
+                        For Job Seekers{" "}
+                        <ChevronRight className="ml-2 w-4 h-4" />
+                      </div>
+                      {hoveredRole && (
+                        <div className="absolute top-0 left-full bg-white shadow-lg min-w-[180px] rounded border p-1 flex flex-col gap-1 z-50">
+                          {(hoveredRole === "recruiter"
+                            ? recruiterMenu
+                            : jobSeekerMenu
+                          ).map((item) => (
+                            <div
+                              key={item.title}
+                              onClick={() => handleMenuClick(item.path)}
+                              className="text-black text-[15px] px-3 py-2 rounded hover:bg-gray-100 cursor-pointer whitespace-nowrap"
+                            >
+                              {item.title}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="rounded p-2 flex flex-col gap-2">
+                      {(userRole === "recruiter"
+                        ? recruiterMenu
+                        : jobSeekerMenu
+                      ).map((item) => (
+                        <div
+                          key={item.title}
+                          onClick={() => handleMenuClick(item.path)}
+                          className="text-black text-[15px] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
+                        >
+                          {item.title}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
