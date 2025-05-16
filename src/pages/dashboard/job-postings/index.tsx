@@ -27,7 +27,15 @@ const JobPostings = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [applicationId, setApplicationId] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { userData } = useUserStore();
+
+  // Protect route from job seekers
+  useEffect(() => {
+    if (userData?.user?.role === "job_seeker") {
+      router.push("/dashboard/job-board");
+    }
+  }, [userData?.user?.role, router]);
 
   // Fetch job data if jobId is in URL
   const { data: jobs } = useQuery({
@@ -59,6 +67,11 @@ const JobPostings = () => {
       }
     }
   }, [searchParams, jobs]);
+
+  // If user is a job seeker, don't render the page content
+  if (userData?.user?.role === "job_seeker") {
+    return null;
+  }
 
   return (
     <DashboardWrapper>

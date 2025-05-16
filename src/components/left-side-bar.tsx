@@ -26,32 +26,59 @@ const LeftSideBar = () => {
 
   const { userData } = useUserStore();
 
-  const [leftSideItems, setLeftSideItems] = React.useState([
-    {
-      title: "Dashboard",
-      icon: <LayoutDashboard size={20} />,
-      link: "/dashboard",
-      active: false,
-    },
-    {
-      title: "Posted Jobs",
-      icon: <BriefcaseBusiness size={20} />,
-      link: "/dashboard/job-postings",
-      active: false,
-    },
-    {
-      title: "Job Board",
-      icon: <BriefcaseBusiness size={20} />,
-      link: "/dashboard/job-board",
-      active: false,
-    },
-    {
-      title: "Talent Pool",
-      icon: <BriefcaseBusiness size={20} />,
-      link: "/dashboard/talent-pool",
-      active: false,
-    },
-  ]);
+  const [leftSideItems, setLeftSideItems] = React.useState(() => {
+    const baseItems = [
+      {
+        title: "Dashboard",
+        icon: <LayoutDashboard size={20} />,
+        link: "/dashboard",
+        active: false,
+      },
+      {
+        title: "Job Board",
+        icon: <BriefcaseBusiness size={20} />,
+        link: "/dashboard/job-board",
+        active: false,
+      },
+      {
+        title: "Talent Pool",
+        icon: <BriefcaseBusiness size={20} />,
+        link: "/dashboard/talent-pool",
+        active: false,
+      },
+    ];
+
+    // Only add Posted Jobs for non-job seekers
+    if (userData?.user?.role !== "job_seeker") {
+      baseItems.splice(1, 0, {
+        title: "Posted Jobs",
+        icon: <BriefcaseBusiness size={20} />,
+        link: "/dashboard/job-postings",
+        active: false,
+      });
+    }
+
+    return baseItems;
+  });
+
+  // Update leftSideItems when user role changes
+  React.useEffect(() => {
+    setLeftSideItems((prevItems) => {
+      const baseItems = prevItems.filter(
+        (item) => item.title !== "Posted Jobs"
+      );
+      if (userData?.user?.role !== "job_seeker") {
+        baseItems.splice(1, 0, {
+          title: "Posted Jobs",
+          icon: <BriefcaseBusiness size={20} />,
+          link: "/dashboard/job-postings",
+          active: false,
+        });
+      }
+      return baseItems;
+    });
+  }, [userData?.user?.role]);
+
   const [extras, setExtras] = React.useState([
     {
       title: "Submit An Article",
