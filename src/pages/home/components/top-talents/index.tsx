@@ -1,3 +1,4 @@
+import { outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Image from "next/image";
 
@@ -125,7 +126,9 @@ const TopTalents = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12  md:p-12 md:px-16">
+    <div
+      className={`${outfit.className} bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12  md:p-12 md:px-16`}
+    >
       {/* Navigation Arrows and Frame Number */}
       <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
         <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20">

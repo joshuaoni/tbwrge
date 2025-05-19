@@ -1,3 +1,4 @@
+import { outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const HomePageStats = () => {
@@ -5,14 +6,14 @@ const HomePageStats = () => {
 
   return (
     <div
-      className="relative h-fit pt-24 md:pt-[74px] flex flex-col gap-10 items-center justify-center p-4 py-12 md:py-24 md:p-12 md:px-16"
+      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex flex-col gap-10 items-center justify-center p-4 py-12 md:py-24 md:p-12 md:px-16`}
       style={{
         backgroundImage: "url(/hero-bg.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <h1 className="text-[44px] leading-[60px] text-center font-bold relative w-[70%]">
+      <h1 className="text-[44px] leading-[60px] text-center font-bold relative w-[65%]">
         <span className="bg-gradient-to-r from-white/60 via-white to-white/40 bg-clip-text text-transparent bg-[length:200%_100%] animate-gradient">
           Build confidence in your Hiring and Job Seeking
         </span>

@@ -1,78 +1,187 @@
-import React from "react";
-import JobTools from "../../../../../public/images/icons/job-tools.png";
-import CVTools from "../../../../../public/images/icons/cv-tools.png";
-import CoverLetterTools from "../../../../../public/images/icons/cover-letter-tools.png";
-import Image from "next/image";
-import { poppins } from "@/constants/app";
-import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { outfit } from "@/constants/app";
 
 const Tools = () => {
-  const tools = [
-    {
-      icon: JobTools,
-      title: "Job Tools",
-      description:
-        "Designed to streamline the job posting and candidate selection process for recruiters, helping them save time while finding the best candidates for each position.",
-    },
-    {
-      icon: CVTools,
-      title: "CV Tools",
-      description:
-        "Provides job seekers and recruiters with advanced tools to create, refine, and analyze CVs, ensuring candidates are represented at their best and matched accurately with job requirements.",
-    },
-    {
-      icon: CoverLetterTools,
-      title: "Cover Letter Tools",
-      description:
-        "Empowers candidates to create targeted, well-written cover letters that align with specific job requirements, and assist recruiters in evaluating them efficiently.",
-    },
-  ];
   return (
-    <div
-      className={`${poppins.className} bg-[#F8F9FF] flex flex-col  spaec-y-4 items-center`}
+    <section
+      className={`${outfit.className} w-full px-6 py-12 flex flex-col items-start md:px-16`}
     >
-      <div className="bg-[#F8F9FF]  flex flex-col w-full md:w-[80%] my-12 pb-8  space-y-4 mb-12 items-center">
-        <h1 className="text-[25px] font-extrabold p-4 text-center">
-          Our Tools Simplify Your Journey
-        </h1>
-        <p className="text-sm text-[#2D2D2D] text-center px-4 md:w-[75%] w-[90%] md:px-24">
-          Intuitive, AI-powered tools for candidates and recruiters. From
-          tailored CVs and cover letters to community forums and job matching,
-          our platform simplifies career growth and hiring.
-        </p>
-        <div className="flex md:w-full w-[80%] flex-col md:flex-row items-center  mt-6 space-y-8 md:space-y-0 md:space-x-8 ">
-          {tools.map((tool, index) => (
-            <div
-              key={index}
-              className="flex flex-1 bg-white h-[380px] rounded-[20px] border border-[#E5F4F2] shadow-[34.85px_29.63px_48.34px_0px_#3366FF0D]"
-            >
-              <div className="flex flex-col w-full p-8">
-                <div className="flex items-center justify-center mb-6">
-                  <Image
-                    src={tool.icon}
-                    alt={tool.title}
-                    width={60}
-                    height={60}
-                  />
-                </div>
-                <h1 className="font-bold text-xl text-center mb-6">
-                  {tool.title}
-                </h1>
-                <div className="flex-1">
-                  <p className="text-center text-[14px]">{tool.description}</p>
-                </div>
-                <div className="pt-6">
-                  <span className="font-semibold text-[#009379] text-center flex items-center justify-center gap-2 cursor-pointer hover:underline group">
-                    Learn More
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
+      {/* Top Section */}
+      <div className="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+        {/* Left: Headline, Description, Button */}
+        <div className="max-w-lg flex flex-col gap-6">
+          <h2 className="text-4xl font-bold text-[#184C2A] leading-tight">
+            Our Tools Simplify Your Journey
+          </h2>
+          <p className="text-base text-[#184C2A] font-medium">
+            At Candivet, we're transforming the way professionals connect with
+            opportunities by merging technology with human-centered design to
+            support every stage of the hiring journey. Built with AI-driven
+            tools, Candivet provides a comprehensive platform for recruiters and
+            job seekers to simplify the job search, application, and candidate
+            vetting processes.
+          </p>
+          <Button className="bg-[#184C2A] text-white rounded-full px-6 py-2 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90">
+            Get Started
+          </Button>
+        </div>
+        {/* Right: Recruiters & Job Seekers Cards */}
+        <div className="flex flex-row gap-6 mt-4 md:mt-0">
+          {/* Recruiters Card */}
+          <div className="flex flex-col gap-2">
+            <span className="text-primary text-[20px] font-semibold tracking-wide">
+              Recruiters
+            </span>
+            <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md">
+              <div className="w-full flex justify-center items-center">
+                <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
+                  {/* User Icon */}
+                  <svg width="56" height="56" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="8"
+                      r="4"
+                      stroke="#dfdfdf"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"
+                      stroke="#dfdfdf"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
                 </div>
               </div>
+              <div className="text-white font-semibold text-lg leading-snug mb-4">
+                Job Posting, Talent Pool, Candidate Vetting Tools and many
+                more...
+              </div>
+              <a
+                href="#"
+                className="flex items-center text-white text-sm font-medium hover:underline"
+              >
+                Learn More <span className="ml-1">→</span>
+              </a>
             </div>
-          ))}
+          </div>
+
+          {/* Job Seekers Card */}
+          <div className="flex flex-col gap-2">
+            <span className="text-primary text-[20px] font-bold tracking-wide">
+              Job Seekers
+            </span>
+            <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md">
+              <div className="w-full flex justify-center items-center">
+                <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
+                  {/* User Icon */}
+                  <svg width="56" height="56" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="8"
+                      r="4"
+                      stroke="#dfdfdf"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"
+                      stroke="#dfdfdf"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-white font-semibold text-lg leading-snug mb-4">
+                Talent Pool, CV, Interview Preparation Tools and many more...
+              </div>
+              <a
+                href="#"
+                className="flex items-center text-white text-sm font-medium hover:underline"
+              >
+                Learn More <span className="ml-1">→</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      {/* Feature Cards Section */}
+      <div className="w-full flex flex-row flex-wrap gap-6 mt-16 justify-center md:justify-start">
+        {/* Card 1 */}
+        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
+          {/* Icon Placeholder */}
+          <div className="mb-6">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+              <rect width="56" height="56" rx="12" fill="#fff" />
+              <rect x="8" y="16" width="40" height="24" rx="6" fill="#184C2A" />
+              <rect x="16" y="24" width="24" height="8" rx="2" fill="#F9B233" />
+            </svg>
+          </div>
+          <div className="text-white font-semibold text-xl leading-snug">
+            Automated Job Posting & Candidate Vetting
+          </div>
+        </div>
+        {/* Card 2 */}
+        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
+          <div className="mb-6">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+              <rect width="56" height="56" rx="12" fill="#fff" />
+              <rect
+                x="16"
+                y="20"
+                width="24"
+                height="16"
+                rx="4"
+                fill="#F9B233"
+              />
+              <rect x="24" y="28" width="8" height="8" rx="2" fill="#184C2A" />
+            </svg>
+          </div>
+          <div className="text-white font-semibold text-xl leading-snug">
+            AI-Powered CV & Cover Letter Optimization
+          </div>
+        </div>
+        {/* Card 3 */}
+        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
+          <div className="mb-6">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+              <rect width="56" height="56" rx="12" fill="#fff" />
+              <rect
+                x="12"
+                y="20"
+                width="32"
+                height="16"
+                rx="4"
+                fill="#3EC6E0"
+              />
+              <rect x="20" y="28" width="16" height="8" rx="2" fill="#F9B233" />
+            </svg>
+          </div>
+          <div className="text-white font-semibold text-xl leading-snug">
+            Smart Interview & Screening Tools
+          </div>
+        </div>
+        {/* Card 4 */}
+        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
+          <div className="mb-6">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+              <rect width="56" height="56" rx="12" fill="#fff" />
+              <rect
+                x="16"
+                y="20"
+                width="24"
+                height="16"
+                rx="4"
+                fill="#F9B233"
+              />
+              <circle cx="28" cy="28" r="8" fill="#3EC6E0" />
+              <rect x="24" y="36" width="8" height="4" rx="2" fill="#184C2A" />
+            </svg>
+          </div>
+          <div className="text-white font-semibold text-xl leading-snug">
+            Real-Time Talent Matching & Ranking
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
