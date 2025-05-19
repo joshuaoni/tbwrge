@@ -326,7 +326,7 @@ const NavigationHeader = ({
                         <ChevronRight className="ml-2 w-4 h-4" />
                       </div>
                       {hoveredRole && (
-                        <div className="absolute top-0 left-full bg-white shadow-lg min-w-[180px] rounded border p-1 flex flex-col gap-1 z-50">
+                        <div className="absolute top-0 left-full bg-white shadow-lg min-w-[180px] rounded border flex flex-col gap-1 z-50">
                           {(hoveredRole === "recruiter"
                             ? recruiterMenu
                             : jobSeekerMenu
