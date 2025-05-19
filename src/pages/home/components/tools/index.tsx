@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { outfit } from "@/constants/app";
+import Image from "next/image";
 
 const Tools = () => {
   return (
@@ -32,7 +33,14 @@ const Tools = () => {
             <span className="text-primary text-[20px] font-semibold tracking-wide">
               Recruiters
             </span>
-            <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md">
+            <div
+              style={{
+                backgroundImage: "url(/hero-bg.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+              className="rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md"
+            >
               <div className="w-full flex justify-center items-center">
                 <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
                   {/* User Icon */}
@@ -70,7 +78,14 @@ const Tools = () => {
             <span className="text-primary text-[20px] font-bold tracking-wide">
               Job Seekers
             </span>
-            <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md">
+            <div
+              style={{
+                backgroundImage: "url(/hero-bg.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+              className="rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md"
+            >
               <div className="w-full flex justify-center items-center">
                 <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
                   {/* User Icon */}
@@ -104,77 +119,87 @@ const Tools = () => {
         </div>
       </div>
       {/* Feature Cards Section */}
-      <div className="w-full flex flex-row flex-wrap gap-6 mt-16 justify-center md:justify-start">
+      <div className="w-full flex flex-row flex-wrap gap-6 mt-16 justify-center md:justify-between">
         {/* Card 1 */}
-        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
+        <div
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
+        >
           {/* Icon Placeholder */}
-          <div className="mb-6">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect width="56" height="56" rx="12" fill="#fff" />
-              <rect x="8" y="16" width="40" height="24" rx="6" fill="#184C2A" />
-              <rect x="16" y="24" width="24" height="8" rx="2" fill="#F9B233" />
-            </svg>
+          <div className="mb-12">
+            <Image
+              src="/one.png"
+              alt="Automated Job Posting & Candidate Vetting"
+              width={825}
+              height={460}
+            />
           </div>
           <div className="text-white font-semibold text-xl leading-snug">
             Automated Job Posting & Candidate Vetting
           </div>
         </div>
         {/* Card 2 */}
-        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
-          <div className="mb-6">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect width="56" height="56" rx="12" fill="#fff" />
-              <rect
-                x="16"
-                y="20"
-                width="24"
-                height="16"
-                rx="4"
-                fill="#F9B233"
-              />
-              <rect x="24" y="28" width="8" height="8" rx="2" fill="#184C2A" />
-            </svg>
+        <div
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
+        >
+          <div className="mb-12">
+            <Image
+              src="/two.png"
+              alt="AI-Powered CV & Cover Letter Optimization"
+              width={825}
+              height={460}
+            />
           </div>
           <div className="text-white font-semibold text-xl leading-snug">
             AI-Powered CV & Cover Letter Optimization
           </div>
         </div>
         {/* Card 3 */}
-        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
-          <div className="mb-6">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect width="56" height="56" rx="12" fill="#fff" />
-              <rect
-                x="12"
-                y="20"
-                width="32"
-                height="16"
-                rx="4"
-                fill="#3EC6E0"
-              />
-              <rect x="20" y="28" width="16" height="8" rx="2" fill="#F9B233" />
-            </svg>
+        <div
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
+        >
+          <div className="mb-12">
+            <Image
+              src="/three.png"
+              alt="Smart Interview & Screening Tools"
+              width={825}
+              height={460}
+            />
           </div>
           <div className="text-white font-semibold text-xl leading-snug">
             Smart Interview & Screening Tools
           </div>
         </div>
         {/* Card 4 */}
-        <div className="bg-gradient-to-br from-[#184C2A] to-[#184C2A]/80 rounded-2xl p-8 w-72 flex flex-col items-start shadow-md">
-          <div className="mb-6">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect width="56" height="56" rx="12" fill="#fff" />
-              <rect
-                x="16"
-                y="20"
-                width="24"
-                height="16"
-                rx="4"
-                fill="#F9B233"
-              />
-              <circle cx="28" cy="28" r="8" fill="#3EC6E0" />
-              <rect x="24" y="36" width="8" height="4" rx="2" fill="#184C2A" />
-            </svg>
+        <div
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
+        >
+          <div className="mb-12">
+            <Image
+              src="/four.png"
+              alt="Real-Time Talent Matching & Ranking"
+              width={825}
+              height={460}
+            />
           </div>
           <div className="text-white font-semibold text-xl leading-snug">
             Real-Time Talent Matching & Ranking
