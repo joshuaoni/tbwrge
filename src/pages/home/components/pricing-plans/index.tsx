@@ -205,7 +205,14 @@ const PricingPlans = () => {
           ))}
         </div>
         <div className="!mt-[40px]">
-          <Button className="bg-primary text-white rounded-[16px] px-8 py-6 text-base font-semibold">
+          <Button
+            style={{
+              backgroundImage: "url(/hero-bg.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            className=" text-white rounded-[16px] px-8 py-6 text-base font-semibold"
+          >
             See full pricing
           </Button>
         </div>

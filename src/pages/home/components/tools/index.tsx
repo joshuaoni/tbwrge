@@ -22,7 +22,14 @@ const Tools = () => {
             job seekers to simplify the job search, application, and candidate
             vetting processes.
           </p>
-          <Button className="bg-[#184C2A] text-white rounded-full px-6 py-2 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90">
+          <Button
+            style={{
+              backgroundImage: "url(/hero-bg.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            className=" text-white rounded-full px-6 py-2 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+          >
             Get Started
           </Button>
         </div>

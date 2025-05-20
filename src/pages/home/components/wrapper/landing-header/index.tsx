@@ -58,7 +58,7 @@ const LandingHeader = ({
 
   return (
     <>
-      <div className="w-full px-4 md:px-16 z-20 fixed flex items-center text-white justify-between bg-transparent top-0 py-4">
+      <div className="absolute top-0 w-full px-4 md:px-16 z-20 flex items-center text-white justify-between bg-transparent py-4">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-8">
             <div

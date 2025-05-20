@@ -26,9 +26,9 @@ const HomePage = () => {
       <RightCandidate />
       <PricingPlans />
       <Blogs />
-      <BlogPosts />
+      {/* <BlogPosts /> */}
       <Expertise />
-      <Community />
+      {/* <Community /> */}
     </LandingWrapper>
   );
 };
