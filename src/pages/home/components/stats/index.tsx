@@ -6,14 +6,26 @@ const HomePageStats = () => {
 
   return (
     <div
-      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex flex-col gap-10 items-center justify-center p-4 py-12 md:py-24 md:p-12 md:px-16`}
+      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex flex-col gap-10 items-center justify-center p-4 py-12 md:py-24 md:p-12 md:px-16 bg-black`}
       style={{
-        backgroundImage: "url(/hero-bg.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        position: "relative",
       }}
     >
-      <h1 className="text-[44px] leading-[60px] text-center font-bold relative w-[65%]">
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url(/hero-bg.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.6,
+          zIndex: 0,
+        }}
+      />
+      <h1 className="text-[44px] leading-[60px] text-center font-bold relative w-[65%] z-10">
         <span className="bg-gradient-to-r from-white/60 via-white to-white/40 bg-clip-text text-transparent bg-[length:200%_100%] animate-gradient">
           Build confidence in your Hiring and Job Seeking
         </span>
@@ -22,7 +34,7 @@ const HomePageStats = () => {
           journey with the #1 Global platform
         </span>
       </h1>
-      <p className="text-white text-center md:text-base text-[14px] w-[80%] mt-4">
+      <p className="text-white text-center md:text-base text-[14px] w-[80%] mt-4 z-10">
         Candivet simplifies hiring and job seeking with AI-driven automation and
         intelligent matching. Recruiters can post jobs, vet candidates, and
         schedule interviews effortlessly, while job seekers benefit from
@@ -31,7 +43,7 @@ const HomePageStats = () => {
         on finding the perfect fit.
       </p>
 
-      <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 mt-10">
+      <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 mt-10 z-10">
         {/* Countries */}
         <div className="flex-1 flex flex-col items-center">
           <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">

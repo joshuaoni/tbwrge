@@ -11,6 +11,7 @@ import HomePageStats from "./components/stats";
 import Tools from "./components/tools";
 import TopTalents from "./components/top-talents";
 import LandingWrapper from "./components/wrapper/landing-wrapper";
+import Blogs from "./components/blogs";
 
 const HomePage = () => {
   return (
@@ -24,6 +25,7 @@ const HomePage = () => {
       <Tools />
       <RightCandidate />
       <PricingPlans />
+      <Blogs />
       <BlogPosts />
       <Expertise />
       <Community />

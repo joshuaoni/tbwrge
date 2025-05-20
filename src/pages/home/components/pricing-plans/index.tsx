@@ -5,7 +5,7 @@ import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
-import { poppins } from "@/constants/app";
+import { outfit, poppins } from "@/constants/app";
 
 const PricingPlans = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -66,11 +66,13 @@ const PricingPlans = () => {
   ];
   return (
     <div
-      className={`${poppins.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
+      className={`${outfit.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
     >
       <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-0 mb-0 md:mb-12 items-center">
-        <h1 className="text-[25px] font-extrabold p-4">Our Pricing Plans</h1>
-        <p className="text-sm text-[#2D2D2D] text-center pb-12 md:px-24">
+        <h1 className="text-[35px] text-primary font-extrabold p-4">
+          Our Pricing Plans
+        </h1>
+        <p className="text-[20px] font-bold text-primary capitalize text-center pb-12 md:px-24">
           Choose the Perfect Pricing for your hiring and career goals
         </p>
         {/* Mobile View with Slider */}
@@ -203,7 +205,7 @@ const PricingPlans = () => {
           ))}
         </div>
         <div className="!mt-[40px]">
-          <Button className="bg-[#009379] text-white rounded-[16px] px-8 py-6 text-base font-semibold">
+          <Button className="bg-primary text-white rounded-[16px] px-8 py-6 text-base font-semibold">
             See full pricing
           </Button>
         </div>
