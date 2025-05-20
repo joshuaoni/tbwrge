@@ -5,47 +5,46 @@ import ExpertiseMan from "../../../../../public/images/expertise-man.png";
 import ManSuit from "../../../../public/images/man-suit.png";
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { poppins } from "@/constants/app";
+import { outfit, poppins } from "@/constants/app";
 
 const Expertise = () => {
   const isMobile = useIsMobile();
   return (
     <div
-      className={`${poppins.className} h-fit  py-[50px] md:py-0 md:h-[500px] relative bg-[#FADAA9] flex items-center  justify-center p-4 md:p-16 md:pb-[16px]`}
+      className={`${outfit.className} h-fit flex flex-col gap-4 py-[50px] md:py-0 md:h-[500px] relative bg-white  items-center  justify-center p-4 md:p-16 md:pb-[16px]`}
     >
-      <div className="flex items-center justify-between w-fit relative">
-        <div className="w-full md:w-[50%] relative z-10">
-          <div className="text-[30px] md-text-[40px] text-black font-extrabold flex flex-col items-start">
-            <div
-              className={`${poppins.className}  text-[30px] md:text-[50px] text-black font-extrabold flex flex-col items-start`}
-            >
-              <h1 className="leading-[1.3]">
-                Share Your
-                <span className="text-[#009379]"> Expertise </span>
-                with the Community
-              </h1>
-            </div>
-          </div>
-          <p className="text-black text-[12px] md:text-[16px] w-[95%] mt-8 md:mt-0 max-w-[700px] ">
-            Submit your blog post with your title, name, job title, company, and
-            profile image. After a quick review, your post will be published
-            with full recognition as an expert in the Candivet community.
-          </p>
-          <div className="flex items-center mt-8">
-            <Button className="bg-[#009379]  text-[12px] px-[40px] py-[25px] text-white  rounded-[20px]">
-              <Image src={RocketIcon} alt="" width={16} height={16} />
-              Share Now
-            </Button>
-          </div>
+      <h2 className="text-primary text-[40px] font-bold">
+        Share Your Expertise with the Community
+      </h2>
+      <p className="w-[55%] text-center text-primary text-[18px]">
+        Submit your blog post with your title, name, job title, company, and
+        profile image. After a quick review, your post will be published with
+        full recognition as an expert in the Webintel community.
+      </p>
+      <div className="flex items-center justify-center gap-12">
+        <Button
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          className="text-white text-sm px-[30px] py-[25px] rounded-full"
+        >
+          Share Article
+        </Button>
+        <div className="text-primary text-sm flex items-center gap-2">
+          Join the community
+          <svg
+            width="16"
+            height="16"
+            fill="none"
+            stroke="#014718"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </div>
-        {!isMobile && (
-          <div className="w-[50%] -mt-48 relative">
-            <div className="absolute bottom-0 right-[20px] w-[350px] h-[270px] bg-[#C44900] " />
-            <div className="relative z-10">
-              <Image src={ExpertiseMan} alt="" width={800} height={800} />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

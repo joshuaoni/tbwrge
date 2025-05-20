@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import InvoiceTemplate from "./invoice-template";
 import { useDownloadPDF } from "@/hooks/download-pdf";
+import { outfit } from "@/constants/app";
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);
@@ -21,7 +22,7 @@ function BillingManageView() {
   const { downloadPDF } = useDownloadPDF(invoiceRef, "invoice");
 
   return (
-    <div>
+    <div className={`${outfit.className}`}>
       <section className="flex items-center my-6 gap-6">
         <div className="w-full border border-lightgreen p-4 space-y-8 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">

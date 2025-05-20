@@ -1,6 +1,6 @@
 import CheckIcon from "@/components/icons/check";
 import { Button } from "@/components/ui/button";
-import { mullish, poppins } from "@/constants/app";
+import { mullish, outfit, poppins } from "@/constants/app";
 import { BillingPlanCardProps } from "@/interfaces/billing.interface";
 import { BillingContext } from "@/providers/billing.context";
 import classNames from "classnames";
@@ -119,7 +119,7 @@ function BillingChooseView() {
   const ctx = useContext(BillingContext);
 
   return (
-    <div className="space-y-6">
+    <div className={`${outfit.className} space-y-6`}>
       <button
         onClick={() => ctx.goTo("manage")}
         className="flex items-center gap-2 text-xl font-bold"

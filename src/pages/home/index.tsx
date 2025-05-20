@@ -7,8 +7,11 @@ import LandingHeroSection from "./components/landing-hero";
 import Partners from "./components/partners";
 import PricingPlans from "./components/pricing-plans";
 import RightCandidate from "./components/right-candidate";
+import HomePageStats from "./components/stats";
 import Tools from "./components/tools";
+import TopTalents from "./components/top-talents";
 import LandingWrapper from "./components/wrapper/landing-wrapper";
+import Blogs from "./components/blogs";
 
 const HomePage = () => {
   return (
@@ -17,12 +20,15 @@ const HomePage = () => {
       {/* <Partners /> */}
       <AboutUs />
       <JobOpportunities />
+      <TopTalents />
+      <HomePageStats />
       <Tools />
       <RightCandidate />
       <PricingPlans />
-      <BlogPosts />
+      <Blogs />
+      {/* <BlogPosts /> */}
       <Expertise />
-      <Community />
+      {/* <Community /> */}
     </LandingWrapper>
   );
 };

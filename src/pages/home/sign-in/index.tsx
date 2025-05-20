@@ -7,7 +7,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import OR from "../../../../public/images/OR.png";
 import candivetlogowhite from "../../../../public/images/candivet-logo.png";
@@ -42,8 +42,13 @@ const Index = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isMobile = useIsMobile();
   const { addUser } = useUserStore();
+
+  // Get the redirect URL from query parameters
+  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+
   const signInMutation = useMutation({
     mutationFn: async () =>
       await loginUser({
@@ -58,10 +63,11 @@ const Index = () => {
           authenticatedUser: res.user,
           token: res.access_token,
         });
+        // Redirect to the saved URL or default based on role
         if (res.user.role === "job_seeker") {
-          router.push("/dashboard/job-board");
+          router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
-          router.push("/dashboard");
+          router.push(redirectUrl || "/dashboard");
         }
       }
     },
@@ -69,6 +75,7 @@ const Index = () => {
       toast.error(err.message || "Login failed");
     },
   });
+
   const signInWithGoogleMutation = useMutation({
     mutationFn: async (token: string) =>
       await loginUserWithGoogle({
@@ -77,7 +84,12 @@ const Index = () => {
     onSuccess: (res) => {
       if (res.user != null) {
         addUser(res.user);
-        router.push("/dashboard");
+        // Redirect to the saved URL or default based on role
+        if (res.user.role === "job_seeker") {
+          router.push(redirectUrl || "/dashboard/job-board");
+        } else if (res.user.role === "recruiter") {
+          router.push(redirectUrl || "/dashboard");
+        }
       }
     },
   });
