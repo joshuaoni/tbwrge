@@ -32,17 +32,24 @@ const LandingHeroSection = () => {
   }, [currentIndex, delay, fullText]);
 
   return (
-    <div
-      className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16"
-      style={{
-        backgroundImage: "url(/hero-bg.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="relative h-fit pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16">
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url(/hero-bg.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.6,
+          zIndex: 0,
+        }}
+      />
       {/* Main Content */}
-      <div className="flex items-center justify-center w-full">
-        <div className="flex flex-col items-start md:items-center justify-center w-full md:w-2/3 md:h-[600px] py-[40px] md:py-0 md:px-4">
+      <div className="flex items-center justify-center w-full relative z-10">
+        <div className="flex flex-col items-start md:items-center justify-center w-full md:w-2/3 md:h-[650px] py-[40px] md:py-0 md:px-4">
           <div className="text-3xl md:text-6xl mb-3 text-white font-extrabold flex flex-col items-center md:items-start">
             <p
               className={`${poppins.className} text-4xl md:text-[50px] text-start md:text-center leading-[1.3] capitalize`}

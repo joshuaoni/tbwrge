@@ -76,126 +76,146 @@ const JobOpportunities = () => {
 
   return (
     <div
-      className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16"
+      className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black"
       style={{
-        backgroundImage: "url(/hero-bg.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        position: "relative",
       }}
     >
-      {/* Navigation Arrows and Frame Number */}
-      <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
-        <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
-          {/* Left Arrow SVG */}
-          <svg
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M10 4l-4 4 4 4" />
-          </svg>
-        </button>
-        <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
-          {/* Right Arrow SVG */}
-          <svg
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M6 4l4 4-4 4" />
-          </svg>
-        </button>
-      </div>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url(/hero-bg.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.6,
+          zIndex: 0,
+        }}
+      />
+      <div className="relative z-10">
+        {/* Navigation Arrows and Frame Number */}
+        <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
+          <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
+            {/* Left Arrow SVG */}
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M10 4l-4 4 4 4" />
+            </svg>
+          </button>
+          <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
+            {/* Right Arrow SVG */}
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M6 4l4 4-4 4" />
+            </svg>
+          </button>
+        </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="w-full text-2xl md:text-3xl font-bold text-white mb-8">
-          Latest Job Opportunities
-        </h2>
-        <div className="w-full max-w-7xl flex flex-col md:flex-row items-center gap-8">
-          {/* Left Sidebar */}
-          <div className="flex flex-col justify-start w-full md:w-1/4 ">
-            <div className="flex flex-col gap-[30px] border-l-4 border-white pl-4">
-              {categories.map((cat, i) => (
-                <div key={cat.name} className="flex items-center gap-3">
-                  <span className="text-white text-lg">{cat.name}</span>
-                  <span
-                    className={`px-2 py-0.5 rounded-md text-xs font-semibold ${cat.color}`}
-                  >
-                    {cat.count}
-                  </span>
+        {/* Main Content */}
+        <div className="flex flex-col items-center justify-center">
+          <h2 className="w-full text-2xl md:text-3xl font-bold text-white mb-8">
+            Latest Job Opportunities
+          </h2>
+          <div className="w-full max-w-7xl flex flex-col md:flex-row items-center gap-8">
+            {/* Left Sidebar */}
+            <div className="flex flex-col justify-start w-full md:w-1/4 ">
+              <div className="flex flex-col gap-[30px] border-l-4 border-white pl-4">
+                {categories.map((cat, i) => (
+                  <div key={cat.name} className="flex items-center gap-3">
+                    <span className="text-white text-lg">{cat.name}</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-md text-xs font-semibold ${cat.color}`}
+                    >
+                      {cat.count}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Job Cards */}
+            <div className="flex-1 flex flex-col md:flex-row gap-6 justify-center items-center">
+              {jobs.map((job, i) => (
+                <div
+                  key={job.title}
+                  className={`w-full md:w-80 rounded-2xl p-6 ${job.cardColor} ${job.border} shadow-lg flex flex-col gap-4`}
+                >
+                  <div className="flex flex-col gap-4">
+                    <span className="text-[22px] font-semibold">
+                      {job.title}
+                    </span>
+                    <div className="flex gap-2">
+                      {job.tags.map((tag, j) => (
+                        <span
+                          key={j}
+                          className={`px-3 py-1 rounded-full text-[16px] font-semibold ${tag.color}`}
+                        >
+                          {tag.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold mt-4 mb-4">
+                    {job.salary}
+                  </div>
+                  {/* Time with horizontal line */}
+                  <div className="flex items-center w-full mb-2">
+                    <div className={`flex-1 border-t-2 ${job.dashColor}`}></div>
+                    <span
+                      className={`ml-2 text-xs whitespace-nowrap ${job.timeColor}`}
+                    >
+                      {job.time}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex items-center gap-2">
+                      {/* Company Icon */}
+                      <img
+                        src={job.companyIcon}
+                        alt={job.company}
+                        className="w-7 h-7 rounded-full bg-white/80 p-1"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold">
+                          {job.company}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {job.info}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span
+                        className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold ${job.jobsColor}`}
+                      >
+                        {job.jobsCount} Jobs
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Job Cards */}
-          <div className="flex-1 flex flex-col md:flex-row gap-6 justify-center items-center">
-            {jobs.map((job, i) => (
-              <div
-                key={job.title}
-                className={`w-full md:w-80 rounded-2xl p-6 ${job.cardColor} ${job.border} shadow-lg flex flex-col gap-4`}
-              >
-                <div className="flex flex-col gap-4">
-                  <span className="text-[22px] font-semibold">{job.title}</span>
-                  <div className="flex gap-2">
-                    {job.tags.map((tag, j) => (
-                      <span
-                        key={j}
-                        className={`px-3 py-1 rounded-full text-[16px] font-semibold ${tag.color}`}
-                      >
-                        {tag.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="text-2xl font-bold mt-4 mb-4">{job.salary}</div>
-                {/* Time with horizontal line */}
-                <div className="flex items-center w-full mb-2">
-                  <div className={`flex-1 border-t-2 ${job.dashColor}`}></div>
-                  <span
-                    className={`ml-2 text-xs whitespace-nowrap ${job.timeColor}`}
-                  >
-                    {job.time}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-auto">
-                  <div className="flex items-center gap-2">
-                    {/* Company Icon */}
-                    <img
-                      src={job.companyIcon}
-                      alt={job.company}
-                      className="w-7 h-7 rounded-full bg-white/80 p-1"
-                    />
-                    <div className="flex flex-col">
-                      <span className="text-sm font-semibold">
-                        {job.company}
-                      </span>
-                      <span className="text-xs text-gray-400">{job.info}</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span
-                      className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold ${job.jobsColor}`}
-                    >
-                      {job.jobsCount} Jobs
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* View All Jobs Button */}
+          <div className="my-12">
+            <button className="px-6 py-4 rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition">
+              View All Jobs
+            </button>
           </div>
-        </div>
-
-        {/* View All Jobs Button */}
-        <div className="my-12">
-          <button className="px-6 py-4 rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition">
-            View All Jobs
-          </button>
         </div>
       </div>
     </div>

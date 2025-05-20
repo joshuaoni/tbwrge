@@ -34,18 +34,26 @@ const LandingHeader = ({
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-8">
             <div
-              onClick={() => router.push("/home")}
               className="flex items-center cursor-pointer"
+              onClick={() => router.push("/home")}
             >
-              <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
-                <Image
-                  src="/header-final.png"
-                  alt=""
-                  width={32}
-                  height={29.2}
-                  className="w-[32px] h-[29.2px] md:w-[32px] md:h-[29.2px]"
-                />
-              </div>
+              {/* <div className="rounded-[6.96px] flex items-center justify-center bg-white w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative"> */}
+              {/* <div
+              className="rounded-[0.12px] w-[22.26px] h-[18.96px] md:w-[27.83px] md:h-[23.7px] absolute"
+              style={{
+                top: "5px",
+                left: "6.91px",
+              }}
+            > */}
+              <Image
+                src="/footer-logo.png"
+                alt=""
+                width={30}
+                height={26}
+                className="w-[30px] h-[26px] md:w-[34px] md:h-[29.2px]"
+              />
+              {/* </div> */}
+              {/* </div> */}
               <h1
                 className={`${outfit.className} ml-2 text-xl md:text-3xl font-bold`}
               >
