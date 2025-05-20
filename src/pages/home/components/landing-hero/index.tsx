@@ -32,7 +32,7 @@ const LandingHeroSection = () => {
   }, [currentIndex, delay, fullText]);
 
   return (
-    <div className="relative h-fit pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16">
+    <div className="relative min-h-[700px] h-screen pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16">
       <div
         style={{
           position: "absolute",
@@ -50,18 +50,18 @@ const LandingHeroSection = () => {
       {/* Main Content */}
       <div className="flex items-center justify-center w-full relative z-10">
         <div className="flex flex-col items-start md:items-center justify-center w-full md:w-2/3 md:h-[650px] py-[40px] md:py-0 md:px-4">
-          <div className="text-3xl md:text-6xl mb-3 text-white font-extrabold flex flex-col items-center md:items-start">
+          <div className="text-3xl md:text-6xl text-white font-extrabold flex flex-col items-center md:items-start">
             <p
               className={`${poppins.className} text-4xl md:text-[50px] text-start md:text-center leading-[1.3] capitalize`}
             >
-              hire <span className="text-[#FDB833]">smarter</span>
+              Hire <span className="text-[#FDB833]">Smarter</span>.
               <br />
-              get hired <span className="text-[#FDB833]">faster</span>
+              Get Hired <span className="text-[#FDB833]">Faster</span>.
             </p>
           </div>
 
           <p
-            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[20px] !leading-[31px] md:text-base`}
+            className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[20px] !leading-[31px] md:text-base md:mt-16`}
           >
             Candivet is the #1 global AI-powered platform designed to simplify
             hiring for recruiters and job seekers alike. Whether you're looking
