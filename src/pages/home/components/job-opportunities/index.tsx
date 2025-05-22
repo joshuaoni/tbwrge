@@ -45,6 +45,11 @@ const JobOpportunities = () => {
     enabled: !!userData?.token,
   });
 
+  const featuredCardClass =
+    "bg-gradient-to-t from-[#09742CBF] to-[#014718F0] text-white border-none";
+  const featuredTimeClass = "text-white";
+  const featuredDashClass = "border-white/50";
+
   return (
     <div
       className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black"
@@ -147,10 +152,14 @@ const JobOpportunities = () => {
               ) : jobs && jobs.length > 0 ? (
                 jobs
                   .slice(page * jobsPerPage, page * jobsPerPage + jobsPerPage)
-                  .map((job: any) => (
+                  .map((job: any, idx: number) => (
                     <div
                       key={job.id}
-                      className={`w-full md:w-80 rounded-2xl p-6 bg-[#E4EEFC] text-gray-900 border border-gray-200 shadow-lg flex flex-col gap-4`}
+                      className={`w-full md:w-80 rounded-2xl p-6 ${
+                        idx === 0
+                          ? featuredCardClass
+                          : "bg-[#E4EEFC] text-gray-900 border border-gray-200"
+                      } shadow-lg flex flex-col gap-4`}
                     >
                       <div className="flex flex-col gap-4">
                         <span
@@ -194,9 +203,15 @@ const JobOpportunities = () => {
                       </div>
                       {/* Time with horizontal line */}
                       <div className="flex items-center w-full mb-2">
-                        <div className={`flex-1 border-t-2 border-white`}></div>
+                        <div
+                          className={`flex-1 border-t-2 ${
+                            idx === 0 ? featuredDashClass : "border-white"
+                          }`}
+                        ></div>
                         <span
-                          className={`ml-2 text-xs whitespace-nowrap text-[#0146B1] font-semibold`}
+                          className={`ml-2 text-xs whitespace-nowrap font-semibold ${
+                            idx === 0 ? featuredTimeClass : "text-[#0146B1]"
+                          }`}
                         >
                           {job.created_at
                             ? new Date(job.created_at).toLocaleDateString()
