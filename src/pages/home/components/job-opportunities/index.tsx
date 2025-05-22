@@ -50,6 +50,32 @@ const JobOpportunities = () => {
   const featuredTimeClass = "text-white";
   const featuredDashClass = "border-white/50";
 
+  // Skeleton card component
+  const JobCardSkeleton = () => (
+    <div className="w-full md:w-80 rounded-2xl p-6 bg-gray-200 border border-gray-100 shadow-lg flex flex-col gap-4 animate-pulse min-h-[260px]">
+      <div className="h-6 bg-gray-300 rounded w-3/4 mb-2" />
+      <div className="flex gap-2 mb-4">
+        <div className="h-6 w-20 bg-gray-300 rounded-full" />
+        <div className="h-6 w-16 bg-gray-300 rounded-full" />
+      </div>
+      <div className="h-7 bg-gray-300 rounded w-1/2 mb-4" />
+      <div className="flex items-center w-full mb-2">
+        <div className="flex-1 border-t-2 border-gray-300" />
+        <div className="ml-2 h-4 w-16 bg-gray-300 rounded" />
+      </div>
+      <div className="flex items-center justify-between mt-auto">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-full bg-gray-300" />
+          <div className="flex flex-col">
+            <div className="h-4 w-20 bg-gray-300 rounded mb-1" />
+            <div className="h-3 w-14 bg-gray-200 rounded" />
+          </div>
+        </div>
+        <div className="h-6 w-20 bg-cyan-100 rounded" />
+      </div>
+    </div>
+  );
+
   return (
     <div
       className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
@@ -122,7 +148,7 @@ const JobOpportunities = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center mt-4">
           <h2 className="w-full text-2xl md:text-3xl font-bold text-white mb-8">
             Latest Job Opportunities
           </h2>
@@ -146,7 +172,11 @@ const JobOpportunities = () => {
             {/* Job Cards */}
             <div className="flex-1 flex flex-col md:flex-row gap-6 justify-center items-center">
               {isLoading ? (
-                <div className="text-white text-lg">Loading jobs...</div>
+                <>
+                  {[...Array(3)].map((_, i) => (
+                    <JobCardSkeleton key={i} />
+                  ))}
+                </>
               ) : isError ? (
                 <div className="text-red-500 text-lg">Failed to load jobs.</div>
               ) : jobs && jobs.length > 0 ? (
@@ -253,7 +283,11 @@ const JobOpportunities = () => {
                     </div>
                   ))
               ) : (
-                <div className="text-white text-lg">No jobs found.</div>
+                <>
+                  {[...Array(3)].map((_, i) => (
+                    <JobCardSkeleton key={i} />
+                  ))}
+                </>
               )}
             </div>
           </div>
