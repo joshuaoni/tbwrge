@@ -52,7 +52,7 @@ const CvDropDown = () => {
     <>
       <div
         onClick={() => setShowCvDropDown(!showCvDropDown)}
-        className="flex justify-between cursor-pointer"
+        className="flex justify-between cursor-pointer py-3"
       >
         <div className="flex items-center">
           <GraduationCap size={20} className="mr-2 text-primary" />

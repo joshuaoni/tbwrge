@@ -29,23 +29,6 @@ const LandingHeader = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userData } = useUserStore();
 
-  const recruiterMenu = [
-    { title: "Job Posting", path: "/dashboard/job-postings" },
-    { title: "Job Tools", path: "/dashboard/job-tools/generator" },
-    { title: "Job Board", path: "/dashboard/job-board" },
-  ];
-
-  const jobSeekerMenu = [
-    { title: "Talent Pool", path: "/dashboard/talent-pool" },
-    { title: "Job Board", path: "/dashboard/job-board" },
-    { title: "Job Applications", path: "/dashboard/applications" },
-    { title: "CV Tools", path: "/dashboard/cv-tools/summarizer" },
-    {
-      title: "Cover Letter Tools",
-      path: "/dashboard/cover-letter-tools/summarizer",
-    },
-  ];
-
   const handleMenuClick = (path: string) => {
     if (!userData?.token) {
       // If not logged in, redirect to login with the intended destination

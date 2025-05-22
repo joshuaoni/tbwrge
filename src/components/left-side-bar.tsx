@@ -12,6 +12,8 @@ import {
   CreditCard,
   BookOpen,
   UserCircle,
+  ClipboardList,
+  FileText,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -20,6 +22,7 @@ import LogoutModal from "./logout-modal";
 import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
 import { outfit } from "@/constants/app";
+import JobBoardIcon from "@/components/icons/job-board";
 
 const LeftSideBar = () => {
   const router = useRouter();
@@ -34,15 +37,16 @@ const LeftSideBar = () => {
         link: "/dashboard",
         active: false,
       },
+
       {
         title: "Job Board",
-        icon: <BriefcaseBusiness size={20} />,
+        icon: <JobBoardIcon size={20} />,
         link: "/dashboard/job-board",
         active: false,
       },
       {
         title: "Talent Pool",
-        icon: <BriefcaseBusiness size={20} />,
+        icon: <Users2 size={20} />,
         link: "/dashboard/talent-pool",
         active: false,
       },
@@ -52,12 +56,19 @@ const LeftSideBar = () => {
     if (userData?.user?.role !== "job_seeker") {
       baseItems.splice(1, 0, {
         title: "Posted Jobs",
-        icon: <BriefcaseBusiness size={20} />,
+        icon: <ClipboardList size={20} />,
         link: "/dashboard/job-postings",
         active: false,
       });
     }
-
+    if (userData?.user?.role === "job_seeker") {
+      baseItems.splice(1, 0, {
+        title: "My Applications",
+        icon: <FileText size={20} />,
+        link: "/dashboard/applications",
+        active: false,
+      });
+    }
     return baseItems;
   });
 
@@ -70,7 +81,7 @@ const LeftSideBar = () => {
       if (userData?.user?.role !== "job_seeker") {
         baseItems.splice(1, 0, {
           title: "Posted Jobs",
-          icon: <BriefcaseBusiness size={20} />,
+          icon: <ClipboardList size={20} />,
           link: "/dashboard/job-postings",
           active: false,
         });
@@ -158,15 +169,9 @@ const LeftSideBar = () => {
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ml-8 ">
           <div className="">
-            <div className="py-3">
-              <JobsDropdown />
-            </div>
-            <div className="py-3">
-              <CoverLetterDropDown />
-            </div>
-            <div className="py-3">
-              <CvDropDown />
-            </div>
+            <JobsDropdown />
+            <CoverLetterDropDown />
+            <CvDropDown />
           </div>
         </div>
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />

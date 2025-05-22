@@ -47,7 +47,7 @@ const CoverLetterDropDown = () => {
     <>
       <div
         onClick={() => setShowCoverLetterDropDown(!showCoverLetterDropDown)}
-        className="flex justify-between cursor-pointer"
+        className="flex justify-between cursor-pointer py-3"
       >
         <div className="flex items-center">
           <File size={20} className="mr-2 text-primary" />
