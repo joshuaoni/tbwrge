@@ -5,6 +5,12 @@ import { useEffect, useState } from "react";
 import ManSuit from "../../../../../public/images/man-suit.png";
 import RocketIcon from "../../../../../public/images/rocket.png";
 import { outfit, poppins } from "@/constants/app";
+import { useQuery } from "@tanstack/react-query";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { useUserStore } from "@/hooks/use-user-store";
+import { getJobOpen } from "@/actions/get-jobs-open";
+import { FaBuilding } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const categories = [
   { name: "Product Management", count: 34, color: "bg-gray-200 text-gray-700" },
@@ -14,65 +20,30 @@ const categories = [
   { name: "Customer Service", count: 54, color: "bg-cyan-200 text-cyan-800" },
 ];
 
-const jobs = [
-  {
-    title: "Product Designer",
-    tags: [
-      { label: "Full Time", color: "bg-black/20 text-white" },
-      { label: "Product", color: "bg-black/20 text-white" },
-    ],
-    salary: "34K$ - 45K$",
-    company: "GitLab",
-    companyIcon: "/gitlab-icon.svg", // Replace with your icon path
-    info: "1200-3000",
-    jobsCount: 20,
-    jobsColor: "bg-cyan-200 text-cyan-800",
-    time: "1 hour ago",
-    cardColor: "bg-gradient-to-t from-[#09742CBF] to-[#014718F0] text-white",
-    border: "border-none",
-    timeColor: "text-white",
-    dashColor: "border-white/50",
-  },
-  {
-    title: "Senior Designer",
-    tags: [
-      { label: "Full Time", color: "bg-[#BBD3F8] text-black" },
-      { label: "Head of Design", color: "bg-[#BBD3F8] text-black" },
-    ],
-    salary: "25K$ - 45K$",
-    company: "Hotjar",
-    companyIcon: "/hotjar-icon.svg", // Replace with your icon path
-    info: "140-300",
-    jobsCount: 40,
-    jobsColor: "bg-orange-200 text-orange-800",
-    time: "4 hour ago",
-    cardColor: "bg-[#E4EEFC] text-gray-900",
-    border: "border border-gray-200",
-    timeColor: "text-[#0146B1] font-semibold",
-    dashColor: "border-white",
-  },
-  {
-    title: "Creative Director",
-    tags: [
-      { label: "Full Time", color: "bg-[#BBD3F8] text-black" },
-      { label: "Design", color: "bg-[#BBD3F8] text-black" },
-    ],
-    salary: "25K$ - 45K$",
-    company: "Github",
-    companyIcon: "/github-icon.svg", // Replace with your icon path
-    info: "6200-4000",
-    jobsCount: 75,
-    jobsColor: "bg-orange-200 text-orange-800",
-    time: "8 hour ago",
-    cardColor: "bg-[#E4EEFC] text-gray-900",
-    border: "border border-gray-200",
-    timeColor: "text-[#0146B1] font-semibold",
-    dashColor: "border-white",
-  },
-];
-
 const JobOpportunities = () => {
   const isMobile = useIsMobile();
+  const router = useRouter();
+  const { userData } = useUserStore();
+  const [page, setPage] = useState(0);
+  const jobsPerPage = 3;
+
+  const {
+    data: jobs,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["job-openings", userData?.token],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getJobOpen({
+        search_term: "",
+        job_type: "full_time",
+        skills: [],
+        location: "",
+      });
+    },
+    enabled: !!userData?.token,
+  });
 
   return (
     <div
@@ -98,7 +69,11 @@ const JobOpportunities = () => {
       <div className="relative z-10">
         {/* Navigation Arrows and Frame Number */}
         <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
-          <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
+          <button
+            className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >
             {/* Left Arrow SVG */}
             <svg
               width="16"
@@ -110,7 +85,24 @@ const JobOpportunities = () => {
               <path d="M10 4l-4 4 4 4" />
             </svg>
           </button>
-          <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20">
+          <button
+            className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() =>
+              setPage((p) =>
+                Math.min(
+                  p + 1,
+                  jobs && jobs.length
+                    ? Math.floor((jobs.length - 1) / jobsPerPage)
+                    : 0
+                )
+              )
+            }
+            disabled={
+              !jobs ||
+              jobs.length <= jobsPerPage ||
+              page >= Math.floor((jobs.length - 1) / jobsPerPage)
+            }
+          >
             {/* Right Arrow SVG */}
             <svg
               width="16"
@@ -148,71 +140,115 @@ const JobOpportunities = () => {
 
             {/* Job Cards */}
             <div className="flex-1 flex flex-col md:flex-row gap-6 justify-center items-center">
-              {jobs.map((job, i) => (
-                <div
-                  key={job.title}
-                  className={`w-full md:w-80 rounded-2xl p-6 ${job.cardColor} ${job.border} shadow-lg flex flex-col gap-4`}
-                >
-                  <div className="flex flex-col gap-4">
-                    <span className="text-[22px] font-semibold">
-                      {job.title}
-                    </span>
-                    <div className="flex gap-2">
-                      {job.tags.map((tag, j) => (
-                        <span
-                          key={j}
-                          className={`px-3 py-1 rounded-full text-[16px] font-semibold ${tag.color}`}
-                        >
-                          {tag.label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold mt-4 mb-4">
-                    {job.salary}
-                  </div>
-                  {/* Time with horizontal line */}
-                  <div className="flex items-center w-full mb-2">
-                    <div className={`flex-1 border-t-2 ${job.dashColor}`}></div>
-                    <span
-                      className={`ml-2 text-xs whitespace-nowrap ${job.timeColor}`}
+              {isLoading ? (
+                <div className="text-white text-lg">Loading jobs...</div>
+              ) : isError ? (
+                <div className="text-red-500 text-lg">Failed to load jobs.</div>
+              ) : jobs && jobs.length > 0 ? (
+                jobs
+                  .slice(page * jobsPerPage, page * jobsPerPage + jobsPerPage)
+                  .map((job: any) => (
+                    <div
+                      key={job.id}
+                      className={`w-full md:w-80 rounded-2xl p-6 bg-[#E4EEFC] text-gray-900 border border-gray-200 shadow-lg flex flex-col gap-4`}
                     >
-                      {job.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between mt-auto">
-                    <div className="flex items-center gap-2">
-                      {/* Company Icon */}
-                      <img
-                        src={job.companyIcon}
-                        alt={job.company}
-                        className="w-7 h-7 rounded-full bg-white/80 p-1"
-                      />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold">
-                          {job.company}
+                      <div className="flex flex-col gap-4">
+                        <span
+                          className="text-[22px] font-semibold truncate w-full block"
+                          title={job.job_title}
+                        >
+                          {job.job_title}
                         </span>
-                        <span className="text-xs text-gray-400">
-                          {job.info}
+                        <div className="flex gap-2">
+                          <span
+                            className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
+                          >
+                            {job.job_type?.replace("_", " ") || "Job"}
+                          </span>
+                          {job.tags &&
+                            job.tags
+                              .split(",")
+                              .slice(0, 1)
+                              .map((tag: string, j: number) => (
+                                <span
+                                  key={j}
+                                  className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
+                                >
+                                  {tag.trim()}
+                                </span>
+                              ))}
+                        </div>
+                      </div>
+                      <div className="text-[20px] font-bold mt-4 mb-4">
+                        {job.salary_range_min && job.salary_range_max
+                          ? `${job.salary_range_min}${
+                              job.salary_currency
+                                ? ` ${job.salary_currency}`
+                                : ""
+                            } - ${job.salary_range_max}${
+                              job.salary_currency
+                                ? ` ${job.salary_currency}`
+                                : ""
+                            }`
+                          : "Salary not specified"}
+                      </div>
+                      {/* Time with horizontal line */}
+                      <div className="flex items-center w-full mb-2">
+                        <div className={`flex-1 border-t-2 border-white`}></div>
+                        <span
+                          className={`ml-2 text-xs whitespace-nowrap text-[#0146B1] font-semibold`}
+                        >
+                          {job.created_at
+                            ? new Date(job.created_at).toLocaleDateString()
+                            : ""}
                         </span>
                       </div>
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="flex items-center gap-2">
+                          {/* Company Icon */}
+                          {job.company_logo ? (
+                            <img
+                              src={job.company_logo}
+                              alt={job.company_name}
+                              className="w-7 h-7 rounded-full bg-white/80 p-1"
+                            />
+                          ) : (
+                            <FaBuilding className="w-7 h-7 text-gray-400 bg-white/80 rounded-full p-1" />
+                          )}
+                          <div className="flex flex-col">
+                            <span
+                              className="text-sm font-semibold truncate block max-w-[120px]"
+                              title={job.company_name}
+                            >
+                              {job.company_name}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {job.job_location_name || "Remote"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span
+                            className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
+                          >
+                            {job.total_applicants} Applicants
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span
-                        className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold ${job.jobsColor}`}
-                      >
-                        {job.jobsCount} Jobs
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  ))
+              ) : (
+                <div className="text-white text-lg">No jobs found.</div>
+              )}
             </div>
           </div>
 
           {/* View All Jobs Button */}
           <div className="my-12">
-            <button className="px-6 py-4 rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition">
+            <button
+              onClick={() => router.push("/dashboard/job-board")}
+              className="px-6 py-4 rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
+            >
               View All Jobs
             </button>
           </div>
