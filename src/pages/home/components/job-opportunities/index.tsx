@@ -52,7 +52,7 @@ const JobOpportunities = () => {
 
   return (
     <div
-      className="relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black"
+      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
       style={{
         position: "relative",
       }}
