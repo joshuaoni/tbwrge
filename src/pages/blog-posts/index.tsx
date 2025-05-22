@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBlogs } from "@/actions/blog";
 import { useUserStore } from "@/hooks/use-user-store";
 import { BlogItem } from "@/actions/blog";
+import { FaUserCircle } from "react-icons/fa";
 
 const BlogPosts = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -137,7 +138,7 @@ export const BlogPostsWithPagination = () => {
 
   return (
     <div
-      className={`${poppins.className} pt-[90px] md:pt-[20px] bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
+      className={`${poppins.className} pt-[90px] md:pt-[100px] bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
     >
       <div className="flex flex-col text-center">
         <h1 className="text-2xl font-bold">Blog Posts</h1>
@@ -199,60 +200,53 @@ export const BlogPostsWithPagination = () => {
   );
 };
 
-export const BlogCard = ({ blog }: { blog: BlogItem }) => {
+const BlogCard = ({ blog }: { blog: BlogItem }) => {
   const router = useRouter();
+
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="flex flex-col h-full border rounded-[20px] shadow-[0px_20px_50px_0px_rgba(18,17,39,0.08)] w-full cursor-pointer bg-white"
+      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden"
     >
-      <div
-        className="w-full h-[200px] bg-cover bg-center rounded-t-[20px] flex-shrink-0"
-        style={{
-          backgroundImage: blog.image
-            ? `url(${blog.image})`
-            : "url('/unsplash_Tyg0rVhOTrE.png')",
-        }}
-      />
-      <div className="p-4 flex-1 flex flex-col">
-        <div className="my-2 w-fit px-4 py-1 text-center bg-[#E2D8FD] rounded-[20px] text-sm font-medium self-start">
-          <span>Article</span>
+      <div className="flex flex-col flex-grow w-full">
+        <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
+          <Image
+            src={blog.image || "/unsplash_Tyg0rVhOTrE.png"}
+            alt={blog.title}
+            width={825}
+            height={160}
+            className="w-full h-full object-cover"
+          />
         </div>
-        <h1 className="text-xl font-bold">{blog.title}</h1>
-        <div
-          className="text-sm text-[#2D2D2D] mt-2 max-h-32 overflow-hidden relative"
-          style={{
-            WebkitMaskImage:
-              "linear-gradient(180deg, #000 60%, transparent 100%)",
-          }}
-          dangerouslySetInnerHTML={{
-            __html: blog.content || "No content available",
-          }}
-        />
+        <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3">
+          {blog.title}
+        </div>
       </div>
-      <div className="flex items-center space-x-2 p-4 mt-auto">
-        <div className="w-[45px] h-[45px] rounded-full flex items-center justify-center bg-gray-100 overflow-hidden">
-          {blog.user?.photo ? (
-            <div
-              className="w-full h-full bg-cover bg-center rounded-full"
-              style={{ backgroundImage: `url(${blog.user.photo})` }}
-            />
-          ) : (
-            <UserCircle2 className="w-8 h-8 text-black" />
-          )}
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm underline decoration-[#b9b9b9] underline-offset-[5px]">
+      {/* Author Section */}
+      <div className="flex items-center justify-end w-full gap-2 px-2 py-3 border-t border-gray-100 bg-white mt-auto">
+        <div>
+          <p className="pb-[2px] font-semibold text-gray-900 text-[15px] leading-tight">
             {blog.user?.name || "Anonymous"}
-          </span>
-          <span className="text-[8px] mt-[2px] text-[#b9b9b9]">
+          </p>
+          <p className="text-xs pt-[2px] border-t border-primary text-gray-500">
             {new Date(blog.created_at).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
               year: "numeric",
             })}
-          </span>
+          </p>
         </div>
+        {blog.user?.photo ? (
+          <Image
+            src={blog.user.photo}
+            alt={blog.user.name || "User"}
+            width={40}
+            height={40}
+            className="rounded-full object-cover w-10 h-10"
+          />
+        ) : (
+          <FaUserCircle className="w-10 h-10 text-gray-400" />
+        )}
       </div>
     </div>
   );

@@ -314,58 +314,40 @@ const NavigationHeader = ({
               </span>
               {showDropdown && (
                 <div className="absolute top-8 left-0 bg-white p-0 rounded shadow-lg z-50 min-w-[180px]">
-                  {!isLoggedIn ? (
+                  <div
+                    className="flex flex-col relative bg-white rounded border shadow min-w-[160px]"
+                    onMouseEnter={() => setHoveredRole(hoveredRole)}
+                    onMouseLeave={() => setHoveredRole(null)}
+                  >
                     <div
-                      className="flex flex-col relative bg-white rounded border shadow min-w-[160px]"
-                      onMouseEnter={() => setHoveredRole(hoveredRole)}
-                      onMouseLeave={() => setHoveredRole(null)}
+                      className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
+                      onMouseEnter={() => setHoveredRole("recruiter")}
                     >
-                      <div
-                        className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
-                        onMouseEnter={() => setHoveredRole("recruiter")}
-                      >
-                        For Recruiters <ChevronRight className="ml-2 w-4 h-4" />
-                      </div>
-                      <div
-                        className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
-                        onMouseEnter={() => setHoveredRole("job_seeker")}
-                      >
-                        For Job Seekers{" "}
-                        <ChevronRight className="ml-2 w-4 h-4" />
-                      </div>
-                      {hoveredRole && (
-                        <div className="absolute top-0 left-full bg-white shadow-lg min-w-[180px] rounded border flex flex-col gap-1 z-50">
-                          {(hoveredRole === "recruiter"
-                            ? recruiterMenu
-                            : jobSeekerMenu
-                          ).map((item) => (
-                            <div
-                              key={item.title}
-                              onClick={() => handleMenuClick(item.path)}
-                              className="text-black text-[15px] px-3 py-2 rounded hover:bg-gray-100 cursor-pointer whitespace-nowrap"
-                            >
-                              {item.title}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      For Recruiters <ChevronRight className="ml-2 w-4 h-4" />
                     </div>
-                  ) : (
-                    <div className="rounded p-2 flex flex-col gap-2">
-                      {(userRole === "recruiter"
-                        ? recruiterMenu
-                        : jobSeekerMenu
-                      ).map((item) => (
-                        <div
-                          key={item.title}
-                          onClick={() => handleMenuClick(item.path)}
-                          className="text-black text-[15px] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
-                        >
-                          {item.title}
-                        </div>
-                      ))}
+                    <div
+                      className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-[16px] font-medium flex items-center justify-between border-b last:border-b-0 text-black"
+                      onMouseEnter={() => setHoveredRole("job_seeker")}
+                    >
+                      For Job Seekers <ChevronRight className="ml-2 w-4 h-4" />
                     </div>
-                  )}
+                    {hoveredRole && (
+                      <div className="absolute top-0 left-full bg-white shadow-lg min-w-[180px] rounded border flex flex-col gap-1 z-50">
+                        {(hoveredRole === "recruiter"
+                          ? recruiterMenu
+                          : jobSeekerMenu
+                        ).map((item) => (
+                          <div
+                            key={item.title}
+                            onClick={() => handleMenuClick(item.path)}
+                            className="text-black text-[15px] px-3 py-2 rounded hover:bg-gray-100 cursor-pointer whitespace-nowrap"
+                          >
+                            {item.title}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

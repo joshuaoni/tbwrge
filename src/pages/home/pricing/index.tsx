@@ -4,6 +4,7 @@ import { inter, montserrat, outfit, poppins } from "@/constants/app";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Community from "../components/community";
+import Expertise from "../components/expertise";
 
 const PricingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -266,7 +267,9 @@ const PricingPage = () => {
     ];
 
     return (
-      <div className="h-[40px] flex items-center justify-between p-4">
+      <div
+        className={`${outfit.className} h-[40px] flex items-center justify-between p-4`}
+      >
         <span className={boldLabels.includes(label) ? "font-extrabold" : ""}>
           {label}
         </span>
@@ -287,9 +290,9 @@ const PricingPage = () => {
 
   return (
     <LandingWrapper>
-      <main className={`${inter.className} flex flex-col`}>
+      <main className={`${outfit.className} flex flex-col`}>
         <div
-          className={`${poppins.className} bg-gradient-to-b from-gray-50 via-gray-50/50 to-white md:px-16 flex flex-col space-y-4 items-center`}
+          className={`${outfit.className} bg-gradient-to-b from-gray-50 via-gray-50/50 to-white md:px-16 flex flex-col space-y-4 items-center`}
         >
           <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 mb-0 md:mb-12 items-center">
             <h1 className="text-[25px] font-extrabold p-4">Pricing</h1>
@@ -1379,7 +1382,8 @@ const PricingPage = () => {
         </div>
       </main>
 
-      <Community />
+      <hr className="w-full border-t-[1px] border-gray-200" />
+      <Expertise />
     </LandingWrapper>
   );
 };

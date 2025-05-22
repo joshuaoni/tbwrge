@@ -4,6 +4,7 @@ import Community from "../components/community";
 import Image from "next/image";
 import BlogsHeaderImage from "../../../../public/images/blogs_header_image.jpeg";
 import { BlogPostsWithPagination } from "@/pages/blog-posts";
+import Expertise from "../components/expertise";
 
 const index = () => {
   return (
@@ -11,7 +12,7 @@ const index = () => {
       <section>
         <BlogPostsWithPagination />
       </section>
-      <Community />
+      <Expertise />
     </LandingWrapper>
   );
 };
