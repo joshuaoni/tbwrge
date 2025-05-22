@@ -220,10 +220,15 @@ const NavigationHeader = ({
     },
   ];
 
-  const handleMenuClick = (path: string) => {
+  const handleMenuClick = (path: string, isRecruiterMenu = false) => {
     if (!userData?.token) {
+      // If not logged in, redirect to login with the intended destination
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else if (isRecruiterMenu && userData?.user?.role === "job_seeker") {
+      // If job_seeker tries to access recruiter menu, redirect to login
       router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
     } else {
+      // If logged in and authorized, go directly to the page
       router.push(path);
     }
   };
@@ -322,7 +327,12 @@ const NavigationHeader = ({
                         ).map((item) => (
                           <div
                             key={item.title}
-                            onClick={() => handleMenuClick(item.path)}
+                            onClick={() =>
+                              handleMenuClick(
+                                item.path,
+                                hoveredRole === "recruiter"
+                              )
+                            }
                             className="text-black text-[15px] px-3 py-2 rounded hover:bg-gray-100 cursor-pointer whitespace-nowrap"
                           >
                             {item.title}
