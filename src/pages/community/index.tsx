@@ -11,9 +11,14 @@ import { getPosts, Post } from "@/actions/get-posts";
 import { useUserStore } from "@/hooks/use-user-store";
 import { togglePostVote } from "@/actions/upvote-post";
 import { deletePost } from "@/actions/delete-post";
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
+import {
+  TrashIcon,
+  PencilIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { getTags } from "@/actions/get-tags";
 import { Tag } from "@/actions/get-tags";
+import { useRouter } from "next/router";
 
 const CommunityPage = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -22,6 +27,8 @@ const CommunityPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const { userData } = useUserStore();
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const { postId } = router.query;
 
   const {
     data: posts = [],
@@ -101,6 +108,127 @@ const CommunityPage = () => {
       toast.error(error.message || "Failed to delete post");
     },
   });
+
+  useEffect(() => {
+    if (postId && posts.length > 0 && !selectedPost) {
+      const found = posts.find((p) => p.id.toString() === postId);
+      if (found) setSelectedPost(found);
+    }
+  }, [postId, posts, selectedPost]);
+
+  const PostCard = ({
+    post,
+    userData,
+    setSelectedPost,
+    setEditingPost,
+    setIsCreatingPost,
+    deletePostMutation,
+    upvoteMutation,
+  }: any) => (
+    <div
+      className="bg-white rounded-xl shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] p-3 md:p-4 mb-4 cursor-pointer hover:shadow-lg transition-shadow relative"
+      onClick={() => setSelectedPost(post)}
+    >
+      {userData?.user?.id?.toString() === post.user.id.toString() && (
+        <div className="absolute top-3 right-3 flex gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditingPost(post);
+              setIsCreatingPost(true);
+            }}
+            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            title="Edit post"
+          >
+            <PencilIcon className="w-4 h-4 text-gray-500 hover:text-blue-500" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              deletePostMutation.mutate(post.id.toString());
+            }}
+            disabled={deletePostMutation.isPending}
+            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            title="Delete post"
+          >
+            <TrashIcon className="w-4 h-4 text-gray-500 hover:text-red-500" />
+          </button>
+        </div>
+      )}
+      <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+        {post.user.profile_picture ? (
+          <Image
+            src={post.user.profile_picture}
+            alt={`${post.user.name} ${post.user.last_name}`}
+            width={30}
+            height={30}
+            className="rounded-full md:w-[30px] md:h-[30px]"
+          />
+        ) : (
+          <UserCircleIcon className="w-8 h-8 text-gray-500" />
+        )}
+        <div>
+          <div className="flex items-center gap-1 md:gap-2">
+            <h3 className="text-xs md:text-sm font-medium">
+              {post.user.name} {post.user.last_name}
+            </h3>
+            <span className="text-[10px] md:text-xs text-black">•</span>
+            <p className="text-[10px] md:text-xs text-black">
+              {new Date(post.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <h2 className="text-base md:text-[16px] font-semibold text-[#1E2937] mb-2">
+        {post.title}
+      </h2>
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col font-semibold">
+          <p className="text-xs md:text-sm font-medium">{post.comments}</p>
+          <p className="text-xs md:text-sm text-black">Comment</p>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-xs md:text-sm text-black">{post.upvotes}</p>
+          <p className="text-xs md:text-sm">Upvotes</p>
+        </div>
+      </div>
+      <div className="flex font-semibold items-center gap-2 md:gap-4 mt-3 md:mt-4 border-t pt-3 md:pt-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            upvoteMutation.mutate(post.id.toString());
+          }}
+          disabled={upvoteMutation.isPending}
+          className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
+            post.reacted ? "bg-green-50 border-green-300" : ""
+          }`}
+        >
+          <Image
+            src="/like.png"
+            alt="Upvote"
+            width={16}
+            height={16}
+            className={`w-4 h-4 md:w-5 md:h-5 ${
+              post.reacted ? "opacity-100" : "opacity-50"
+            }`}
+          />
+          <span className="text-xs md:text-sm">
+            {post.reacted ? "Upvoted" : "Upvote"}
+          </span>
+        </button>
+        <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
+          <Image
+            src="/brush.png"
+            alt="Comment"
+            width={16}
+            height={16}
+            className="w-4 h-4 md:w-5 md:h-5"
+          />
+          <span className="text-xs md:text-sm">Comment</span>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -218,117 +346,16 @@ const CommunityPage = () => {
                   </div>
                 ) : (
                   posts.map((post) => (
-                    <div
+                    <PostCard
                       key={post.id}
-                      className="bg-white rounded-xl shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] p-3 md:p-4 mb-4 cursor-pointer hover:shadow-lg transition-shadow relative"
-                      onClick={() => setSelectedPost(post)}
-                    >
-                      {userData?.user?.id?.toString() ===
-                        post.user.id.toString() && (
-                        <div className="absolute top-3 right-3 flex gap-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingPost(post);
-                              setIsCreatingPost(true);
-                            }}
-                            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
-                            title="Edit post"
-                          >
-                            <PencilIcon className="w-4 h-4 text-gray-500 hover:text-blue-500" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deletePostMutation.mutate(post.id.toString());
-                            }}
-                            disabled={deletePostMutation.isPending}
-                            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
-                            title="Delete post"
-                          >
-                            <TrashIcon className="w-4 h-4 text-gray-500 hover:text-red-500" />
-                          </button>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
-                          <Image
-                            src={post.user.profile_picture || "/Mask.png"}
-                            alt={`${post.user.name} ${post.user.last_name}`}
-                            width={24}
-                            height={24}
-                            className="rounded-full md:w-[30px] md:h-[32px]"
-                          />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1 md:gap-2">
-                            <h3 className="text-xs md:text-sm font-medium">
-                              {post.user.name} {post.user.last_name}
-                            </h3>
-                            <span className="text-[10px] md:text-xs text-black">
-                              •
-                            </span>
-                            <p className="text-[10px] md:text-xs text-black">
-                              {new Date(post.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <h2 className="text-base md:text-[16px] font-semibold text-[#1E2937] mb-2">
-                        {post.title}
-                      </h2>
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col font-semibold">
-                          <p className="text-xs md:text-sm font-medium">
-                            {post.comments}
-                          </p>
-                          <p className="text-xs md:text-sm text-black">
-                            Comment
-                          </p>
-                        </div>
-                        <div className="flex flex-col">
-                          <p className="text-xs md:text-sm text-black">
-                            {post.upvotes}
-                          </p>
-                          <p className="text-xs md:text-sm">Upvotes</p>
-                        </div>
-                      </div>
-                      <div className="flex font-semibold items-center gap-2 md:gap-4 mt-3 md:mt-4 border-t pt-3 md:pt-4">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            upvoteMutation.mutate(post.id.toString());
-                          }}
-                          disabled={upvoteMutation.isPending}
-                          className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
-                            post.reacted ? "bg-green-50 border-green-300" : ""
-                          }`}
-                        >
-                          <Image
-                            src="/like.png"
-                            alt="Upvote"
-                            width={16}
-                            height={16}
-                            className={`w-4 h-4 md:w-5 md:h-5 ${
-                              post.reacted ? "opacity-100" : "opacity-50"
-                            }`}
-                          />
-                          <span className="text-xs md:text-sm">
-                            {post.reacted ? "Upvoted" : "Upvote"}
-                          </span>
-                        </button>
-                        <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
-                          <Image
-                            src="/brush.png"
-                            alt="Comment"
-                            width={16}
-                            height={16}
-                            className="w-4 h-4 md:w-5 md:h-5"
-                          />
-                          <span className="text-xs md:text-sm">Comment</span>
-                        </button>
-                      </div>
-                    </div>
+                      post={post}
+                      userData={userData}
+                      setSelectedPost={setSelectedPost}
+                      setEditingPost={setEditingPost}
+                      setIsCreatingPost={setIsCreatingPost}
+                      deletePostMutation={deletePostMutation}
+                      upvoteMutation={upvoteMutation}
+                    />
                   ))
                 )}
               </>

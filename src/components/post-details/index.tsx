@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleLeftIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Post } from "@/actions/get-posts";
 import { getComments, Comment } from "@/actions/get-comments";
@@ -132,15 +135,17 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
 
       {/* Author Info */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-full bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+        {post.user.profile_picture ? (
           <Image
-            src={post.user.profile_picture || "/Mask.png"}
+            src={post.user.profile_picture}
             alt={`${post.user.name} ${post.user.last_name}`}
-            width={24}
-            height={24}
-            className="rounded-full"
+            width={30}
+            height={30}
+            className="rounded-full md:w-[30px] md:h-[30px]"
           />
-        </div>
+        ) : (
+          <UserCircleIcon className="w-8 h-8 text-gray-500" />
+        )}
         <span className="text-sm font-medium">
           {post.user.name} {post.user.last_name}
         </span>
@@ -179,15 +184,18 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
           className="p-4 border-b border-gray-200"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+            {userData?.user?.profile_picture ? (
               <Image
-                src="/Mask.png"
-                alt={userData?.user?.name || "Current User"}
+                src={userData?.user?.profile_picture}
+                alt={`${userData?.user?.name} `}
                 width={30}
                 height={30}
-                className="rounded-full"
+                className="rounded-full md:w-[30px] md:h-[30px]"
               />
-            </div>
+            ) : (
+              <UserCircleIcon className="w-8 h-8 text-gray-500" />
+            )}
+
             <div className="flex-1">
               <input
                 type="text"

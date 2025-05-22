@@ -1,6 +1,5 @@
 import { inter, outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BlogCard } from "@/pages/blog-posts";
 import LandingFooter from "@/pages/home/components/wrapper/landing-footer";
 import LandingHeader from "@/pages/home/components/wrapper/landing-header";
 import { ChevronLeft, ChevronRight, UserCircle2 } from "lucide-react";

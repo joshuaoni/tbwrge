@@ -11,11 +11,14 @@ import {
   ChevronDown,
   Menu,
   X,
+  UserCircleIcon,
 } from "lucide-react";
 import { FaUsers } from "react-icons/fa";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const CommunityDashHeader = () => {
   const router = useRouter();
+  const { userData } = useUserStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -99,15 +102,17 @@ const CommunityDashHeader = () => {
             <Image src="/noti.png" alt="Home" width={20} height={20} />
           </button>
           <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded-full">
-            <div className="w-10 h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+            {userData?.user?.profile_picture ? (
               <Image
-                src="/Mask.png"
-                alt="User Avatar"
+                src={userData?.user?.profile_picture}
+                alt={`${userData?.user?.name} `}
                 width={30}
-                height={32}
-                className="rounded-full"
+                height={30}
+                className="rounded-full md:w-[30px] md:h-[30px]"
               />
-            </div>
+            ) : (
+              <UserCircleIcon className="w-8 h-8 text-gray-500" />
+            )}
             <span className="text-sm font-medium">David</span>
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </div>
@@ -156,15 +161,17 @@ const CommunityDashHeader = () => {
               <span className="text-sm">Notifications</span>
             </button>
             <div className="flex items-center gap-3 w-full p-3 hover:bg-gray-50 rounded-lg">
-              <div className="w-8 h-8 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+              {userData?.user?.profile_picture ? (
                 <Image
-                  src="/Mask.png"
-                  alt="User Avatar"
-                  width={24}
-                  height={24}
-                  className="rounded-full"
+                  src={userData?.user?.profile_picture}
+                  alt={`${userData?.user?.name} `}
+                  width={30}
+                  height={30}
+                  className="rounded-full md:w-[30px] md:h-[30px]"
                 />
-              </div>
+              ) : (
+                <UserCircleIcon className="w-8 h-8 text-gray-500" />
+              )}
               <span className="text-sm">Profile</span>
             </div>
           </div>
