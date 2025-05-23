@@ -11,6 +11,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { getJobOpen } from "@/actions/get-jobs-open";
 import { FaBuilding } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 const categories = [
   { name: "Product Management", count: 34, color: "bg-gray-200 text-gray-700" },
@@ -75,6 +76,15 @@ const JobOpportunities = () => {
       </div>
     </div>
   );
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+    }),
+  };
 
   return (
     <div
@@ -180,108 +190,118 @@ const JobOpportunities = () => {
               ) : isError ? (
                 <div className="text-red-500 text-lg">Failed to load jobs.</div>
               ) : jobs && jobs.length > 0 ? (
-                jobs
-                  .slice(page * jobsPerPage, page * jobsPerPage + jobsPerPage)
-                  .map((job: any, idx: number) => (
-                    <div
-                      key={job.id}
-                      className={`w-full md:w-80 rounded-2xl p-6 ${
-                        idx === 0
-                          ? featuredCardClass
-                          : "bg-[#E4EEFC] text-gray-900 border border-gray-200"
-                      } shadow-lg flex flex-col gap-4`}
-                    >
-                      <div className="flex flex-col gap-4">
-                        <span
-                          className="text-[22px] font-semibold truncate w-full block"
-                          title={job.job_title}
-                        >
-                          {job.job_title}
-                        </span>
-                        <div className="flex gap-2">
+                <AnimatePresence>
+                  {jobs
+                    .slice(page * jobsPerPage, page * jobsPerPage + jobsPerPage)
+                    .map((job: any, idx: number) => (
+                      <motion.div
+                        key={job.id}
+                        custom={idx}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={cardVariants}
+                        className={`cursor-pointer hover:scale-[1.01] transition-all duration-200 w-full md:w-80 rounded-2xl p-6 ${
+                          idx === 0
+                            ? featuredCardClass
+                            : "bg-[#E4EEFC] text-gray-900 border border-gray-200"
+                        } shadow-lg flex flex-col gap-4`}
+                        onClick={() =>
+                          router.push(`/dashboard/job-board/${job.id}`)
+                        }
+                      >
+                        <div className="flex flex-col gap-4">
                           <span
-                            className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
+                            className="text-[22px] font-semibold truncate w-full block"
+                            title={job.job_title}
                           >
-                            {job.job_type?.replace("_", " ") || "Job"}
+                            {job.job_title}
                           </span>
-                          {job.tags &&
-                            job.tags
-                              .split(",")
-                              .slice(0, 1)
-                              .map((tag: string, j: number) => (
-                                <span
-                                  key={j}
-                                  className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
-                                >
-                                  {tag.trim()}
-                                </span>
-                              ))}
-                        </div>
-                      </div>
-                      <div className="text-[20px] font-bold mt-4 mb-4">
-                        {job.salary_range_min && job.salary_range_max
-                          ? `${job.salary_range_min}${
-                              job.salary_currency
-                                ? ` ${job.salary_currency}`
-                                : ""
-                            } - ${job.salary_range_max}${
-                              job.salary_currency
-                                ? ` ${job.salary_currency}`
-                                : ""
-                            }`
-                          : "Salary not specified"}
-                      </div>
-                      {/* Time with horizontal line */}
-                      <div className="flex items-center w-full mb-2">
-                        <div
-                          className={`flex-1 border-t-2 ${
-                            idx === 0 ? featuredDashClass : "border-white"
-                          }`}
-                        ></div>
-                        <span
-                          className={`ml-2 text-xs whitespace-nowrap font-semibold ${
-                            idx === 0 ? featuredTimeClass : "text-[#0146B1]"
-                          }`}
-                        >
-                          {job.created_at
-                            ? new Date(job.created_at).toLocaleDateString()
-                            : ""}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex items-center gap-2">
-                          {/* Company Icon */}
-                          {job.company_logo ? (
-                            <img
-                              src={job.company_logo}
-                              alt={job.company_name}
-                              className="w-7 h-7 rounded-full bg-white/80 p-1"
-                            />
-                          ) : (
-                            <FaBuilding className="w-7 h-7 text-gray-400 bg-white/80 rounded-full p-1" />
-                          )}
-                          <div className="flex flex-col">
+                          <div className="flex gap-2">
                             <span
-                              className="text-sm font-semibold truncate block max-w-[120px]"
-                              title={job.company_name}
+                              className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
                             >
-                              {job.company_name}
+                              {job.job_type?.replace("_", " ") || "Job"}
                             </span>
-                            <span className="text-xs text-gray-400">
-                              {job.job_location_name || "Remote"}
+                            {job.tags &&
+                              job.tags
+                                .split(",")
+                                .slice(0, 1)
+                                .map((tag: string, j: number) => (
+                                  <span
+                                    key={j}
+                                    className={`px-3 py-1 rounded-full text-[16px] font-semibold bg-black/20 text-white`}
+                                  >
+                                    {tag.trim()}
+                                  </span>
+                                ))}
+                          </div>
+                        </div>
+                        <div className="text-[20px] font-bold mt-4 mb-4">
+                          {job.salary_range_min && job.salary_range_max
+                            ? `${job.salary_range_min}${
+                                job.salary_currency
+                                  ? ` ${job.salary_currency}`
+                                  : ""
+                              } - ${job.salary_range_max}${
+                                job.salary_currency
+                                  ? ` ${job.salary_currency}`
+                                  : ""
+                              }`
+                            : "Salary not specified"}
+                        </div>
+                        {/* Time with horizontal line */}
+                        <div className="flex items-center w-full mb-2">
+                          <div
+                            className={`flex-1 border-t-2 ${
+                              idx === 0 ? featuredDashClass : "border-white"
+                            }`}
+                          ></div>
+                          <span
+                            className={`ml-2 text-xs whitespace-nowrap font-semibold ${
+                              idx === 0 ? featuredTimeClass : "text-[#0146B1]"
+                            }`}
+                          >
+                            {job.created_at
+                              ? new Date(job.created_at).toLocaleDateString()
+                              : ""}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center gap-2">
+                            {/* Company Icon */}
+                            {job.company_logo ? (
+                              <img
+                                src={job.company_logo}
+                                alt={job.company_name}
+                                className="w-7 h-7 rounded-full bg-white/80 p-1"
+                              />
+                            ) : (
+                              <FaBuilding className="w-7 h-7 text-gray-400 bg-white/80 rounded-full p-1" />
+                            )}
+                            <div className="flex flex-col">
+                              <span
+                                className="text-sm font-semibold truncate block max-w-[120px]"
+                                title={job.company_name}
+                              >
+                                {job.company_name}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {job.job_location_name || "Remote"}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span
+                              className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
+                            >
+                              {job.total_applicants} Applicants
                             </span>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end">
-                          <span
-                            className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
-                          >
-                            {job.total_applicants} Applicants
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
+                      </motion.div>
+                    ))}
+                </AnimatePresence>
               ) : (
                 <>
                   {[...Array(3)].map((_, i) => (

@@ -12,22 +12,50 @@ import Tools from "./components/tools";
 import TopTalents from "./components/top-talents";
 import LandingWrapper from "./components/wrapper/landing-wrapper";
 import Blogs from "./components/blogs";
+import { motion } from "framer-motion";
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, ease: "easeOut" },
+  viewport: { once: true },
+};
 
 const HomePage = () => {
   return (
     <LandingWrapper>
-      <LandingHeroSection />
+      <motion.div {...fadeInUp}>
+        <LandingHeroSection />
+      </motion.div>
       {/* <Partners /> */}
-      <AboutUs />
-      <JobOpportunities />
-      <TopTalents />
-      <HomePageStats />
-      <Tools />
-      <RightCandidate />
-      <PricingPlans />
-      <Blogs />
+      <motion.div {...fadeInUp}>
+        <AboutUs />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <JobOpportunities />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <TopTalents />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <HomePageStats />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <Tools />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <RightCandidate />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <PricingPlans />
+      </motion.div>
+      <motion.div {...fadeInUp}>
+        <Blogs />
+      </motion.div>
       {/* <BlogPosts /> */}
-      <Expertise />
+      <motion.div {...fadeInUp}>
+        <Expertise />
+      </motion.div>
       {/* <Community /> */}
     </LandingWrapper>
   );

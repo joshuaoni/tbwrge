@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { poppins } from "@/constants/app";
 import { outfit } from "@/constants/app";
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { useUserStore } from "@/hooks/use-user-store";
@@ -29,19 +28,11 @@ const LandingHeader = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userData } = useUserStore();
 
-  const handleMenuClick = (path: string) => {
-    if (!userData?.token) {
-      // If not logged in, redirect to login with the intended destination
-      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
-    } else {
-      // If logged in, go directly to the page
-      router.push(path);
-    }
-  };
-
   return (
     <>
-      <div className="absolute top-0 w-full px-4 md:px-16 z-20 flex items-center text-white justify-between bg-transparent py-4">
+      <div
+        className={`${outfit.className} absolute top-0 w-full px-4 md:px-16 z-20 flex items-center text-white justify-between bg-transparent py-4`}
+      >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-8">
             <div
@@ -141,7 +132,7 @@ const LandingHeader = ({
                   }}
                   className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg"
                 >
-                  <span className={`${poppins.className} text-sm`}>
+                  <span className={`${outfit.className} text-sm`}>
                     {item.title}
                   </span>
                 </button>
@@ -157,7 +148,7 @@ const LandingHeader = ({
                 }}
                 className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg"
               >
-                <span className={`${poppins.className} text-sm`}>Log In</span>
+                <span className={`${outfit.className} text-sm`}>Log In</span>
               </button>
               <button
                 onClick={() => {
@@ -166,7 +157,7 @@ const LandingHeader = ({
                 }}
                 className="flex items-center w-full p-3 bg-[#009379] hover:bg-[#008369] text-white rounded-lg justify-center"
               >
-                <span className={`${poppins.className} text-sm font-medium`}>
+                <span className={`${outfit.className} text-sm font-medium`}>
                   Sign Up
                 </span>
               </button>

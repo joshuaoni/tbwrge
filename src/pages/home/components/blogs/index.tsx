@@ -6,6 +6,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { useState } from "react";
 import { outfit } from "@/constants/app";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 const BLOGS_PER_PAGE = 8;
 
@@ -15,7 +16,7 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden"
+      className="hover:scale-[1.01] transition-all duration-200 cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden"
     >
       <div className="flex flex-col flex-grow w-full">
         <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
@@ -106,6 +107,15 @@ const Blogs = () => {
   const prevSlide = () => {
     if (!blogs) return;
     setCurrentSlide((prev) => (prev - 1 + blogs.length) % blogs.length);
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.12, duration: 0.5, ease: "easeOut" },
+    }),
   };
 
   return (
@@ -230,16 +240,23 @@ const Blogs = () => {
           </div>
           {/* Desktop/Tablet Grid with Pagination */}
           <div className="w-full overflow-hidden hidden md:block">
-            <div
-              className={`flex flex-row flex-wrap gap-6 mt-16 justify-center md:justify-between transition-all duration-500 ${getSlideClass()}`}
-            >
-              {isLoading ? (
-                <div className="text-white text-lg">Loading...</div>
-              ) : (
-                blogs?.map((blog: BlogItem) => (
-                  <BlogCard key={blog.id} blog={blog} />
-                ))
-              )}
+            <div className="w-full max-w-7xl flex flex-wrap gap-8 justify-center items-center">
+              <AnimatePresence>
+                {blogs &&
+                  blogs.length > 0 &&
+                  blogs.map((blog: BlogItem, idx: number) => (
+                    <motion.div
+                      key={blog.id}
+                      custom={idx}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                      variants={cardVariants}
+                    >
+                      <BlogCard blog={blog} />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
             </div>
           </div>
 

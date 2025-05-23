@@ -1,6 +1,14 @@
+import { Button } from "@/components/ui/button";
 import { outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+import { getTalents } from "@/actions/talent";
+import { useUserStore } from "@/hooks/use-user-store";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Talent {
   id: number;
@@ -62,27 +70,17 @@ const dummyTalents: Talent[] = [
 ];
 
 const TalentCard = ({ talent }: { talent: Talent }) => {
+  const router = useRouter();
+
   return (
     <div
-      className="rounded-[28px] border border-black/60 shadow-[0_4px_0_0_rgba(0,0,0,0.7)] bg-white w-[340px] h-[280px] flex flex-col items-center p-7 relative"
+      onClick={() => router.push(`/dashboard/talent-pool/${talent.id}/details`)}
+      className="hover:scale-[1.01] transition-all duration-200 cursor-pointer rounded-[28px] border border-black/60 shadow-[0_4px_0_0_rgba(0,0,0,0.7)] bg-white w-[340px] h-[280px] flex flex-col items-center p-7 relative"
       style={{ boxSizing: "border-box" }}
     >
       {/* Profile + Name/Title */}
       <div className="flex gap-4 items-end justify-start w-full">
         <div className="relative w-[84px] h-[84px] mb-2">
-          {/* Green SVG shape with shadow */}
-          <svg
-            className="absolute left-0 top-0 w-full h-full z-0"
-            viewBox="0 0 84 84"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M42 0C54 0 84 30 84 42C84 54 54 84 42 84C30 84 0 54 0 42C0 30 30 0 42 0Z"
-              fill="#00C853"
-              fillOpacity="0.8"
-            />
-          </svg>
           {/* Shadow for the SVG shape */}
           <svg
             className="absolute left-2 top-2 w-full h-full z-0"
@@ -92,18 +90,22 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
           >
             <path
               d="M42 0C54 0 84 30 84 42C84 54 54 84 42 84C30 84 0 54 0 42C0 30 30 0 42 0Z"
-              fill="#000"
+              fill="#009379"
               fillOpacity="0.18"
             />
           </svg>
           {/* Profile image */}
-          <Image
-            src={talent.image}
-            alt={talent.name}
-            width={84}
-            height={84}
-            className="rounded-full object-cover absolute left-0 top-0 w-[84px] h-[84px] z-10"
-          />
+          {talent.image ? (
+            <Image
+              src={talent.image}
+              alt={talent.name}
+              width={84}
+              height={84}
+              className="rounded-full object-cover absolute left-0 top-0 w-[84px] h-[84px] z-10"
+            />
+          ) : (
+            <UserCircleIcon className="absolute left-0 top-0 w-[90px] h-[90px] text-gray-300 z-10" />
+          )}
         </div>
         <div className="text-left mt-1">
           <div className="font-bold text-[20px] leading-tight text-black">
@@ -122,8 +124,59 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
   );
 };
 
+// Skeleton card for loading
+const TalentCardSkeleton = () => (
+  <div className="rounded-[28px] border border-black/20 shadow bg-gray-100 w-[340px] h-[280px] flex flex-col items-center p-7 animate-pulse">
+    <div className="flex gap-4 items-end justify-start w-full">
+      <div className="relative w-[84px] h-[84px] mb-2">
+        <div className="absolute left-0 top-0 w-full h-full bg-gray-300 rounded-full" />
+      </div>
+      <div className="text-left mt-1 flex-1">
+        <div className="h-6 bg-gray-300 rounded w-3/4 mb-2" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+      </div>
+    </div>
+    <div className="w-full border-t border-black/10 my-5" />
+    <div className="h-4 bg-gray-200 rounded w-full mb-2" />
+    <div className="h-4 bg-gray-200 rounded w-2/3" />
+  </div>
+);
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+  }),
+};
+
 const TopTalents = () => {
   const isMobile = useIsMobile();
+  const router = useRouter();
+  const { userData } = useUserStore();
+  const [page, setPage] = useState(0);
+
+  const { data: talents, isLoading } = useQuery({
+    queryKey: ["get-talents", userData?.token],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getTalents(userData.token, {
+        page: "0",
+        text: "",
+        search_type: "text",
+      });
+    },
+    enabled: !!userData?.token,
+  });
+
+  const talentsList = talents || [];
+  const talentsPerPage = 6;
+  const totalPages = Math.ceil(talentsList.length / talentsPerPage);
+  const pagedTalents = talentsList.slice(
+    page * talentsPerPage,
+    page * talentsPerPage + talentsPerPage
+  );
 
   return (
     <div
@@ -131,7 +184,11 @@ const TopTalents = () => {
     >
       {/* Navigation Arrows and Frame Number */}
       <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
-        <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20">
+        <button
+          className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+          onClick={() => setPage((p) => Math.max(0, p - 1))}
+          disabled={page === 0 || isLoading}
+        >
           {/* Left Arrow SVG */}
           <svg
             width="16"
@@ -143,7 +200,11 @@ const TopTalents = () => {
             <path d="M10 4l-4 4 4 4" />
           </svg>
         </button>
-        <button className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20">
+        <button
+          className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          disabled={isLoading || page >= totalPages - 1}
+        >
           {/* Right Arrow SVG */}
           <svg
             width="16"
@@ -162,10 +223,45 @@ const TopTalents = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {dummyTalents.map((talent) => (
-          <TalentCard key={talent.id} talent={talent} />
-        ))}
+        {isLoading || !talents ? (
+          [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
+        ) : (
+          <AnimatePresence>
+            {pagedTalents.map((talent: any, idx: number) => (
+              <motion.div
+                key={talent.id}
+                custom={idx}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={cardVariants}
+              >
+                <TalentCard
+                  talent={{
+                    id: talent.id,
+                    name: talent.name || "No Name",
+                    title: talent.current_position || "No Title",
+                    image: talent.profile_photo,
+                    description:
+                      talent.experience_summary || "No description available.",
+                  }}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
       </div>
+      <Button
+        style={{
+          backgroundImage: "url(/hero-bg.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        onClick={() => router.push("/dashboard/talent-pool")}
+        className="mt-8 text-white rounded-full px-6 py-6 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+      >
+        View Talent Pool
+      </Button>
     </div>
   );
 };

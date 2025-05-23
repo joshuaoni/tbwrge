@@ -1,8 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { outfit } from "@/constants/app";
 import Image from "next/image";
+import { motion } from "framer-motion";
+
+const featureCards = [
+  {
+    image: "/one.png",
+    title: "Automated Job Posting & Candidate Vetting",
+  },
+  {
+    image: "/two.png",
+    title: "AI-Powered CV & Cover Letter Optimization",
+  },
+  {
+    image: "/three.png",
+    title: "Smart Interview & Screening Tools",
+  },
+  {
+    image: "/four.png",
+    title: "Real-Time Talent Matching & Ranking",
+  },
+];
 
 const Tools = () => {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+    }),
+  };
+
   return (
     <section
       className={`${outfit.className} w-full px-6 py-12 flex flex-col items-start md:px-16`}
@@ -35,183 +64,90 @@ const Tools = () => {
         </div>
         {/* Right: Recruiters & Job Seekers Cards */}
         <div className="flex flex-row gap-6 mt-4 md:mt-0">
-          {/* Recruiters Card */}
-          <div className="flex flex-col gap-2">
-            <span className="text-primary text-[20px] font-semibold tracking-wide">
-              Recruiters
-            </span>
-            <div
-              style={{
-                backgroundImage: "url(/hero-bg.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              className="rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md"
+          {["Recruiters", "Job Seekers"].map((role, idx) => (
+            <motion.div
+              key={role}
+              custom={idx}
+              initial="hidden"
+              animate="visible"
+              variants={cardVariants}
+              className="flex flex-col gap-2"
             >
-              <div className="w-full flex justify-center items-center">
-                <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
-                  {/* User Icon */}
-                  <svg width="56" height="56" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      cx="12"
-                      cy="8"
-                      r="4"
-                      stroke="#dfdfdf"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"
-                      stroke="#dfdfdf"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="text-white font-semibold text-lg leading-snug mb-4">
-                Job Posting, Talent Pool, Candidate Vetting Tools and many
-                more...
-              </div>
-              <a
-                href="#"
-                className="flex items-center text-white text-sm font-medium hover:underline"
+              <span className="text-primary text-[20px] font-semibold tracking-wide">
+                {role}
+              </span>
+              <div
+                style={{
+                  backgroundImage: "url(/hero-bg.jpg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                className="rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md"
               >
-                Learn More <span className="ml-1">→</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Job Seekers Card */}
-          <div className="flex flex-col gap-2">
-            <span className="text-primary text-[20px] font-bold tracking-wide">
-              Job Seekers
-            </span>
-            <div
-              style={{
-                backgroundImage: "url(/hero-bg.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              className="rounded-2xl p-6 pt-12 w-64 flex flex-col items-start shadow-md"
-            >
-              <div className="w-full flex justify-center items-center">
-                <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
-                  {/* User Icon */}
-                  <svg width="56" height="56" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      cx="12"
-                      cy="8"
-                      r="4"
-                      stroke="#dfdfdf"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"
-                      stroke="#dfdfdf"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
+                <div className="w-full flex justify-center items-center">
+                  <div className="w-[74px] h-[74px] rounded-full border border-white flex items-center justify-center mb-4">
+                    {/* User Icon */}
+                    <svg width="56" height="56" fill="none" viewBox="0 0 24 24">
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="4"
+                        stroke="#dfdfdf"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M4 20c0-2.5 3.5-4 8-4s8 1.5 8 4"
+                        stroke="#dfdfdf"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                  </div>
                 </div>
+                <div className="text-white font-semibold text-lg leading-snug mb-4">
+                  Job Posting, Talent Pool, Candidate Vetting Tools and many
+                  more...
+                </div>
+                <a
+                  href="#"
+                  className="flex items-center text-white text-sm font-medium hover:underline"
+                >
+                  Learn More <span className="ml-1">→</span>
+                </a>
               </div>
-              <div className="text-white font-semibold text-lg leading-snug mb-4">
-                Talent Pool, CV, Interview Preparation Tools and many more...
-              </div>
-              <a
-                href="#"
-                className="flex items-center text-white text-sm font-medium hover:underline"
-              >
-                Learn More <span className="ml-1">→</span>
-              </a>
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </div>
       </div>
       {/* Feature Cards Section */}
       <div className="w-full flex flex-row flex-wrap gap-6 mt-16 justify-center md:justify-between">
-        {/* Card 1 */}
-        <div
-          style={{
-            backgroundImage: "url(/hero-bg.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
-        >
-          {/* Icon Placeholder */}
-          <div className="mb-12">
-            <Image
-              src="/one.png"
-              alt="Automated Job Posting & Candidate Vetting"
-              width={825}
-              height={460}
-            />
-          </div>
-          <div className="text-white font-semibold text-xl leading-snug">
-            Automated Job Posting & Candidate Vetting
-          </div>
-        </div>
-        {/* Card 2 */}
-        <div
-          style={{
-            backgroundImage: "url(/hero-bg.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
-        >
-          <div className="mb-12">
-            <Image
-              src="/two.png"
-              alt="AI-Powered CV & Cover Letter Optimization"
-              width={825}
-              height={460}
-            />
-          </div>
-          <div className="text-white font-semibold text-xl leading-snug">
-            AI-Powered CV & Cover Letter Optimization
-          </div>
-        </div>
-        {/* Card 3 */}
-        <div
-          style={{
-            backgroundImage: "url(/hero-bg.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
-        >
-          <div className="mb-12">
-            <Image
-              src="/three.png"
-              alt="Smart Interview & Screening Tools"
-              width={825}
-              height={460}
-            />
-          </div>
-          <div className="text-white font-semibold text-xl leading-snug">
-            Smart Interview & Screening Tools
-          </div>
-        </div>
-        {/* Card 4 */}
-        <div
-          style={{
-            backgroundImage: "url(/hero-bg.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
-        >
-          <div className="mb-12">
-            <Image
-              src="/four.png"
-              alt="Real-Time Talent Matching & Ranking"
-              width={825}
-              height={460}
-            />
-          </div>
-          <div className="text-white font-semibold text-xl leading-snug">
-            Real-Time Talent Matching & Ranking
-          </div>
-        </div>
+        {featureCards.map((card, idx) => (
+          <motion.div
+            key={card.title}
+            custom={idx}
+            initial="hidden"
+            animate="visible"
+            variants={cardVariants}
+            className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
+            style={{
+              backgroundImage: "url(/hero-bg.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {/* Icon Placeholder */}
+            <div className="mb-12">
+              <Image
+                src={card.image}
+                alt={card.title}
+                width={825}
+                height={460}
+              />
+            </div>
+            <div className="text-white font-semibold text-xl leading-snug">
+              {card.title}
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );

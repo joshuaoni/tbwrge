@@ -38,7 +38,7 @@ export const getTalents = async (
     url: `${API_CONFIG.GET_TALENTS}?${queryParams.toString()}`,
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log({ response });
+  console.log("talents: ", { response });
   return response.data;
 };
 

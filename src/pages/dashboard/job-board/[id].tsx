@@ -166,7 +166,10 @@ const ApplicationForm = ({
 
   useEffect(() => {
     const fetchTalentProfile = async () => {
-      if (!userData?.token) return;
+      if (!userData?.token || !userData?.user?.joined_talent_pool) {
+        setIsLoadingProfile(false);
+        return;
+      }
 
       try {
         setIsLoadingProfile(true);

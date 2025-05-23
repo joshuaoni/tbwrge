@@ -1,8 +1,36 @@
 import { outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { motion } from "framer-motion";
 
 const HomePageStats = () => {
   const isMobile = useIsMobile();
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+    }),
+  };
+
+  const stats = [
+    {
+      value: "30+",
+      label: "Countries",
+      sub: "#7 2025 Global Ranking",
+    },
+    {
+      value: "15k+",
+      label: "Business Partners",
+      sub: "From Small Businesses to Large Enterprises",
+    },
+    {
+      value: "98%",
+      label: "Matching Accuracy",
+      sub: "Candidate and Job Matching",
+    },
+  ];
 
   return (
     <div
@@ -44,42 +72,24 @@ const HomePageStats = () => {
       </p>
 
       <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 mt-10 z-10">
-        {/* Countries */}
-        <div className="flex-1 flex flex-col items-center">
-          <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">
-            30+
-          </div>
-          <div className="text-white text-sm md:text-base font-semibold uppercase tracking-wide">
-            Countries
-          </div>
-          <div className="text-gray-300 text-xs md:text-sm">
-            #7 2025 Global Ranking
-          </div>
-        </div>
-        {/* Business Partners */}
-        <div className="flex-1 flex flex-col items-center">
-          <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">
-            15k+
-          </div>
-          <div className="text-white text-sm md:text-base font-semibold uppercase tracking-wide">
-            Business Partners
-          </div>
-          <div className="text-gray-300 text-xs md:text-sm">
-            From Small Businesses to Large Enterprises
-          </div>
-        </div>
-        {/* Matching Accuracy */}
-        <div className="flex-1 flex flex-col items-center">
-          <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">
-            98%
-          </div>
-          <div className="text-white text-sm md:text-base font-semibold uppercase tracking-wide">
-            Matching Accuracy
-          </div>
-          <div className="text-gray-300 text-xs md:text-sm">
-            Candidate and Job Matching
-          </div>
-        </div>
+        {stats.map((stat, idx) => (
+          <motion.div
+            key={stat.label}
+            custom={idx}
+            initial="hidden"
+            animate="visible"
+            variants={cardVariants}
+            className="flex-1 flex flex-col items-center"
+          >
+            <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">
+              {stat.value}
+            </div>
+            <div className="text-white text-sm md:text-base font-semibold uppercase tracking-wide">
+              {stat.label}
+            </div>
+            <div className="text-gray-300 text-xs md:text-sm">{stat.sub}</div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
