@@ -6,8 +6,10 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { outfit, poppins } from "@/constants/app";
+import { useRouter } from "next/router";
 
 const PricingPlans = () => {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = () => {
@@ -211,6 +213,7 @@ const PricingPlans = () => {
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
+            onClick={() => router.push("/home/pricing")}
             className=" text-white rounded-[16px] px-8 py-6 text-base font-semibold"
           >
             See full pricing

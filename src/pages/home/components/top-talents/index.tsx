@@ -71,10 +71,20 @@ const dummyTalents: Talent[] = [
 
 const TalentCard = ({ talent }: { talent: Talent }) => {
   const router = useRouter();
+  const { userData } = useUserStore();
+
+  const handleClick = () => {
+    const path = `/dashboard/talent-pool/${talent.id}/details`;
+    if (!userData?.token || userData?.user?.role === "job_seeker") {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
 
   return (
     <div
-      onClick={() => router.push(`/dashboard/talent-pool/${talent.id}/details`)}
+      onClick={handleClick}
       className="hover:scale-[1.01] transition-all duration-200 cursor-pointer rounded-[28px] border border-black/60 shadow-[0_4px_0_0_rgba(0,0,0,0.7)] bg-white w-[340px] h-[280px] flex flex-col items-center p-7 relative"
       style={{ boxSizing: "border-box" }}
     >
@@ -157,6 +167,15 @@ const TopTalents = () => {
   const { userData } = useUserStore();
   const [page, setPage] = useState(0);
 
+  const handleViewTalentPool = () => {
+    const path = "/dashboard/talent-pool";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   const { data: talents, isLoading } = useQuery({
     queryKey: ["get-talents", userData?.token],
     queryFn: async () => {
@@ -218,9 +237,11 @@ const TopTalents = () => {
         </button>
       </div>
 
-      <h2 className="w-full text-2xl md:text-3xl font-bold text-black mb-8">
-        Top Talents
-      </h2>
+      <div className="w-full flex justify-between items-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-black">
+          Top Talents
+        </h2>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {isLoading || !talents ? (
@@ -257,7 +278,7 @@ const TopTalents = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        onClick={() => router.push("/dashboard/talent-pool")}
+        onClick={handleViewTalentPool}
         className="mt-8 text-white rounded-full px-6 py-6 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
       >
         View Talent Pool

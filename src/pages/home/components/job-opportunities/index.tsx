@@ -28,6 +28,24 @@ const JobOpportunities = () => {
   const [page, setPage] = useState(0);
   const jobsPerPage = 3;
 
+  const handleJobClick = (jobId: string) => {
+    const path = `/dashboard/job-board/${jobId}`;
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleViewAllJobs = () => {
+    const path = "/dashboard/job-board";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   const {
     data: jobs,
     isLoading,
@@ -206,9 +224,7 @@ const JobOpportunities = () => {
                             ? featuredCardClass
                             : "bg-[#E4EEFC] text-gray-900 border border-gray-200"
                         } shadow-lg flex flex-col gap-4`}
-                        onClick={() =>
-                          router.push(`/dashboard/job-board/${job.id}`)
-                        }
+                        onClick={() => handleJobClick(job.id)}
                       >
                         <div className="flex flex-col gap-4">
                           <span
@@ -315,7 +331,7 @@ const JobOpportunities = () => {
           {/* View All Jobs Button */}
           <div className="my-12">
             <button
-              onClick={() => router.push("/dashboard/job-board")}
+              onClick={handleViewAllJobs}
               className="px-6 py-4 rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
             >
               View All Jobs

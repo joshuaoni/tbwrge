@@ -413,7 +413,7 @@ export default function TalentPool() {
           <>
             {!userData?.user?.joined_talent_pool ? (
               <Link
-                href="/join-talent-pool"
+                href="/dashboard/talent-pool/join-talent-pool"
                 className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
               >
                 <span>Join our Talent Pool</span>

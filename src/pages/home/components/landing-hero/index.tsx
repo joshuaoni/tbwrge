@@ -6,6 +6,8 @@ import ManSuit from "../../../../../public/images/man-suit.png";
 import RocketIcon from "../../../../../public/images/rocket.png";
 import { outfit, poppins } from "@/constants/app";
 import Partners from "../partners";
+import { useRouter } from "next/router";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const LandingHeroSection = () => {
   const [currentText, setCurrentText] = useState("");
@@ -13,6 +15,36 @@ const LandingHeroSection = () => {
   const fullText = "Candidate";
   const delay = 150; // Adjust speed here for faster/slower typing
   const isMobile = useIsMobile();
+  const router = useRouter();
+  const { userData } = useUserStore();
+
+  const handlePostJob = () => {
+    const path = "/dashboard/create";
+    if (!userData?.token || userData?.user?.role === "job_seeker") {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleJoinTalentPool = () => {
+    const path = "/dashboard/talent-pool/join-talent-pool";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleApplyJob = () => {
+    const path = "/dashboard/job-board";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   useEffect(() => {
     if (currentIndex < fullText.length) {
       const timeout = setTimeout(() => {
@@ -74,20 +106,22 @@ const LandingHeroSection = () => {
             <div
               className={`${poppins.className} flex gap-4 w-full items-start md:justify-center md:flex-row md:items-center space-y-4 md:space-y-0 mt-6 md:mt-12 md:space-x-4`}
             >
-              <Button className="w-[220px] bg-[#009379] text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]">
+              <Button
+                onClick={handlePostJob}
+                className="w-[220px] bg-[#009379] text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]"
+              >
                 Post a Job
               </Button>
-              <Button className="w-[220px] bg-[#00000000] border text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]">
+              <Button
+                onClick={handleJoinTalentPool}
+                className="w-[220px] bg-[#00000000] border text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]"
+              >
                 Join Talent Pool
               </Button>
-              <Button className="w-[220px] bg-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 text-primary rounded-[10px]">
-                {/* <Image
-                  src="/RocketLaunch.png"
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="mr-2"
-                /> */}
+              <Button
+                onClick={handleApplyJob}
+                className="w-[220px] bg-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 text-primary rounded-[10px]"
+              >
                 Apply for a Job
               </Button>
             </div>

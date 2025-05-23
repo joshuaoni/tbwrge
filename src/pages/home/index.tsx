@@ -24,9 +24,7 @@ const fadeInUp = {
 const HomePage = () => {
   return (
     <LandingWrapper>
-      <motion.div {...fadeInUp}>
-        <LandingHeroSection />
-      </motion.div>
+      <LandingHeroSection />
       {/* <Partners /> */}
       <motion.div {...fadeInUp}>
         <AboutUs />
