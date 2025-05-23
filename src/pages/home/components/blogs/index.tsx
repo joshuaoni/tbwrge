@@ -3,10 +3,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getBlogs, BlogItem } from "@/actions/blog";
 import { useUserStore } from "@/hooks/use-user-store";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { outfit } from "@/constants/app";
 import { useRouter } from "next/router";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 const BLOGS_PER_PAGE = 8;
 
@@ -68,6 +68,48 @@ const Blogs = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.4,
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (custom: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+        delay: custom * 0.1, // 0.1s delay between each card
+      },
+    }),
+  };
+
+  // Function to calculate the animation order for grid layout
+  const getAnimationOrder = (index: number, totalItems: number) => {
+    const itemsPerRow = 4; // Number of items per row in the grid
+    const row = Math.floor(index / itemsPerRow);
+    const col = index % itemsPerRow;
+
+    // For even rows (0, 2, etc.), go left to right
+    // For odd rows (1, 3, etc.), go right to left
+    if (row % 2 === 0) {
+      return row * itemsPerRow + col;
+    } else {
+      return row * itemsPerRow + (itemsPerRow - 1 - col);
+    }
+  };
 
   const { data: blogs, isLoading } = useQuery({
     queryKey: ["blogs", { approved: true, page: currentPage }],
@@ -109,17 +151,12 @@ const Blogs = () => {
     setCurrentSlide((prev) => (prev - 1 + blogs.length) % blogs.length);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.12, duration: 0.5, ease: "easeOut" },
-    }),
-  };
-
   return (
-    <div
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
       className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
       style={{
         position: "relative",
@@ -141,7 +178,10 @@ const Blogs = () => {
       />
       <div className="w-full relative z-10">
         {/* Navigation Arrows and Frame Number (Desktop/Tablet) */}
-        <div className="absolute top-8 right-12 items-center space-x-4 z-10 hidden md:flex">
+        <motion.div
+          variants={itemVariants}
+          className="absolute top-8 right-12 items-center space-x-4 z-10 hidden md:flex"
+        >
           <button
             className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-50"
             onClick={handlePrev}
@@ -174,15 +214,23 @@ const Blogs = () => {
               <path d="M6 4l4 4-4 4" />
             </svg>
           </button>
-        </div>
+        </motion.div>
 
         {/* Main Content */}
         <div className="flex flex-col items-center justify-center">
-          <h2 className="w-full text-2xl md:text-3xl capitalize font-bold text-white mb-8">
+          <motion.h2
+            variants={itemVariants}
+            custom={0}
+            className="w-full text-2xl md:text-3xl capitalize font-bold text-white mb-8"
+          >
             Blogs
-          </h2>
+          </motion.h2>
           {/* Mobile Carousel */}
-          <div className="relative w-full md:hidden mt-8">
+          <motion.div
+            variants={itemVariants}
+            custom={1}
+            className="relative w-full md:hidden mt-8"
+          >
             <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-300 ease-in-out"
@@ -237,41 +285,44 @@ const Blogs = () => {
                 <path d="M9 5l7 7-7 7" />
               </svg>
             </button>
-          </div>
+          </motion.div>
           {/* Desktop/Tablet Grid with Pagination */}
-          <div className="w-full overflow-hidden hidden md:block">
+          <motion.div
+            variants={itemVariants}
+            custom={2}
+            className="w-full overflow-hidden hidden md:block"
+          >
             <div className="w-full max-w-7xl flex flex-wrap gap-8 justify-center items-center">
-              <AnimatePresence>
-                {blogs &&
-                  blogs.length > 0 &&
-                  blogs.map((blog: BlogItem, idx: number) => (
-                    <motion.div
-                      key={blog.id}
-                      custom={idx}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                      variants={cardVariants}
-                    >
-                      <BlogCard blog={blog} />
-                    </motion.div>
-                  ))}
-              </AnimatePresence>
+              {blogs &&
+                blogs.length > 0 &&
+                blogs.map((blog: BlogItem, idx: number) => (
+                  <motion.div
+                    key={blog.id}
+                    custom={getAnimationOrder(idx, blogs.length)}
+                    variants={itemVariants}
+                  >
+                    <BlogCard blog={blog} />
+                  </motion.div>
+                ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* View All Blogs Button */}
-          <div className="my-12">
+          <motion.div
+            variants={itemVariants}
+            custom={blogs ? blogs.length + 3 : 3}
+            className="my-12"
+          >
             <button
               onClick={() => router.push("/home/blog")}
               className="text-sm px-[30px] py-[16px] rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
             >
               View All Blogs
             </button>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -7,8 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getTalents } from "@/actions/talent";
 import { useUserStore } from "@/hooks/use-user-store";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 interface Talent {
   id: number;
@@ -166,7 +166,35 @@ const TopTalents = () => {
   const router = useRouter();
   const { userData } = useUserStore();
   const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
+  const [direction, setDirection] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+  };
 
   const handleViewTalentPool = () => {
     const path = "/dashboard/talent-pool";
@@ -217,11 +245,18 @@ const TopTalents = () => {
   };
 
   return (
-    <div
-      className={`${outfit.className} bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12  md:p-12 md:px-16`}
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className={`${outfit.className} bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12 md:p-12 md:px-16`}
     >
       {/* Navigation Arrows and Frame Number */}
-      <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
+      <motion.div
+        variants={itemVariants}
+        className="absolute top-8 right-12 flex items-center space-x-4 z-10"
+      >
         <button
           className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={() => {
@@ -230,7 +265,6 @@ const TopTalents = () => {
           }}
           disabled={page === 0 || isLoading}
         >
-          {/* Left Arrow SVG */}
           <svg
             width="16"
             height="16"
@@ -249,7 +283,6 @@ const TopTalents = () => {
           }}
           disabled={isLoading || page >= totalPages - 1}
         >
-          {/* Right Arrow SVG */}
           <svg
             width="16"
             height="16"
@@ -260,15 +293,21 @@ const TopTalents = () => {
             <path d="M6 4l4 4-4 4" />
           </svg>
         </button>
-      </div>
+      </motion.div>
 
-      <div className="w-full flex justify-between items-center mb-8">
+      <motion.div
+        variants={itemVariants}
+        className="w-full flex justify-between items-center mb-8"
+      >
         <h2 className="text-2xl md:text-3xl font-bold text-black">
           Top Talents
         </h2>
-      </div>
+      </motion.div>
 
-      <div className="relative w-full max-w-6xl mx-auto min-h-[600px]">
+      <motion.div
+        variants={itemVariants}
+        className="relative w-full max-w-6xl mx-auto min-h-[600px]"
+      >
         <AnimatePresence custom={direction} initial={false} mode="wait">
           <motion.div
             key={page}
@@ -304,20 +343,22 @@ const TopTalents = () => {
                 ))}
           </motion.div>
         </AnimatePresence>
-      </div>
+      </motion.div>
 
-      <Button
-        style={{
-          backgroundImage: "url(/hero-bg.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        onClick={handleViewTalentPool}
-        className="mt-8 text-white rounded-full px-6 py-6 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
-      >
-        View Talent Pool
-      </Button>
-    </div>
+      <motion.div variants={itemVariants}>
+        <Button
+          style={{
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          onClick={handleViewTalentPool}
+          className="mt-8 text-white rounded-full px-6 py-6 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+        >
+          View Talent Pool
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import JobTools from "../../../../public/images/icons/job-tools.png";
 import CVTools from "../../../../public/images/icons/cv-tools.png";
 import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
@@ -7,10 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { outfit, poppins } from "@/constants/app";
 import { useRouter } from "next/router";
+import { motion, useInView } from "framer-motion";
 
 const PricingPlans = () => {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % plans.length);
@@ -66,19 +95,30 @@ const PricingPlans = () => {
       ],
     },
   ];
+
   return (
-    <div
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
       className={`${outfit.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
     >
       <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-0 mb-0 md:mb-12 items-center">
-        <h1 className="text-[35px] text-primary font-extrabold p-4">
-          Our Pricing Plans
-        </h1>
-        <p className="text-[20px] font-bold text-primary capitalize text-center pb-12 md:px-24">
-          Choose the Perfect Pricing for your hiring and career goals
-        </p>
+        <motion.div variants={itemVariants}>
+          <h1 className="text-[35px] text-primary text-center font-extrabold p-4">
+            Our Pricing Plans
+          </h1>
+          <p className="text-[20px] font-bold text-primary capitalize text-center pb-12 md:px-24">
+            Choose the Perfect Pricing for your hiring and career goals
+          </p>
+        </motion.div>
+
         {/* Mobile View with Slider */}
-        <div className="relative block md:hidden w-full mt-8">
+        <motion.div
+          variants={itemVariants}
+          className="relative block md:hidden w-full mt-8"
+        >
           <div className="overflow-hidden">
             <div
               className="flex transition-transform duration-300 ease-in-out"
@@ -151,13 +191,17 @@ const PricingPlans = () => {
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-        </div>
+        </motion.div>
 
         {/* Desktop/Tablet Grid View */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
+        <motion.div
+          variants={itemVariants}
+          className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0"
+        >
           {plans.map((plan, index: number) => (
-            <div
+            <motion.div
               key={index}
+              variants={itemVariants}
               className={`flex flex-col ${
                 plan.plan === "Enterprise"
                   ? "bg-primary text-white"
@@ -203,10 +247,11 @@ const PricingPlans = () => {
                   Get Started
                 </Button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-        <div className="!mt-[40px]">
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="!mt-[40px]">
           <Button
             style={{
               backgroundImage: "url(/hero-bg.jpg)",
@@ -214,13 +259,13 @@ const PricingPlans = () => {
               backgroundPosition: "center",
             }}
             onClick={() => router.push("/home/pricing")}
-            className=" text-white rounded-[16px] px-8 py-6 text-base font-semibold"
+            className="text-white rounded-[16px] px-8 py-6 text-base font-semibold"
           >
             See full pricing
           </Button>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
