@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { outfit } from "@/constants/app";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const featureCards = [
   {
@@ -23,23 +24,59 @@ const featureCards = [
 ];
 
 const Tools = () => {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const leftContentVariants = {
+    hidden: { opacity: 0, x: -100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const rightCardsVariants = {
+    hidden: { opacity: 0, x: 100 },
     visible: (i: number) => ({
       opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+      x: 0,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    }),
+  };
+
+  const featureCardVariants = {
+    hidden: { opacity: 0, x: 100, scale: 0.8 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.8,
+        ease: "easeOut",
+      },
     }),
   };
 
   return (
     <section
+      ref={ref}
       className={`${outfit.className} w-full px-6 py-12 flex flex-col items-start md:px-16`}
     >
       {/* Top Section */}
       <div className="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-8">
         {/* Left: Headline, Description, Button */}
-        <div className="max-w-lg flex flex-col gap-6">
+        <motion.div
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={leftContentVariants}
+          className="max-w-lg flex flex-col gap-6"
+        >
           <h2 className="text-4xl font-bold text-[#184C2A] leading-tight">
             Our Tools Simplify Your Journey
           </h2>
@@ -57,11 +94,11 @@ const Tools = () => {
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-            className=" text-white rounded-full px-6 py-2 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+            className="text-white rounded-full px-6 py-2 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
           >
             Get Started
           </Button>
-        </div>
+        </motion.div>
         {/* Right: Recruiters & Job Seekers Cards */}
         <div className="flex flex-row gap-6 mt-4 md:mt-0">
           {["Recruiters", "Job Seekers"].map((role, idx) => (
@@ -69,8 +106,8 @@ const Tools = () => {
               key={role}
               custom={idx}
               initial="hidden"
-              animate="visible"
-              variants={cardVariants}
+              animate={isInView ? "visible" : "hidden"}
+              variants={rightCardsVariants}
               className="flex flex-col gap-2"
             >
               <span className="text-primary text-[20px] font-semibold tracking-wide">
@@ -125,8 +162,8 @@ const Tools = () => {
             key={card.title}
             custom={idx}
             initial="hidden"
-            animate="visible"
-            variants={cardVariants}
+            animate={isInView ? "visible" : "hidden"}
+            variants={featureCardVariants}
             className="rounded-2xl p-8 pb-12 w-72 flex flex-col items-start shadow-md"
             style={{
               backgroundImage: "url(/hero-bg.jpg)",

@@ -1,32 +1,46 @@
 import { outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useCountAnimation } from "../landing-hero";
+import { useRef } from "react";
 
 const HomePageStats = () => {
   const isMobile = useIsMobile();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+      transition: {
+        delay: i * 0.2,
+        duration: 0.5,
+      },
     }),
   };
 
+  const { count: countriesCount, showPlus: showCountriesPlus } =
+    useCountAnimation(isInView ? 30 : 0);
+  const { count: partnersCount, showPlus: showPartnersPlus } =
+    useCountAnimation(isInView ? 15000 : 0);
+  const { count: accuracyCount, showPlus: showAccuracyPlus } =
+    useCountAnimation(isInView ? 98 : 0);
+
   const stats = [
     {
-      value: "30+",
+      value: `${countriesCount}${showCountriesPlus ? "+" : ""}`,
       label: "Countries",
       sub: "#7 2025 Global Ranking",
     },
     {
-      value: "15k+",
+      value: `${partnersCount.toLocaleString()}${showPartnersPlus ? "+" : ""}`,
       label: "Business Partners",
       sub: "From Small Businesses to Large Enterprises",
     },
     {
-      value: "98%",
+      value: `${accuracyCount}${showAccuracyPlus ? "%" : ""}`,
       label: "Matching Accuracy",
       sub: "Candidate and Job Matching",
     },
@@ -34,6 +48,7 @@ const HomePageStats = () => {
 
   return (
     <div
+      ref={ref}
       className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex flex-col gap-10 items-center justify-center p-4 py-12 md:py-24 md:p-12 md:px-16 bg-black`}
       style={{
         position: "relative",

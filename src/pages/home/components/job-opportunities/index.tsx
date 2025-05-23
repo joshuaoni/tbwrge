@@ -106,7 +106,7 @@ const JobOpportunities = () => {
 
   return (
     <div
-      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
+      className={`${outfit.className} overflow-hidden relative h-[615px] pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
       style={{
         position: "relative",
       }}
@@ -182,7 +182,7 @@ const JobOpportunities = () => {
           </h2>
           <div className="w-full max-w-7xl flex flex-col md:flex-row items-center gap-8">
             {/* Left Sidebar */}
-            <div className="flex flex-col justify-start w-full md:w-1/4 ">
+            <div className="flex flex-col justify-start w-full md:min-w-[236px] md:w-1/4 ">
               <div className="flex flex-col gap-[30px] border-l-4 border-white pl-4">
                 {categories.map((cat, i) => (
                   <div key={cat.name} className="flex items-center gap-3">
@@ -207,11 +207,14 @@ const JobOpportunities = () => {
                 </>
               ) : isError ? (
                 <div className="text-red-500 text-lg">Failed to load jobs.</div>
-              ) : jobs && jobs.length > 0 ? (
-                <AnimatePresence>
-                  {jobs
-                    .slice(page * jobsPerPage, page * jobsPerPage + jobsPerPage)
-                    .map((job: any, idx: number) => (
+              ) : (
+                [...Array(3)].map((_, idx) => {
+                  const job =
+                    jobs && jobs.length > idx
+                      ? jobs[page * jobsPerPage + idx]
+                      : null;
+                  if (job) {
+                    return (
                       <motion.div
                         key={job.id}
                         custom={idx}
@@ -311,19 +314,16 @@ const JobOpportunities = () => {
                             <span
                               className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
                             >
-                              {job.total_applicants} Applicants
+                              N/A Applicants
                             </span>
                           </div>
                         </div>
                       </motion.div>
-                    ))}
-                </AnimatePresence>
-              ) : (
-                <>
-                  {[...Array(3)].map((_, i) => (
-                    <JobCardSkeleton key={i} />
-                  ))}
-                </>
+                    );
+                  } else {
+                    return <JobCardSkeleton key={idx} />;
+                  }
+                })
               )}
             </div>
           </div>

@@ -166,6 +166,7 @@ const TopTalents = () => {
   const router = useRouter();
   const { userData } = useUserStore();
   const [page, setPage] = useState(0);
+  const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
 
   const handleViewTalentPool = () => {
     const path = "/dashboard/talent-pool";
@@ -197,6 +198,24 @@ const TopTalents = () => {
     page * talentsPerPage + talentsPerPage
   );
 
+  const pageVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      position: "absolute" as const,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      position: "relative" as const,
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -300 : 300,
+      opacity: 0,
+      position: "absolute" as const,
+    }),
+  };
+
   return (
     <div
       className={`${outfit.className} bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12  md:p-12 md:px-16`}
@@ -205,7 +224,10 @@ const TopTalents = () => {
       <div className="absolute top-8 right-12 flex items-center space-x-4 z-10">
         <button
           className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
-          onClick={() => setPage((p) => Math.max(0, p - 1))}
+          onClick={() => {
+            setDirection(-1);
+            setPage((p) => Math.max(0, p - 1));
+          }}
           disabled={page === 0 || isLoading}
         >
           {/* Left Arrow SVG */}
@@ -221,7 +243,10 @@ const TopTalents = () => {
         </button>
         <button
           className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
-          onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+          onClick={() => {
+            setDirection(1);
+            setPage((p) => Math.min(totalPages - 1, p + 1));
+          }}
           disabled={isLoading || page >= totalPages - 1}
         >
           {/* Right Arrow SVG */}
@@ -243,35 +268,44 @@ const TopTalents = () => {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {isLoading || !talents ? (
-          [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
-        ) : (
-          <AnimatePresence>
-            {pagedTalents.map((talent: any, idx: number) => (
-              <motion.div
-                key={talent.id}
-                custom={idx}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={cardVariants}
-              >
-                <TalentCard
-                  talent={{
-                    id: talent.id,
-                    name: talent.name || "No Name",
-                    title: talent.current_position || "No Title",
-                    image: talent.profile_photo,
-                    description:
-                      talent.experience_summary || "No description available.",
-                  }}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        )}
+      <div className="relative w-full max-w-6xl mx-auto min-h-[600px]">
+        <AnimatePresence custom={direction} initial={false} mode="wait">
+          <motion.div
+            key={page}
+            custom={direction}
+            variants={pageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 40,
+              duration: 0.5,
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            style={{ position: "absolute", width: "100%" }}
+          >
+            {isLoading || !talents
+              ? [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
+              : pagedTalents.map((talent: any, idx: number) => (
+                  <TalentCard
+                    key={talent.id}
+                    talent={{
+                      id: talent.id,
+                      name: talent.name || "No Name",
+                      title: talent.current_position || "No Title",
+                      image: talent.profile_photo,
+                      description:
+                        talent.experience_summary ||
+                        "No description available.",
+                    }}
+                  />
+                ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
+
       <Button
         style={{
           backgroundImage: "url(/hero-bg.jpg)",
