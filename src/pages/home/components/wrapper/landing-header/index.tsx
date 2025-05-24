@@ -24,14 +24,20 @@ const LandingHeader = ({
   CommunitySectionRef: RefObject<HTMLDivElement>;
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const isMobile = useIsMobile();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userData } = useUserStore();
 
+  const isBlogOrTools =
+    pathname?.includes("/home/blog") || pathname?.includes("/home/tools");
+  const logoSrc = isBlogOrTools ? "/header-final.png" : "/footer-logo.png";
+  const textColor = isBlogOrTools ? "text-black" : "text-white";
+
   return (
     <>
       <div
-        className={`${outfit.className} absolute top-0 w-full px-4 md:px-16 z-20 flex items-center text-white justify-between bg-transparent py-4`}
+        className={`${outfit.className} absolute top-0 w-full px-4 md:px-16 z-20 flex items-center ${textColor} justify-between bg-transparent py-4`}
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-8">
@@ -39,23 +45,13 @@ const LandingHeader = ({
               className="flex items-center cursor-pointer"
               onClick={() => router.push("/home")}
             >
-              {/* <div className="rounded-[6.96px] flex items-center justify-center bg-white w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative"> */}
-              {/* <div
-              className="rounded-[0.12px] w-[22.26px] h-[18.96px] md:w-[27.83px] md:h-[23.7px] absolute"
-              style={{
-                top: "5px",
-                left: "6.91px",
-              }}
-            > */}
               <Image
-                src="/footer-logo.png"
+                src={logoSrc}
                 alt=""
                 width={30}
                 height={26}
                 className="w-[30px] h-[26px] md:w-[34px] md:h-[29.2px]"
               />
-              {/* </div> */}
-              {/* </div> */}
               <h1
                 className={`${outfit.className} ml-2 text-xl md:text-3xl font-bold`}
               >
@@ -70,6 +66,7 @@ const LandingHeader = ({
                 toolsSectionRef={toolsSectionRef}
                 pricingSectionRef={pricingSectionRef}
                 blogSectionRef={blogSectionRef}
+                textColor={textColor}
               />
             )}
           </div>
@@ -77,13 +74,17 @@ const LandingHeader = ({
             <div className="flex items-center gap-4">
               <Button
                 onClick={() => router.push("/home/sign-in")}
-                className="border-none outline-none tet-black"
+                className={`border-none outline-none ${textColor}`}
               >
                 Log In
               </Button>
               <Button
                 onClick={() => router.push("/home/sign-up")}
-                className="bg-transparent hover:bg-white/20 text-white border border-white rounded-full"
+                className={`bg-transparent hover:bg-white/20 ${
+                  isBlogOrTools
+                    ? "text-black border-black/40 hover:bg-black/10"
+                    : "text-white border-white"
+                } border rounded-full`}
               >
                 Sign Up
               </Button>
@@ -176,6 +177,7 @@ const NavigationHeader = ({
   pricingSectionRef,
   blogSectionRef,
   CommunitySectionRef,
+  textColor,
 }: {
   scrollToSection: (sectionRef: RefObject<HTMLDivElement>) => void;
   aboutUsSectionRef: RefObject<HTMLDivElement>;
@@ -183,6 +185,7 @@ const NavigationHeader = ({
   pricingSectionRef: RefObject<HTMLDivElement>;
   blogSectionRef: RefObject<HTMLDivElement>;
   CommunitySectionRef: RefObject<HTMLDivElement>;
+  textColor: string;
 }) => {
   const { userData } = useUserStore();
   const router = useRouter();
@@ -286,7 +289,7 @@ const NavigationHeader = ({
               onMouseLeave={handleMouseLeave}
             >
               <span
-                className={`${outfit.className} text-white cursor-pointer flex items-center`}
+                className={`${outfit.className} ${textColor} cursor-pointer flex items-center`}
               >
                 {nav.title}
                 <ChevronDown className="ml-1 w-4 h-4" />
@@ -336,14 +339,19 @@ const NavigationHeader = ({
               )}
             </div>
           ) : (
-            <NavItem scrollToSection={scrollToSection} {...nav} key={index} />
+            <NavItem
+              scrollToSection={scrollToSection}
+              {...nav}
+              key={index}
+              textColor={textColor}
+            />
           )
         )}
       </div>
     </div>
   );
 };
-const NavItem = ({ title, link }: any) => {
+const NavItem = ({ title, link, textColor }: any) => {
   const router = useRouter();
   const pathName = usePathname();
   const path = (pathName ?? "").split("/")[
@@ -363,7 +371,7 @@ const NavItem = ({ title, link }: any) => {
         isActive
           ? "font-bold underline underline-offset-2 transform transition-all"
           : ""
-      } ${outfit.className}text-white  cursor-pointer`}
+      } ${outfit.className} ${textColor} cursor-pointer`}
     >
       {title}
     </span>
