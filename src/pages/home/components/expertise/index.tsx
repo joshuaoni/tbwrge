@@ -6,9 +6,23 @@ import ManSuit from "../../../../public/images/man-suit.png";
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { outfit, poppins } from "@/constants/app";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useRouter } from "next/router";
 
 const Expertise = () => {
   const isMobile = useIsMobile();
+  const router = useRouter();
+  const { userData } = useUserStore();
+
+  const handleShareArticle = () => {
+    const path = "/dashboard/submit-article";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   return (
     <div
       className={`${outfit.className} h-fit flex flex-col gap-4 py-[50px] md:py-0 md:h-[500px] relative bg-white items-center justify-center p-4 md:p-16 md:pb-[16px]`}
@@ -28,6 +42,7 @@ const Expertise = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
+          onClick={handleShareArticle}
           className="text-white text-sm px-6 py-4 md:px-[30px] md:py-[25px] rounded-full w-full md:w-auto"
         >
           Share Article
