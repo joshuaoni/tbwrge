@@ -252,7 +252,7 @@ const NavigationHeader = ({
     //   link: "/home/about",
     // },
     {
-      title: "Apply for a jobs",
+      title: "Apply for a job",
       link: "home/sign-in",
     },
     {

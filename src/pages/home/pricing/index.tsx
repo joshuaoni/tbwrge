@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import LandingWrapper from "../components/wrapper/landing-wrapper";
 import { inter, montserrat, outfit, poppins } from "@/constants/app";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Community from "../components/community";
 import Expertise from "../components/expertise";
+import { motion, useInView } from "framer-motion";
 
 const PricingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentFeatureSlide, setCurrentFeatureSlide] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % plans.length);
@@ -290,17 +319,30 @@ const PricingPage = () => {
 
   return (
     <LandingWrapper>
-      <main className={`${outfit.className} flex flex-col`}>
-        <div
+      <motion.main
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={containerVariants}
+        className={`${outfit.className} flex flex-col`}
+      >
+        <motion.div
+          variants={containerVariants}
           className={`${outfit.className} bg-gradient-to-b from-gray-50 via-gray-50/50 to-white md:px-16 flex flex-col space-y-4 items-center`}
         >
-          <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 mb-0 md:mb-12 items-center">
+          <motion.div
+            variants={itemVariants}
+            className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 mb-0 md:mb-12 items-center"
+          >
             <h1 className="text-[25px] font-extrabold p-4">Pricing</h1>
             <p className="text-sm text-[#2D2D2D] md:pb-12 text-center md:px-24">
               Choose the Perfect Pricing for Your Hiring and Career Goals
             </p>
             {/* Mobile View with Slider */}
-            <div className="relative block md:hidden w-full mt-8">
+            <motion.div
+              variants={itemVariants}
+              className="relative block md:hidden w-full mt-8"
+            >
               <div className="overflow-hidden">
                 <div
                   className="flex transition-transform duration-300 ease-in-out"
@@ -373,13 +415,17 @@ const PricingPage = () => {
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
-            </div>
+            </motion.div>
 
             {/* Desktop/Tablet Grid View */}
-            <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
+            <motion.div
+              variants={itemVariants}
+              className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0"
+            >
               {plans.map((plan, index) => (
-                <div
+                <motion.div
                   key={index}
+                  variants={itemVariants}
                   className={`flex flex-col ${
                     plan.plan === "Enterprise"
                       ? "bg-primary text-white"
@@ -425,16 +471,22 @@ const PricingPage = () => {
                       Get Started
                     </Button>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
         {/* Detailed Features Table */}
-        <div className="w-full text-[12px] max-w-[1400px] mx-auto px-4 md:px-16 md:pb-16 mb-16">
+        <motion.div
+          variants={containerVariants}
+          className="w-full text-[12px] max-w-[1400px] mx-auto px-4 md:px-16 md:pb-16 mb-16"
+        >
           {/* Mobile Features Carousel */}
-          <div className="relative block md:hidden w-full mt-8">
+          <motion.div
+            variants={itemVariants}
+            className="relative block md:hidden w-full mt-8"
+          >
             <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-300 ease-in-out"
@@ -755,14 +807,18 @@ const PricingPage = () => {
                 />
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Desktop Grid View */}
-          <div className="hidden md:block">
-            <div className="bg-transparent">
-              <div className="grid grid-cols-[1.3fr_1fr_1fr_1fr_1fr] gap-4">
+          <motion.div variants={itemVariants} className="hidden md:block">
+            <motion.div variants={containerVariants} className="bg-transparent">
+              <motion.div
+                variants={containerVariants}
+                className="grid grid-cols-[1.3fr_1fr_1fr_1fr_1fr] gap-4"
+              >
                 {/* Features Column */}
-                <div
+                <motion.div
+                  variants={itemVariants}
                   className={`${montserrat.className} rounded-[16px] border-t-[8px] border-t-[#065844] shadow-md`}
                 >
                   <div className="h-[64px] mb-6">
@@ -809,10 +865,11 @@ const PricingPage = () => {
                   {renderFeatureLabel("Community Access")}
                   {renderFeatureLabel("Submit an Article")}
                   {renderFeatureLabel("Feedback & Support")}
-                </div>
+                </motion.div>
 
                 {/* Basic Plan Column */}
-                <div
+                <motion.div
+                  variants={itemVariants}
                   className={`${outfit.className} rounded-[30px] border-t-[8px] bg-gray-50 border-t-gray-50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px]`}
                 >
                   <div className="p-2 text-center h-[62px] border-b-0 mb-8">
@@ -949,10 +1006,11 @@ const PricingPage = () => {
                   <div className="p-4 h-[40px] flex justify-center text-center">
                     {renderCheckOrValue(pricingPlans[0].feedbackSupport)}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Basic - Job Seekers Column */}
-                <div
+                <motion.div
+                  variants={itemVariants}
                   className={`${outfit.className} rounded-[30px] border-t-[8px] border-t-white shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px]`}
                 >
                   <div className="p-2 text-center h-[62px] border-b-0 mb-8">
@@ -1092,10 +1150,11 @@ const PricingPage = () => {
                   <div className="p-4 h-[40px] text-center">
                     {renderCheckOrValue(pricingPlans[1].feedbackSupport)}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Premium - Recruiters Column */}
-                <div
+                <motion.div
+                  variants={itemVariants}
                   className={`${outfit.className} rounded-[30px] border-t-[8px] border-t-white shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px]`}
                 >
                   <div className="p-2 text-center h-[62px] border-b-0 mb-8">
@@ -1235,10 +1294,11 @@ const PricingPage = () => {
                   <div className="p-4  flex  justify-center items-center h-[40px] text-center">
                     {renderCheckOrValue(pricingPlans[2].feedbackSupport)}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Enterprise Column */}
-                <div
+                <motion.div
+                  variants={itemVariants}
                   className={`${outfit.className} bg-primary border-t-[8px] border-t-[#065844] text-white rounded-[30px] shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px] pb-8`}
                 >
                   <div className="p-2 text-center h-[62px] border-b-0 mb-8">
@@ -1375,12 +1435,12 @@ const PricingPage = () => {
                   <div className="p-4 flex  justify-center items-center h-[40px] text-center">
                     {renderCheckOrValue(pricingPlans[3].feedbackSupport)}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </motion.main>
 
       <hr className="w-full border-t-[1px] border-gray-200" />
       <Expertise />

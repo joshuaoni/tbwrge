@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { poppins } from "@/constants/app";
 import { ChevronLeft, ChevronRight, User2, UserCircle2 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import { getBlogs } from "@/actions/blog";
 import { useUserStore } from "@/hooks/use-user-store";
 import { BlogItem } from "@/actions/blog";
 import { FaUserCircle } from "react-icons/fa";
+import { motion, useInView } from "framer-motion";
 
 const BlogPosts = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -107,6 +108,48 @@ export const BlogPostsWithPagination = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const { userData } = useUserStore();
   const postsPerPage = 8;
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.4,
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (custom: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+        delay: custom * 0.1, // 0.1s delay between each card
+      },
+    }),
+  };
+
+  // Function to calculate the animation order for grid layout
+  const getAnimationOrder = (index: number, totalItems: number) => {
+    const itemsPerRow = 4; // Number of items per row in the grid
+    const row = Math.floor(index / itemsPerRow);
+    const col = index % itemsPerRow;
+
+    // For even rows (0, 2, etc.), go left to right
+    // For odd rows (1, 3, etc.), go right to left
+    if (row % 2 === 0) {
+      return row * itemsPerRow + col;
+    } else {
+      return row * itemsPerRow + (itemsPerRow - 1 - col);
+    }
+  };
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs", { approved: true, page: currentPage }],
@@ -137,18 +180,30 @@ export const BlogPostsWithPagination = () => {
   const hasMore = blogs ? blogs.length === postsPerPage : false;
 
   return (
-    <div
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
       className={`${poppins.className} pt-[90px] md:pt-[100px] bg-[#F8F9FF] h-fit p-6 md:p-16 pb-[100px] w-full flex items-center flex-col`}
     >
-      <div className="flex flex-col text-center">
+      <motion.div
+        variants={itemVariants}
+        custom={0}
+        className="flex flex-col text-center"
+      >
         <h1 className="text-2xl font-bold">Blog Posts</h1>
         <p className="text-sm text-[#2D2D2D] mt-4">
           Read Up to Date Tips from Professionals
         </p>
-      </div>
+      </motion.div>
 
       {/* Mobile View with Slider */}
-      <div className="relative w-full md:hidden mt-8">
+      <motion.div
+        variants={itemVariants}
+        custom={1}
+        className="relative w-full md:hidden mt-8"
+      >
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-300 ease-in-out"
@@ -177,26 +232,42 @@ export const BlogPostsWithPagination = () => {
         >
           <ChevronRight className="w-6 h-6" />
         </button>
-      </div>
+      </motion.div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+      <motion.div
+        variants={itemVariants}
+        custom={2}
+        className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8"
+      >
         {isLoading ? (
           <div className="col-span-4 text-center">Loading...</div>
         ) : (
-          blogs?.map((blog) => <BlogCard key={blog.id} blog={blog} />)
+          blogs?.map((blog, idx) => (
+            <motion.div
+              key={blog.id}
+              custom={getAnimationOrder(idx, blogs.length)}
+              variants={itemVariants}
+            >
+              <BlogCard blog={blog} />
+            </motion.div>
+          ))
         )}
-      </div>
+      </motion.div>
 
       {/* Pagination */}
-      <div className="mt-8">
+      <motion.div
+        variants={itemVariants}
+        custom={blogs ? blogs.length + 3 : 3}
+        className="mt-8"
+      >
         <BlogsPagination
           currentPage={currentPage}
           onPageChange={handlePageChange}
           hasMore={hasMore}
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

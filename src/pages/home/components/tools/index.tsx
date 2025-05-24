@@ -66,7 +66,7 @@ const Tools = () => {
   return (
     <section
       ref={ref}
-      className={`${outfit.className} w-full px-6 py-12 flex flex-col items-start md:px-16`}
+      className={`${outfit.className} overflow-hidden w-full px-6 py-12 flex flex-col items-start md:px-16`}
     >
       {/* Top Section */}
       <div className="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-8">

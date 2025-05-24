@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import LandingWrapper from "../components/wrapper/landing-wrapper";
 import Community from "../components/community";
 import { Button } from "@/components/ui/button";
@@ -9,14 +9,53 @@ import { outfit, poppins } from "@/constants/app";
 import Expertise from "../components/expertise";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Tools from "../components/tools";
+import { motion, useInView } from "framer-motion";
 
 const index = () => {
   const isMobile = useIsMobile();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+        delay: 0.4,
+      },
+    },
+  };
 
   return (
     <LandingWrapper>
       <main className={`${poppins.className} flex flex-col`}>
-        <div className="relative min-h-[700px] h-screen w-full md:px-16 px-4 pt-[100px] bg-black">
+        <div className="relative min-h-[700px] h-screen w-full md:px-16 px-4 pt-[20px] bg-black">
           {/* Background image and overlay */}
           <div
             style={{
@@ -32,13 +71,26 @@ const index = () => {
               zIndex: 0,
             }}
           />
-          <div className="relative z-10 flex items-center h-full ">
-            <div className="flex md:w-[50%] w-full flex-col items-start">
-              <h1 className="mb-4 md:text-[60px] text-[16px] text-white font-extrabold">
+          <motion.div
+            ref={ref}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            variants={containerVariants}
+            className="relative z-10 flex items-center h-full"
+          >
+            <motion.div
+              variants={containerVariants}
+              className="flex md:w-[50%] w-full flex-col items-start"
+            >
+              <motion.h1
+                variants={itemVariants}
+                className="mb-4 md:text-[60px] text-[16px] text-white font-extrabold"
+              >
                 About <span className="text-[#DEA042]">Us</span>
-              </h1>
-              <p
-                className={`${outfit.className} leading-[26px] text-white text-sm font-light`}
+              </motion.h1>
+              <motion.p
+                variants={itemVariants}
+                className={`${outfit.className} w-[90%] leading-[26px] text-white text-sm font-light`}
               >
                 At Candivet, we're transforming the way professionals connect
                 with opportunities by merging technology with human-centered
@@ -46,17 +98,22 @@ const index = () => {
                 AI-driven tools, Candivet provides a comprehensive platform for
                 recruiters and job seekers to simplify the job search,
                 application, and candidate vetting processes.
-              </p>
-              <Button className="flex md:mt-8 mt-4 text-[12px] px-[40px] py-[25px] rounded-[20px] bg-[#009379] text-white items-center">
-                <p>Join Us</p> <ArrowRight />
-              </Button>
-            </div>
+              </motion.p>
+              <motion.div variants={itemVariants}>
+                <Button className="flex md:mt-8 mt-4 text-[12px] px-[40px] py-[25px] rounded-[20px] bg-[#009379] text-white items-center">
+                  <p>Join Us</p> <ArrowRight />
+                </Button>
+              </motion.div>
+            </motion.div>
             {!isMobile && (
-              <div className="w-[50%] flex justify-end">
+              <motion.div
+                variants={imageVariants}
+                className="w-[50%] flex justify-end"
+              >
                 <Image src={AboutUs} alt="" width={500} height={500} />
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         </div>
       </main>
       <Tools />
