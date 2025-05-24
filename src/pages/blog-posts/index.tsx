@@ -12,6 +12,24 @@ import { BlogItem } from "@/actions/blog";
 import { FaUserCircle } from "react-icons/fa";
 import { motion, useInView } from "framer-motion";
 
+// BlogCardSkeleton for loading state
+const BlogCardSkeleton = () => (
+  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden animate-pulse">
+    <div className="mb-6 w-full h-40 bg-gray-200" />
+    <div className="px-6 w-full flex-1 flex flex-col justify-between">
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 mt-2" />
+      <div className="h-4 bg-gray-100 rounded w-1/2 mb-2" />
+    </div>
+    <div className="flex items-center gap-2 px-2 py-3 border-t border-gray-100 bg-white mt-auto w-full">
+      <div className="w-10 h-10 rounded-full bg-gray-200" />
+      <div className="flex flex-col flex-1">
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-1" />
+        <div className="h-3 bg-gray-100 rounded w-1/3" />
+      </div>
+    </div>
+  </div>
+);
+
 const BlogPosts = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { userData } = useUserStore();
@@ -51,15 +69,20 @@ const BlogPosts = () => {
             className="flex transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
-            {isLoading ? (
-              <div className="w-full text-center">Loading...</div>
-            ) : (
-              blogs?.map((blog) => (
-                <div key={blog.id} className="w-full h-full flex-shrink-0">
-                  <BlogCard blog={blog} />
-                </div>
-              ))
-            )}
+            {isLoading || !blogs || blogs.length === 0
+              ? [...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-full h-full flex-shrink-0 flex justify-center"
+                  >
+                    <BlogCardSkeleton />
+                  </div>
+                ))
+              : blogs?.map((blog) => (
+                  <div key={blog.id} className="w-full h-full flex-shrink-0">
+                    <BlogCard blog={blog} />
+                  </div>
+                ))}
           </div>
         </div>
         <button
@@ -78,22 +101,18 @@ const BlogPosts = () => {
 
       {/* Desktop/Tablet Grid View */}
       <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading ? (
-          <div className="col-span-4 text-center">Loading...</div>
-        ) : (
-          blogs
-            ?.slice(0, 4)
-            .map((blog) => <BlogCard key={blog.id} blog={blog} />)
-        )}
+        {isLoading || !blogs || blogs.length === 0
+          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+          : blogs
+              ?.slice(0, 4)
+              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
       </div>
       <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading ? (
-          <div className="col-span-4 text-center">Loading...</div>
-        ) : (
-          blogs
-            ?.slice(4, 8)
-            .map((blog) => <BlogCard key={blog.id} blog={blog} />)
-        )}
+        {isLoading || !blogs || blogs.length === 0
+          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+          : blogs
+              ?.slice(4, 8)
+              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
       </div>
 
       <Button className="text-[12px] self-center mt-8 bg-[#009379] py-4 text-white">
@@ -209,15 +228,20 @@ export const BlogPostsWithPagination = () => {
             className="flex transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
-            {isLoading ? (
-              <div className="w-full text-center">Loading...</div>
-            ) : (
-              blogs?.map((blog) => (
-                <div key={blog.id} className="w-full h-full flex-shrink-0">
-                  <BlogCard blog={blog} />
-                </div>
-              ))
-            )}
+            {isLoading || !blogs || blogs.length === 0
+              ? [...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-full h-full flex-shrink-0 flex justify-center"
+                  >
+                    <BlogCardSkeleton />
+                  </div>
+                ))
+              : blogs?.map((blog) => (
+                  <div key={blog.id} className="w-full h-full flex-shrink-0">
+                    <BlogCard blog={blog} />
+                  </div>
+                ))}
           </div>
         </div>
         <button
@@ -240,19 +264,17 @@ export const BlogPostsWithPagination = () => {
         custom={2}
         className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8"
       >
-        {isLoading ? (
-          <div className="col-span-4 text-center">Loading...</div>
-        ) : (
-          blogs?.map((blog, idx) => (
-            <motion.div
-              key={blog.id}
-              custom={getAnimationOrder(idx, blogs.length)}
-              variants={itemVariants}
-            >
-              <BlogCard blog={blog} />
-            </motion.div>
-          ))
-        )}
+        {isLoading || !blogs || blogs.length === 0
+          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+          : blogs?.map((blog, idx) => (
+              <motion.div
+                key={blog.id}
+                custom={getAnimationOrder(idx, blogs.length)}
+                variants={itemVariants}
+              >
+                <BlogCard blog={blog} />
+              </motion.div>
+            ))}
       </motion.div>
 
       {/* Pagination */}

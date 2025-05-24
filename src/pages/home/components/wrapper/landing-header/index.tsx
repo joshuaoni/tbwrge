@@ -27,12 +27,72 @@ const LandingHeader = ({
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
+  const [mobileToolsRole, setMobileToolsRole] = useState<
+    null | "recruiter" | "job_seeker"
+  >(null);
   const { userData } = useUserStore();
 
   const isBlogOrTools =
-    pathname?.includes("/home/blog") || pathname?.includes("/home/tools");
+    pathname?.includes("/home/blog") || pathname?.includes("/home/pricing");
   const logoSrc = isBlogOrTools ? "/header-final.png" : "/footer-logo.png";
   const textColor = isBlogOrTools ? "text-black" : "text-white";
+
+  const recruiterMenu = [
+    { title: "Job Posting", path: "/dashboard/job-postings" },
+    { title: "Job Tools", path: "/dashboard/job-tools/generator" },
+    { title: "Job Board", path: "/dashboard/job-board" },
+  ];
+
+  const jobSeekerMenu = [
+    { title: "Talent Pool", path: "/dashboard/talent-pool" },
+    { title: "Job Board", path: "/dashboard/job-board" },
+    { title: "Job Applications", path: "/dashboard/applications" },
+    { title: "CV Tools", path: "/dashboard/cv-tools/summarizer" },
+    {
+      title: "Cover Letter Tools",
+      path: "/dashboard/cover-letter-tools/summarizer",
+    },
+  ];
+
+  const Navs = [
+    {
+      ref: toolsSectionRef,
+      title: "Tools",
+      link: "/home/tools",
+      isTools: true,
+    },
+    {
+      ref: blogSectionRef,
+      title: "Blog",
+      link: "/home/blog",
+    },
+    {
+      ref: pricingSectionRef,
+      title: "Pricing",
+      link: "/home/pricing",
+    },
+    {
+      ref: CommunitySectionRef,
+      title: "Community",
+      link: "/community",
+    },
+    {
+      title: "Apply for a job",
+      link: "/dashboard/job-board",
+      protected: true,
+    },
+    {
+      title: "Post a job",
+      link: "/dashboard/create",
+      protected: true,
+    },
+    {
+      title: "Join talent pool",
+      link: "/dashboard/talent-pool/join-talent-pool",
+      protected: true,
+    },
+  ];
 
   return (
     <>
@@ -92,12 +152,20 @@ const LandingHeader = ({
           ) : (
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 hover:bg-gray-100 border border-gray-300 rounded-full"
+              className="p-2 hover:bg-gray-100/40 border border-gray-300 rounded-full"
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X
+                  className={`w-5 h-5 ${
+                    isBlogOrTools ? "text-black" : "text-white"
+                  }`}
+                />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu
+                  className={`w-5 h-5 ${
+                    isBlogOrTools ? "text-black" : "text-white"
+                  }`}
+                />
               )}
             </button>
           )}
@@ -108,40 +176,136 @@ const LandingHeader = ({
       {isMobileMenuOpen && isMobile && (
         <div className="fixed top-[68px] left-0 right-0 bg-white z-20 border-b md:hidden">
           <div className="px-4 py-2 space-y-2">
-            {/* Navigation Items */}
+            {/* Navigation Items - Use Navs array */}
             <div className="space-y-1 border-b pb-2">
-              {[
-                { title: "Home", link: "/home" },
-                { title: "About", link: "/home/about", ref: aboutUsSectionRef },
-                {
-                  title: "Pricing",
-                  link: "/home/pricing",
-                  ref: pricingSectionRef,
-                },
-                { title: "Blog", link: "/home/blog", ref: blogSectionRef },
-                { title: "Community", link: "/community" },
-              ].map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (item.link) {
+              {Navs.map((item, index) => {
+                if (item.isTools) {
+                  return (
+                    <div key={item.title}>
+                      <button
+                        onClick={() => setMobileToolsOpen((open) => !open)}
+                        className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg justify-between"
+                      >
+                        <span className={`${outfit.className} text-sm`}>
+                          {item.title}
+                        </span>
+                        <ChevronDown
+                          className={`ml-2 w-4 h-4 transition-transform ${
+                            mobileToolsOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                      {mobileToolsOpen && (
+                        <div className="pl-4 pb-2">
+                          <button
+                            onClick={() => setMobileToolsRole("recruiter")}
+                            className="flex items-center w-full p-2 hover:bg-gray-100 rounded-lg justify-between"
+                          >
+                            <span className="text-sm">For Recruiters</span>
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setMobileToolsRole("job_seeker")}
+                            className="flex items-center w-full p-2 hover:bg-gray-100 rounded-lg justify-between"
+                          >
+                            <span className="text-sm">For Job Seekers</span>
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          {/* Submenu for recruiter/job_seeker */}
+                          {mobileToolsRole && (
+                            <div className="pl-4 pt-2">
+                              {(mobileToolsRole === "recruiter"
+                                ? recruiterMenu
+                                : jobSeekerMenu
+                              ).map((subitem) => (
+                                <button
+                                  key={subitem.title}
+                                  onClick={() => {
+                                    // Use same redirect logic as desktop
+                                    if (!userData?.token) {
+                                      router.push(
+                                        `/home/sign-in?redirect=${encodeURIComponent(
+                                          subitem.path
+                                        )}`
+                                      );
+                                    } else if (
+                                      mobileToolsRole === "recruiter" &&
+                                      userData?.user?.role === "job_seeker"
+                                    ) {
+                                      router.push(
+                                        `/home/sign-in?redirect=${encodeURIComponent(
+                                          subitem.path
+                                        )}`
+                                      );
+                                    } else {
+                                      router.push(subitem.path);
+                                    }
+                                    setIsMobileMenuOpen(false);
+                                    setMobileToolsOpen(false);
+                                    setMobileToolsRole(null);
+                                  }}
+                                  className="flex items-center w-full p-2 hover:bg-gray-200 rounded-lg text-left text-sm"
+                                >
+                                  {subitem.title}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                // All other nav items
+                return (
+                  <button
+                    key={item.title}
+                    onClick={() => {
+                      // Protected logic for mobile
+                      if (item.protected) {
+                        if (item.title === "Post a job") {
+                          if (!userData?.token) {
+                            router.push(
+                              `/home/sign-in?redirect=${encodeURIComponent(
+                                item.link
+                              )}`
+                            );
+                            setIsMobileMenuOpen(false);
+                            return;
+                          }
+                          if (userData?.user?.role === "job_seeker") {
+                            router.push(
+                              `/home/sign-in?redirect=${encodeURIComponent(
+                                item.link
+                              )}`
+                            );
+                            setIsMobileMenuOpen(false);
+                            return;
+                          }
+                        } else if (!userData?.token) {
+                          router.push(
+                            `/home/sign-in?redirect=${encodeURIComponent(
+                              item.link
+                            )}`
+                          );
+                          setIsMobileMenuOpen(false);
+                          return;
+                        }
+                      }
                       router.push(item.link);
-                    } else if (item.ref) {
-                      scrollToSection(item.ref);
-                    }
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg"
-                >
-                  <span className={`${outfit.className} text-sm`}>
-                    {item.title}
-                  </span>
-                </button>
-              ))}
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg"
+                  >
+                    <span className={`${outfit.className} text-sm`}>
+                      {item.title}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-
-            {/* Auth Buttons */}
-            <div className="pt-2 space-y-2">
+            {/* Auth Buttons (unchanged) */}
+            <div className="py-2 space-y-2">
               <button
                 onClick={() => {
                   router.push("/home/sign-in");
@@ -156,11 +320,9 @@ const LandingHeader = ({
                   router.push("/home/sign-up");
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex items-center w-full p-3 bg-[#009379] hover:bg-[#008369] text-white rounded-lg justify-center"
+                className="flex items-center w-full p-3 hover:bg-gray-50 rounded-lg"
               >
-                <span className={`${outfit.className} text-sm font-medium`}>
-                  Sign Up
-                </span>
+                <span className={`${outfit.className} text-sm`}>Sign Up</span>
               </button>
             </div>
           </div>
@@ -249,22 +411,20 @@ const NavigationHeader = ({
       title: "Community",
       link: "/community",
     },
-    // {
-    //   ref: aboutUsSectionRef,
-    //   title: "About",
-    //   link: "/home/about",
-    // },
     {
       title: "Apply for a job",
-      link: "home/sign-in",
+      link: "/dashboard/job-board",
+      protected: true,
     },
     {
       title: "Post a job",
-      link: "home/sign-in",
+      link: "/dashboard/create",
+      protected: true,
     },
     {
       title: "Join talent pool",
-      link: "home/sign-in",
+      link: "/dashboard/talent-pool/join-talent-pool",
+      protected: true,
     },
   ];
   const handleMouseEnter = () => {
@@ -351,22 +511,36 @@ const NavigationHeader = ({
     </div>
   );
 };
-const NavItem = ({ title, link, textColor }: any) => {
+const NavItem = ({ title, link, textColor, protected: isProtected }: any) => {
   const router = useRouter();
   const pathName = usePathname();
+  const { userData } = useUserStore();
   const path = (pathName ?? "").split("/")[
     (pathName ?? "").split("/").length - 1
   ];
-  console.log("path", path, link);
   const isActive = path === link.split("/")[link.split("/").length - 1];
   const onClick = () => {
+    if (isProtected) {
+      // Special case for 'Post a job'
+      if (title === "Post a job") {
+        if (!userData?.token) {
+          router.push(`/home/sign-in?redirect=${encodeURIComponent(link)}`);
+          return;
+        }
+        if (userData?.user?.role === "job_seeker") {
+          router.push(`/home/sign-in?redirect=${encodeURIComponent(link)}`);
+          return;
+        }
+      } else if (!userData?.token) {
+        router.push(`/home/sign-in?redirect=${encodeURIComponent(link)}`);
+        return;
+      }
+    }
     router.push(link);
   };
   return (
     <span
-      onClick={() => {
-        onClick();
-      }}
+      onClick={onClick}
       className={`${
         isActive
           ? "font-bold underline underline-offset-2 transform transition-all"

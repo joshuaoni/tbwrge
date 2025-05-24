@@ -10,6 +10,24 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 
 const BLOGS_PER_PAGE = 8;
 
+// BlogCardSkeleton for loading state
+const BlogCardSkeleton = () => (
+  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden animate-pulse">
+    <div className="mb-6 w-full h-40 bg-gray-200" />
+    <div className="px-6 w-full flex-1 flex flex-col justify-between">
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 mt-2" />
+      <div className="h-4 bg-gray-100 rounded w-1/2 mb-2" />
+    </div>
+    <div className="flex items-center gap-2 px-2 py-3 border-t border-gray-100 bg-white mt-auto w-full">
+      <div className="w-10 h-10 rounded-full bg-gray-200" />
+      <div className="flex flex-col flex-1">
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-1" />
+        <div className="h-3 bg-gray-100 rounded w-1/3" />
+      </div>
+    </div>
+  </div>
+);
+
 const BlogCard = ({ blog }: { blog: BlogItem }) => {
   const router = useRouter();
 
@@ -221,7 +239,7 @@ const Blogs = () => {
           <motion.h2
             variants={itemVariants}
             custom={0}
-            className="w-full text-2xl md:text-3xl capitalize font-bold text-white mb-6 md:mb-8"
+            className="w-full text-2xl md:text-3xl md:text-left text-center capitalize font-bold text-white mb-6 md:mb-8"
           >
             Blogs
           </motion.h2>
@@ -236,20 +254,23 @@ const Blogs = () => {
                 className="flex transition-transform duration-300 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {isLoading ? (
-                  <div className="w-full text-center text-white">
-                    Loading...
-                  </div>
-                ) : (
-                  blogs?.map((blog: BlogItem) => (
-                    <div
-                      key={blog.id}
-                      className="w-full h-full flex-shrink-0 flex justify-center px-2 md:px-4"
-                    >
-                      <BlogCard blog={blog} />
-                    </div>
-                  ))
-                )}
+                {isLoading || !blogs || blogs.length === 0
+                  ? [...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-full h-full flex-shrink-0 flex justify-center px-2 md:px-4"
+                      >
+                        <BlogCardSkeleton />
+                      </div>
+                    ))
+                  : blogs.map((blog: BlogItem) => (
+                      <div
+                        key={blog.id}
+                        className="w-full h-full flex-shrink-0 flex justify-center px-2 md:px-4"
+                      >
+                        <BlogCard blog={blog} />
+                      </div>
+                    ))}
               </div>
             </div>
             {/* Navigation Buttons */}
@@ -295,17 +316,17 @@ const Blogs = () => {
             className="w-full overflow-hidden hidden md:block md:mt-4"
           >
             <div className="w-full flex flex-wrap gap-4 md:gap-6 lg:gap-8 justify-center items-center">
-              {blogs &&
-                blogs.length > 0 &&
-                blogs.map((blog: BlogItem, idx: number) => (
-                  <motion.div
-                    key={blog.id}
-                    custom={getAnimationOrder(idx, blogs.length)}
-                    variants={itemVariants}
-                  >
-                    <BlogCard blog={blog} />
-                  </motion.div>
-                ))}
+              {isLoading || !blogs || blogs.length === 0
+                ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+                : blogs.map((blog: BlogItem, idx: number) => (
+                    <motion.div
+                      key={blog.id}
+                      custom={getAnimationOrder(idx, blogs.length)}
+                      variants={itemVariants}
+                    >
+                      <BlogCard blog={blog} />
+                    </motion.div>
+                  ))}
             </div>
           </motion.div>
 

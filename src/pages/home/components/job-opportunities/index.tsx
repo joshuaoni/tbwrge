@@ -199,7 +199,7 @@ const JobOpportunities = () => {
 
             {/* Job Cards - Mobile Carousel */}
             <div className="w-full md:flex-1">
-              {isLoading ? (
+              {isLoading || !jobs || jobs.length === 0 ? (
                 <div className="flex gap-4 md:gap-6 lg:gap-8">
                   {[...Array(3)].map((_, i) => (
                     <JobCardSkeleton key={i} />

@@ -84,13 +84,13 @@ const index = () => {
             >
               <motion.h1
                 variants={itemVariants}
-                className="mb-4 md:text-[60px] text-[16px] text-white font-extrabold"
+                className="mb-4 md:text-[60px] text-[30px] text-white font-extrabold"
               >
                 About <span className="text-[#DEA042]">Us</span>
               </motion.h1>
               <motion.p
                 variants={itemVariants}
-                className={`${outfit.className} w-[90%] leading-[26px] text-white text-sm font-light`}
+                className={`${outfit.className} md:w-[90%] w-full leading-[26px] text-white text-sm font-light`}
               >
                 At Candivet, we're transforming the way professionals connect
                 with opportunities by merging technology with human-centered
@@ -99,8 +99,8 @@ const index = () => {
                 recruiters and job seekers to simplify the job search,
                 application, and candidate vetting processes.
               </motion.p>
-              <motion.div variants={itemVariants}>
-                <Button className="flex md:mt-8 mt-4 text-[12px] px-[40px] py-[25px] rounded-[20px] bg-[#009379] text-white items-center">
+              <motion.div className="w-full md:w-fit" variants={itemVariants}>
+                <Button className="md:w-fit w-full flex md:mt-8 mt-4 text-[12px] px-[40px] py-[25px] rounded-[20px] bg-[#009379] text-white items-center">
                   <p>Join Us</p> <ArrowRight />
                 </Button>
               </motion.div>

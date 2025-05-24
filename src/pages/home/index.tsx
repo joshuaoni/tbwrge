@@ -47,14 +47,10 @@ const HomePage = () => {
       <motion.div {...fadeInUp}>
         <PricingPlans />
       </motion.div>
-      {/* <motion.div {...fadeInUp}> */}
       <Blogs />
-      {/* </motion.div> */}
-      {/* <BlogPosts /> */}
       <motion.div {...fadeInUp}>
         <Expertise />
       </motion.div>
-      {/* <Community /> */}
     </LandingWrapper>
   );
 };

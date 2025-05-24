@@ -199,6 +199,7 @@ const LandingHeroSection = () => {
                 </span>
                 & over{" "}
                 <span className="font-bold text-[18px] md:text-[20px]">
+                  <br className="block md:hidden" />
                   <span
                     className={`text-[#FDB833] inline-block${
                       animateMillion ? " pop-animate" : ""
