@@ -106,10 +106,10 @@ const PricingPlans = () => {
     >
       <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-0 mb-0 md:mb-12 items-center">
         <motion.div variants={itemVariants}>
-          <h1 className="text-2xl md:text-[35px] text-primary text-center font-extrabold p-4">
+          <h1 className="text-2xl md:text-[35px] text-primary text-center font-bold p-4">
             Our Pricing Plans
           </h1>
-          <p className="text-base md:text-[20px]  text-primary capitalize text-center pb-12 md:px-24">
+          <p className="text-sm md:text-base text-[#184C2A] font-medium capitalize text-center pb-12 md:px-24">
             Choose the Perfect Pricing for your hiring and career goals
           </p>
         </motion.div>
