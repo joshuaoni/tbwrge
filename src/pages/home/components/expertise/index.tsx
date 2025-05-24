@@ -11,24 +11,24 @@ const Expertise = () => {
   const isMobile = useIsMobile();
   return (
     <div
-      className={`${outfit.className} h-fit flex flex-col gap-4 py-[50px] md:py-0 md:h-[500px] relative bg-white  items-center  justify-center p-4 md:p-16 md:pb-[16px]`}
+      className={`${outfit.className} h-fit flex flex-col gap-4 py-[50px] md:py-0 md:h-[500px] relative bg-white items-center justify-center p-4 md:p-16 md:pb-[16px]`}
     >
-      <h2 className="text-primary text-[40px] font-bold">
+      <h2 className="text-primary text-2xl md:text-[40px] font-bold text-center px-4">
         Share Your Expertise with the Community
       </h2>
-      <p className="w-[55%] text-center text-primary text-[18px]">
+      <p className="w-full md:w-[55%] text-center text-primary text-base md:text-[18px] px-4">
         Submit your blog post with your title, name, job title, company, and
         profile image. After a quick review, your post will be published with
         full recognition as an expert in the Webintel community.
       </p>
-      <div className="flex items-center justify-center gap-12">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mt-4">
         <Button
           style={{
             backgroundImage: "url(/hero-bg.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-          className="text-white text-sm px-[30px] py-[25px] rounded-full"
+          className="text-white text-sm px-6 py-4 md:px-[30px] md:py-[25px] rounded-full w-full md:w-auto"
         >
           Share Article
         </Button>

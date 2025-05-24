@@ -68,7 +68,7 @@ const HomePageStats = () => {
           zIndex: 0,
         }}
       />
-      <h1 className="text-[44px] leading-[60px] text-center font-bold relative w-[65%] z-10">
+      <h1 className="text-2xl md:text-[44px] leading-tight md:leading-[60px] text-center font-bold relative w-full md:w-[65%] z-10 px-4">
         <span className="bg-gradient-to-r from-white/60 via-white to-white/40 bg-clip-text text-transparent bg-[length:200%_100%] animate-gradient">
           Build confidence in your Hiring and Job Seeking
         </span>
@@ -77,7 +77,7 @@ const HomePageStats = () => {
           journey with the #1 Global platform
         </span>
       </h1>
-      <p className="text-white text-center md:text-base text-[14px] w-[80%] mt-4 z-10">
+      <p className="text-white text-center text-sm md:text-base w-full md:w-[80%] mt-4 z-10 px-4">
         Candivet simplifies hiring and job seeking with AI-driven automation and
         intelligent matching. Recruiters can post jobs, vet candidates, and
         schedule interviews effortlessly, while job seekers benefit from
@@ -86,7 +86,7 @@ const HomePageStats = () => {
         on finding the perfect fit.
       </p>
 
-      <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 mt-10 z-10">
+      <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl gap-8 md:gap-0 z-10">
         {stats.map((stat, idx) => (
           <motion.div
             key={stat.label}
@@ -94,9 +94,9 @@ const HomePageStats = () => {
             initial="hidden"
             animate="visible"
             variants={cardVariants}
-            className="flex-1 flex flex-col items-center"
+            className="flex-1 flex flex-col items-center text-center"
           >
-            <div className="text-yellow-400 text-3xl md:text-4xl font-bold mb-2">
+            <div className="text-yellow-400 text-2xl md:text-4xl font-bold mb-2">
               {stat.value}
             </div>
             <div className="text-white text-sm md:text-base font-semibold uppercase tracking-wide">

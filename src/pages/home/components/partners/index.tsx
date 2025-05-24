@@ -41,7 +41,7 @@ const Partners = () => {
 
   if (isMobile) {
     return (
-      <div className="overflow-hidden pt-16 pb-16 border-b bg-white">
+      <div className="md:block hidden overflow-hidden pt-16 pb-16 border-b bg-white">
         <div className="px-4">
           <div className="grid grid-cols-3 gap-6">
             {partners.map((partner, index) => (

@@ -167,6 +167,7 @@ const TopTalents = () => {
   const { userData } = useUserStore();
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-200px" });
 
@@ -226,6 +227,17 @@ const TopTalents = () => {
     page * talentsPerPage + talentsPerPage
   );
 
+  // Mobile Carousel Navigation
+  const nextSlide = () => {
+    if (currentSlide >= 5) return; // Disable after 6 items (0-5)
+    setCurrentSlide((prev) => prev + 1);
+  };
+
+  const prevSlide = () => {
+    if (currentSlide === 0) return;
+    setCurrentSlide((prev) => prev - 1);
+  };
+
   const pageVariants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 300 : -300,
@@ -250,12 +262,12 @@ const TopTalents = () => {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className={`${outfit.className} bg-white relative h-fit pt-24 md:pt-[74px] flex flex-col items-center justify-center p-4 py-12 md:p-12 md:px-16`}
+      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
     >
-      {/* Navigation Arrows and Frame Number */}
+      {/* Navigation Arrows and Frame Number (Desktop) */}
       <motion.div
         variants={itemVariants}
-        className="absolute top-8 right-12 flex items-center space-x-4 z-10"
+        className="absolute top-4 md:top-8 right-4 md:right-8 lg:right-12 items-center space-x-4 z-10 hidden md:flex"
       >
         <button
           className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -297,16 +309,93 @@ const TopTalents = () => {
 
       <motion.div
         variants={itemVariants}
-        className="w-full flex justify-between items-center mb-8"
+        className="w-full flex justify-center md:justify-between items-center mb-6 md:mb-8"
       >
         <h2 className="text-2xl md:text-3xl font-bold text-black">
           Top Talents
         </h2>
       </motion.div>
 
+      {/* Mobile Carousel */}
       <motion.div
         variants={itemVariants}
-        className="relative w-full max-w-6xl mx-auto min-h-[600px]"
+        className="relative w-full md:hidden mt-4"
+      >
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {isLoading || !talents
+              ? [...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-full flex-shrink-0 flex justify-center px-2"
+                  >
+                    <TalentCardSkeleton />
+                  </div>
+                ))
+              : pagedTalents.slice(0, 6).map((talent: any) => (
+                  <div
+                    key={talent.id}
+                    className="w-full flex-shrink-0 flex justify-center px-2"
+                  >
+                    <TalentCard
+                      talent={{
+                        id: talent.id,
+                        name: talent.name || "No Name",
+                        title: talent.current_position || "No Title",
+                        image: talent.profile_photo,
+                        description:
+                          talent.experience_summary ||
+                          "No description available.",
+                      }}
+                    />
+                  </div>
+                ))}
+          </div>
+        </div>
+        {/* Mobile Navigation Buttons */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-1 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={currentSlide === 0}
+          aria-label="Previous Talent"
+        >
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="md:w-6 md:h-6"
+          >
+            <path d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-1 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={currentSlide >= 5}
+          aria-label="Next Talent"
+        >
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="md:w-6 md:h-6"
+          >
+            <path d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </motion.div>
+
+      {/* Desktop Grid */}
+      <motion.div
+        variants={itemVariants}
+        className="relative w-full max-w-6xl mx-auto min-h-[600px] hidden md:block"
       >
         <AnimatePresence custom={direction} initial={false} mode="wait">
           <motion.div
@@ -322,7 +411,7 @@ const TopTalents = () => {
               damping: 40,
               duration: 0.5,
             }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
             style={{ position: "absolute", width: "100%" }}
           >
             {isLoading || !talents
@@ -353,7 +442,7 @@ const TopTalents = () => {
             backgroundPosition: "center",
           }}
           onClick={handleViewTalentPool}
-          className="mt-8 text-white rounded-full px-6 py-6 w-fit text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+          className="mt-8 md:mt-12 text-white rounded-full px-6 py-4 md:py-6 w-full md:w-fit text-sm md:text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
         >
           View Talent Pool
         </Button>

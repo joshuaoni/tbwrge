@@ -157,7 +157,7 @@ const Blogs = () => {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className={`${outfit.className} relative h-fit pt-24 md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-12 md:px-16 bg-black`}
+      className={`${outfit.className} relative h-fit pt-12 md:pt-16 lg:pt-24 flex items-center justify-center p-4 md:p-8 lg:p-12 bg-black`}
       style={{
         position: "relative",
       }}
@@ -176,11 +176,11 @@ const Blogs = () => {
           zIndex: 0,
         }}
       />
-      <div className="w-full relative z-10">
+      <div className="w-full max-w-7xl relative z-10">
         {/* Navigation Arrows and Frame Number (Desktop/Tablet) */}
         <motion.div
           variants={itemVariants}
-          className="absolute top-8 right-12 items-center space-x-4 z-10 hidden md:flex"
+          className="absolute top-4 md:top-8 right-4 md:right-8 lg:right-12 items-center space-x-4 z-10 hidden md:flex"
         >
           <button
             className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-50"
@@ -221,7 +221,7 @@ const Blogs = () => {
           <motion.h2
             variants={itemVariants}
             custom={0}
-            className="w-full text-2xl md:text-3xl capitalize font-bold text-white mb-8"
+            className="w-full text-2xl md:text-3xl capitalize font-bold text-white mb-6 md:mb-8"
           >
             Blogs
           </motion.h2>
@@ -229,7 +229,7 @@ const Blogs = () => {
           <motion.div
             variants={itemVariants}
             custom={1}
-            className="relative w-full md:hidden mt-8"
+            className="relative w-full md:hidden mt-4 md:mt-8"
           >
             <div className="overflow-hidden">
               <div
@@ -244,7 +244,7 @@ const Blogs = () => {
                   blogs?.map((blog: BlogItem) => (
                     <div
                       key={blog.id}
-                      className="w-full h-full flex-shrink-0 flex justify-center"
+                      className="w-full h-full flex-shrink-0 flex justify-center px-2 md:px-4"
                     >
                       <BlogCard blog={blog} />
                     </div>
@@ -255,32 +255,34 @@ const Blogs = () => {
             {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300"
+              className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300"
               style={{ display: blogs && blogs.length > 1 ? "block" : "none" }}
               aria-label="Previous Blog"
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                className="md:w-6 md:h-6"
               >
                 <path d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300"
+              className="absolute right-1 md:right-2 top-1/2 -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-20 border border-gray-300"
               style={{ display: blogs && blogs.length > 1 ? "block" : "none" }}
               aria-label="Next Blog"
             >
               <svg
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                className="md:w-6 md:h-6"
               >
                 <path d="M9 5l7 7-7 7" />
               </svg>
@@ -290,9 +292,9 @@ const Blogs = () => {
           <motion.div
             variants={itemVariants}
             custom={2}
-            className="w-full overflow-hidden hidden md:block"
+            className="w-full overflow-hidden hidden md:block md:mt-4"
           >
-            <div className="w-full max-w-7xl flex flex-wrap gap-8 justify-center items-center">
+            <div className="w-full flex flex-wrap gap-4 md:gap-6 lg:gap-8 justify-center items-center">
               {blogs &&
                 blogs.length > 0 &&
                 blogs.map((blog: BlogItem, idx: number) => (
@@ -311,11 +313,11 @@ const Blogs = () => {
           <motion.div
             variants={itemVariants}
             custom={blogs ? blogs.length + 3 : 3}
-            className="my-12"
+            className="mt-8 md:mt-12 lg:mt-16"
           >
             <button
               onClick={() => router.push("/home/blog")}
-              className="text-sm px-[30px] py-[16px] rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
+              className="text-sm px-6 md:px-8 lg:px-[30px] py-3 md:py-4 lg:py-[16px] rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
             >
               View All Blogs
             </button>

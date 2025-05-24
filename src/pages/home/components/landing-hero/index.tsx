@@ -119,7 +119,7 @@ const LandingHeroSection = () => {
 
   return (
     <>
-      <div className="relative min-h-[700px] h-screen pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-0 ">
+      <div className="relative min-h-[700px] h-screen  bg-black pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-0">
         <div
           style={{
             position: "absolute",
@@ -137,10 +137,10 @@ const LandingHeroSection = () => {
         {/* Main Content */}
         <div className="flex items-center justify-center w-full relative z-10">
           <div className="w-full flex flex-col justify-between md:h-[650px] py-[40px] md:py-0 md:px-0">
-            <div className="flex flex-1 flex-col items-start md:items-center justify-center w-full ">
+            <div className="flex flex-1 flex-col items-start md:items-center justify-center w-full">
               <div className="text-3xl md:text-6xl text-white font-extrabold flex flex-col items-center md:items-start">
                 <p
-                  className={`${poppins.className} text-4xl md:text-[60px] text-start md:text-center leading-[1.3] capitalize`}
+                  className={`${poppins.className} text-3xl md:text-[60px] text-start md:text-center leading-[1.3] capitalize px-4 md:px-0`}
                 >
                   Hire <span className="text-[#FDB833]">Smarter</span>.
                   <br />
@@ -149,7 +149,7 @@ const LandingHeroSection = () => {
               </div>
 
               <p
-                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[20px] !leading-[31px] md:text-base md:mt-8`}
+                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[16px] md:!text-[20px] !leading-[24px] md:!leading-[31px] px-4 md:px-0 md:mt-8 mt-4`}
               >
                 Candivet is the #1 global AI-powered platform designed to
                 simplify hiring for recruiters and job seekers alike. Whether
@@ -158,33 +158,33 @@ const LandingHeroSection = () => {
               </p>
 
               <div
-                className={`${poppins.className} flex gap-4 w-full items-start md:justify-center md:flex-row md:items-center space-y-4 md:space-y-0 mt-6 md:mt-12 md:space-x-4`}
+                className={`${poppins.className} flex flex-col md:flex-row gap-4 w-full items-center md:justify-center mt-6 md:mt-12 px-4 md:px-0`}
               >
                 <Button
                   onClick={handlePostJob}
-                  className="w-[220px] bg-[#009379] text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]"
+                  className="w-full md:w-[220px] bg-[#009379] text-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 rounded-[10px]"
                 >
                   Post a Job
                 </Button>
                 <Button
                   onClick={handleJoinTalentPool}
-                  className="w-[220px] bg-[#00000000] border text-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 rounded-[10px]"
+                  className="w-full md:w-[220px] bg-[#00000000] border text-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 rounded-[10px]"
                 >
                   Join Talent Pool
                 </Button>
                 <Button
                   onClick={handleApplyJob}
-                  className="w-[220px] bg-white text-[12px] md:py-6 font-semibold md:px-4 md:max-w-40 text-primary rounded-[10px]"
+                  className="w-full md:w-[220px] bg-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 text-primary rounded-[10px]"
                 >
                   Apply for a Job
                 </Button>
               </div>
 
               <p
-                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base mt-6 md:mt-12`}
+                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base mt-6 md:mt-12 px-4 md:px-0`}
               >
                 Used by{" "}
-                <span className="font-bold text-[20px]">
+                <span className="font-bold text-[18px] md:text-[20px]">
                   <span className="text-[#FDB833]">
                     {recruiterCount.toLocaleString()}
                     <span
@@ -198,7 +198,7 @@ const LandingHeroSection = () => {
                   Recruiters{" "}
                 </span>
                 & over{" "}
-                <span className="font-bold text-[20px]">
+                <span className="font-bold text-[18px] md:text-[20px]">
                   <span
                     className={`text-[#FDB833] inline-block${
                       animateMillion ? " pop-animate" : ""
@@ -212,7 +212,7 @@ const LandingHeroSection = () => {
               </p>
             </div>
 
-            <div className="">
+            <div className="mt-8 md:mt-0">
               <Partners />
             </div>
           </div>
