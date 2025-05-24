@@ -135,8 +135,8 @@ const LandingHeroSection = () => {
           }}
         />
         {/* Main Content */}
-        <div className="flex items-center justify-center w-full relative z-10">
-          <div className="w-full flex flex-col justify-between md:h-[650px] py-[40px] md:py-0 md:px-0">
+        <div className="flex items-center justify-center h-full w-full relative z-10">
+          <div className="w-full flex flex-col justify-between md:h-full py-[40px] md:py-0 md:px-0">
             <div className="flex flex-1 flex-col items-start md:items-center justify-center w-full">
               <div className="text-3xl md:text-6xl text-white font-extrabold flex flex-col items-center md:items-start">
                 <p
