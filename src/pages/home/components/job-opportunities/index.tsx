@@ -126,8 +126,57 @@ const JobOpportunities = () => {
         }}
       />
       <div className="relative z-10 w-full max-w-7xl">
+        {/* Navigation Arrows and Frame Number */}
+        <div className="hidden md:flex absolute top-8 right-0 items-center space-x-4 z-10">
+          <button
+            className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >
+            {/* Left Arrow SVG */}
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M10 4l-4 4 4 4" />
+            </svg>
+          </button>
+          <button
+            className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() =>
+              setPage((p) =>
+                Math.min(
+                  p + 1,
+                  jobs && jobs.length
+                    ? Math.floor((jobs.length - 1) / jobsPerPage)
+                    : 0
+                )
+              )
+            }
+            disabled={
+              !jobs ||
+              jobs.length <= jobsPerPage ||
+              page >= Math.floor((jobs.length - 1) / jobsPerPage)
+            }
+          >
+            {/* Right Arrow SVG */}
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M6 4l4 4-4 4" />
+            </svg>
+          </button>
+        </div>
+
         {/* Main Content */}
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center md:mt-4">
           <h2 className="md:text-left text-center w-full text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">
             Latest Job Opportunities
           </h2>
@@ -283,7 +332,7 @@ const JobOpportunities = () => {
                   </div>
 
                   {/* Desktop Grid */}
-                  <div className="hidden md:flex flex-row gap-4 md:gap-6 lg:gap-8 justify-center items-center">
+                  <div className="hidden md:flex flex-row gap-4 md:gap-6 justify-center items-center">
                     {[...Array(3)].map((_, idx) => {
                       const job =
                         jobs && jobs.length > idx
