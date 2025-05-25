@@ -172,8 +172,7 @@ const Blogs = () => {
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate="visible"
       variants={containerVariants}
       className={`${outfit.className} relative h-fit pt-12 md:pt-16 lg:pt-24 flex items-center justify-center p-4 md:p-8 lg:p-12 bg-black`}
       style={{

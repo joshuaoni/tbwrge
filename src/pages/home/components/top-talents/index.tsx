@@ -259,8 +259,7 @@ const TopTalents = () => {
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate="visible"
       variants={containerVariants}
       className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
     >

@@ -99,10 +99,9 @@ const PricingPlans = () => {
   return (
     <motion.div
       ref={ref}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate="visible"
       variants={containerVariants}
-      className={`${outfit.className} bg-gradient-to-b from-white to-[#F8F9FF] md:px-16 flex flex-col space-y-4 items-center`}
+      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
     >
       <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-0 mb-0 md:mb-12 items-center">
         <motion.div variants={itemVariants}>
