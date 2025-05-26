@@ -9,6 +9,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import butterfly from "../../../../../public/butterfly2.png";
 
 interface Talent {
   id: number;
@@ -89,32 +90,27 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
       style={{ boxSizing: "border-box" }}
     >
       {/* Profile + Name/Title */}
-      <div className="flex gap-4 items-end justify-start w-full">
-        <div className="relative w-[84px] h-[84px] mb-2">
-          {/* Shadow for the SVG shape */}
-          <svg
-            className="absolute left-2 top-2 w-full h-full z-0"
-            viewBox="0 0 84 84"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M42 0C54 0 84 30 84 42C84 54 54 84 42 84C30 84 0 54 0 42C0 30 30 0 42 0Z"
-              fill="#009379"
-              fillOpacity="0.18"
-            />
-          </svg>
-          {/* Profile image */}
+      <div className="flex items-end justify-start w-full">
+        <div className="relative w-[120px] h-[100px] mb-2 flex items-center justify-center">
+          {/* Butterfly background (fully opaque) */}
+          <Image
+            src={butterfly}
+            alt="Butterfly overlay"
+            width={120}
+            height={120}
+            className="absolute left-[45px] top-[60px] w-[120px] h-[120px] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
+          />
+          {/* Profile image or icon (foreground, semi-transparent) */}
           {talent.image ? (
             <Image
               src={talent.image}
               alt={talent.name}
               width={84}
               height={84}
-              className="rounded-full object-cover absolute left-0 top-0 w-[84px] h-[84px] z-10"
+              className="rounded-full object-cover absolute left-[45px] top-[57px] w-[55px] h-[55px] -translate-x-1/2 -translate-y-1/2 z-20 opacity-40"
             />
           ) : (
-            <UserCircleIcon className="absolute left-0 top-0 w-[90px] h-[90px] text-gray-300 z-10" />
+            <UserCircleIcon className="absolute left-[45px] top-[57px] w-[70px] h-[70px] -translate-x-1/2 -translate-y-1/2 text-gray-300 z-20 opacity-40" />
           )}
         </div>
         <div className="text-left mt-1">
@@ -151,15 +147,6 @@ const TalentCardSkeleton = () => (
     <div className="h-4 bg-gray-200 rounded w-2/3" />
   </div>
 );
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
-  }),
-};
 
 const TopTalents = () => {
   const isMobile = useIsMobile();
