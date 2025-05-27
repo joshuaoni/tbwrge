@@ -10,6 +10,7 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import butterfly from "../../../../../public/butterfly2.png";
+import ButterflyMaskedImage from "./components/ButterflyMask";
 
 interface Talent {
   id: number;
@@ -403,18 +404,21 @@ const TopTalents = () => {
             {isLoading || !talents
               ? [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
               : pagedTalents.map((talent: any, idx: number) => (
-                  <TalentCard
-                    key={talent.id}
-                    talent={{
-                      id: talent.id,
-                      name: talent.name || "No Name",
-                      title: talent.current_position || "No Title",
-                      image: talent.profile_photo,
-                      description:
-                        talent.experience_summary ||
-                        "No description available.",
-                    }}
-                  />
+                  <>
+                    <ButterflyMaskedImage imageUrl={talent.profile_photo} />
+                    <TalentCard
+                      key={talent.id}
+                      talent={{
+                        id: talent.id,
+                        name: talent.name || "No Name",
+                        title: talent.current_position || "No Title",
+                        image: talent.profile_photo,
+                        description:
+                          talent.experience_summary ||
+                          "No description available.",
+                      }}
+                    />
+                  </>
                 ))}
           </motion.div>
         </AnimatePresence>

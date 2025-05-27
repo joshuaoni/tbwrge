@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+
+# Host
+Host: https://www.candivet.com
+
+# Sitemaps
+Sitemap: https://www.candivet.com/sitemap.xml
