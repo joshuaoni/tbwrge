@@ -102,7 +102,7 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
             className="absolute left-[45px] top-[60px] w-[120px] h-[120px] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
           />
           {/* Profile image or icon (foreground, semi-transparent) */}
-          {talent.image ? (
+          {/* {talent.image ? (
             <Image
               src={talent.image}
               alt={talent.name}
@@ -112,7 +112,7 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
             />
           ) : (
             <UserCircleIcon className="absolute left-[45px] top-[57px] w-[70px] h-[70px] -translate-x-1/2 -translate-y-1/2 text-gray-300 z-20 opacity-40" />
-          )}
+          )} */}
         </div>
         <div className="text-left mt-1">
           <div className="font-bold text-[20px] leading-tight text-black">
