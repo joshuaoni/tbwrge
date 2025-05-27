@@ -10,7 +10,6 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import butterfly from "../../../../../public/butterfly2.png";
-import ButterflyMaskedImage from "./components/ButterflyMask";
 
 interface Talent {
   id: number;
@@ -93,28 +92,40 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
       {/* Profile + Name/Title */}
       <div className="flex items-end justify-start w-full">
         <div className="relative w-[120px] h-[100px] mb-2 flex items-center justify-center">
-          {/* Butterfly background (fully opaque) */}
-          <Image
-            src={butterfly}
-            alt="Butterfly overlay"
-            width={120}
-            height={120}
-            className="absolute left-[45px] top-[60px] w-[120px] h-[120px] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
-          />
-          {/* Profile image or icon (foreground, semi-transparent) */}
-          {/* {talent.image ? (
+          {/* Profile image with butterfly mask */}
+          <div className="relative w-[120px] h-[120px]">
+            {talent.image ? (
+              <Image
+                src={talent.image}
+                alt={talent.name}
+                width={120}
+                height={120}
+                className="absolute left-[-20px] top-[10px] w-full h-full object-cover"
+                style={{
+                  WebkitMaskImage: `url(${butterfly.src})`,
+                  maskImage: `url(${butterfly.src})`,
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                }}
+              />
+            ) : (
+              <div className="absolute left-0 top-0 w-full h-full rounded-full" />
+            )}
+            {/* Butterfly overlay */}
             <Image
-              src={talent.image}
-              alt={talent.name}
-              width={84}
-              height={84}
-              className="rounded-full object-cover absolute left-[45px] top-[57px] w-[55px] h-[55px] -translate-x-1/2 -translate-y-1/2 z-20 opacity-40"
+              src={butterfly}
+              alt="Butterfly overlay"
+              width={120}
+              height={120}
+              className="opacity-60 absolute left-[-20px] top-[10px] w-full h-full pointer-events-none"
             />
-          ) : (
-            <UserCircleIcon className="absolute left-[45px] top-[57px] w-[70px] h-[70px] -translate-x-1/2 -translate-y-1/2 text-gray-300 z-20 opacity-40" />
-          )} */}
+          </div>
         </div>
-        <div className="text-left mt-1">
+        <div className="text-left mt-1 -ml-3">
           <div className="font-bold text-[20px] leading-tight text-black">
             {talent.name}
           </div>
@@ -405,7 +416,6 @@ const TopTalents = () => {
               ? [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
               : pagedTalents.map((talent: any, idx: number) => (
                   <>
-                    <ButterflyMaskedImage imageUrl={talent.profile_photo} />
                     <TalentCard
                       key={talent.id}
                       talent={{
