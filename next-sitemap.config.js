@@ -1,6 +1,6 @@
 module.exports = {
   siteUrl: "https://www.candivet.com",
-  generateRobotsTxt: true, // optional if you want robots.txt generated
+  generateRobotsTxt: true,
   exclude: [
     "/admin",
     "/admin/*",
