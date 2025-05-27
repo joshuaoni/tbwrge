@@ -1,27 +1,66 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
 import TrashIcon from "@/components/icons/trash";
 import { CreateJobContext } from "@/providers/job-posting.context";
-import { ArrowLeft, CheckIcon } from "lucide-react";
+import { ArrowLeft, CheckIcon, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { outfit } from "@/constants/app";
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <div className="mb-8">
+    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    {children}
+  </div>
+);
 
 function CreateJobScreening() {
+  const ctx = useContext(CreateJobContext);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [questions, setQuestions] = useState<
     { title: string; answer: string }[]
-  >([
-    {
-      title:
-        "Could you describe a project or task you’ve worked on that best demonstrates your skills for this role?",
-      answer: "",
-    },
-  ]);
+  >([]);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newQuestion, setNewQuestion] = useState<string>("");
   const [wordCount, setWordCount] = useState(0);
   const limit = 500;
+
+  // Initialize questions from context when component mounts
+  useEffect(() => {
+    setIsLoading(true);
+
+    if (
+      ctx.formData.screening_questions &&
+      ctx.formData.screening_questions.length > 0
+    ) {
+      // Map the string array to the required format
+      const formattedQuestions = ctx.formData.screening_questions.map((q) => ({
+        title: q,
+        answer: "",
+      }));
+      setQuestions(formattedQuestions);
+    } else {
+      // Use default question if no questions are available
+      setQuestions([
+        {
+          title:
+            "Could you describe a project or task you've worked on that best demonstrates your skills for this role?",
+          answer: "",
+        },
+      ]);
+    }
+
+    setIsLoading(false);
+  }, [ctx.formData.screening_questions]);
 
   const handleTextareaChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -52,109 +91,189 @@ function CreateJobScreening() {
     setQuestions(questions.filter((_, i) => i !== index));
   };
 
-  const ctx = useContext(CreateJobContext);
+  const handleSaveScreeningQuestions = () => {
+    // Filter out empty questions and only take the titles
+    const questionTitles = questions
+      .filter((q) => q.title.trim() !== "")
+      .map((q) => q.title);
+
+    if (questionTitles.length === 0) {
+      return toast.error("Please add at least one question");
+    }
+
+    // Update the context with the questions
+    ctx.setFormData("screening_questions", questionTitles);
+    toast.success("Screening questions saved successfully");
+
+    // Navigate back to hiring flow page after 500ms
+    setTimeout(() => {
+      ctx.goTo("hiring");
+    }, 1000);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[#009379]" />
+      </div>
+    );
+  }
 
   return (
-    <div className="">
+    <div className={`${outfit.className}`}>
       <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.prevScreen()} className="mr-4">
+        <button onClick={() => ctx.goTo("hiring")} className="mr-4">
           <ArrowLeft />
-        </button>{" "}
-        {ctx.formData.job_title} Screen Questions
+        </button>
+        <span>Job Screening</span>
       </h3>
-      <div className="flex gap-20">
+      <div className="flex gap-8">
         <section className="w-full">
-          <div className="flex justify-between items-center my-6">
-            <span>Example Tech Solution</span>
-            <span className="w-16 h-16 bg-gray-300 rounded-full"></span>
-          </div>
-          <div className="flex justify-between items-center gap-10">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-              atque laboriosam vero labore ullam expedita dolorem distinctio
-              debitis nesciunt tenetur.
-            </p>
-            <p>www.babs.com</p>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <h4 className="text-lg font-semibold mt-6">Job Information</h4>
-          </div>
-
-          {[
-            { title: "Job Title", value: ctx.formData.job_title },
-            {
-              title: "Job Description",
-              value: ctx.formData.job_description,
-            },
-            {
-              title: "Key Responsibilities",
-              value: [
-                "Develop, test, and maintain software applications and systems.",
-                "Write clean, scalable, and efficient code following best practices and industry standards.",
-                "Participate in code reviews to maintain high code quality.",
-                "Troubleshoot and resolve bugs and issues across production systems.",
-                "Stay up-to-date with the latest trends in software development.",
-              ],
-            },
-            {
-              title: "Required Skills",
-              value: [
-                "JavaScript",
-                "TypeScript",
-                "Python",
-                "C++",
-                "Node.js",
-                "React",
-                "AWS",
-                "Docker",
-              ],
-            },
-            {
-              title: "Experience",
-              value:
-                "Minimum 3+ years of professional software development experience",
-            },
-            { title: "Job Type", value: "Full Time" },
-            { title: "Location", value: "Remote (Flexible Working Hours)" },
-            { title: "Salary Range", value: "€60,000 - €90,000 USD per year" },
-            {
-              title: "Benefits",
-              value: [
-                "Health and dental insurance",
-                "401(k) matching",
-                "PTO",
-                "Professional development opportunities",
-              ],
-            },
-            { title: "Job ID", value: "JOB12345" },
-            { title: "Job Expiry", value: "December 31, 2024" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-start gap-10 my-6"
-            >
-              <span className="font-semibold w-1/3">{item.title}</span>
-              {Array.isArray(item.value) ? (
-                <ul className="list-disc w-full">
-                  {item.value.map((val, index) => (
-                    <li key={index}>{val}</li>
-                  ))}
-                </ul>
-              ) : (
-                <span className="w-full">{item.value}</span>
-              )}
+          <div className="bg-white rounded-lg p-6 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                {ctx.formData.company_logo ? (
+                  <Image
+                    src={URL.createObjectURL(ctx.formData.company_logo)}
+                    alt={ctx.formData.company_name}
+                    width={48}
+                    height={48}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-300 flex items-center justify-center">
+                    <span className="text-white font-medium text-xl">
+                      {ctx.formData.company_name[0]}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold mb-2">
+                  {ctx.formData.job_title}
+                </h1>
+                <div className="flex flex-col gap-1">
+                  <div className="text-[15px] text-gray-600">
+                    {ctx.formData.company_name}
+                  </div>
+                  <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                    <span>{ctx.formData.job_location}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="font-medium">
+                {ctx.formData.job_type.replace("_", " ")}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="font-medium">
+                {ctx.formData.years_of_experience_required}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+              <div className="font-medium">
+                {ctx.formData.salary_range_min && ctx.formData.salary_range_max
+                  ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
+                  : "Not specified"}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="font-medium">{ctx.formData.job_location}</div>
+            </div>
+          </div>
+
+          {ctx.formData.company_description && (
+            <Section title="About the Company">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.company_description}
+              </p>
+            </Section>
+          )}
+
+          <Section title="Job Description">
+            <div
+              className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
+            />
+          </Section>
+
+          <Section title="Required Skills">
+            <div className="flex flex-wrap gap-2">
+              {ctx.formData.required_skills.split(",").map((skill: string) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 bg-gray-100 rounded text-sm"
+                >
+                  {skill.trim()}
+                </span>
+              ))}
+            </div>
+          </Section>
+
+          {ctx.formData.educational_requirements && (
+            <Section title="Educational Requirements">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.educational_requirements}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.languages && (
+            <Section title="Languages">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.languages.split(",").map((language: string) => (
+                  <span
+                    key={language}
+                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm"
+                  >
+                    {language.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {ctx.formData.additional_benefits && (
+            <Section title="Additional Benefits">
+              <p className="text-gray-700 leading-relaxed">
+                {ctx.formData.additional_benefits}
+              </p>
+            </Section>
+          )}
+
+          {ctx.formData.job_tags && (
+            <Section title="Tags">
+              <div className="flex flex-wrap gap-2">
+                {ctx.formData.job_tags.split(",").map((tag: string) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm"
+                  >
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+            </Section>
+          )}
         </section>
-        <section className="w-11/12 px-4 h-fit pb-8 shadow-lg">
+
+        <section className="w-full h-fit p-6 pb-8">
           <p className="text-sm text-[#898989]">
             Thank you for taking the time to apply for the&nbsp;
             {ctx.formData.job_title} position at&nbsp;
             {ctx.formData.company_name} and for sharing your qualifications and
             experiences with us.
             <br />
-            As the next step in our hiring process, we’d love to invite you to
+            As the next step in our hiring process, we'd love to invite you to
             screening process to get to know you better.
           </p>
 
@@ -166,7 +285,7 @@ function CreateJobScreening() {
                     onClick={() => handleSaveEdit(i)}
                     className="text-green-600"
                   >
-                    <CheckIcon />
+                    <CheckIcon className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
@@ -190,7 +309,7 @@ function CreateJobScreening() {
                     type="text"
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   />
                 ) : (
                   <label className="block text-gray-700 text-sm font-medium">
@@ -199,12 +318,12 @@ function CreateJobScreening() {
                 )}
                 <textarea
                   rows={5}
-                  className="bg-gray-100 py-4 px-6 rounded w-full focus:outline-none"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   placeholder="Type your answer here"
                   value={question.answer}
                   onChange={(e) => handleTextareaChange(e, i)}
                 />
-                <span className="absolute top-8 right-6 text-xs font-medium text-gray-500">
+                <span className="absolute bottom-[115px] right-4 text-xs font-medium text-gray-500">
                   {wordCount} / {limit}
                 </span>
               </div>
@@ -222,11 +341,20 @@ function CreateJobScreening() {
               ]);
               setEditingIndex(questions.length);
             }}
-            className="flex items-center gap-2 mt-6 px-4"
+            className="w-full flex items-center justify-center gap-2 mt-6 px-4"
           >
             <PlusCircleIcon />
             <span className="capitalize font-bold">Add custom question</span>
           </button>
+
+          <div className="flex justify-center">
+            <button
+              onClick={handleSaveScreeningQuestions}
+              className=" bg-primary text-white p-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors"
+            >
+              Save Screening Questions
+            </button>
+          </div>
         </section>
       </div>
     </div>

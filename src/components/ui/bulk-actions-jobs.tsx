@@ -33,14 +33,14 @@ export const BulkActionsJobsPopUp = (props: BulkActionsJobsPopUpProps) => {
   });
   return (
     <Popover open={showPopUp} onOpenChange={setShowPopUp}>
-      <PopoverTrigger className="w-fit mt-2">
-        <div className="bg-[#F0F0F0] mt-6 flex p-3 items-center ml-auto space-x-4 text-gray-300 rounded-full">
+      <PopoverTrigger className="w-fit">
+        <div className="bg-[#F0F0F0] flex h-[35px] px-4 w-[150px] justify-between items-center ml-auto space-x-4 text-gray-500 text-[12px] rounded-full">
           <span>Bulk Actions</span>
           <CaretDownIcon />
         </div>
       </PopoverTrigger>
-      <PopoverContent className=" rounded-lg z-10 border-none w-fit">
-        <div className="flex flex-col w-fit bg-white rounded-lg">
+      <PopoverContent className="rounded-lg z-10 border-none p-0 w-[150px]">
+        <div className="flex flex-col w-full bg-white rounded-lg">
           <button
             onClick={() => {
               setSelectedOption("close"),
@@ -50,11 +50,11 @@ export const BulkActionsJobsPopUp = (props: BulkActionsJobsPopUpProps) => {
             className={classNames(
               selectedOption === "close"
                 ? "text-white bg-lightgreen"
-                : "text-[#898989]",
+                : "text-[#898989] hover:bg-gray-50",
               props.status === "closed"
                 ? "cursor-not-allowed"
                 : "cursor-pointer",
-              "p-3 text-sm rounded-t-lg"
+              "p-3 text-sm rounded-t-lg w-full transition-colors"
             )}
             disabled={props.status === "closed"}
           >
@@ -69,9 +69,9 @@ export const BulkActionsJobsPopUp = (props: BulkActionsJobsPopUpProps) => {
             className={classNames(
               selectedOption === "open"
                 ? "text-white bg-lightgreen"
-                : "text-[#898989]",
+                : "text-[#898989] hover:bg-gray-50",
               props.status === "open" ? "cursor-not-allowed" : "cursor-pointer",
-              "p-3 text-sm"
+              "p-3 text-sm w-full rounded-b-lg transition-colors"
             )}
             disabled={props.status === "open"}
           >

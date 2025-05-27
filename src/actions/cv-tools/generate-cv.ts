@@ -5,16 +5,18 @@ import axios from "axios";
 export const generateCV = async (
   token: string,
   prompts: string[],
+  language: string,
   audio?: any
 ) => {
   const formData = new FormData();
+  formData.append("language", language);
   if (audio) {
     formData.append("audio", audio);
   }
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
-      formData.append("text", tag);
+      formData.append("texts", tag);
     });
   }
   try {
@@ -26,6 +28,7 @@ export const generateCV = async (
       },
       data: formData,
     });
+    console.log({ response });
     return response.data;
   } catch (error: any) {
     if (error.response) {

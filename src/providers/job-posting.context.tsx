@@ -12,6 +12,11 @@ import {
   ICreateJobScreen,
 } from "@/interfaces/create-job";
 
+interface FormData {
+  job_id: string | null;
+  recruiter_id: string | null;
+}
+
 export const CreateJobContext = createContext<ICreateJobContext>({
   goTo: () => {},
   nextScreen: () => {},

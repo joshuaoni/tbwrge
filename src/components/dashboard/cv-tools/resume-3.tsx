@@ -10,83 +10,92 @@ const ResumeThree = forwardRef<HTMLDivElement, ResumeProps>(
         ref={ref}
         className={classNames(
           poppins.className,
-          "bg-white shadow-md p-6 rounded-lg w-full"
+          "bg-white p-6 rounded-lg w-full"
         )}
       >
         {/* Header Section */}
         <div className="flex justify-between gap-8 mb-6">
           <div className="w-2/5">
-            <h1 className="text-2xl font-semibold">{name}</h1>
-            <p className="text-sm">{title}</p>
+            <h1 className="text-lg font-semibold">{name}</h1>
+            <p className="text-xs">{title}</p>
           </div>
-          <div className="w-full text-sm underline">
+          <div className="w-full text-xs underline">
             <p>{contactInfo?.email}</p>
             <p>{contactInfo?.linkedin}</p>
             <p>{contactInfo?.phone}</p>
           </div>
         </div>
 
-        <p className="text-xs mb-6">
-          Over 5 years of professional experience conducting UX research and
-          designing interactive end-to-end user flows. I enjoy working in close
-          collaboration with teams across technology, business and design.
-        </p>
-
-        <div className="flex gap-6">
-          <h2 className="text-sm font-medium mb-4">Experience</h2>
+        {/* Experience Section */}
+        <div className="grid grid-cols-[120px_1fr_120px] gap-4 mb-6">
           <div>
+            <h2 className="text-xs font-medium">Experience</h2>
+          </div>
+          <div className="col-span-2">
             {workExperience?.map((job, index) => (
-              <div key={index} className="mb-6 flex gap-8 justify-between">
-                <p className="text-sm text-gray-500 w-2/5">
-                  {job.start_date} - {job.end_date}
-                </p>
-                <div className="w-full">
-                  <h3 className="text-md font-semibold text-gray-800">
+              <div
+                key={index}
+                className="grid grid-cols-[1fr_120px] gap-4 mb-4 last:mb-0"
+              >
+                <div>
+                  <p className="text-xs font-medium">
                     {job.role}, {job.company_name}
-                  </h3>
-                  <ul className="text-xs mt-2 space-y-1">
+                  </p>
+                  <ul className="text-xs text-gray-600 mt-1">
                     {job.description?.split("\n").map((desc, index) => (
                       <li key={index}>{desc}</li>
                     ))}
                   </ul>
                 </div>
+                <p className="text-xs text-gray-600 text-right">
+                  {job.start_date} - {job.end_date}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex gap-6">
-          <h2 className="text-sm font-medium mb-4">Education</h2>
-
+        {/* Education Section */}
+        <div className="grid grid-cols-[120px_1fr_120px] gap-4 mb-6">
           <div>
-            {education?.map((job, index) => (
-              <div key={index} className="mb-6 flex gap-8 justify-between">
-                <p className="text-sm text-gray-500 w-2/5">{job.date}</p>
-                <div className="w-full text-xs">
-                  <p className="">{job.certificate}</p>
-                  <p className="">{job.institution}</p>
+            <h2 className="text-xs font-medium">Education</h2>
+          </div>
+          <div className="col-span-2">
+            {education?.map((edu, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-[1fr_120px] gap-4 mb-2 last:mb-0"
+              >
+                <div>
+                  <p className="text-xs">{edu.certificate}</p>
+                  <p className="text-xs text-gray-600">{edu.institution}</p>
                 </div>
+                <p className="text-xs text-gray-600 text-right">{edu.date}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex gap-6">
-          <h2 className="text-sm font-medium mb-4">Skills</h2>
-
+        {/* Skills Section */}
+        <div className="grid grid-cols-[120px_1fr_120px] gap-4">
           <div>
-            <ul className="w-full grid grid-cols-3 justify-between">
+            <h2 className="text-xs font-medium">Skills</h2>
+          </div>
+          <div className="col-span-2">
+            <div className="grid grid-cols-3 gap-2">
               {skills?.map((skill, index) => (
-                <li key={index} className="text-xs">
+                <div key={index} className="text-[10px]">
                   {skill}
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 );
+
+ResumeThree.displayName = "ResumeThree";
 
 export default ResumeThree;

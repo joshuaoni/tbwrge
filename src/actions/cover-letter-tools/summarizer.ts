@@ -19,7 +19,7 @@ export const summarizeCoverLetter = async (
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
     stringifiedPrompts.forEach((tag: any) => {
-      formData.append("prompts[]", tag);
+      formData.append("additional_prompts", tag);
     });
   }
   try {

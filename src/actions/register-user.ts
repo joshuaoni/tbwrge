@@ -35,7 +35,7 @@ export const registerUser = async ({
     if (error.response) {
       // Server responded with a status code outside the 2xx range
       console.error("Error Response:", error.response.data);
-      throw new Error(error.response.data.message || "Server error occurred");
+      throw new Error(error.response.data.detail || "Server error occurred");
     } else if (error.request) {
       // Request was made, but no response received
       console.error("Error Request:", error.request);

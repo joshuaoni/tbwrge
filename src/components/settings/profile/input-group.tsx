@@ -13,7 +13,7 @@ function ProfileInputGroup(props: ProfileInputGroupProps) {
     <div className={twMerge("w-full space-y-2", props.className)}>
       <label
         htmlFor={convertToSlug(props.label)}
-        className="block text-[#4A5568] text-sm"
+        className="block text-sm font-medium text-gray-700 mb-1"
       >
         {props.label}
       </label>
@@ -22,7 +22,7 @@ function ProfileInputGroup(props: ProfileInputGroupProps) {
         onChange={(e) => props.onChange?.(e.target.value)}
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
         placeholder={`Enter your ${props.label}`}
       />
     </div>

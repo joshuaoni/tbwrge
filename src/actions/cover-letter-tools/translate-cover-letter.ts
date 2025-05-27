@@ -5,7 +5,8 @@ import axios from "axios";
 export const translateCoverLetter = async (
   cv: File[],
   language: string,
-  token: any
+  token: any,
+  jobDescription: string
 ) => {
   let formData = new FormData();
   if (cv) {
@@ -15,6 +16,9 @@ export const translateCoverLetter = async (
     }
   }
   formData.append("language", language);
+  if (jobDescription) {
+    formData.append("text", jobDescription);
+  }
 
   try {
     const options = {
@@ -27,6 +31,7 @@ export const translateCoverLetter = async (
       data: formData,
     };
     const response = await axios(options);
+    console.log("response", response.data);
     return response.data; // Return only the response data for convenience
   } catch (error: any) {
     // Handle errors and return meaningful information

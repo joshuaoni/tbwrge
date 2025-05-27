@@ -9,7 +9,6 @@ export const rankCoverLetter = async (
   prompts: string[],
   jobDescription: string
 ) => {
-  console.log(cv, language, token, prompts);
   const formData = new FormData();
   if (cv) {
     for (let i = 0; i < cv.length; i++) {
@@ -36,6 +35,7 @@ export const rankCoverLetter = async (
       },
       data: formData,
     });
+    console.log({ response });
     return response.data;
   } catch (error: any) {
     if (error.response) {

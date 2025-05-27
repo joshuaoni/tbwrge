@@ -9,32 +9,42 @@ import toast from "react-hot-toast";
 
 interface SelectGroupProps {
   title: string;
+  options?: { label: string; value: string; disabled?: boolean }[];
   defaultValue?: string;
   value?: string;
-  options: { label: string; value: string; disabled: boolean }[];
-  onChange: (val: string) => void;
+  onChange?: (value: string) => void;
+  customInput?: React.ReactNode;
   className?: string;
   actions?: { label: string; onClick: () => void }[];
 }
 
-export function CreateJobHiringSelectGroup(props: SelectGroupProps) {
+export function CreateJobHiringSelectGroup({
+  title,
+  options = [],
+  defaultValue,
+  value,
+  onChange,
+  customInput,
+  className,
+  actions,
+}: SelectGroupProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (optionValue: string) => {
     setIsOpen(false);
-    if (props.onChange) props.onChange(optionValue);
+    if (onChange) onChange(optionValue);
   };
 
   useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   return (
-    <div className={twMerge("relative w-full", props.className)}>
+    <div className={twMerge("relative w-full", className)}>
       <div className="flex justify-between items-end mb-2">
-        <label className="block text-[#4A5568] text-sm">{props.title}</label>
+        <label className="block text-[#4A5568] text-sm">{title}</label>
         <div>
-          {props.actions?.map((action, i) => (
+          {actions?.map((action, i) => (
             <button
               key={i}
               onClick={action.onClick}
@@ -45,15 +55,16 @@ export function CreateJobHiringSelectGroup(props: SelectGroupProps) {
           ))}
         </div>
       </div>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="w-full py-3 px-4 flex justify-between items-center bg-[#EDF2F7] text-[#898989] rounded"
-      >
-        {props?.options?.find((o) => o.value === props.value)?.label ??
-          props.defaultValue}
-        <CaretDownIcon />
-      </button>
+      {customInput || (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="w-full py-3 px-4 flex justify-between items-center  text-[#898989] rounded bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {options.find((o) => o.value === value)?.label ?? defaultValue}
+          <CaretDownIcon />
+        </button>
+      )}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -63,16 +74,16 @@ export function CreateJobHiringSelectGroup(props: SelectGroupProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            {props.options.map((option, i) => (
+            {options.map((option, i) => (
               <span
                 key={i}
                 className={twMerge(
                   classNames(
                     "py-3 px-6 hover:bg-lightgreen hover:text-white cursor-pointer transition-all block",
                     {
-                      "bg-lightgreen text-white": option.value === props.value,
+                      "bg-lightgreen text-white": option.value === value,
                       "cursor-not-allowed bg-gray-200 hover:bg-gray-300 hover:text-gray-500":
-                        option.disabled && option.value !== props.value,
+                        option.disabled && option.value !== value,
                     }
                   )
                 )}

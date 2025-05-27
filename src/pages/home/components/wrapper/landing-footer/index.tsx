@@ -1,70 +1,147 @@
 import Image from "next/image";
 import React from "react";
 import candivetlogo from "../../../../../../public/images/candivet-logo.png";
+import { outfit } from "@/constants/app";
+import { Twitter, Linkedin, ShieldCheck } from "lucide-react";
+import {
+  FaEnvelope,
+  FaInstagram,
+  FaFacebook,
+  FaTwitter,
+  FaLinkedin,
+} from "react-icons/fa";
 
 const LandingFooter = () => {
   let currentYear = new Date().getFullYear();
   return (
-    <div className=" bg-black text-white h-fit flex flex-col items-center justify-center w-screen p-4 md:p-20">
-      <div className="flex flex-col  md:flex-row items-start border-b border-b-white md:w-[80%] pb-12">
-        <div className="w-full md:w-[70%]">
-          <div className=" md:flex md:items-start md:space-x-8">
-            <div className="flex flex-col md:flex-row md:space-x-6">
-              <div className="flex justify-between space-x-[140px] w-full">
-                <div className="flex flex-col">
-                  <h1 className="font-bold ">Product</h1>
-                  <div className="flex flex-col space-y-2 mt-3">
-                    <span className="text-[#C0C1C6] text-sm">Job Tools</span>
-                    <span className="text-[#C0C1C6] text-sm">CV Tools</span>
-                    <span className="text-[#C0C1C6] text-sm">Cover Tools</span>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <h1 className="font-bold ">Support</h1>
-                  <span className="text-[#C0C1C6] text-sm">Send an email</span>
-                </div>
-              </div>
-              <div className=" flex justify-between w-full space-x-4 mt-4 md:mt-0">
-                <div className="flex flex-col">
-                  <h1 className="font-bold ">Company</h1>
-                  <div className="flex flex-col space-y-2 mt-3">
-                    <span className="text-[#C0C1C6] text-sm">About Us</span>
-                    <span className="text-[#C0C1C6] text-sm">Contact</span>
-                    <span className="text-[#C0C1C6] text-sm">Community</span>
-                    <span className="text-[#C0C1C6] text-sm">FAQs</span>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <h1 className="font-bold ">Terms of service</h1>
-                  <span className="text-[#C0C1C6] text-sm">Privacy Policy</span>
-                </div>
-              </div>
+    <div
+      className="relative h-fit pt-12 md:pt-24 flex items-center justify-center p-4 md:p-12 md:pb-24 md:px-16 bg-black"
+      style={{
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url(/hero-bg.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.6,
+          zIndex: 0,
+        }}
+      />
+      <div className="w-full relative z-10 flex flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-4">
+          <div className="flex items-center gap-2 md:items-start cursor-pointer mb-6 md:mb-0">
+            <div className="flex items-center justify-center rounded-[6.96px] bg-[#00000000] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
+              <Image
+                src="/footer-logo.png"
+                alt=""
+                width={32}
+                height={29.2}
+                className="w-[32px] h-[29.2px] md:w-[32px] md:h-[29.2px]"
+              />
+            </div>
+            <h1
+              className={`${outfit.className} text-white text-3xl font-bold text-center md:text-left`}
+            >
+              Candivet
+            </h1>
+          </div>
+          <div className="text-white mb-6 md:mb-0">
+            <h2 className="font-bold text-lg md:text-[20px]">How it works</h2>
+            <div className="font-light mt-3 space-y-2 text-sm md:text-base">
+              <p>Recruiters</p>
+              <p>Job Seekers</p>
+              <p>All Candivet Tools</p>
+            </div>
+          </div>
+          <div className="text-white mb-6 md:mb-0">
+            <h2 className="font-bold text-lg md:text-[20px]">Tools</h2>
+            <div className="font-light mt-3 space-y-2 text-sm md:text-base">
+              <p>Posted Jobs</p>
+              <p>Job Board</p>
+              <p>Candidate Talent Pool</p>
+              <p>CV Tools</p>
+              <p>Cover Letter Tools</p>
+              <p>Job Tools</p>
+            </div>
+          </div>
+          <div className="text-white mb-6 md:mb-0">
+            <h2 className="font-bold text-lg md:text-[20px]">Resources</h2>
+            <div className="font-light mt-3 space-y-2 text-sm md:text-base">
+              <p>About</p>
+              <p>Pricing</p>
+              <p>Blog</p>
+              <p>Community</p>
+              <p>Submit A Blog</p>
+              <p>Login</p>
+              <p>Sign Up</p>
+            </div>
+          </div>
+          <div className="hidden lg:block"></div>
+        </div>
+        <div className="mt-12 md:mt-24">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center pb-4 gap-4 md:gap-0">
+            <h1 className="text-xs md:text-sm text-white/80 text-center md:text-left mb-2 md:mb-0">
+              English
+            </h1>
+            <div className="flex flex-wrap justify-center md:justify-end items-center space-x-4 gap-y-2">
+              {/* Social Icons */}
+              <a
+                href="mailto:info@candivet.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaEnvelope className="w-6 h-6 text-white hover:text-[#065844] transition-colors" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram className="w-6 h-6 text-white hover:text-[#065844] transition-colors" />
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaFacebook className="w-6 h-6 text-white hover:text-[#065844] transition-colors" />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTwitter className="w-6 h-6 text-white hover:text-[#065844] transition-colors" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin className="w-6 h-6 text-white hover:text-[#065844] transition-colors" />
+              </a>
+            </div>
+          </div>
+          <div className="border-t pt-4 border-white flex flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-0">
+            <h1 className="text-xs md:text-sm text-white/80 text-center md:text-left">
+              © {currentYear} Candivet - Powered by MIXT Technologies. All
+              rights reserved.
+            </h1>
+            <div className="text-xs md:text-sm text-white/80 flex flex-wrap justify-center md:justify-end items-center gap-x-4 gap-y-2 mt-2 md:mt-0">
+              <p>Disclaimer</p>
+              <p>Privacy Policy</p>
+              <p>Terms of Service</p>
+              <p>Cookie Policy</p>
             </div>
           </div>
         </div>
-        <div className="w-full mt-3 md:mt-0 md:w-[30%]">
-          <div className="flex flex-col">
-            <h1 className="font-bold">connect with us</h1>
-            <h1 className="font-bold text-[#C0C1C6]">
-              Your modern vetting superpowers
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex  items-center w-[80%] mt-6 justify-between">
-        <Image
-          src={candivetlogo}
-          alt=""
-          width={50}
-          height={50}
-          style={{
-            color: "white",
-          }}
-        />
-        <h1 className="font-bold">
-          © {currentYear} Candivet, Inc. All rights reserved.
-        </h1>
       </div>
     </div>
   );

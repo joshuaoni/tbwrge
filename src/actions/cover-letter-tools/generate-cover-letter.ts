@@ -20,7 +20,9 @@ export const generateCoverLetter = async (
   if (audio) {
     formData.append("audio", audio);
   }
-  formData.append("job_ad", jobDescription);
+  if (jobDescription) {
+    formData.append("job_ad", jobDescription);
+  }
   formData.append("language", language);
   if (prompts.length !== 0) {
     let stringifiedPrompts = prompts.map((tag: any) => JSON.stringify(tag));
@@ -37,6 +39,7 @@ export const generateCoverLetter = async (
       },
       data: formData,
     });
+    console.log("cl generator response", response.data);
     return response.data;
   } catch (error: any) {
     if (error.response) {

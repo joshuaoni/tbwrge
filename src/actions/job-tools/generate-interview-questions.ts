@@ -8,19 +8,18 @@ export const generateInterviewQuestions = async (
   jobDescription?: string
 ) => {
   const formData = new FormData();
-  
+
   // Append files if they exist
   if (files.length > 0) {
     for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+      formData.append("ad_file", files[i]);
     }
   }
-
 
   // Append language selection
   formData.append("language", language);
   if (jobDescription) {
-    formData.append("job_description", jobDescription);
+    formData.append("job_ad", jobDescription);
   }
 
   try {
@@ -32,6 +31,7 @@ export const generateInterviewQuestions = async (
       },
       data: formData,
     });
+    console.log({ response });
     return response.data;
   } catch (error: any) {
     if (error.response) {

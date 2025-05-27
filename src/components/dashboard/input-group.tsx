@@ -1,7 +1,7 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { convertToSlug } from "@/components/settings/profile/input-group";
@@ -11,6 +11,7 @@ import { InputGroupProps } from "@/interfaces/input";
 interface DashboardSelectGroupProps {
   title: string;
   defaultValue?: string;
+  value?: string;
   options: { label: string; value: string }[];
   onChange: (val: string) => void;
   className?: string;
@@ -42,7 +43,7 @@ export function DashboardInputGroup(props: InputGroupProps) {
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 "
         placeholder={props.placeholder ?? `Enter your ${props.label}`}
         onChange={(e) => props.onChange?.(e.target.value)}
       />
@@ -74,7 +75,7 @@ export function DashboardTextareaGroup(props: InputGroupProps) {
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
         rows={5}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder={props.placeholder ?? `Enter your ${props.label}`}
         value={props.value}
         onChange={handleTextareaChange}
@@ -90,7 +91,13 @@ export function DashboardSelectGroup(props: DashboardSelectGroupProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(props.value || "");
+
+  useEffect(() => {
+    if (props.value) {
+      setSelectedOption(props.value);
+    }
+  }, [props.value]);
 
   const handleOptionClick = (optionValue: string) => {
     setSelectedOption(optionValue);

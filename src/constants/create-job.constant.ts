@@ -17,12 +17,14 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   company_website: "",
   company_name: "",
   company_description: "",
+  company_logo: null as File | null,
   job_description: "",
-  minimum_fit_score: 0,
+  minimum_fit_score: 70,
   required_skills: "",
+  additional_benefits: "",
   educational_requirements: "",
   years_of_experience_required: "",
-  job_type: "full-time",
+  job_type: "full_time",
   job_location: "",
   languages: "",
   job_tags: "",
@@ -38,6 +40,22 @@ export const INITIAL_CREATE_JOB_FORM_DATA = {
   voicenote_recording: false,
   job_visibility: true,
   hide_candidates_personal_details: false,
+  job_id: null as string | null,
+  recruiter_id: null as string | null,
+  screening_questions: [] as string[],
+  hiring_flows: [
+    {
+      title: "fit_score",
+      value: 70,
+      step: 1,
+      email_template: null,
+    },
+  ] as Array<{
+    title: "fit_score" | "screening" | "interview" | "rejection";
+    value: number | null;
+    step: number;
+    email_template: string | null;
+  }>,
 };
 
 export const INITIAL_HIRING_FLOW_STATE = {

@@ -34,7 +34,7 @@ export function FeedbackSupportInputGroup(props: InputGroupProps) {
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
         placeholder={`Enter your ${props.label}`}
         onChange={(e) => props.onChange?.(e.target.value)}
         value={props.value}
@@ -67,7 +67,7 @@ export function FeedbackSupportTextareaGroup(props: InputGroupProps) {
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
         rows={5}
-        className="bg-[#EDF2F7] py-4 px-6 rounded w-full focus:outline-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
         placeholder={`Enter your ${props.label}`}
         value={props.value}
         onChange={handleTextareaChange}
@@ -103,7 +103,7 @@ export function FeedbackSupportSelectGroup(
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full py-3 px-4 flex justify-between items-center bg-[#EDF2F7] text-[#898989] rounded"
+        className="w-full mt-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] flex justify-between items-center"
       >
         {props?.options?.find((o) => o.value === selectedOption)?.label ??
           props.defaultValue}
@@ -144,21 +144,19 @@ export function FeedbackSupportFileGroup(props: FeebackSupportFileGroupProps) {
     <div className="w-full space-y-2">
       <label htmlFor={convertToSlug(props.label)} className="block">
         <span className="block text-[#4A5568] text-sm mb-2">{props.label}</span>
-        <div className="w-full bg-[#EDF2F7] text-[#87909E] text-xs py-4 px-6 space-x-4 rounded">
-          <span className="capitalize border border-gray-500 py-0.5 px-2 rounded-sm cursor-pointer">
-            choose file
-          </span>{" "}
-          <span>{props.file?.name ?? "No file chosen"}</span>
+        <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200">
+          <input
+            type="file"
+            id={convertToSlug(props.label)}
+            className="w-full"
+            onChange={(e) =>
+              props.onChange &&
+              e.target.files &&
+              props.onChange(e.target.files[0])
+            }
+          />
         </div>
       </label>
-      <input
-        type="file"
-        id={convertToSlug(props.label)}
-        className="hidden"
-        onChange={(e) =>
-          props.onChange && e.target.files && props.onChange(e.target.files[0])
-        }
-      />
     </div>
   );
 }

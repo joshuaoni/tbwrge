@@ -1,0 +1,185 @@
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getPosts, Post } from "@/actions/get-posts";
+import { getBlogs, BlogItem } from "@/actions/blog";
+import { useUserStore } from "@/hooks/use-user-store";
+import AllActivityDropDown from "@/components/all-activity-dropdown";
+import { TrashIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import { useRouter } from "next/router";
+
+const PostCard = ({
+  post,
+  userData,
+  setSelectedPost,
+  setEditingPost,
+  setIsCreatingPost,
+  deletePostMutation,
+  upvoteMutation,
+  isBlog = false,
+}: any) => {
+  const router = useRouter();
+  const handleClick = () => {
+    if (isBlog) {
+      router.push(`/blog/${post.id}`);
+    } else {
+      router.push(`/community?postId=${post.id}`);
+    }
+  };
+  return (
+    <div
+      className="bg-white rounded-xl  p-3 md:p-4 mb-4 cursor-pointer hover:border-2 hover:border-primary/20 relative"
+      onClick={handleClick}
+    >
+      <div className="absolute top-3 right-3">
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            isBlog
+              ? "bg-[#E2D8FD] text-[#6B21A8]"
+              : "bg-[#E0F7F4] text-[#009379]"
+          }`}
+        >
+          {isBlog ? "Article" : "Post"}
+        </span>
+      </div>
+      <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+        {post.user?.profile_picture || post.user?.photo ? (
+          <Image
+            src={post.user.profile_picture || post.user.photo}
+            alt={post.user.name || "User"}
+            width={30}
+            height={30}
+            className="rounded-full md:w-[30px] md:h-[30px]"
+          />
+        ) : (
+          <UserCircleIcon className="w-8 h-8 text-gray-500" />
+        )}
+        <div>
+          <div className="flex items-center gap-1 md:gap-2">
+            <h3 className="text-xs md:text-sm font-medium">
+              {post.user?.name || "Anonymous"} {post.user?.last_name || ""}
+            </h3>
+            <span className="text-[10px] md:text-xs text-black">•</span>
+            <p className="text-[10px] md:text-xs text-black">
+              {new Date(post.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <h2
+        className={`text-base md:text-[16px] font-semibold text-[#1E2937] mb-2 ${
+          isBlog ? "line-clamp-2" : ""
+        }`}
+      >
+        {post.title}
+      </h2>
+      {isBlog && post.content && (
+        <div
+          className="text-sm text-gray-700 mb-2 line-clamp-2"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+      )}
+      {!isBlog && (
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col font-semibold">
+            <p className="text-xs md:text-sm font-medium">{post.comments}</p>
+            <p className="text-xs md:text-sm text-black">Comment</p>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-xs md:text-sm text-black">{post.upvotes}</p>
+            <p className="text-xs md:text-sm">Upvotes</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ArticlesCommunity = () => {
+  const { userData } = useUserStore();
+  const {
+    data: posts = [],
+    isLoading: postsLoading,
+    error: postsError,
+  } = useQuery({
+    queryKey: ["posts", 0],
+    queryFn: async () => {
+      if (!userData?.token) throw new Error("No authentication token found");
+      return getPosts(userData.token, 0);
+    },
+    enabled: !!userData?.token,
+  });
+
+  const {
+    data: blogs = [],
+    isLoading: blogsLoading,
+    error: blogsError,
+  } = useQuery({
+    queryKey: ["blogs", { approved: true, page: 0 }],
+    queryFn: async () => {
+      if (!userData?.token) return [];
+      return await getBlogs(userData.token, { approved: true, page: 0 });
+    },
+    enabled: !!userData?.token,
+  });
+
+  return (
+    <div className="bg-[#F9F9F9] rounded-lg p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-lg font-semibold">Articles & Community</h2>
+        <AllActivityDropDown />
+      </div>
+      <div className="space-y-4">
+        {postsLoading ? (
+          <div>Loading posts...</div>
+        ) : postsError ? (
+          <div className="text-red-500">Error loading articles.</div>
+        ) : (
+          posts
+            .slice(0, 3)
+            .map((post: Post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                userData={userData}
+                setSelectedPost={() => {}}
+                setEditingPost={() => {}}
+                setIsCreatingPost={() => {}}
+                deletePostMutation={{ mutate: () => {}, isPending: false }}
+                upvoteMutation={{ mutate: () => {}, isPending: false }}
+              />
+            ))
+        )}
+        {blogsLoading ? (
+          <div>Loading blogs...</div>
+        ) : blogsError ? (
+          <div className="text-red-500">Error loading blogs.</div>
+        ) : (
+          blogs.slice(0, 1).map((blog: BlogItem) => (
+            <PostCard
+              key={blog.id}
+              post={{
+                ...blog,
+                user: blog.user || { name: "Anonymous" },
+                created_at:
+                  blog.created_at ||
+                  blog.updated_at ||
+                  new Date().toISOString(),
+              }}
+              userData={userData}
+              isBlog={true}
+              setSelectedPost={() => {}}
+              setEditingPost={() => {}}
+              setIsCreatingPost={() => {}}
+              deletePostMutation={{ mutate: () => {}, isPending: false }}
+              upvoteMutation={{ mutate: () => {}, isPending: false }}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ArticlesCommunity;

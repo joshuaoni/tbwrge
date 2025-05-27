@@ -15,12 +15,12 @@ function SocialConnection(props: SocialConnectionProps) {
         alt={props.name + " logo"}
         width={40}
         height={40}
-        className="w-10 h-10 rounded-full inline-block"
+        className="w-10 h-10 rounded-full shadow-[0px_4px_6px_0px_rgba(33,33,33,0.04)] inline-block"
       />
       <span className="pr-10 pl-2 text-[#4A5568] font-medium">
         {props.name}
       </span>
-      <span className="text-[#4A5568] font-medium">
+      {/* <span className="text-[#4A5568] font-medium">
         Status:&nbsp;&nbsp;&nbsp;
       </span>
       <span
@@ -40,7 +40,7 @@ function SocialConnection(props: SocialConnectionProps) {
         )}
       >
         {props.isConnected ? "Disconnect" : "Connect"}
-      </button>
+      </button> */}
     </div>
   );
 }

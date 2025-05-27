@@ -1,145 +1,132 @@
-import classNames from "classnames";
-
-import { FaPhone } from "react-icons/fa6";
-import { RiLinkedinFill } from "react-icons/ri";
-import { TbMailFilled } from "react-icons/tb";
-
-import { poppins, prata } from "@/constants/app";
-import { ContactInfo, ResumeProps } from "@/interfaces/cv-generator.interface";
+import { ResumeProps } from "@/interfaces/cv-generator.interface";
 import { forwardRef } from "react";
-import { IconType } from "react-icons/lib";
-
-const contactIcon: Record<string, IconType> = {
-  email: TbMailFilled,
-  phone: FaPhone,
-  linkedin: RiLinkedinFill,
-};
-
-function renderContactIcon(type: string) {
-  const Icon = contactIcon[type];
-  return <Icon size={8} />;
-}
+import { outfit } from "@/constants/app";
+import { cn } from "@/lib/utils";
 
 const Resume = forwardRef<HTMLDivElement, ResumeProps>(
   ({ name, title, contactInfo, workExperience, education, skills }, ref) => {
     return (
-      <div ref={ref} className=" bg-white shadow-md  rounded-lg w-full p-6">
-        {/* Header */}
-        <header
-          className={classNames(
-            prata.className,
-            "mb-10 flex items-start justify-between"
-          )}
-        >
-          <div className="w-40">
-            <span className="block text-resume-text font-bold text-sm">
-              {title}
-            </span>
-            <span className="block text-4xl font-bold">{name}</span>
+      <div
+        ref={ref}
+        className={cn(outfit.className, "bg-white h-full w-full relative")}
+      >
+        {/* Curved Background */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[180px] bg-[#FDF8F3]"
+          style={{
+            borderBottomLeftRadius: "40% 20%",
+            borderBottomRightRadius: "40% 20%",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative p-8">
+          {/* Header Section */}
+          <div className="mb-16">
+            <h2 className="text-[#C97B43] text-base mb-1">{title}</h2>
+            <div className="flex justify-between">
+              <div>
+                <h1 className="text-[2.5rem] leading-none font-serif">
+                  {name.split(" ")[0]}
+                  <br />
+                  {name.split(" ")[1]}
+                </h1>
+              </div>
+              <div className="text-[12px] space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-[14px] h-[14px] rounded-full border-2 border-[#C97B43] flex items-center justify-center">
+                    <span className="text-[#C97B43] text-[10px]">@</span>
+                  </div>
+                  <a
+                    href={`mailto:${contactInfo.email}`}
+                    className="hover:underline"
+                  >
+                    {contactInfo.email}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-[14px] h-[14px] rounded-full border-2 border-[#C97B43] flex items-center justify-center">
+                    <span className="text-[#C97B43] text-[10px]">in</span>
+                  </div>
+                  <a
+                    href={contactInfo.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {contactInfo.linkedin?.replace(
+                      "https://linkedin.com/in/",
+                      ""
+                    ) || ""}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-[14px] h-[14px] rounded-full border-2 border-[#C97B43] flex items-center justify-center">
+                    <span className="text-[#C97B43] text-[8px]">☎</span>
+                  </div>
+                  <span>{contactInfo.phone}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <ul className="text-gray-600 space-y-1">
-            {(Object.keys(contactInfo) as (keyof ContactInfo)[]).map(
-              (item, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  <span className="bg-resume-text p-1 rounded-full text-[#DADADA]">
-                    {renderContactIcon(item as string)}
-                  </span>
-                  <span className="text-xs">{contactInfo[item]}</span>
-                </li>
-              )
-            )}
-          </ul>
-        </header>
 
-        <div className="flex items-start gap-10">
-          {/* Left Column */}
-          {workExperience![0]?.role && (
-            <div className="w-full">
-              {/* Work Experience */}
-              <section className="mb-10">
-                <h2
-                  className={classNames(
-                    prata.className,
-                    "text-resume-text font-bold mb-4"
-                  )}
-                >
-                  Work Experience
-                </h2>
-                <div className="space-y-6">
-                  {workExperience.map((job, index) => (
-                    <div key={index}>
-                      <h3
-                        className={classNames(
-                          prata.className,
-                          "font-semibold text-gray-800"
-                        )}
-                      >
-                        <span className="block text-sm">{job.role}</span>
-                        <span className="block text-gray-500 text-xs">
-                          {job.company_name}, {job.start_date} - {job.end_date}
-                        </span>
-                      </h3>
-                      <p
-                        className={classNames(
-                          poppins.className,
-                          "text-xs text-gray-600 mt-1"
-                        )}
-                      >
-                        {job.description}
-                      </p>
+          <div className="grid grid-cols-[1fr,1fr] gap-8">
+            {/* Left Column */}
+            <div>
+              <h2 className="text-[#C97B43] text-lg font-serif mb-2">
+                Work experience
+              </h2>
+              <div className="space-y-8">
+                {workExperience?.map((job, index) => (
+                  <div key={index}>
+                    <h3 className="text-base font-serif mb-1">{job.role}</h3>
+                    <p className="text-sm text-[#666666] mb-1">
+                      {job.company_name}, {job.start_date} - {job.end_date}
+                    </p>
+                    <div className="text-sm leading-relaxed">
+                      {job.description}
                     </div>
-                  ))}
-                </div>
-              </section>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
 
-          {/* Right Column */}
-          {education![0].certificate && (
-            <div className={classNames(prata.className, "w-full")}>
-              {/* Education */}
-              <section>
-                <h2 className="text-resume-text font-bold mb-4">
-                  Education & Learning
-                </h2>
-                <div className="space-y-6 text-xs">
-                  {education.map((edu, index) => (
-                    <div key={index}>
-                      <h3 className="font-semibold text-gray-800">
-                        {edu.certificate}{" "}
-                        <span className="text-gray-500">
-                          - {edu.institution}, {edu.date}
-                        </span>
-                      </h3>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            {/* Right Column */}
+            <div>
+              <h2 className="text-[#C97B43] text-lg font-serif mb-2">
+                Education & Learning
+              </h2>
+              <div className="space-y-6">
+                {education?.map((edu, index) => (
+                  <div key={index}>
+                    <h3 className="text-base font-serif mb-1">
+                      {edu.certificate}
+                    </h3>
+                    <p className="text-sm text-[#666666]">
+                      {edu.institution}, {edu.date}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+          </div>
+          {/* Skills Section */}
+          <div className="mt-4">
+            <h2 className="text-[#C97B43] text-lg font-serif mb-2">Skills</h2>
+            <div className="grid grid-cols-3 gap-x-2 gap-y-0">
+              {skills?.map((skill, index) => (
+                <div key={index} className="text-[12px]">
+                  {skill}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* Skills */}
-        <section>
-          <h2
-            className={classNames(
-              prata.className,
-              "text-resume-text font-bold text-lg mb-2"
-            )}
-          >
-            Skills
-          </h2>
-          <ul className="grid grid-cols-3 text-gray-700 text-sm">
-            {skills.map((skill, index) => (
-              <li key={index} className={poppins.className}>
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </section>
       </div>
     );
   }
 );
+
+Resume.displayName = "Resume";
 
 export default Resume;

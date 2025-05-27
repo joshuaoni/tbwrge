@@ -1,36 +1,36 @@
 import { getTeamMembers } from "@/actions/get-team-members";
+import { deleteTeamMember } from "@/actions/delete-team-member";
+import { updateTeamMember } from "@/actions/update-team-member";
 import AddTeamMember from "@/components/add-team-member";
 import EditTeamMember from "@/components/edit-team-member";
 import DashboardSettingsLayout from "@/components/settings/layout";
 import { useUserStore } from "@/hooks/use-user-store";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { UserCircle } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 const TeamsAndCollaborationSettingsPage = () => {
   const _ = require("lodash");
-
-  const [teams, setTeams] = useState([
-    {
-      name: "Tobi",
-      status: "Accepted",
-      email: "test@gmail.com",
-    },
-    {
-      name: "Dave",
-      status: "Accepted",
-      email: "test@gmail.com",
-    },
-    {
-      name: "Tobi",
-      status: "Accepted",
-      email: "test@gmail.com",
-    },
-  ]);
   const { userData } = useUserStore();
+  const [editingMember, setEditingMember] = useState<any>(null);
+  const [memberToDelete, setMemberToDelete] = useState<any>(null);
+  const [memberToSuspend, setMemberToSuspend] = useState<any>(null);
+  const [memberToUnsuspend, setMemberToUnsuspend] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("Active Users");
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["get-members"],
@@ -39,6 +39,69 @@ const TeamsAndCollaborationSettingsPage = () => {
       return response;
     },
   });
+
+  const filteredMembers = data?.filter((member: any) => {
+    if (activeTab === "Active Users") {
+      return !member.suspended;
+    } else if (activeTab === "Suspended Users") {
+      return member.suspended;
+    }
+    return true;
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (memberId: string) => {
+      if (!userData?.token) throw new Error("No token available");
+      return deleteTeamMember(memberId, userData.token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get-members"] });
+      setMemberToDelete(null);
+      toast.success("Team member deleted successfully");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to delete team member");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      memberId,
+      data,
+    }: {
+      memberId: string;
+      data: {
+        permission?: "admin" | "tools";
+        accepted?: boolean;
+        suspended?: boolean;
+      };
+    }) => {
+      if (!userData?.token) throw new Error("No token available");
+      return updateTeamMember(memberId, data, userData.token);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["get-members"] });
+      setMemberToSuspend(null);
+      if (variables.data.suspended) {
+        toast.success("Team member suspended successfully");
+      } else if (variables.data.suspended === false) {
+        toast.success("Team member unsuspended successfully");
+      } else {
+        toast.success("Team member updated successfully");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to update team member");
+    },
+  });
+
+  const handleSuspend = (member: any) => {
+    setMemberToSuspend(member);
+  };
+
+  const handleUnsuspend = (member: any) => {
+    setMemberToUnsuspend(member);
+  };
 
   return (
     <DashboardSettingsLayout>
@@ -51,88 +114,244 @@ const TeamsAndCollaborationSettingsPage = () => {
           <AddTeamMember />
         </div>
 
-        {/* Table Header */}
-        <div className="grid grid-cols-4 bg-gray-100 text-gray-600 font-semibold py-3 px-5 rounded-md">
-          {["User", "Status", "Email", "Actions"].map((text, i) => (
-            <div
-              key={i}
-              className={twMerge("text-center", i === 0 && "text-left")}
+        {/* Tabs */}
+        <div className="flex items-center gap-6">
+          {["Active Users", "Suspended Users"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`font-medium ${
+                activeTab === tab ? "text-[#2563EB]" : ""
+              }`}
             >
-              {text}
-            </div>
+              {tab}
+            </button>
           ))}
         </div>
 
-        {/* Team List */}
-        <div className="space-y-4">
-          {data?.map((item: any, i: number) => (
-            <div
-              key={i}
-              className="grid grid-cols-4 items-center bg-white p-4 rounded-md shadow-sm transition-shadow duration-300"
-            >
-              {/* User Info */}
-              <div className="flex items-center gap-4">
-                {item.user.profile_picture != null ? (
-                  <Image
-                    alt="profile_pic"
-                    src={item.user.profile_picture}
-                    style={{
-                      borderRadius: "50%",
-                      width: "40px",
-                      height: "40px",
-                    }}
-                  />
-                ) : (
-                  <UserCircle size={40} className="text-gray-500" />
-                )}
-
-                <div>
-                  <p className="font-medium text-gray-800">{item.user.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {formatDistanceToNow(new Date(item.user.last_login), {
-                      addSuffix: true,
-                    })}
-                  </p>
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="flex justify-center">
-                <span
-                  className={twMerge(
-                    "px-3 py-1 text-xs rounded-md font-medium",
-                    item.accepted
-                      ? "bg-[#377DFF33] text-blue-500 text-xs"
-                      : "bg-[#377DFF33] text-blue-500 text-xs"
-                  )}
-                >
-                  {item.accepted ? "Accepted" : "Pending"}
-                </span>
-              </div>
-
-              {/* Email */}
-              <div className="text-center text-gray-700">{item.user.email}</div>
-
-              {/* Actions */}
-              <div className="flex justify-center space-x-3">
-                {["Edit", "Suspend", "Delete"].map((action, idx) => {
-                  if (action === "Edit") {
-                    return <EditTeamMember />;
-                  }
-                  return (
-                    <button
-                      key={idx}
-                      className="bg-primary text-white text-sm px-3 py-1 rounded-full hover:bg-primary/90 transition-colors duration-300"
+        <div className="overflow-hidden rounded-xl">
+          <table className="w-full bg-white border-separate border-spacing-0">
+            <thead>
+              <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
+                <th className="py-3 px-6 text-left rounded-tl-xl">User</th>
+                <th className="py-3 px-6 text-left">Status</th>
+                <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-left rounded-tr-xl">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMembers?.map((item: any, i: number) => (
+                <tr key={i} className="hover:bg-gray-100">
+                  <td className="py-3 px-6 text-left flex items-center space-x-2">
+                    {item.user.profile_picture ? (
+                      <Image
+                        src={item.user.profile_picture}
+                        alt="user"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
+                        style={{ width: 40, height: 40 }}
+                      />
+                    ) : (
+                      <UserCircle size={40} className="text-gray-400" />
+                    )}
+                    <div>
+                      <p className="font-medium text-sm text-[#333]">
+                        {item.user.name}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Last Login:{" "}
+                        {formatDistanceToNow(new Date(item.user.last_login), {
+                          addSuffix: true,
+                        })}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="py-3 px-6 text-left">
+                    <span
+                      className={`p-1.5 text-xs rounded-md ${
+                        item.accepted
+                          ? "text-[#377DFF] bg-[#377DFF]/20"
+                          : "text-[#FF3737] bg-[#FF3737]/20"
+                      }`}
                     >
-                      {action}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+                      {item.accepted ? "Accepted" : "Pending"}
+                    </span>
+                  </td>
+                  <td className="py-3 px-6 text-left">{item.user.email}</td>
+                  <td className="py-3 px-6 space-x-6">
+                    {["Edit", "Suspend", "Delete"].map((action, idx) => {
+                      if (action === "Edit") {
+                        return (
+                          <button
+                            key={idx}
+                            className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setEditingMember(item)}
+                          >
+                            {action}
+                          </button>
+                        );
+                      }
+                      if (action === "Delete") {
+                        return (
+                          <button
+                            key={idx}
+                            className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setMemberToDelete(item)}
+                          >
+                            {action}
+                          </button>
+                        );
+                      }
+                      if (action === "Suspend") {
+                        return item.suspended ? (
+                          <button
+                            key={idx}
+                            className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => handleUnsuspend(item)}
+                            disabled={updateMutation.isPending}
+                          >
+                            Unsuspend
+                          </button>
+                        ) : (
+                          <button
+                            key={idx}
+                            className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => handleSuspend(item)}
+                            disabled={updateMutation.isPending}
+                          >
+                            Suspend
+                          </button>
+                        );
+                      }
+                      return null;
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+      {editingMember && (
+        <EditTeamMember
+          member={editingMember}
+          onClose={() => setEditingMember(null)}
+        />
+      )}
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={!!memberToDelete}
+        onOpenChange={() => setMemberToDelete(null)}
+      >
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Delete Team Member</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {memberToDelete?.user?.name}? This
+              action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setMemberToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                memberToDelete && deleteMutation.mutate(memberToDelete.id)
+              }
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Suspend Confirmation Dialog */}
+      <Dialog
+        open={!!memberToSuspend}
+        onOpenChange={() => setMemberToSuspend(null)}
+      >
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Suspend Team Member</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to suspend {memberToSuspend?.user?.name}?
+              This action can be undone later.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setMemberToSuspend(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (memberToSuspend) {
+                  updateMutation.mutate({
+                    memberId: memberToSuspend.id,
+                    data: { suspended: true },
+                  });
+                  setMemberToSuspend(null);
+                }
+              }}
+              disabled={updateMutation.isPending}
+            >
+              {updateMutation.isPending ? "Suspending..." : "Suspend"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unsuspend Confirmation Dialog */}
+      <Dialog
+        open={!!memberToUnsuspend}
+        onOpenChange={() => setMemberToUnsuspend(null)}
+      >
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Unsuspend Team Member</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to unsuspend {memberToUnsuspend?.user?.name}
+              ? They will regain access to the platform.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setMemberToUnsuspend(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              onClick={() => {
+                if (memberToUnsuspend) {
+                  updateMutation.mutate({
+                    memberId: memberToUnsuspend.id,
+                    data: { suspended: false },
+                  });
+                  setMemberToUnsuspend(null);
+                }
+              }}
+              disabled={updateMutation.isPending}
+            >
+              {updateMutation.isPending ? "Unsuspending..." : "Unsuspend"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardSettingsLayout>
   );
 };

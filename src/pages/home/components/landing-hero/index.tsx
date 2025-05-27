@@ -4,6 +4,52 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ManSuit from "../../../../../public/images/man-suit.png";
 import RocketIcon from "../../../../../public/images/rocket.png";
+import { outfit, poppins } from "@/constants/app";
+import Partners from "../partners";
+import { useRouter } from "next/router";
+import { useUserStore } from "@/hooks/use-user-store";
+
+const useCountAnimation = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(1);
+  const [showPlus, setShowPlus] = useState(false);
+
+  useEffect(() => {
+    let startTime: number;
+    let animationFrame: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentCount = Math.floor(easeOutQuart * end);
+
+      setCount(currentCount);
+
+      // Show plus sign when we reach the end
+      if (currentCount >= end) {
+        setShowPlus(true);
+      }
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [end, duration]);
+
+  return { count, showPlus };
+};
+
+export { useCountAnimation };
 
 const LandingHeroSection = () => {
   const [currentText, setCurrentText] = useState("");
@@ -11,6 +57,39 @@ const LandingHeroSection = () => {
   const fullText = "Candidate";
   const delay = 150; // Adjust speed here for faster/slower typing
   const isMobile = useIsMobile();
+  const router = useRouter();
+  const { userData } = useUserStore();
+  const { count: recruiterCount, showPlus: showRecruiterPlus } =
+    useCountAnimation(15000);
+  const [animateMillion, setAnimateMillion] = useState(false);
+
+  const handlePostJob = () => {
+    const path = "/dashboard/create";
+    if (!userData?.token || userData?.user?.role === "job_seeker") {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleJoinTalentPool = () => {
+    const path = "/dashboard/talent-pool/join-talent-pool";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleApplyJob = () => {
+    const path = "/dashboard/job-board";
+    if (!userData?.token) {
+      router.push(`/home/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   useEffect(() => {
     if (currentIndex < fullText.length) {
       const timeout = setTimeout(() => {
@@ -29,40 +108,141 @@ const LandingHeroSection = () => {
       return () => clearTimeout(resetTimeout);
     }
   }, [currentIndex, delay, fullText]);
-  return (
-    <div className="h-fit bg-[#16372C] pt-24 md:pt-0 flex items-center  justify-center p-4 py-12 md:py-0 md:p-12  ">
-      <div className="flex items-center justify-between w-fit ">
-        <div className="w-full md:w-2/3">
-          <div className="text-6xl mb-3 text-white font-extrabold flex flex-col items-start">
-            <p className="capitalize">
-              a simple <span className="text-[#FDB833]">candidate</span>
-              <br />
-              management platform
-            </p>
-          </div>
 
-          <p className="text-white max-w-[700px] ">
-            Accelerate your hiring with tools like CV vetting, job post
-            creation, cover letter translation, and more designed to simplify
-            your workflow.
-          </p>
-          <div className="flex flex-col md:flex-row md:items-center  space-y-4 md:space-y-0 mt-8 md:space-x-4">
-            <Button className="bg-[#009379] max-w-40 text-white  rounded-xl">
-              <Image src={RocketIcon} alt="" width={20} height={20} />
-              Get Started
-            </Button>
-            <Button className="bg-white max-w-40 text-primary rounded-xl">
-              How it works
-            </Button>
+  useEffect(() => {
+    if (showRecruiterPlus) {
+      setAnimateMillion(true);
+      const timeout = setTimeout(() => setAnimateMillion(false), 700);
+      return () => clearTimeout(timeout);
+    }
+  }, [showRecruiterPlus]);
+
+  return (
+    <>
+      <div className="relative min-h-[700px] h-screen pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-0 ">
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: "url(/hero-bg.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.6,
+            zIndex: 0,
+          }}
+        />
+        {/* Main Content */}
+        <div className="flex items-center justify-center h-full w-full relative z-10">
+          <div className="w-full flex flex-col justify-between md:h-full py-[40px] md:py-0 md:px-0">
+            <div className="flex flex-1 flex-col items-start md:items-center justify-center w-full">
+              <div className="text-3xl md:text-6xl text-white font-extrabold flex flex-col items-center md:items-start">
+                <p
+                  className={`${poppins.className} text-3xl md:text-[60px] text-start md:text-center leading-[1.3] capitalize px-4 md:px-0`}
+                >
+                  Hire <span className="text-[#FDB833]">Smarter</span>.
+                  <br />
+                  Get Hired <span className="text-[#FDB833]">Faster</span>.
+                </p>
+              </div>
+
+              <p
+                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center !text-[16px] md:!text-[20px] !leading-[24px] md:!leading-[31px] px-4 md:px-0 md:mt-8 mt-4`}
+              >
+                Candivet is the #1 global AI-powered platform designed to
+                simplify hiring for recruiters and job seekers alike. Whether
+                you're looking to find top talent or land your dream job, we
+                optimize every step of the process.
+              </p>
+
+              <div
+                className={`${poppins.className} flex flex-col md:flex-row gap-4 w-full items-center md:justify-center mt-6 md:mt-12 px-4 md:px-0`}
+              >
+                <Button
+                  onClick={handlePostJob}
+                  className="w-full md:w-[220px] bg-[#009379] text-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 rounded-[10px]"
+                >
+                  Post a Job
+                </Button>
+                <Button
+                  onClick={handleJoinTalentPool}
+                  className="w-full md:w-[220px] bg-[#00000000] border text-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 rounded-[10px]"
+                >
+                  Join Talent Pool
+                </Button>
+                <Button
+                  onClick={handleApplyJob}
+                  className="w-full md:w-[220px] bg-white text-[12px] py-4 md:py-6 font-semibold px-4 md:max-w-40 text-primary rounded-[10px]"
+                >
+                  Apply for a Job
+                </Button>
+              </div>
+
+              <p
+                className={`${outfit.className} text-white text-left max-w-[700px] md:text-center text-sm md:text-base mt-6 md:mt-12 px-4 md:px-0`}
+              >
+                Used by{" "}
+                <span className="font-bold text-[18px] md:text-[20px]">
+                  <span className="text-[#FDB833]">
+                    {recruiterCount.toLocaleString()}
+                    <span
+                      className={`inline-block transition-opacity duration-500${
+                        showRecruiterPlus ? " opacity-100" : " opacity-0"
+                      }`}
+                    >
+                      {showRecruiterPlus ? "+ " : ""}
+                    </span>
+                  </span>{" "}
+                  Recruiters{" "}
+                </span>
+                & over{" "}
+                <span className="font-bold text-[18px] md:text-[20px]">
+                  <br className="block md:hidden" />
+                  <span
+                    className={`text-[#FDB833] inline-block${
+                      animateMillion ? " pop-animate" : ""
+                    }`}
+                  >
+                    1 Million
+                  </span>{" "}
+                  Candidates{" "}
+                </span>
+                in our Talent Pool
+              </p>
+            </div>
+
+            <div className="mt-8 md:mt-0">
+              <Partners />
+            </div>
           </div>
         </div>
-        {!isMobile && (
-          <div className="w-[30%] ml-[100px] mt-20">
-            <Image src={ManSuit} alt="" width={300} height={300} />
-          </div>
-        )}
       </div>
-    </div>
+      <style jsx global>{`
+        @keyframes pop {
+          0% {
+            transform: scale(1);
+            color: #fdb833;
+          }
+          30% {
+            transform: scale(1.25);
+            color: #fff700;
+          }
+          60% {
+            transform: scale(0.95);
+            color: #fdb833;
+          }
+          100% {
+            transform: scale(1);
+            color: #fdb833;
+          }
+        }
+        .pop-animate {
+          animation: pop 1.2s cubic-bezier(0.36, 1.7, 0.3, 0.9);
+        }
+      `}</style>
+    </>
   );
 };
 

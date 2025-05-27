@@ -10,7 +10,7 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
         ref={ref}
         className={classNames(
           poppins.className,
-          " max-w-5xl mx-auto bg-white shadow-md  rounded-lg w-full p-6 text-[#222222]"
+          " max-w-5xl mx-auto bg-white rounded-lg w-full text-[#222222]"
         )}
       >
         <div className="bg-[#E4F6FB]/50 flex justify-between items-start border-b p-5">
@@ -48,10 +48,12 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
             {workExperience.map((job, index) => (
               <div key={index} className="mt-4">
                 <h3 className="font-bold text-lg">{job.role}</h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-[12px]">
                   {job.company_name}, {job.start_date} - {job.end_date}
                 </p>
-                <p className="mt-1 text-gray-700">{job.description}</p>
+                <p className="mt-1 text-[12px] text-gray-700">
+                  {job.description}
+                </p>
               </div>
             ))}
           </div>
@@ -64,7 +66,7 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
             {education.map((edu, index) => (
               <div key={index} className="mt-4">
                 <h3 className="font-bold text-lg">{edu.certificate}</h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-[12px]">
                   {edu.institution}, {edu.date}
                 </p>
               </div>
@@ -73,7 +75,7 @@ const ResumeFive = forwardRef<HTMLDivElement, ResumeProps>(
             {/* Skills */}
             <div className="mt-8">
               <h2 className="text-lg font-medium text-[#1C8EB5]">Skills</h2>
-              <p className="mt-2 text-gray-700">
+              <p className="mt-2 text-gray-700 text-[12px]">
                 {skills.map((skill, index) => (
                   <span key={index} className="mr-2 ">
                     {skill}

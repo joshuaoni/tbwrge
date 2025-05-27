@@ -30,6 +30,7 @@ export const rewriteCV = async (
       data: formData,
     };
     const response = await axios(options);
+    console.log("response", response.data);
     return response.data; // Return only the response data for convenience
   } catch (error: any) {
     // Handle errors and return meaningful information

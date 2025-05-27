@@ -1,6 +1,20 @@
 export const MAIN_URL = "https://api.candivet.com";
+export const CHAT_URL = "https://chats.candivet.com";
 
 export const API_CONFIG = {
+  GET_ADMIN_STATS: `${MAIN_URL}/admin/admin-stats/`,
+  GET_ADMIN_USERS: (search_term: string) =>
+    `${MAIN_URL}/admin/get-users/?search_term=${search_term}`,
+  DELETE_USER_ADMIN: (user_id: string) =>
+    `${MAIN_URL}/admin/delete-users/${user_id}/`,
+  UPDATE_USER_ADMIN: (user_id: string) =>
+    `${MAIN_URL}/admin/update-user/${user_id}/`,
+  GET_TICKETS: `${MAIN_URL}/admin/get-tickets/`,
+  CLOSE_TICKET: (ticket_id: string) =>
+    `${MAIN_URL}/admin/close-ticket/${ticket_id}/`,
+  DELETE_TICKET: (ticket_id: string) =>
+    `${MAIN_URL}/admin/delete-ticket/${ticket_id}/`,
+
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
   VERIFY_EMAIL: `${MAIN_URL}/auth/verify-account/`,
   LOGIN_USER: `${MAIN_URL}/auth/login/`,
@@ -9,6 +23,7 @@ export const API_CONFIG = {
   RESET_PASSWORD: `${MAIN_URL}/auth/confirm-password-reset/`,
   CREATE_JOB: `${MAIN_URL}/job/create-job/`,
   CREATE_JOB_WITH_AI: `${MAIN_URL}/job/create-job-with-ai/`,
+  CREATE_JOB_AI: `${MAIN_URL}/job/create-job-ai/`,
   TRANSLATE_JOB_POSTING: `${MAIN_URL}/job/translate-jp/`,
   SUMMARIZE_CV: `${MAIN_URL}/cv/summarize-cv/`,
   TRANSLATE_CV: `${MAIN_URL}/cv/translate-cv/`,
@@ -24,27 +39,57 @@ export const API_CONFIG = {
   TRANSLATE_COVER_LETTER: `${MAIN_URL}/cl/translate-cl/`,
   REWRITE_COVER_LETTER: `${MAIN_URL}/cl/rewrite-cl/`,
   GENERATE_JOB: `${MAIN_URL}/job/create-job-with-ai/`,
+  GENERATE_JOB_NEW: `${MAIN_URL}/job/generate-job-post/`,
   VET_JOB: `${MAIN_URL}/job/vet-job-post/`,
   INTERVIEW_QUESTION_GEN: `${MAIN_URL}/job/interview-questions-gen/`,
   SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
   GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  INTERVIEW_PREP: `${MAIN_URL}/job/interview-prep/`,
+  GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
+  GET_APPLICATION_ITEM: (application_id: string) =>
+    `${MAIN_URL}/job/get-application-item/${application_id}/`,
 
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
+  UPDATE_JOB: (job_id: string) => `${MAIN_URL}/job/update-job/${job_id}/`,
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
-  SUBMIT_JOB_APPLICATION: `${MAIN_URL}/job/submit-application/`,
+  SUBMIT_JOB_APPLICATION: (job_id: string) =>
+    `${MAIN_URL}/job/submit-application/${job_id}/`,
+  SUBMIT_APPLICATION_QUESTION_ANSWERS: (application_id: string) =>
+    `${MAIN_URL}/job/submit-application-answers/${application_id}/`,
   GET_JOB_APPLICATION_ITEM: `${MAIN_URL}/job/get-application-item/{application_id}/`,
   GET_JOB_OPEN: `${MAIN_URL}/job/get-jobs-open/`,
   SUBMIT_ARTICLE: `${MAIN_URL}/job/submit-article/`,
+  CREATE_SCREENING_QUESTIONS: `${MAIN_URL}/job/create-screening-questions/`,
   UPDATE_PROFILE: `${MAIN_URL}/profile/update-profile/`,
+  GET_PROFILE: `${MAIN_URL}/profile/get-profile/`,
   UPDATE_SETTINGS: `${MAIN_URL}/profile/update-settings/`,
   GET_PROFILE_SETTINGS: `${MAIN_URL}/profile/get-settings/`,
   ADD_TEAM_MEMBER: `${MAIN_URL}/profile/add-team-member/`,
+  DELETE_TEAM_MEMBER: (member_id: string) =>
+    `${MAIN_URL}/profile/remove-member/${member_id}/`,
   GET_TEAM_MEMBERS: `${MAIN_URL}/profile/get-member/`,
+  UPDATE_TEAM_MEMBER: (member_id: string) =>
+    `${MAIN_URL}/profile/update-member/${member_id}/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
+  GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
+  GET_APPLIED_JOBS: (page: number = 0) =>
+    `${MAIN_URL}/job/get-user-applications/${page}/`,
+
+  CREATE_BLOG: `${MAIN_URL}/blog/create-post/`,
+  GET_BLOGS: `${MAIN_URL}/blog/get-posts/`,
+  GET_BLOGS_ADMIN: `${MAIN_URL}/blog/get-posts-admin/`,
+  GET_ONE_BLOG: (post_id: string) => `${MAIN_URL}/blog/get-post/${post_id}/`,
+  UPDATE_BLOG: (post_id: string) => `${MAIN_URL}/blog/update-post/${post_id}/`,
+  DELETE_BLOG: (post_id: string) => `${MAIN_URL}/blog/delete-post/${post_id}/`,
+
+  GET_NOTES: (application_id: string) =>
+    `${MAIN_URL}/job/get-notes/${application_id}/`,
+  CREATE_NOTE: (application_id: string) =>
+    `${MAIN_URL}/job/create-note/${application_id}/`,
 
   GET_TALENTS: `${MAIN_URL}/talent/get-talents/`,
   GET_TALENT_ITEM: (talent_id: string) =>
@@ -54,4 +99,36 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+
+  MANAGE_CHAT: (feedback_id: string) =>
+    `${CHAT_URL}/chat/manage-chat/${feedback_id}/`,
+  GET_CHATS: `${CHAT_URL}/chat/get-chats/`,
+  GET_MESSAGES: (channel_id: string) =>
+    `${CHAT_URL}/chat/get-messages/${channel_id}/`,
+  CREATE_MESSAGE: (channel_id: string) =>
+    `${CHAT_URL}/chat/create-message/${channel_id}/`,
+
+  TRANSCRIBE_AUDIO: `${MAIN_URL}/talent/transcribe-audio/`,
+  JOIN_TALENT_POOL: `${MAIN_URL}/talent/join-talent-pool/`,
+  GET_TALENT_PROFILE: `${MAIN_URL}/talent/get-talent-profile/`,
+  UPDATE_TALENT_PROFILE: `${MAIN_URL}/talent/update-profile/`,
+  TALENT_AI_SEARCH: (page: number = 0) =>
+    `${MAIN_URL}/talent/ai-search/${page}/`,
+  GET_PROFILE_STATS: `${MAIN_URL}/talent/get-profile-stats/`,
+
+  GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
+  GET_COMMENTS: (post_id: string) =>
+    `${MAIN_URL}/community/get-comments/${post_id}/`,
+  CREATE_COMMENT: (post_id: string) =>
+    `${MAIN_URL}/community/create-comment/${post_id}/`,
+  CREATE_POST: `${MAIN_URL}/community/create-post/`,
+  UPVOTE_DOWNVOTE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/react-unreact-item/${post_id}/`,
+  DELETE_COMMENT: (comment_id: string) =>
+    `${MAIN_URL}/community/delete-comment/${comment_id}/`,
+  DELETE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/delete-post/${post_id}/`,
+  UPDATE_POST: (post_id: string) =>
+    `${MAIN_URL}/community/update-post/${post_id}/`,
+  GET_TAGS: (page: number = 0) => `${MAIN_URL}/community/get-tags/${page}/`,
 };

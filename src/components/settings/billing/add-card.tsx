@@ -11,15 +11,15 @@ function BillingAddCard() {
   const ctx = useContext(BillingContext);
 
   return (
-    <form className="space-y-10 max-w-4xl pt-10">
+    <form className="space-y-6 max-w-3xl pt-6">
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-8">
-          <div className="w-fit p-2 rounded-full border border-gray-400">
-            <CardAddIcon className="text-lightgreen" />
+        <div className="flex items-center gap-4">
+          <div className="w-fit p-1 rounded-full border border-gray-400">
+            <CardAddIcon />
           </div>
           <div>
-            <p>Add new card</p>
-            <p className="text-textgray">
+            <p className="text-base">Add new card</p>
+            <p className="text-sm text-textgray">
               Streamline your checkout process by adding a new card
             </p>
           </div>
@@ -34,7 +34,7 @@ function BillingAddCard() {
         placeholder="0000 0000 0000 0000"
         icon={CardIcon}
       />
-      <div className="flex items-center gap-4 w-full">
+      <div className="flex items-center gap-2 w-full">
         <BillingInputGroup
           label="Expiry Date"
           placeholder="MM/YY"
@@ -46,7 +46,7 @@ function BillingAddCard() {
           icon={InfoCircleIcon}
         />
       </div>
-      <div className="w-4/5">
+      <div className="w-3/5">
         <BillingInputGroup
           label="CardHolder's Name"
           placeholder="Enter cardholder's full name"
@@ -56,13 +56,13 @@ function BillingAddCard() {
       <div>
         <label className="inline-flex items-center cursor-pointer">
           <input type="checkbox" className="sr-only peer" />
-          <div className="relative w-20 h-10 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[6px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-9 after:w-9 after:transition-all peer-checked:bg-lightgreen" />
-          <span className="ms-3 text-2xl text-[#545E7D]">Save my card</span>
+          <div className="relative w-12 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-lightgreen" />
+          <span className="ms-2 text-base text-[#545E7D]">Save my card</span>
         </label>
       </div>
 
-      <div className="w-full flex item-center justify-center">
-        <button className="px-20 py-5 bg-lightgreen text-white text-lg font-semibold rounded-xl flex items-center gap-2">
+      <div className="w-full flex items-center justify-center">
+        <button className="px-8 py-3 bg-lightgreen text-white text-base font-semibold rounded-lg flex items-center gap-2">
           <CardAddIcon /> Add Card
         </button>
       </div>

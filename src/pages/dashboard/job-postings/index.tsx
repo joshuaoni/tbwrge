@@ -11,10 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { outfit } from "@/constants/app";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import Image, { StaticImageData } from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getJobOpenings } from "@/actions/get-current-jobs";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useQuery } from "@tanstack/react-query";
 
 const JobPostings = () => {
   const [selectedOpening, setSelectedOpening] = useState(null);
@@ -22,80 +26,128 @@ const JobPostings = () => {
   const [currentView, setCurrentView] = useState("openings");
   const [selectedJob, setSelectedJob] = useState(null);
   const [applicationId, setApplicationId] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { userData } = useUserStore();
+
+  // Protect route from job seekers
+  useEffect(() => {
+    if (userData?.user?.role === "job_seeker") {
+      router.push("/dashboard/job-board");
+    }
+  }, [userData?.user?.role, router]);
+
+  // Fetch job data if jobId is in URL
+  const { data: jobs } = useQuery({
+    queryKey: ["job-openings"],
+    queryFn: async () => {
+      const response = await getJobOpenings({
+        status: "open",
+        token: userData?.token,
+      });
+      return response;
+    },
+    enabled: !!userData?.token,
+  });
+
+  // Handle URL parameters
+  useEffect(() => {
+    if (!searchParams) return;
+
+    const jobId = searchParams.get("jobId");
+    const view = searchParams.get("view");
+
+    if (jobId && jobs) {
+      const job = jobs.find((j: any) => j.id === jobId);
+      if (job) {
+        setSelectedJob(job);
+        if (view === "details") {
+          setCurrentView("details");
+        }
+      }
+    }
+  }, [searchParams, jobs]);
+
+  // If user is a job seeker, don't render the page content
+  if (userData?.user?.role === "job_seeker") {
+    return null;
+  }
 
   return (
     <DashboardWrapper>
-      <div className="flex w-full  justify-between items-center  mb-4">
-        {currentView != "details" && currentView != "candidatedetail" && (
-          <>
-            <div className="flex flex-row items-center space-x-6">
-              <h1 className="text-xl font-bold">
-                {currentView === "openings"
-                  ? "Current Openings"
-                  : "Closed Jobs"}
-              </h1>
-              <Button
-                onClick={() => {
-                  setCurrentView(
-                    currentView === "openings" ? "closed" : "openings"
-                  );
-                }}
-                className="bg-primary text-white"
-              >
-                {currentView === "openings"
-                  ? "Closed Jobs"
-                  : "Current Openings"}
-              </Button>
-            </div>
+      <div
+        className={`${outfit.className} pb-[30px] flex flex-col min-h-full w-full max-w-full`}
+      >
+        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+          {currentView != "details" && currentView != "candidatedetail" && (
+            <>
+              <div className="flex flex-row items-center gap-4 sm:gap-6 flex-wrap">
+                <h1 className="text-xl font-bold">
+                  {currentView === "openings"
+                    ? "Current Openings"
+                    : "Closed Jobs"}
+                </h1>
+                <Button
+                  onClick={() => {
+                    setCurrentView(
+                      currentView === "openings" ? "closed" : "openings"
+                    );
+                  }}
+                  className="border-[1.5px] border-[#009379] text-black bg-white whitespace-nowrap"
+                >
+                  {currentView === "openings"
+                    ? "Closed Jobs"
+                    : "Current Openings"}
+                </Button>
+              </div>
 
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="h-12  px-3 w-fit rounded-full text-[#898989] bg-[#e1e1e1] flex items-center">
-                    <p className="text-sm"> Sort By: {filterOpenings}</p>
-                    <CaretDownIcon />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white">
-                  {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </>
-        )}
-      </div>
+              {currentView === "openings" ? (
+                <div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div className="rounded-full bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[150px] justify-between flex items-center gap-2">
+                        <p className="text-sm">Sort By: {filterOpenings}</p>
+                        <CaretDownIcon />
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white w-[150px] p-0 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)] rounded-lg border-none">
+                      <DropdownMenuItem className="w-full px-4 py-3 cursor-pointer hover:bg-gray-50 focus:bg-gray-50">
+                        Profile
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <button className=" bg-[#F0F0F0] flex h-[35px] px-4 w-[100px] justify-between items-center ml-auto space-x-4 text-gray-500 text-[12px] rounded-full">
+                  Repost Job
+                </button>
+              )}
+            </>
+          )}
+        </div>
 
-      <div className="flex overflow-x-auto gap-6 flex-col h-screen overflow-y-scroll w-full ">
-        {currentView === "openings" && (
-          <CurrentOpenings
-            setCurrentView={setCurrentView}
-            setSelectedJob={setSelectedJob}
-          />
-        )}
-        {currentView === "closed" && <ClosedOpenings />}
-        {currentView === "details" && (
-          <JobDetails
-            selectedJob={selectedJob}
-            setCurrentView={setCurrentView}
-            setApplicationId={(id) => setApplicationId(id)}
-          />
-        )}
-        {currentView === "candidatedetail" && (
-          <CandidateDetail
-            applicationId={applicationId}
-            setCurrentView={setCurrentView}
-          />
-        )}
-        {/* {jobPosts.map((jobPost, index) => (
-          <JobPost
-            jobPost={jobPost}
-            setSelectedOpening={setSelectedOpening}
-            key={index}
-            {...jobPost}
-          />
-        ))} */}
+        <div className="flex-1">
+          {currentView === "openings" && (
+            <CurrentOpenings
+              setCurrentView={setCurrentView}
+              setSelectedJob={setSelectedJob}
+            />
+          )}
+          {currentView === "closed" && <ClosedOpenings />}
+          {currentView === "details" && (
+            <JobDetails
+              selectedJob={selectedJob}
+              setCurrentView={setCurrentView}
+              setApplicationId={(id) => setApplicationId(id)}
+            />
+          )}
+          {currentView === "candidatedetail" && (
+            <CandidateDetail
+              applicationId={applicationId}
+              setCurrentView={setCurrentView}
+            />
+          )}
+        </div>
       </div>
     </DashboardWrapper>
   );

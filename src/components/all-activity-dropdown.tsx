@@ -11,7 +11,7 @@ const AllActivityDropDown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className="h-8  px-3 w-fit rounded-full text-[#898989]  border flex items-center">
+        <div className="h-8  px-3 w-fit rounded-full text-black border flex items-center">
           <p className="text-sm"> All Activity</p>
           <CaretDownIcon />
         </div>

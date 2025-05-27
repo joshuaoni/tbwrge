@@ -10,7 +10,7 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addTeamMember } from "@/actions/add-team-member";
 import toast from "react-hot-toast";
 
@@ -19,6 +19,8 @@ const AddTeamMember = () => {
   const [email, setEmail] = useState("");
   const { userData } = useUserStore();
   const [showModal, setShowModal] = useState(false);
+  const queryClient = useQueryClient();
+
   const AddTeamMemberMutation = useMutation({
     mutationKey: ["add-team-member"],
     mutationFn: async () => {
@@ -33,6 +35,9 @@ const AddTeamMember = () => {
     onSuccess: () => {
       toast.success("Team member added");
       setShowModal(false);
+      setName("");
+      setEmail("");
+      queryClient.invalidateQueries({ queryKey: ["get-members"] });
     },
     onError: () => {
       toast.error("Failed to add team member");

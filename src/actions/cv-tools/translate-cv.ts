@@ -24,6 +24,7 @@ export const translateCV = async (cv: File[], language: string, token: any) => {
       data: formData,
     };
     const response = await axios(options);
+    console.log(response.data);
     return response.data; // Return only the response data for convenience
   } catch (error: any) {
     // Handle errors and return meaningful information

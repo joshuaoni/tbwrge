@@ -8,12 +8,13 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import RankByFilter from "../../../components/dashboard/ranking/rank-by-filter";
 import { rankFilters } from "../../../interfaces/ranking.constant";
 import { Candidate } from "../../../interfaces/ranking.interface";
+import { outfit } from "@/constants/app";
 
 const Ranking = () => {
   const [files, setFiles] = useState<any[]>([]);
@@ -29,7 +30,7 @@ const Ranking = () => {
 
   const {
     mutate: rankCoverLetterMutation,
-    data: rankings,
+    data: rawRankings,
     isPending,
     isSuccess,
   } = useMutation<Partial<Candidate>[]>({
@@ -60,6 +61,18 @@ const Ranking = () => {
       return response;
     },
   });
+
+  // Sort rankings based on selected filter
+  const rankings = useMemo(() => {
+    if (!rawRankings) return [];
+
+    return [...rawRankings].sort((a, b) => {
+      const valueA = (a[rankFilter as keyof Candidate] as number) || 0;
+      const valueB = (b[rankFilter as keyof Candidate] as number) || 0;
+      return valueB - valueA; // Descending order
+    });
+  }, [rawRankings, rankFilter]);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || files.length >= 5) return;
 
@@ -80,28 +93,41 @@ const Ranking = () => {
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">Cover Letter Ranking</span>
-      <section className="flex h-screen space-x-4 ">
+      <span className={`${outfit.className} font-bold text-xl`}>
+        Cover Letter Ranking
+      </span>
+      <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
-          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Cover Letter Upload</span>
             <span className="font-light text-xs">
-              Add your documents here, and you can upload up to 5 files max
+              Add your Cover Letter here, you can upload up to 5 files max
             </span>
-            <div className="relative w-full px-4 mt-3 flex flex-col items-start rounded-lg">
+            <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
                 onChange={handleFileChange}
                 name="cv"
                 type="file"
                 accept=".pdf, .doc, .docx, .txt"
                 multiple
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
-              <div className="outline-dotted flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
+              <div
+                className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
+                style={{
+                  borderRadius: "12px",
+                  border: "none",
+                  background: "white",
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23285C44' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")",
+                  backgroundPosition: "center",
+                  backgroundSize: "100% 100%",
+                }}
+              >
                 <Image
-                  className="w-fit h-10 object-cover"
+                  className="w-fit h-8 object-cover"
                   src={uploadIcon}
-                  alt=""
+                  alt="Upload Icon"
                 />
                 <span>
                   Drag your file(s) or <span className="font-bold">browse</span>{" "}
@@ -111,20 +137,20 @@ const Ranking = () => {
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .word, and .txt
+                Only supports .pdf, .doc, .docx, and .txt
               </span>
             </div>
 
             {files.map((file, index) => (
               <div
                 key={index}
-                className="flex h-14 w-full mt-6 px-4 border rounded-lg justify-between items-center space-x-2"
+                className="flex h-14 w-full mt-6 px-4 pl-2 border rounded-lg justify-between items-center space-x-2"
               >
-                <div className="flex items-start">
+                <div className="flex items-center">
                   <Image
-                    className="w-10 h-10 object-cover"
+                    className="w-8 h-8 mr-2 object-cover"
                     src={pdfIcon}
-                    alt=""
+                    alt="File Icon"
                   />
                   <div className="flex flex-col">
                     <span className="text-sm text-black">{file.name}</span>
@@ -142,21 +168,23 @@ const Ranking = () => {
             ))}
           </div>
 
-          <div className="rounded-xl shadow-xl h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job description here</span>
-            <Textarea
-              placeholder="Input Job Description"
-              value={jobDescription}
-              rows={8}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="my-3 bg-white border"
-            />
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Detailed Job Description"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+              />
+            </div>
           </div>
 
-          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+          {/* Prompts Section */}
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?
+                Want to customize your results?{" "}
                 <span className="text-sm font-medium">
                   &#40;Add up to 20 prompts&#41;
                 </span>
@@ -174,13 +202,16 @@ const Ranking = () => {
             <Input
               placeholder="Input Prompt"
               value={value}
-              className="my-3"
+              className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
             />
 
             <div>
               {prompts.map((prompt, index) => (
-                <div key={index} className="flex justify-between my-2">
+                <div
+                  key={index}
+                  className="flex justify-between my-2 bg-gray-50 p-2 rounded-lg"
+                >
                   <span>{prompt}</span>
                   <Trash
                     className="cursor-pointer"
@@ -207,12 +238,12 @@ const Ranking = () => {
             </div>
             <div className="flex flex-col">
               <Button
-                disabled={files.length === 0}
+                disabled={files.length === 0 || jobDescription === ""}
                 variant="default"
                 onClick={() => {
                   rankCoverLetterMutation();
                 }}
-                className="self-center bg-lightgreen min-w-[100px]  text-white"
+                className="self-center bg-primary min-w-[100px]  text-white"
               >
                 {isPending ? (
                   <Loader2 className="animate-spin" />
@@ -225,7 +256,7 @@ const Ranking = () => {
         </div>
 
         <div className="w-[50%]">
-          <div className="rounded-xl shadow-xl h-fit mt-4 p-6">
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <span className="font-bold">Cover Letter Ranking</span>
               {isSuccess && (
@@ -245,24 +276,47 @@ const Ranking = () => {
               )}
             </div>
             <div className="flex items-center justify-center h-fit">
-              {isPending && <Loader2 className="animate-spin" />}
+              {isPending && (
+                <div className="flex items-center justify-center h-[200px]">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              )}
+
+              {!isPending && !isSuccess && (
+                <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
+                  Upload cover letters to see ranking results
+                </div>
+              )}
 
               {isSuccess && (
-                <div className="py-10 w-full">
-                  <div className="w-full flex justify-between px-6 py-2 bg-[#D6D6D6] text-[#898989] text-sm font-bold rounded-lg">
-                    <span className="uppercase">candidate name</span>
-                    <span className="capitalize">{ranking}</span>
+                <div className="py-5 w-full">
+                  <div className="bg-gray-200 py-3 rounded-t-lg flex">
+                    <div className="w-2/3 pl-4 uppercase text-gray-600 font-semibold text-sm">
+                      candidate name
+                    </div>
+                    <div className="w-1/3 text-center text-gray-600 font-semibold text-sm">
+                      {ranking}
+                    </div>
                   </div>
 
                   {rankings.map((item, i) => (
-                    <div key={i} className="px-6 py-2">
-                      <div className="w-full flex justify-between">
-                        <span className="font-medium">
-                          {item.candidate_name ?? "empty"}
-                        </span>
-                        <span>{item![rankFilter as keyof Candidate] ?? 0}</span>
+                    <div key={i} className="border-b py-4">
+                      <div className="flex items-center">
+                        <div className="w-2/3 flex items-center pl-4">
+                          <div className="w-8 h-8 mr-3 rounded-full bg-pink-200 flex items-center justify-center text-pink-800 font-bold text-sm">
+                            {item.candidate_name?.charAt(0) || "?"}
+                          </div>
+                          <span className="font-semibold">
+                            {item.candidate_name || "Unnamed Candidate"}
+                          </span>
+                        </div>
+                        <div className="w-1/3 text-center font-semibold">
+                          {item[rankFilter as keyof Candidate] || 0}
+                        </div>
                       </div>
-                      <p className="text-gray-600">{item.description}</p>
+                      <div className="pl-16 pr-4 mt-2 text-sm text-gray-600">
+                        {item.description}
+                      </div>
                     </div>
                   ))}
                 </div>

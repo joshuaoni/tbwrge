@@ -1,21 +1,409 @@
 import AdminDashboardLayout from "@/components/admin/layout";
 import AdminDashboardSearchBox from "@/components/admin/search";
 import BriefcaseIcon from "@/components/icons/briefcase";
+import { outfit } from "@/constants/app";
 import Image from "next/image";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getAdminStats,
+  getAdminUsers,
+  deleteAdminUser,
+  updateAdminUser,
+  type AdminUser,
+  type UpdateAdminUserRequest,
+} from "@/actions/admin";
+import { useUserStore } from "@/hooks/use-user-store";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import {
+  UserCircle,
+  FileText,
+  DollarSign,
+  MessageSquare,
+  ThumbsUp,
+  TrendingDown,
+} from "lucide-react";
+import classNames from "classnames";
+
+const initialEditState = {
+  name: "",
+  last_name: "",
+  phone: "",
+  user_class: "",
+  country_code: "",
+  calendly_link: "",
+  google_calender_link: "",
+  username: "",
+  location: "",
+};
+
+const formatTimeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  if (diffInSeconds < 60) {
+    return "just now";
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes}m ago`;
+  } else if (diffInHours < 24) {
+    return `${diffInHours}h ago`;
+  } else {
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  }
+};
+
+// Minimal inline loader
+const Loader = ({ size = 20, className = "" }) => (
+  <span
+    className={`inline-block animate-spin border-2 border-gray-300 border-t-[#2563EB] rounded-full ${className}`}
+    style={{ width: size, height: size, borderTopColor: "#2563EB" }}
+  />
+);
 
 const AdminDashboardPage = () => {
+  const { userData } = useUserStore();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
+  const [userToEdit, setUserToEdit] = useState<AdminUser | null>(null);
+  const [editForm, setEditForm] = useState(initialEditState);
+  const queryClient = useQueryClient();
+  const [userToSuspend, setUserToSuspend] = useState<AdminUser | null>(null);
+  const [activeTab, setActiveTab] = useState("Active Users");
+
+  const { data: stats, isLoading: isLoadingStats } = useQuery({
+    queryKey: ["adminStats"],
+    queryFn: () => {
+      if (!userData?.token) throw new Error("No token available");
+      return getAdminStats(userData.token);
+    },
+    enabled: !!userData?.token,
+  });
+
+  const { data: users, isLoading: isLoadingUsers } = useQuery({
+    queryKey: ["adminUsers", searchTerm],
+    queryFn: () => {
+      if (!userData?.token) throw new Error("No token available");
+      return getAdminUsers(userData.token, searchTerm);
+    },
+    enabled: !!userData?.token,
+  });
+
+  useEffect(() => {
+    if (userToEdit) {
+      setEditForm({
+        name: userToEdit.name || "",
+        last_name: userToEdit.last_name || "",
+        phone: userToEdit.phone || "",
+        user_class: userToEdit.role || "",
+        country_code: userToEdit.country_code || "",
+        calendly_link: userToEdit.calendly_link || "",
+        google_calender_link: userToEdit.google_calender_link || "",
+        username: userToEdit.username || "",
+        location: userToEdit.location || "",
+      });
+    } else {
+      setEditForm(initialEditState);
+    }
+  }, [userToEdit]);
+
+  const deleteMutation = useMutation({
+    mutationFn: (userId: string) => {
+      if (!userData?.token) throw new Error("No token available");
+      return deleteAdminUser(userData.token, userId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      setUserToDelete(null);
+      toast.success("User deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete user");
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: ({
+      userId,
+      data,
+    }: {
+      userId: string;
+      data: UpdateAdminUserRequest;
+    }) => {
+      if (!userData?.token) throw new Error("No token available");
+      return updateAdminUser(userData.token, userId, data);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      setUserToEdit(null);
+      if (variables.data.suspend === true) {
+        toast.success("User suspended successfully");
+      } else if (variables.data.suspend === false) {
+        toast.success("User unsuspended successfully");
+      } else {
+        toast.success("User updated successfully");
+      }
+    },
+    onError: () => {
+      toast.error("Failed to update user");
+    },
+  });
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userToEdit) {
+      const filteredData = Object.fromEntries(
+        Object.entries(editForm).filter(([_, v]) => v !== "")
+      );
+      editMutation.mutate({ userId: userToEdit.id, data: filteredData });
+    }
+  };
+
+  const handleSuspend = (user: AdminUser) => {
+    setUserToSuspend(user);
+  };
+
+  const handleUnsuspend = (user: AdminUser) => {
+    editMutation.mutate({
+      userId: user.id,
+      data: { suspend: false },
+    });
+  };
+
+  const statBoxes = [
+    {
+      title: "Active Users",
+      value: stats?.users ?? 0,
+      icon: <UserCircle size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Docs Processed",
+      value: stats?.docs ?? 0,
+      icon: <FileText size={24} className="text-primary" />,
+    },
+    {
+      title: "Monthly Revenue",
+      value: `$${stats?.revenue ?? 0}`,
+      icon: <DollarSign size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Support Tickets",
+      value: stats?.support ?? 0,
+      icon: <MessageSquare size={24} className="text-primary" />,
+    },
+    {
+      title: "Total Feedbacks Received",
+      value: stats?.feedback ?? 0,
+      icon: <ThumbsUp size={24} className="text-primary" />,
+    },
+    {
+      title: "Churn Rate",
+      value: `${stats?.churn ?? 0}%`,
+      icon: <TrendingDown size={24} className="text-primary" />,
+    },
+  ];
+
+  const filteredUsers =
+    users?.filter((user) => {
+      switch (activeTab) {
+        case "Active Users":
+          return !user.suspend && !user.deleted;
+        case "Suspended Users":
+          return user.suspend && !user.deleted;
+        case "Deleted Users":
+          return user.deleted;
+        default:
+          return true;
+      }
+    }) || [];
+
   return (
     <AdminDashboardLayout>
-      <section className="grid grid-cols-3 gap-8 w-fit">
-        {[
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-          { title: "Active Users", icon: BriefcaseIcon, value: "12" },
-        ].map(() => (
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!userToDelete} onOpenChange={() => setUserToDelete(null)}>
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Delete User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {userToDelete?.name}? This action
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setUserToDelete(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                userToDelete && deleteMutation.mutate(userToDelete.id)
+              }
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={!!userToEdit} onOpenChange={() => setUserToEdit(null)}>
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>Update user details below.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4 mt-2">
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                name="name"
+                value={editForm.name}
+                onChange={handleEditChange}
+                placeholder="First Name"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="last_name"
+                value={editForm.last_name}
+                onChange={handleEditChange}
+                placeholder="Last Name"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="phone"
+                value={editForm.phone}
+                onChange={handleEditChange}
+                placeholder="Phone"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="user_class"
+                value={editForm.user_class}
+                onChange={handleEditChange}
+                placeholder="User Class (recruiter/job_seeker)"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="country_code"
+                value={editForm.country_code}
+                onChange={handleEditChange}
+                placeholder="Country Code"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="calendly_link"
+                value={editForm.calendly_link}
+                onChange={handleEditChange}
+                placeholder="Calendly Link"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="google_calender_link"
+                value={editForm.google_calender_link}
+                onChange={handleEditChange}
+                placeholder="Google Calendar Link"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="username"
+                value={editForm.username}
+                onChange={handleEditChange}
+                placeholder="Username"
+                className="border rounded px-3 py-2"
+              />
+              <input
+                name="location"
+                value={editForm.location}
+                onChange={handleEditChange}
+                placeholder="Location"
+                className="border rounded px-3 py-2"
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+                onClick={() => setUserToEdit(null)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={editMutation.isPending}>
+                {editMutation.isPending ? "Saving..." : "Save"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Suspend Confirmation Dialog */}
+      <Dialog
+        open={!!userToSuspend}
+        onOpenChange={() => setUserToSuspend(null)}
+      >
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+          <DialogHeader>
+            <DialogTitle>Suspend User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to suspend {userToSuspend?.name}? This
+              action can be undone by editing the user.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+              onClick={() => setUserToSuspend(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (userToSuspend) {
+                  editMutation.mutate({
+                    userId: userToSuspend.id,
+                    data: { suspend: true },
+                  });
+                  setUserToSuspend(null);
+                }
+              }}
+              disabled={editMutation.isPending}
+            >
+              {editMutation.isPending ? "Suspending..." : "Suspend"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <section className={`${outfit.className} grid grid-cols-3 gap-8 w-fit`}>
+        {statBoxes.map((stat, index) => (
           <div
+            key={index}
             className="py-6 px-5 w-full min-w-72 space-y-4 rounded-xl"
             style={{
               boxShadow:
@@ -23,78 +411,148 @@ const AdminDashboardPage = () => {
             }}
           >
             <div className="flex items-end gap-3">
-              <BriefcaseIcon />
-              <span className="text-sm">Active Users</span>
+              {stat.icon}
+              <span className="text-sm">{stat.title}</span>
             </div>
 
-            <p className="text-2xl font-bold">12</p>
+            <p className="text-2xl font-bold flex items-center">
+              {isLoadingStats ? (
+                <Loader size={20} className="mr-2" />
+              ) : (
+                stat.value
+              )}
+            </p>
           </div>
         ))}
       </section>
 
-      <section className="mt-10">
-        <div className="flex justify-between items-center my-6">
-          <h3 className="text-xl font-semibold">User Management</h3>
-          <AdminDashboardSearchBox placeholder="Search for any user" />
+      <section className={`${outfit.className} mt-10 space-y-10`}>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-6">
+            {["Active Users", "Suspended Users", "Deleted Users"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={classNames("font-medium", {
+                  "text-[#2563EB]": activeTab === tab,
+                })}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <AdminDashboardSearchBox
+            placeholder="Search for any user"
+            onSearch={(term) => setSearchTerm(term)}
+          />
         </div>
+
         <div className="overflow-hidden rounded-xl">
           <table className="w-full bg-white border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
                 <th className="py-3 px-6 text-left rounded-tl-xl">User</th>
-                <th className="py-3 px-6 text-center">Status</th>
-                <th className="py-3 px-6 text-center">Email</th>
+                <th className="py-3 px-6 text-left">Status</th>
+                <th className="py-3 px-6 text-left">Email</th>
                 <th className="py-3 px-6 text-left rounded-tr-xl">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {new Array(5)
-                .fill(null)
-                .map((_, index) => ({
-                  id: index + 1,
-                  name: "John James",
-                  email: "john@gmail.com",
-                  status: true ? "Accepted" : "Pending",
-                  lastLogin: ` mins ago`,
-                }))
-                .map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-100">
+              {isLoadingUsers ? (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center">
+                    Loading users...
+                  </td>
+                </tr>
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center">
+                    No users found in this category.
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr
+                    key={user.id}
+                    className={classNames("hover:bg-gray-100", {
+                      "opacity-50": user.deleted,
+                    })}
+                  >
                     <td className="py-3 px-6 text-left flex items-center space-x-2">
-                      <Image
-                        src="https://ui-avatars.com/api/?background=random&rounded=true"
-                        alt="user"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
+                      {user.profile_picture ? (
+                        <Image
+                          src={user.profile_picture}
+                          alt="user"
+                          width={40}
+                          height={40}
+                          className="rounded-full object-cover"
+                          style={{ width: 40, height: 40 }}
+                        />
+                      ) : (
+                        <UserCircle size={40} className="text-gray-400" />
+                      )}
                       <div>
                         <p className="font-medium text-sm text-[#333]">
                           {user.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Last Login: {user.lastLogin}
+                          Last Login:{" "}
+                          {user.last_login
+                            ? formatTimeAgo(user.last_login)
+                            : "Never"}
                         </p>
                       </div>
                     </td>
-                    <td className="py-3 px-6 text-center">
-                      <span className="p-1.5 text-xs text-[#377DFF] bg-[#377DFF]/20 rounded-md">
-                        {user.status}
+                    <td className="py-3 px-6 text-left">
+                      <span
+                        className={`p-1.5 text-xs rounded-md ${
+                          user.is_verified
+                            ? "text-[#377DFF] bg-[#377DFF]/20"
+                            : "text-[#FF3737] bg-[#FF3737]/20"
+                        }`}
+                      >
+                        {user.is_verified ? "Verified" : "Unverified"}
                       </span>
                     </td>
-                    <td className="py-3 px-6 text-center">{user.email}</td>
+                    <td className="py-3 px-6 text-left">{user.email}</td>
                     <td className="py-3 px-6 space-x-6">
-                      <button className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold">
-                        Edit
-                      </button>
-                      <button className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold">
-                        Suspend
-                      </button>
-                      <button className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold">
-                        Delete
-                      </button>
+                      {!user.deleted && (
+                        <>
+                          <button
+                            className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setUserToEdit(user)}
+                          >
+                            Edit
+                          </button>
+                          {user.suspend ? (
+                            <button
+                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              onClick={() => handleUnsuspend(user)}
+                              disabled={editMutation.isPending}
+                            >
+                              Unsuspend
+                            </button>
+                          ) : (
+                            <button
+                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              onClick={() => handleSuspend(user)}
+                              disabled={editMutation.isPending}
+                            >
+                              Suspend
+                            </button>
+                          )}
+                          <button
+                            className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            onClick={() => setUserToDelete(user)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
-                ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>

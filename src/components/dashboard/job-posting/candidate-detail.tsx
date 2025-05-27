@@ -136,9 +136,9 @@ const CandidateDetail = ({
               },
             ].map((item, i) => (
               <div
-              onClick={() => {
-                window.open(item.fileName)
-              }}
+                onClick={() => {
+                  window.open(item.fileName);
+                }}
                 key={i}
                 className="border border-[#E7E7E7] p-4 rounded-lg flex items-center gap-2"
               >
@@ -152,9 +152,7 @@ const CandidateDetail = ({
                   <div className="h-6 w-40 bg-gray-200 animate-pulse rounded-lg"></div>
                 ) : (
                   <div className="grid gap-0.5">
-                    <button
-                      className="font-semibold text-[#0B0B0B] text-sm cursor-pointer hover:underline"
-                    >
+                    <button className="font-semibold text-[#0B0B0B] text-sm cursor-pointer hover:underline">
                       {item.fileName?.split("/").pop()}
                     </button>
                     <span className="text-[#6D6D6D] text-xs">
@@ -177,31 +175,34 @@ const CandidateDetail = ({
               <span className="w-2/12">date</span>
               <span>notes</span>
             </div>
-            {[
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-              {
-                date: "31/10/2024",
-                notes:
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, eius.",
-              },
-            ].map(() => (
-              <div className="flex gap-4 px-5 tracking-[5%] font-medium">
-                <span className="w-2/12">31/10/2024</span>
-                <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Soluta, eius.
-                </span>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
               </div>
-            ))}
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
+            <div className="grid grid-cols-[120px_1fr]">
+              <div className="p-3 text-sm text-gray-500">31/10/24</div>
+              <div className="p-3 text-sm">
+                Impressive Skills in finance analytics. Consider for next
+                interview
+              </div>
+            </div>
           </div>
         </div>
       </section>

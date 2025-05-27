@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,17 @@ import { CircleXIcon, Loader2, Download } from "lucide-react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import downloadIcon from "../../../../public/images/icons/file-download.png";
-import Image from 'next/image';
+import Image from "next/image";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
-import { generateInterviewQuestions } from "@/actions/job-tools/generate-interview-questions";
+import { generateInterviewPrep } from "@/actions/job-tools/interview-prep";
 import "react-quill/dist/quill.snow.css";
-// import './style.css'
-// import '@/styles/globals.css'
-// 
+import { outfit } from "@/constants/app";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import toast from "react-hot-toast";
+import DocumentDownloadIcon from "@/components/icons/document-download";
+
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -32,32 +35,213 @@ const modules = {
 };
 
 const formats = [
-  "header", "bold", "italic", "underline", "strike",
-  "list", "bullet", "link",
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "bullet",
+  "link",
 ];
+
+interface InterviewQuestion {
+  question: string;
+  best_answer: string;
+}
+
+interface InterviewPrepResponse {
+  role: string;
+  cv_insight: string;
+  questions: InterviewQuestion[];
+}
 
 const AiInterviewPrep = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
   const { userData } = useUserStore();
-  
-  const handleDownload = () => {
-    if (!questions) return;
-    
-    const content = questions.map((q: string, index: number) => 
-      `${index + 1}. ${q}\n`
-    ).join('\n');
 
-    const blob = new Blob([content], { type: 'text/plain' });
+  const downloadTxtFile = () => {
+    if (!questions) return;
+
+    let content = `Possible Interview Questions & Answers\n\n`;
+
+    if (typeof questions === "object" && questions.role) {
+      content += `Role: ${questions.role}\n\n`;
+
+      if (questions.cv_insight && questions.cv_insight !== "null") {
+        content += `CV Insights: ${questions.cv_insight}\n\n`;
+      }
+
+      content += `Likely Interview Questions & Suggested Answers:\n\n`;
+
+      questions.questions.forEach((q: InterviewQuestion, idx: number) => {
+        content += `${idx + 1}. "${q.question}"\n\n`;
+        content += `✓ Best Answer: "${q.best_answer}"\n\n`;
+      });
+    } else if (Array.isArray(questions)) {
+      // Fallback for legacy format
+      questions.forEach((q: string, index: number) => {
+        content += `${index + 1}. ${q}\n`;
+      });
+    }
+
+    const blob = new Blob([content], { type: "text/plain" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'interview-questions.txt';
+    a.download = "interview-prep.txt";
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+  };
+
+  const downloadPDF = async () => {
+    try {
+      if (!questions) return;
+
+      setIsGeneratingPDF(true);
+      const toastId = toast.loading("Generating PDF...");
+
+      // Create a new PDF document
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const margin = 20;
+      const contentWidth = pageWidth - margin * 2;
+      let y = 20; // Starting Y position
+
+      // Add title with better styling
+      pdf.setFontSize(18);
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Possible Interview Questions & Answers", pageWidth / 2, y, {
+        align: "center",
+      });
+      y += 15;
+
+      // Add role if available
+      if (typeof questions === "object" && questions.role) {
+        pdf.setFontSize(14);
+        pdf.text(`Role: ${questions.role}`, margin, y);
+        y += 10;
+      }
+
+      // Add CV Insights if available
+      if (
+        typeof questions === "object" &&
+        questions.cv_insight &&
+        questions.cv_insight !== "null"
+      ) {
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.text("CV Insights:", margin, y);
+        y += 6;
+
+        pdf.setFont("helvetica", "normal");
+        const insightText = questions.cv_insight;
+        const splitInsight = pdf.splitTextToSize(insightText, contentWidth);
+        pdf.text(splitInsight, margin, y);
+        y += splitInsight.length * 6 + 6;
+      }
+
+      // Add "Likely Interview Questions & Suggested Answers" heading
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Likely Interview Questions & Suggested Answers:", margin, y);
+      y += 10;
+
+      // Add horizontal line
+      pdf.setDrawColor(220, 220, 220);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, y, pageWidth - margin, y);
+      y += 10;
+
+      if (typeof questions === "object" && questions.questions) {
+        // Process each question and answer
+        for (const [qIndex, q] of questions.questions.entries()) {
+          // Check if we need a new page
+          if (y > 250) {
+            pdf.addPage();
+            y = 20;
+          }
+
+          // Question number and text
+          pdf.setFontSize(12);
+          pdf.setTextColor(0, 0, 0);
+          pdf.setFont("helvetica", "bold");
+
+          // Split long questions into multiple lines
+          const questionText = `${qIndex + 1}. "${q.question}"`;
+          const splitQuestion = pdf.splitTextToSize(questionText, contentWidth);
+          pdf.text(splitQuestion, margin, y);
+          y += splitQuestion.length * 6 + 4;
+
+          // Best Answer section with green checkmark
+          const checkmarkX = margin + 4;
+          const checkmarkY = y;
+
+          // Create green box for checkmark
+          pdf.setFillColor(0, 200, 83); // Green color for checkbox
+          pdf.rect(checkmarkX, checkmarkY - 4, 6, 6, "F");
+
+          // Add white checkmark symbol
+          pdf.setTextColor(255, 255, 255);
+          pdf.setFont("helvetica", "bold");
+          pdf.setFontSize(9);
+          pdf.text("✓", checkmarkX + 1.2, checkmarkY - 0.2);
+
+          // Add "Best Answer:" text
+          pdf.setTextColor(0, 0, 0);
+          pdf.setFont("helvetica", "bold");
+          pdf.setFontSize(11);
+          pdf.text("Best Answer:", checkmarkX + 10, checkmarkY);
+
+          // Add the actual answer text
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(60, 60, 60);
+
+          // Split long answers into multiple lines with proper indentation
+          const answerText = q.best_answer;
+          const splitAnswer = pdf.splitTextToSize(
+            `"${answerText}"`,
+            contentWidth - 15
+          );
+
+          // Add answer text indented
+          pdf.text(splitAnswer, checkmarkX + 10, checkmarkY + 6);
+          y += splitAnswer.length * 5 + 15;
+        }
+      } else if (Array.isArray(questions)) {
+        // Legacy format fallback
+        pdf.setFontSize(11);
+        for (let i = 0; i < questions.length; i++) {
+          if (y > 270) {
+            pdf.addPage();
+            y = 20;
+          }
+
+          const text = `${i + 1}. ${questions[i]}`;
+          const splitText = pdf.splitTextToSize(text, contentWidth);
+          pdf.text(splitText, margin, y);
+          y += splitText.length * 6 + 5;
+        }
+      }
+
+      const fileName = `Interview_Prep_${new Date()
+        .toISOString()
+        .slice(0, 10)}.pdf`;
+      pdf.save(fileName);
+
+      toast.success("PDF generated successfully", { id: toastId });
+      setIsGeneratingPDF(false);
+    } catch (error) {
+      console.error("Failed to generate PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+      setIsGeneratingPDF(false);
+    }
   };
 
   const {
@@ -70,15 +254,25 @@ const AiInterviewPrep = () => {
     mutationKey: ["generateInterviewQuestions"],
     mutationFn: async () => {
       let language = "en";
-      switch(selectedLanguage) {
-        case "French": language = "fr"; break;
-        case "Spanish": language = "es"; break;
-        case "German": language = "de"; break;
-        case "Arabic": language = "ar"; break;
-        case "Portuguese": language = "pt"; break;
+      switch (selectedLanguage) {
+        case "French":
+          language = "fr";
+          break;
+        case "Spanish":
+          language = "es";
+          break;
+        case "German":
+          language = "de";
+          break;
+        case "Arabic":
+          language = "ar";
+          break;
+        case "Portuguese":
+          language = "pt";
+          break;
       }
-      
-      return generateInterviewQuestions(
+
+      return generateInterviewPrep(
         files,
         language,
         userData?.token as string,
@@ -110,172 +304,273 @@ const AiInterviewPrep = () => {
 
   return (
     <DashboardWrapper>
-      <span className="font-bold text-xl">Ai Prep</span>
-<br /><br />
-      <div className=" max-w-5xl mx-auto space-y-6">
-      <div className="cont flex flex-col lg:flex-row gap-6">
-      <div className="grid shadow-xl border-[1px] p-4 rounded-md pb-8 lg:w-[70%] w-full">
-            {/* File Upload Section */}
-            <div className="rounded-xl h-fit flex flex-col p-6 ">
-              <span className="font-bold text-xl">CV and Cover Letter Upload</span>
-              <span className="font-light text-xs">
-                Add your documents here, and you can upload up to 5 files max
-              </span>
-              <div className="relative w-full px-6 mt-3 flex flex-col items-start rounded-lg">
-                <input
-                  onChange={handleFileChange}
-                  type="file"
-                  multiple
-                  accept=".pdf, .doc, .docx, .txt"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      <span className={`${outfit.className} font-bold text-xl`}>
+        AI Interview Prep
+      </span>
+      <section className={`${outfit.className} flex space-x-4`}>
+        {/* Left Side */}
+        <div className="w-[50%] flex flex-col">
+          {/* File Upload */}
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">CV & Cover Letter Upload</span>
+            <span className="font-light text-xs">
+              You need to upload at least your CV, you can upload up to 5 files
+              max
+            </span>
+            <div className="relative w-full flex flex-col items-start rounded-lg">
+              <input
+                onChange={handleFileChange}
+                type="file"
+                multiple
+                accept=".pdf, .doc, .docx, .txt"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              />
+              <div
+                className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
+                style={{
+                  borderRadius: "12px",
+                  border: "none",
+                  background: "white",
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23285C44' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")",
+                  backgroundPosition: "center",
+                  backgroundSize: "100% 100%",
+                }}
+              >
+                <Image
+                  className="w-fit h-8 object-cover"
+                  src={uploadIcon}
+                  alt="Upload Icon"
                 />
-                <div className="border-dotted flex flex-col space-y-5 border-[2px] border-[#065844] cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px]">
-                  <Image
-                    className="w-fit h-8 object-cover"
-                    src={uploadIcon}
-                    alt="Upload Icon"
-                  />
-                  <span>
-                    Drag your file(s) or <span className="font-bold">browse</span>
-                  </span>
-                  <span className="text-gray-500 text-sm">
-                    Max 10MB files are allowed
-                  </span>
-                </div>
+                <span>
+                  Drag your file(s) or <span className="font-bold">browse</span>
+                </span>
+                <span className="text-textgray text-sm">
+                  Max 10MB files are allowed
+                </span>
               </div>
+              <span className="text-textgray mt-3 text-sm">
+                Only supports .pdf, .doc, .docx, and .txt
+              </span>
+            </div>
 
-              {/* File List */}
-              {files.length > 0 && (
-                <div className="mt-6 space-y-2">
-                  {files.map((file, index) => (
-                    <div key={index} className="flex h-14 w-full px-4 border rounded-lg justify-between items-center">
-                      <div className="flex items-start">
+            {/* Uploaded Files */}
+            {files.length > 0 && (
+              <div className="mt-6 space-y-2">
+                {files.map((file, index) => {
+                  const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                  return (
+                    <div
+                      key={index}
+                      className="flex h-14 w-full px-4 pl-2 border rounded-lg justify-between items-center space-x-2"
+                    >
+                      <div className="flex items-center">
                         <Image
-                          className="w-10 h-10 object-cover"
+                          className="w-8 h-8 mr-2 object-cover"
                           src={pdfIcon}
                           alt="File Icon"
                         />
                         <div className="flex flex-col">
-                          <span className="text-sm">{file.name}</span>
-                          <span className="text-sm text-gray-500">
-                            {(file.size / (1024 * 1024)).toFixed(2)} MB
+                          <span className="text-sm text-black">
+                            {file.name}
+                          </span>
+                          <span className="text-sm text-textgray">
+                            {fileSizeInMB} MB
                           </span>
                         </div>
                       </div>
                       <CircleXIcon
                         onClick={() => removeFile(index)}
-                        className="cursor-pointer"
+                        color="black"
                         size={14}
                       />
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* <div className="flex items-center my-4">
-              <div className="flex-1 border-t border-gray-300"></div>
-              <span className="mx-2 text-gray-400 text-sm">OR</span>
-              <div className="flex-1 border-t border-gray-300"></div>
-            </div> */}
-
-            {/* Job Description Editor */}
-            <div className="rounded-xl shadow-md h-fit flex flex-col p-6">
-              <span className="font-bold text-xl">Paste Your Job description here</span>
-              <div className="my-8 bg-white border rounded-md mb-10">
-                <ReactQuill
-                  theme="snow"
-                  value={jobDescription}
-                  onChange={setJobDescription}
-                  modules={modules}
-                  formats={formats}
-                  className="h-64 "
-                />
+                  );
+                })}
               </div>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
+            <span className="font-bold">Paste Your Job Description Here</span>
+            <div className="mt-5 bg-white">
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Detailed Job Description"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+              />
             </div>
           </div>
 
-          {/* Results Display */}
-          <div className="border rounded-xl p-4 shadow-md flex flex-col h-fit ">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Possible Interview Questions and Answers</h2>
-              {isSuccess && questions && questions.length > 0 && (
-             <>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={handleDownload}
-                  className="hover:bg-gray-100"
-                >
-                  <Image
-                    src={downloadIcon}
-                    alt="Download"
-                    className="w-4 h-4"
-                  />
-                </Button>
-                   <Button 
-                   variant="ghost" 
-                   size="icon"
-                   onClick={clearResults}
-                   className="hover:bg-gray-100"
-                 >
-                   X
-                 </Button>
-             </>
-              )}
+          {/* Language Selection & Generate Button */}
+          <div className="flex items-center h-fit mt-12 justify-between">
+            <div className="flex items-center flex-1">
+              <span className="flex-nowrap mr-3 font-semibold">
+                Select Output language
+              </span>
+              <LanguageSelectorDropDown
+                outputLanguage={true}
+                value={selectedLanguage}
+                setValue={setSelectedValue}
+              />
             </div>
-            
+            <div className="flex flex-col">
+              <Button
+                className="self-center bg-primary min-w-[100px] text-white"
+                onClick={() => generateQuestions()}
+                disabled={!files.length || !jobDescription || isPending}
+              >
+                {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side */}
+        <div className="w-[50%] mb-12">
+          <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold">
+                Possible Interview Questions & Answers
+              </h2>
+              {isSuccess && questions && (
+                <div className="flex gap-2">
+                  <div className="relative download-button-container">
+                    <button
+                      onClick={downloadPDF}
+                      className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all"
+                      aria-label="Download questions as PDF"
+                      disabled={isGeneratingPDF}
+                    >
+                      {isGeneratingPDF ? (
+                        <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                      ) : (
+                        <DocumentDownloadIcon />
+                      )}
+                    </button>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black text-white text-xs rounded p-2 opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 download-tooltip">
+                      <div className="tooltip-arrow absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black"></div>
+                      Download as PDF
+                    </div>
+                  </div>
+                </div>
+              )}
+              <style jsx>{`
+                .download-button-container {
+                  position: relative;
+                }
+                .download-button-container:hover .download-tooltip {
+                  opacity: 0.9;
+                  visibility: visible;
+                }
+                .download-tooltip {
+                  opacity: 0;
+                  visibility: hidden;
+                  transition: opacity 0.2s, visibility 0.2s;
+                  text-align: center;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                  z-index: 50;
+                }
+                .tooltip-arrow {
+                  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+                }
+              `}</style>
+            </div>
+
             {isPending && (
               <div className="flex items-center justify-center h-[200px]">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
             )}
-            
+
             {!isPending && !isSuccess && !isError && (
               <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
-                Generated Interview question will be displayed here
+                Generated interview preparation will be displayed here
               </div>
             )}
-            
+
             {isSuccess && questions && (
-              <div className="mt-4 space-y-4 max-h-[500px] overflow-y-auto">
-                <div className="space-y-2">
-                  {questions.map((question: string, index: number) => (
-                    <div key={index} className="p-2 rounded-lg border hover:bg-gray-50">
-                      <p className="text-sm">{`${index + 1}. ${question}`}</p>
+              <div
+                className="mt-4 space-y-6 max-h-[600px] overflow-y-auto px-2"
+                ref={resultsContainerRef}
+              >
+                {typeof questions === "object" && questions.role ? (
+                  <div className="space-y-5">
+                    <div>
+                      <h3 className="font-bold">
+                        Role:{" "}
+                        <span className="font-normal">{questions.role}</span>
+                      </h3>
+
+                      {questions.cv_insight &&
+                        questions.cv_insight !== "null" && (
+                          <div className="mt-2">
+                            <h3 className="font-bold">
+                              CV Insights:{" "}
+                              <span className="font-normal">
+                                {questions.cv_insight}
+                              </span>
+                            </h3>
+                          </div>
+                        )}
                     </div>
-                  ))}
-                </div>
+
+                    <h3 className="font-bold">
+                      Likely Interview Questions & Suggested Answers:
+                    </h3>
+
+                    <div className="space-y-6">
+                      {questions.questions.map(
+                        (q: InterviewQuestion, qIndex: number) => (
+                          <div key={qIndex} className="space-y-2">
+                            <p className="font-medium text-base">
+                              Q{qIndex + 1}. "{q.question}"
+                            </p>
+
+                            <div className="ml-2 pl-4 border-l-2 border-green-500">
+                              <div className="flex items-start gap-2">
+                                <div className="bg-green-500 text-white rounded-sm h-5 w-5 flex items-center justify-center shrink-0 mt-0.5">
+                                  <span className="text-xs">✓</span>
+                                </div>
+                                <div>
+                                  <span className="font-medium">
+                                    Best Answer:{" "}
+                                  </span>
+                                  <span>"{q.best_answer}"</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ) : Array.isArray(questions) ? (
+                  // Fallback for legacy format
+                  <div className="space-y-2">
+                    {questions.map((question: string, index: number) => (
+                      <div
+                        key={index}
+                        className="p-2 rounded-lg border hover:bg-gray-50"
+                      >
+                        <p className="text-sm">{`${index + 1}. ${question}`}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             )}
-            
+
             {isError && (
               <div className="text-red-500 mt-4 text-center p-4">
-                An error occurred while generating questions. Please try again.
+                An error occurred while generating interview preparation. Please
+                try again.
               </div>
             )}
           </div>
         </div>
-
-        {/* Language Selection & Generate Button */}
-        <div className="flex items-center gap-12 justify-between w-fit">
-          <div className="flex items-center space-x-4">
-            <span className="font-semibold">Select Output language</span>
-            <LanguageSelectorDropDown
-              outputLanguage={true}
-              value={selectedLanguage}
-              setValue={setSelectedValue}
-            />
-          </div>
-          <Button 
-            className="bg-lightgreen min-w-[100px] text-white self-center"
-            onClick={() => generateQuestions()}
-            disabled={(!files.length && !jobDescription) || isPending}
-          >
-            {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
-          </Button>
-        </div>
-      </div>
+      </section>
     </DashboardWrapper>
   );
 };

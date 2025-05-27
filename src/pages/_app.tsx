@@ -1,5 +1,7 @@
 import QueryClientProvider from "@/providers/queryclient.provider";
 import "@/styles/globals.css";
+import "react-quill/dist/quill.snow.css";
+import "@/styles/quillOverrides.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
