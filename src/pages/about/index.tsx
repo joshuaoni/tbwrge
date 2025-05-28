@@ -3,7 +3,7 @@ import LandingWrapper from "@/components/home/wrapper/landing-wrapper";
 import Community from "@/components/home/community";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight } from "lucide-react";
-import AboutUs from "../../../../public/images/about-us.png";
+import AboutUs from "../../../public/images/about-us.png";
 import Image from "next/image";
 import { outfit, poppins } from "@/constants/app";
 import Expertise from "@/components/home/expertise";
