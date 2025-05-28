@@ -29,7 +29,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   useEffect(() => {
     if (!isLoading) {
       if (userData === null) {
-        router.push("/home/sign-in");
+        router.push("/sign-in");
       }
     }
   }, [userData, isLoading, router]);

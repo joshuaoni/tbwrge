@@ -2,8 +2,6 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin/
-
 # Host
 Host: https://www.candivet.com
 

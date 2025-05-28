@@ -144,7 +144,7 @@ const CurrentOpenings = ({
                 />
               </TableCell>
               <TableCell>
-                <div className="flex gap-[10px] items-center justify-center bg-[#F9F9F9] py-[5px] rounded-[6px]">
+                <div className="flex gap-[10px] items-center justify-startbg-[#F9F9F9] py-[5px] rounded-[6px]">
                   <div className="flex items-center justify-center w-[35px] ml-[6px]">
                     {job.company_logo ? (
                       <div className="w-[35px] h-[35px] rounded-full overflow-hidden">

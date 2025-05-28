@@ -4,7 +4,6 @@ module.exports = {
   exclude: [
     "/admin",
     "/admin/*",
-    "/home/components/*", // exclude all component/internal wrapper URLs
     "/blog-posts",
     "/dashboard/candidates",
     "/dashboard/dashboard-home",
