@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
-import OR from "../../../../public/images/OR.png";
+import OR from "../../../public/images/OR.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
