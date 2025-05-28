@@ -1,10 +1,10 @@
 import Image from "next/image";
-import CoverLetterTools from "../../../../public/images/icons/cover-letter-tools.png";
-import CVTools from "../../../../public/images/icons/cv-tools.png";
-import JobTools from "../../../../public/images/icons/job-tools.png";
-import Tool1 from "../../../../public/images/tool1.png";
-import Tool2 from "../../../../public/images/tool2.png";
-import ToolsHeaderImage from "../../../../public/images/tools_img.jpeg";
+import CoverLetterTools from "../../../public/images/icons/cover-letter-tools.png";
+import CVTools from "../../../public/images/icons/cv-tools.png";
+import JobTools from "../../../public/images/icons/job-tools.png";
+import Tool1 from "../../../public/images/tool1.png";
+import Tool2 from "../../../public/images/tool2.png";
+import ToolsHeaderImage from "../../../public/images/tools_img.jpeg";
 import { inter, outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LandingWrapper from "@/components/home/wrapper/landing-wrapper";
