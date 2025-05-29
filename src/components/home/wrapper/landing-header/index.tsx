@@ -63,6 +63,11 @@ const LandingHeader = ({
       isTools: true,
     },
     {
+      ref: aboutUsSectionRef,
+      title: "About",
+      link: "/about",
+    },
+    {
       ref: blogSectionRef,
       title: "Blog",
       link: "/blog",
@@ -108,12 +113,12 @@ const LandingHeader = ({
               <Image
                 src={logoSrc}
                 alt=""
-                width={30}
+                width={36}
                 height={26}
-                className="w-[30px] h-[26px] md:w-[34px] md:h-[29.2px]"
+                className="w-[30px] h-[26px] md:w-[36px] md:h-[31px]"
               />
               <h1
-                className={`${outfit.className} ml-2 text-xl md:text-3xl font-bold`}
+                className={`${outfit.className} ml-2 text-xl md:text-[36px] font-bold`}
               >
                 Candivet
               </h1>
@@ -395,6 +400,11 @@ const NavigationHeader = ({
       isTools: true,
     },
     {
+      ref: aboutUsSectionRef,
+      title: "About",
+      link: "/about",
+    },
+    {
       ref: blogSectionRef,
       title: "Blog",
       link: "/blog",
@@ -437,7 +447,7 @@ const NavigationHeader = ({
   };
   return (
     <div>
-      <div className="flex items-center text-[14px] space-x-12 ml-12">
+      <div className="flex items-center text-[16px] space-x-12 ml-12">
         {Navs.map((nav, index) =>
           nav.isTools ? (
             <div
@@ -543,7 +553,7 @@ const NavItem = ({ title, link, textColor, protected: isProtected }: any) => {
         isActive
           ? "font-bold underline underline-offset-2 transform transition-all"
           : ""
-      } ${outfit.className} ${textColor} cursor-pointer`}
+      } ${outfit.className} ${textColor} cursor-pointer text-center`}
     >
       {title}
     </span>

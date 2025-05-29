@@ -90,7 +90,7 @@ const index = () => {
               </motion.h1>
               <motion.p
                 variants={itemVariants}
-                className={`${outfit.className} md:w-[90%] w-full leading-[26px] text-white text-sm font-light`}
+                className={`${outfit.className} md:w-[70%] w-full leading-[26px] text-white text-sm font-light`}
               >
                 At Candivet, we're transforming the way professionals connect
                 with opportunities by merging technology with human-centered
