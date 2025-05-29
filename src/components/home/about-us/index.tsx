@@ -15,7 +15,6 @@ const AboutUs = () => {
         width={1000}
         height={1000}
       />
-      <h1 className="text-[100px] font-bold">YAGAYAGA</h1>
     </div>
   );
 };
