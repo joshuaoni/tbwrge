@@ -45,7 +45,7 @@ const LogoutModal = () => {
         <Button
           onClick={() => {
             removeUser();
-            router.push("/home/sign-in");
+            router.push("/sign-in");
           }}
           className="bg-primary text-white"
         >

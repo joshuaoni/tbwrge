@@ -10,7 +10,7 @@ const RightCandidate = () => {
   const isMobile = useIsMobile();
   return (
     <div
-      className={`${outfit.className} h-fit bg-[#133026] md:flex items-center  justify-center py-[50px] md:mb-0  p-4  md:p-0 md:pl-16 `}
+      className={`${outfit.className} h-fit bg-[#013613] md:flex items-center  justify-center py-[50px] md:mb-0  p-4  md:p-0 md:pl-16 `}
     >
       <div className="flex items-center justify-between w-full">
         <div className="w-full md:w-[50%]">

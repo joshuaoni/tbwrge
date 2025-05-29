@@ -15,9 +15,10 @@ export type BlogItem = {
   updated_at: string;
   user: {
     name: string;
-    photo: string | null;
+    profile_photo: string | null;
+    role: string | null;
     job_title: string | null;
-    company: string | null;
+    company_name: string | null;
   };
   title: string;
   slug: string;

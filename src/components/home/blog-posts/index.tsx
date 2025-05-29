@@ -299,27 +299,33 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden"
+      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
     >
-      <div className="flex flex-col flex-grow w-full">
-        <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
-          <Image
-            src={blog.image || "/unsplash_Tyg0rVhOTrE.png"}
-            alt={blog.title}
-            width={825}
-            height={160}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3">
-          {blog.title}
-        </div>
+      <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
+        <Image
+          src={blog.image || "/unsplash_Tyg0rVhOTrE.png"}
+          alt={blog.title}
+          width={825}
+          height={160}
+          className="w-full h-full object-cover"
+        />
       </div>
+      <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3 h-[84px]">
+        {blog.title}
+      </div>
+      <div className="flex-grow"></div>
       {/* Author Section */}
-      <div className="flex items-center justify-end w-full gap-2 px-2 py-3 border-t border-gray-100 bg-white mt-auto">
+      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 border-t border-gray-100 bg-white">
         <div>
-          <p className="pb-[2px] font-semibold text-gray-900 text-[15px] leading-tight">
+          <p className="toppy font-semibold text-gray-900 text-[15px] leading-none m-0">
             {blog.user?.name || "Anonymous"}
+          </p>
+          <p className="downy capitalize text-[8px] text-gray-500 mt-0 pb-[2px]">
+            {blog.user?.job_title || "Employee"}
+            {", "}
+            <span className="uppercase">
+              {blog.user?.company_name || "Anonymous"}
+            </span>
           </p>
           <p className="text-xs pt-[2px] border-t border-primary text-gray-500">
             {new Date(blog.created_at).toLocaleDateString("en-US", {
@@ -329,16 +335,16 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
             })}
           </p>
         </div>
-        {blog.user?.photo ? (
+        {blog.user?.profile_photo ? (
           <Image
-            src={blog.user.photo}
+            src={blog.user.profile_photo}
             alt={blog.user.name || "User"}
-            width={40}
-            height={40}
-            className="rounded-full object-cover w-10 h-10"
+            width={48}
+            height={48}
+            className="rounded-full object-cover w-12 h-12"
           />
         ) : (
-          <FaUserCircle className="w-10 h-10 text-gray-400" />
+          <FaUserCircle className="w-12 h-12 text-gray-400" />
         )}
       </div>
     </div>
