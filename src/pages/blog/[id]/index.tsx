@@ -100,9 +100,9 @@ const BlogPostDetail = () => {
               </div>
             ) : (
               <div className="w-12 h-12 rounded-full bg-black  flex items-center justify-center">
-                {blog.user?.photo ? (
+                {blog.user?.profile_photo ? (
                   <Image
-                    src={blog.user.photo}
+                    src={blog.user.profile_photo}
                     alt="Author"
                     width={48}
                     height={48}
@@ -118,7 +118,7 @@ const BlogPostDetail = () => {
                 <span className="text-base">
                   {blog.user?.name || "Anonymous"}
                   {blog.user?.job_title && ` - ${blog.user.job_title}`}
-                  {blog.user?.company && ` at ${blog.user.company}`}
+                  {blog.user?.company_name && ` at ${blog.user.company_name}`}
                 </span>
                 <span className="text-gray-400">—</span>
                 <div className="flex items-center gap-2">
