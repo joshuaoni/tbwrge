@@ -41,3 +41,15 @@ export const getJobOpenings = async ({
     }
   }
 };
+
+export const getCurrentJobOpenings = async (page: number = 0) => {
+  const response = await axios({
+    method: "POST",
+    url: API_CONFIG.GET_JOB_OPEN,
+    data: {
+      limit: 3,
+      page,
+    },
+  });
+  return response.data;
+};

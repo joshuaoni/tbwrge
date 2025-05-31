@@ -91,6 +91,8 @@ export const API_CONFIG = {
   CREATE_NOTE: (application_id: string) =>
     `${MAIN_URL}/job/create-note/${application_id}/`,
 
+  GET_TALENTS_PUBLIC: (page: number = 0) =>
+    `${MAIN_URL}/talent/get-talents-public/?limit=6&page=${page}`,
   GET_TALENTS: `${MAIN_URL}/talent/get-talents/`,
   GET_TALENT_ITEM: (talent_id: string) =>
     `${MAIN_URL}/talent/get-talent-item/${talent_id}/`,

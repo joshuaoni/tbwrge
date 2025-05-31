@@ -138,13 +138,11 @@ const Blogs = () => {
   const { data: blogs, isLoading } = useQuery({
     queryKey: ["blogs", { approved: true, page: currentPage }],
     queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getBlogs(userData.token, {
+      return await getBlogs({
         approved: true,
         page: currentPage,
       });
     },
-    enabled: !!userData?.token,
   });
 
   // Animation classes
