@@ -37,8 +37,7 @@ const BlogPosts = () => {
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs", { approved: true }],
     queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getBlogs(userData.token, { approved: true });
+      return await getBlogs({ approved: true });
     },
     enabled: !!userData?.token,
   });
@@ -173,13 +172,11 @@ export const BlogPostsWithPagination = () => {
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs", { approved: true, page: currentPage }],
     queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getBlogs(userData.token, {
+      return await getBlogs({
         approved: true,
         page: currentPage,
       });
     },
-    enabled: !!userData?.token,
   });
 
   const nextSlide = () => {

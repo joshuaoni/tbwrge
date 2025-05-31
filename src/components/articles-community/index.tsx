@@ -118,8 +118,7 @@ const ArticlesCommunity = () => {
   } = useQuery({
     queryKey: ["blogs", { approved: true, page: 0 }],
     queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getBlogs(userData.token, { approved: true, page: 0 });
+      return await getBlogs({ approved: true, page: 0 });
     },
     enabled: !!userData?.token,
   });

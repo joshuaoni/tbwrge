@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
-import { getTalents } from "@/actions/talent";
+import { getPublicTalents } from "@/actions/talent";
 import { useUserStore } from "@/hooks/use-user-store";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useState, useRef } from "react";
@@ -135,8 +135,32 @@ const TalentCard = ({ talent }: { talent: Talent }) => {
       {/* Divider */}
       <div className="w-full border-t border-black/60 my-5" />
       {/* Description */}
-      <div className="text-[17px] text-black text-left w-full leading-snug">
-        {talent.description}
+      <div className="relative w-full">
+        <div
+          className="text-[17px] text-black text-left w-full leading-snug line-clamp-4 pr-2"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            minHeight: "4.5em", // Ensures consistent card height
+          }}
+        >
+          {talent.description}
+        </div>
+        {/* Fade-out effect */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: "2em",
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 100%)",
+            pointerEvents: "none",
+          }}
+        />
       </div>
     </div>
   );
@@ -206,25 +230,14 @@ const TopTalents = () => {
   };
 
   const { data: talents, isLoading } = useQuery({
-    queryKey: ["get-talents", userData?.token],
+    queryKey: ["get-public-talents", page],
     queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getTalents(userData.token, {
-        page: "0",
-        text: "",
-        search_type: "text",
-      });
+      return await getPublicTalents(page);
     },
-    enabled: !!userData?.token,
   });
 
   const talentsList = talents || [];
-  const talentsPerPage = 6;
-  const totalPages = Math.ceil(talentsList.length / talentsPerPage);
-  const pagedTalents = talentsList.slice(
-    page * talentsPerPage,
-    page * talentsPerPage + talentsPerPage
-  );
+  const hasNextPage = talentsList.length === 6; // If we get 6 items, there might be more pages
 
   // Mobile Carousel Navigation
   const nextSlide = () => {
@@ -289,9 +302,9 @@ const TopTalents = () => {
           className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-black hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={() => {
             setDirection(1);
-            setPage((p) => Math.min(totalPages - 1, p + 1));
+            setPage((p) => p + 1);
           }}
-          disabled={isLoading || page >= totalPages - 1}
+          disabled={isLoading || !hasNextPage}
         >
           <svg
             width="16"
@@ -333,7 +346,7 @@ const TopTalents = () => {
                     <TalentCardSkeleton />
                   </div>
                 ))
-              : pagedTalents.slice(0, 6).map((talent: any) => (
+              : talentsList.slice(0, 6).map((talent: any) => (
                   <div
                     key={talent.id}
                     className="w-full flex-shrink-0 flex justify-center px-2"
@@ -345,7 +358,7 @@ const TopTalents = () => {
                         title: talent.current_position || "No Title",
                         image: talent.profile_photo,
                         description:
-                          talent.experience_summary ||
+                          talent.professional_summary ||
                           "No description available.",
                       }}
                     />
@@ -393,7 +406,7 @@ const TopTalents = () => {
       {/* Desktop Grid */}
       <motion.div
         variants={itemVariants}
-        className="relative w-full max-w-6xl mx-auto min-h-[600px] hidden md:block"
+        className="relative w-full max-w-6xl mx-auto mb-8 hidden md:block"
       >
         <AnimatePresence custom={direction} initial={false} mode="wait">
           <motion.div
@@ -414,21 +427,19 @@ const TopTalents = () => {
           >
             {isLoading || !talents
               ? [...Array(6)].map((_, i) => <TalentCardSkeleton key={i} />)
-              : pagedTalents.map((talent: any, idx: number) => (
-                  <>
-                    <TalentCard
-                      key={talent.id}
-                      talent={{
-                        id: talent.id,
-                        name: talent.name || "No Name",
-                        title: talent.current_position || "No Title",
-                        image: talent.profile_photo,
-                        description:
-                          talent.experience_summary ||
-                          "No description available.",
-                      }}
-                    />
-                  </>
+              : talentsList.map((talent: any) => (
+                  <TalentCard
+                    key={talent.id}
+                    talent={{
+                      id: talent.id,
+                      name: talent.name || "No Name",
+                      title: talent.current_position || "No Title",
+                      image: talent.profile_photo,
+                      description:
+                        talent.professional_summary ||
+                        "No description available.",
+                    }}
+                  />
                 ))}
           </motion.div>
         </AnimatePresence>

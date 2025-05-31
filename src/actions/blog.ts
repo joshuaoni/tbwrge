@@ -42,14 +42,13 @@ export const getBlogsAdmin = async (
   return response.data;
 };
 
-export const getBlogs = async (
-  token: string,
-  filter?: { approved?: boolean; page?: number }
-) => {
+export const getBlogs = async (filter?: {
+  approved?: boolean;
+  page?: number;
+}) => {
   const response = await axios({
     method: "POST",
     url: API_CONFIG.GET_BLOGS,
-    headers: { Authorization: `Bearer ${token}` },
     data: filter,
   });
   return response.data;

@@ -42,6 +42,15 @@ export const getTalents = async (
   return response.data;
 };
 
+export const getPublicTalents = async (page: number = 0) => {
+  const response = await axios({
+    method: "GET",
+    url: API_CONFIG.GET_TALENTS_PUBLIC(page),
+  });
+  console.log("public-talents: ", { response });
+  return response.data;
+};
+
 export const getTalentItem = async (token: string, talent_id: string) => {
   const response = await axios({
     method: "GET",

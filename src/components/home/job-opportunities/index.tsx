@@ -6,7 +6,7 @@ import ManSuit from "../../../../../public/images/man-suit.png";
 import RocketIcon from "../../../../../public/images/rocket.png";
 import { outfit, poppins } from "@/constants/app";
 import { useQuery } from "@tanstack/react-query";
-import { getJobOpenings } from "@/actions/get-current-jobs";
+import { getCurrentJobOpenings } from "@/actions/get-current-jobs";
 import { useUserStore } from "@/hooks/use-user-store";
 import { getJobOpen } from "@/actions/get-jobs-open";
 import { FaBuilding } from "react-icons/fa";
@@ -47,22 +47,14 @@ const JobOpportunities = () => {
   };
 
   const {
-    data: jobs,
+    data: jobsData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["job-openings", userData?.token],
-    queryFn: async () => {
-      if (!userData?.token) return [];
-      return await getJobOpen({
-        search_term: "",
-        job_type: "full_time",
-        skills: [],
-        location: "",
-      });
-    },
-    enabled: !!userData?.token,
+    queryKey: ["current-job-openings", page],
+    queryFn: async () => await getCurrentJobOpenings(page),
   });
+  const jobs = jobsData || [];
 
   const featuredCardClass =
     "bg-gradient-to-t from-[#09742CBF] to-[#014718F0] text-white border-none";
@@ -148,19 +140,10 @@ const JobOpportunities = () => {
             className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center bg-white/10 text-white hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
             onClick={() =>
               setPage((p) =>
-                Math.min(
-                  p + 1,
-                  jobs && jobs.length
-                    ? Math.floor((jobs.length - 1) / jobsPerPage)
-                    : 0
-                )
+                Math.min(p + 1, jobs && jobs.length ? page + 1 : 0)
               )
             }
-            disabled={
-              !jobs ||
-              jobs.length <= jobsPerPage ||
-              page >= Math.floor((jobs.length - 1) / jobsPerPage)
-            }
+            disabled={!jobs || jobs.length < jobsPerPage}
           >
             {/* Right Arrow SVG */}
             <svg
@@ -215,7 +198,7 @@ const JobOpportunities = () => {
                       className="flex transition-transform duration-300 ease-in-out"
                       style={{ transform: `translateX(-${page * 100}%)` }}
                     >
-                      {jobs?.slice(0, 3).map((job, idx) => (
+                      {jobs?.slice(0, 3).map((job: any, idx: number) => (
                         <div
                           key={job.id}
                           className="w-full flex-shrink-0 px-2 md:px-4"
@@ -334,10 +317,7 @@ const JobOpportunities = () => {
                   {/* Desktop Grid */}
                   <div className="hidden md:flex flex-row gap-4 md:gap-6 justify-center items-center">
                     {[...Array(3)].map((_, idx) => {
-                      const job =
-                        jobs && jobs.length > idx
-                          ? jobs[page * jobsPerPage + idx]
-                          : null;
+                      const job = jobs && jobs.length > idx ? jobs[idx] : null;
                       if (job) {
                         return (
                           <motion.div
