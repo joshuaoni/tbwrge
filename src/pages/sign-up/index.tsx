@@ -6,15 +6,17 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import OR from "../../../public/images/OR.png";
 import candivetlogowhite from "../../../public/images/candivet-logo.png";
-import GOOGLEICON from "../../../public/images/icons/google-icon.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
+import { loginUserWithGoogle } from "@/actions/login-with-google";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -46,6 +48,10 @@ const SignUpPage = () => {
   const [password, setPassword] = React.useState("");
   const router = useRouter();
   const isMobile = useIsMobile();
+  const { addUser } = useUserStore();
+  const searchParams = useSearchParams();
+  // Get the redirect URL from query parameters
+  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
 
   const data = {
     fullName,
@@ -66,9 +72,38 @@ const SignUpPage = () => {
     },
   });
 
+  const signUpWithGoogleMutation = useMutation({
+    mutationFn: async (token: string) =>
+      await loginUserWithGoogle({
+        token,
+      }),
+    onSuccess: (res) => {
+      if (res.user != null) {
+        addUser(res.user);
+        // Redirect to the saved URL or default based on role
+        if (res.user.role === "job_seeker") {
+          router.push(redirectUrl || "/dashboard/job-board");
+        } else if (res.user.role === "recruiter") {
+          router.push(redirectUrl || "/dashboard");
+        }
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Google sign up failed");
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     registerUserMutation.mutate();
+  };
+
+  const handleGoogleSignUp = (response: any) => {
+    if (response.credential) {
+      signUpWithGoogleMutation.mutate(response.credential);
+    } else {
+      toast.error("Google sign up failed");
+    }
   };
 
   return (
@@ -203,23 +238,20 @@ const SignUpPage = () => {
               />
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 bg-white text-black border border-gray-200 h-10 md:h-11 text-sm md:text-base"
-              onClick={() => {
-                /* Handle Google sign in */
-              }}
-            >
-              <Image
-                src={GOOGLEICON}
-                alt="Google"
-                width={18}
-                height={18}
-                className="w-[16px] h-[16px] md:w-[18px] md:h-[18px]"
+            <div className="flex justify-center w-full">
+              <GoogleLogin
+                onSuccess={handleGoogleSignUp}
+                onError={() => {
+                  toast.error("Google sign up failed");
+                }}
+                width="100%"
+                text="signup_with"
+                shape="rectangular"
+                theme="outline"
+                logo_alignment="left"
+                useOneTap={false}
               />
-              <span className="text-[14px]">Continue with Google</span>
-            </Button>
+            </div>
 
             <p className="text-center text-[12px] md:text-[14px] text-gray-400">
               Already have an account?{" "}
