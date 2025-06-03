@@ -35,7 +35,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   }, [userData, isLoading, router]);
 
   return (
-    <div className="flex">
+    <div className="flex w-full max-w-[1600px] mx-auto">
       <DashboardHeader
         searchTerm={searchTerm || ""}
         setSearchTerm={setSearchTerm || (() => {})}

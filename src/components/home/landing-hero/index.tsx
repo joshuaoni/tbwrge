@@ -119,7 +119,7 @@ const LandingHeroSection = () => {
 
   return (
     <>
-      <div className="relative min-h-[700px] h-screen pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-0 ">
+      <div className="relative min-h-[700px] h-screen pt-24 bg-black md:pt-[74px] flex items-center justify-center p-4 py-12 md:py-0 md:p-0 custom-hero-height">
         <div
           style={{
             position: "absolute",
@@ -240,6 +240,11 @@ const LandingHeroSection = () => {
         }
         .pop-animate {
           animation: pop 1.2s cubic-bezier(0.36, 1.7, 0.3, 0.9);
+        }
+        @media (min-width: 1700px) {
+          .custom-hero-height {
+            max-height: 900px !important;
+          }
         }
       `}</style>
     </>

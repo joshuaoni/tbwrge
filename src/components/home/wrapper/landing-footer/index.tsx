@@ -34,7 +34,7 @@ const LandingFooter = () => {
           zIndex: 0,
         }}
       />
-      <div className="w-full relative z-10 flex flex-col">
+      <div className="w-full relative z-10 flex flex-col max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-4">
           <div className="flex items-center gap-2 md:items-start cursor-pointer mb-6 md:mb-0">
             <div className="flex items-center justify-center rounded-[6.96px] bg-[#00000000] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">

@@ -55,7 +55,7 @@ const index = () => {
   return (
     <LandingWrapper>
       <main className={`${poppins.className} flex flex-col`}>
-        <div className="relative min-h-[700px] h-screen w-full md:px-16 px-4 pt-[20px] bg-black">
+        <div className="relative min-h-[700px] h-screen w-full md:px-16 px-4 pt-[20px] bg-black custom-about-height">
           {/* Background image and overlay */}
           <div
             style={{
@@ -116,6 +116,13 @@ const index = () => {
           </motion.div>
         </div>
       </main>
+      <style jsx global>{`
+        @media (min-width: 1700px) {
+          .custom-about-height {
+            max-height: 900px !important;
+          }
+        }
+      `}</style>
       <Tools />
     </LandingWrapper>
   );

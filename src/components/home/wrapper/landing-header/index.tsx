@@ -101,79 +101,83 @@ const LandingHeader = ({
 
   return (
     <>
-      <div
-        className={`${outfit.className} absolute top-0 w-full px-4 md:px-16 z-20 flex items-center ${textColor} justify-between bg-transparent py-4`}
-      >
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-8">
-            <div
-              className="flex items-center cursor-pointer"
-              onClick={() => router.push("/")}
-            >
-              <Image
-                src={logoSrc}
-                alt=""
-                width={36}
-                height={26}
-                className="w-[30px] h-[26px] md:w-[36px] md:h-[31px]"
-              />
-              <h1
-                className={`${outfit.className} ml-2 text-xl md:text-[36px] font-bold`}
+      <div className="w-full bg-transparent">
+        <div
+          className={`fixed top-0 left-0 right-0 z-20 bg-transparent ${outfit.className}`}
+        >
+          <div
+            className={`w-full max-w-[1600px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
+          >
+            <div className="flex items-center gap-8">
+              <div
+                className="flex items-center cursor-pointer"
+                onClick={() => router.push("/")}
               >
-                Candivet
-              </h1>
-            </div>
-            {!isMobile && (
-              <NavigationHeader
-                CommunitySectionRef={CommunitySectionRef}
-                scrollToSection={scrollToSection}
-                aboutUsSectionRef={aboutUsSectionRef}
-                toolsSectionRef={toolsSectionRef}
-                pricingSectionRef={pricingSectionRef}
-                blogSectionRef={blogSectionRef}
-                textColor={textColor}
-              />
-            )}
-          </div>
-          {!isMobile ? (
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={() => router.push("/sign-in")}
-                className={`border-none outline-none ${textColor}`}
-              >
-                Log In
-              </Button>
-              <Button
-                onClick={() => router.push("/sign-up")}
-                className={`bg-transparent hover:bg-white/20 ${
-                  isBlogOrTools
-                    ? "text-black border-black/40 hover:bg-black/10"
-                    : "text-white border-white"
-                } border rounded-full`}
-              >
-                Sign Up
-              </Button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 hover:bg-gray-100/40 border border-gray-300 rounded-full"
-            >
-              {isMobileMenuOpen ? (
-                <X
-                  className={`w-5 h-5 ${
-                    isBlogOrTools ? "text-black" : "text-white"
-                  }`}
+                <Image
+                  src={logoSrc}
+                  alt=""
+                  width={36}
+                  height={26}
+                  className="w-[30px] h-[26px] md:w-[36px] md:h-[31px]"
                 />
-              ) : (
-                <Menu
-                  className={`w-5 h-5 ${
-                    isBlogOrTools ? "text-black" : "text-white"
-                  }`}
+                <h1
+                  className={`${outfit.className} ml-2 text-xl md:text-[36px] font-bold`}
+                >
+                  Candivet
+                </h1>
+              </div>
+              {!isMobile && (
+                <NavigationHeader
+                  CommunitySectionRef={CommunitySectionRef}
+                  scrollToSection={scrollToSection}
+                  aboutUsSectionRef={aboutUsSectionRef}
+                  toolsSectionRef={toolsSectionRef}
+                  pricingSectionRef={pricingSectionRef}
+                  blogSectionRef={blogSectionRef}
+                  textColor={textColor}
                 />
               )}
-            </button>
-          )}
+            </div>
+            {!isMobile ? (
+              <div className="flex items-center gap-4">
+                <Button
+                  onClick={() => router.push("/sign-in")}
+                  className={`border-none outline-none ${textColor}`}
+                >
+                  Log In
+                </Button>
+                <Button
+                  onClick={() => router.push("/sign-up")}
+                  className={`bg-transparent hover:bg-white/20 ${
+                    isBlogOrTools
+                      ? "text-black border-black/40 hover:bg-black/10"
+                      : "text-white border-white"
+                  } border rounded-full`}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 hover:bg-gray-100/40 border border-gray-300 rounded-full"
+              >
+                {isMobileMenuOpen ? (
+                  <X
+                    className={`w-5 h-5 ${
+                      isBlogOrTools ? "text-black" : "text-white"
+                    }`}
+                  />
+                ) : (
+                  <Menu
+                    className={`w-5 h-5 ${
+                      isBlogOrTools ? "text-black" : "text-white"
+                    }`}
+                  />
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
