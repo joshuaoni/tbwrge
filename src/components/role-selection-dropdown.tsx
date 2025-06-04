@@ -30,25 +30,25 @@ const RoleSelectionDropDown = ({
       >
         <div
           onClick={() => {
-            setRole("Candidate");
+            setRole("Job Seeker");
             setShowDropDown(false);
           }}
           className={`p-2 ${
-            role === "Candidate" ? "text-white bg-primary" : ""
+            role === "Job Seeker" ? "text-white bg-primary" : ""
           } cursor-pointer text-sm `}
         >
-          Candidate
+          Job Seeker
         </div>
         <div
           onClick={() => {
-            setRole("Employer");
+            setRole("Recruiter");
             setShowDropDown(false);
           }}
           className={`p-2 ${
-            role === "Employer" ? "text-white bg-primary" : ""
+            role === "Recruiter" ? "text-white bg-primary" : ""
           } cursor-pointer text-sm `}
         >
-          Employer
+          Recruiter
         </div>
       </div>
     </div>

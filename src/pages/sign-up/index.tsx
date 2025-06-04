@@ -251,23 +251,35 @@ const SignUpPage = () => {
             )}
             {/* Step 3: Review & Submit */}
             {step === 3 && (
-              <div className="space-y-3 md:space-y-4">
-                <h2 className="text-lg font-bold text-primary mb-2">
-                  Review your details
-                </h2>
-                <div className="text-sm text-gray-700">
-                  <div>
-                    <span className="font-semibold">Full Name:</span> {fullName}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Email:</span> {email}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Role:</span> {role}
-                  </div>
-                  <div>
-                    <span className="font-semibold">Channel:</span> {channel}
-                  </div>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4 shadow-sm border border-gray-200">
+                  <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                    <span>Review your details</span>
+                  </h2>
+                  <ul className="space-y-2">
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Full Name:
+                      </span>
+                      <span className="ml-2 text-gray-900">{fullName}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Email:
+                      </span>
+                      <span className="ml-2 text-gray-900">{email}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">Role:</span>
+                      <span className="ml-2 text-gray-900">{role}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Channel:
+                      </span>
+                      <span className="ml-2 text-gray-900">{channel}</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             )}

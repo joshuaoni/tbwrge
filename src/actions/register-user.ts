@@ -24,7 +24,7 @@ export const registerUser = async ({
         email,
         password,
         name: fullName,
-        role: role == "Employer" ? "recruiter" : "job_seeker",
+        role: role == "Recruiter" ? "recruiter" : "job_seeker",
         channel: channel.toLocaleLowerCase(),
       },
     };
