@@ -26,7 +26,7 @@ const JobOpportunities = () => {
   const router = useRouter();
   const { userData } = useUserStore();
   const [page, setPage] = useState(0);
-  const jobsPerPage = 3;
+  const jobsPerPage = 8;
 
   const handleJobClick = (jobId: string) => {
     const path = `/dashboard/job-board/${jobId}`;
@@ -164,27 +164,11 @@ const JobOpportunities = () => {
             Latest Job Opportunities
           </h2>
           <div className="w-full flex flex-col md:flex-row items-center gap-4 md:gap-6 lg:gap-8">
-            {/* Left Sidebar - Hidden on Mobile */}
-            <div className="hidden md:flex flex-col justify-start w-full md:min-w-[236px] md:w-1/4">
-              <div className="flex flex-col gap-[30px] border-l-4 border-white pl-4">
-                {categories.map((cat, i) => (
-                  <div key={cat.name} className="flex items-center gap-3">
-                    <span className="text-white text-lg">{cat.name}</span>
-                    <span
-                      className={`px-2 py-0.5 rounded-md text-xs font-semibold ${cat.color}`}
-                    >
-                      {cat.count}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Job Cards - Mobile Carousel */}
             <div className="w-full md:flex-1">
               {isLoading || !jobs || jobs.length === 0 ? (
                 <div className="flex gap-4 md:gap-6 lg:gap-8">
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(4)].map((_, i) => (
                     <JobCardSkeleton key={i} />
                   ))}
                 </div>
@@ -220,9 +204,9 @@ const JobOpportunities = () => {
                             <div className="flex flex-col gap-4">
                               <span
                                 className="text-[22px] font-semibold truncate w-full block"
-                                title={job.job_title}
+                                title={job.job_title || "Untitled Position"}
                               >
-                                {job.job_title}
+                                {job.job_title || "Untitled Position"}
                               </span>
                               <div className="flex gap-2">
                                 <span
@@ -291,9 +275,11 @@ const JobOpportunities = () => {
                                 <div className="flex flex-col">
                                   <span
                                     className="text-sm font-semibold truncate block max-w-[120px]"
-                                    title={job.company_name}
+                                    title={
+                                      job.company_name || "Unknown Company"
+                                    }
                                   >
-                                    {job.company_name}
+                                    {job.company_name || "Unknown Company"}
                                   </span>
                                   <span className="text-xs text-gray-400">
                                     {job.job_location_name || "Remote"}
@@ -315,8 +301,8 @@ const JobOpportunities = () => {
                   </div>
 
                   {/* Desktop Grid */}
-                  <div className="hidden md:flex flex-row gap-4 md:gap-6 justify-center items-center">
-                    {[...Array(3)].map((_, idx) => {
+                  <div className="hidden md:grid grid-cols-4 gap-4 md:gap-6 justify-center items-center">
+                    {[...Array(8)].map((_, idx) => {
                       const job = jobs && jobs.length > idx ? jobs[idx] : null;
                       if (job) {
                         return (
@@ -327,7 +313,7 @@ const JobOpportunities = () => {
                             animate="visible"
                             exit="hidden"
                             variants={cardVariants}
-                            className={`cursor-pointer hover:scale-[1.01] transition-all duration-200 w-80 rounded-2xl p-6 ${
+                            className={`cursor-pointer hover:scale-[1.01] transition-all duration-200 w-full rounded-2xl p-6 ${
                               idx === 0
                                 ? featuredCardClass
                                 : "bg-[#E4EEFC] text-gray-900 border border-gray-200"
@@ -337,9 +323,9 @@ const JobOpportunities = () => {
                             <div className="flex flex-col gap-4">
                               <span
                                 className="text-[22px] font-semibold truncate w-full block"
-                                title={job.job_title}
+                                title={job.job_title || "Untitled Position"}
                               >
-                                {job.job_title}
+                                {job.job_title || "Untitled Position"}
                               </span>
                               <div className="flex gap-2">
                                 <span
@@ -410,9 +396,11 @@ const JobOpportunities = () => {
                                 <div className="flex flex-col">
                                   <span
                                     className="text-sm font-semibold truncate block max-w-[120px]"
-                                    title={job.company_name}
+                                    title={
+                                      job.company_name || "Unknown Company"
+                                    }
                                   >
-                                    {job.company_name}
+                                    {job.company_name || "Unknown Company"}
                                   </span>
                                   <span className="text-xs text-gray-400">
                                     {job.job_location_name || "Remote"}
