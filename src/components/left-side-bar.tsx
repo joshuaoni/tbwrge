@@ -14,6 +14,8 @@ import {
   UserCircle,
   ClipboardList,
   FileText,
+  Shield,
+  Crown,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -111,12 +113,6 @@ const LeftSideBar = () => {
       link: "/dashboard/billing",
       active: false,
     },
-    // {
-    //   title: "Teams",
-    //   icon: <User />,
-    //   link: "/dashboard/billings",
-    //   active: false,
-    // },
     {
       title: "Settings",
       icon: <Settings size={20} />,
@@ -136,6 +132,30 @@ const LeftSideBar = () => {
       active: false,
     },
   ]);
+
+  // Update userLeftSideItems when user role changes
+  React.useEffect(() => {
+    setUserLeftSideItems((prevItems) => {
+      // Remove any existing 'Admin Dashboard' item
+      const baseItems = prevItems.filter(
+        (item) => item.title !== "Admin Dashboard"
+      );
+      if (userData?.user?.role === "admin") {
+        // Find the index of 'Logout'
+        const logoutIdx = baseItems.findIndex(
+          (item) => item.title === "Logout"
+        );
+        // Insert 'Admin Dashboard' just above 'Logout'
+        baseItems.splice(logoutIdx, 0, {
+          title: "Admin Dashboard",
+          icon: <Crown size={20} />,
+          link: "/admin",
+          active: false,
+        });
+      }
+      return baseItems;
+    });
+  }, [userData?.user?.role]);
 
   return (
     <div
