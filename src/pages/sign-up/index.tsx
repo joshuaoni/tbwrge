@@ -46,6 +46,7 @@ const SignUpPage = () => {
   const [channel, setChannel] = React.useState("Select Channel");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [step, setStep] = React.useState(1);
   const router = useRouter();
   const isMobile = useIsMobile();
   const { addUser } = useUserStore();
@@ -95,6 +96,10 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (step < 3) {
+      setStep(step + 1);
+      return;
+    }
     registerUserMutation.mutate();
   };
 
@@ -105,6 +110,9 @@ const SignUpPage = () => {
       toast.error("Google sign up failed");
     }
   };
+
+  // Progress indicator
+  const steps = ["Account Info", "Channel & Role", "Review & Submit"];
 
   return (
     <div className="min-h-screen w-full bg-darkgreen overflow-y-auto relative">
@@ -125,7 +133,7 @@ const SignUpPage = () => {
         </button>
       </div>
 
-      <div className="w-full max-w-[400px] mx-auto py-6 md:py-8 px-4">
+      <div className="w-full max-w-[400px] mx-auto py-6 md:py-0 md:pt-4 px-4">
         <div className="flex items-center justify-center cursor-pointer">
           <Image
             src="/footer-logo.png"
@@ -141,128 +149,208 @@ const SignUpPage = () => {
           </h1>
         </div>
 
-        <div
-          className={`${poppins.className} w-full bg-white rounded-lg mt-4 p-4 md:p-6`}
-        >
-          <h1 className="text-[18px] md:text-[20px] text-center font-bold text-primary">
-            Create an Account
-          </h1>
-          <p className="text-[12px] md:text-[14px] text-[#4A5568] text-center mt-2">
-            Welcome to simplified candidate vetting
-          </p>
-
-          <form onSubmit={handleSubmit} className="mt-4 md:mt-6 space-y-4">
-            <div className="space-y-3 md:space-y-4">
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="fullName">
-                  Full Name
-                </label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  name="fullName"
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="email">
-                  Email Address
-                </label>
-                <Input
-                  id="email"
-                  value={email}
-                  name="email"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@gmail.com"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="password">
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="********"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs">
-                  How did you hear about us? (optional)
-                </label>
-                <ChannelsDropDown channel={channel} setChannel={setChannel} />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs">Role Selection</label>
-                <RoleSelectionDropDown role={role} setRole={setRole} />
-              </div>
-            </div>
-
-            <Button
-              disabled={
-                registerUserMutation.isPending ||
-                !email ||
-                !password ||
-                !fullName ||
-                role === "Select Role"
-              }
-              variant="default"
-              className="bg-primary text-white w-full h-10 md:h-11 text-sm md:text-base"
-              type="submit"
-            >
-              {registerUserMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "CREATE ACCOUNT"
-              )}
-            </Button>
-
-            <div className="flex items-center justify-center my-3 md:my-4">
-              <Image
-                src={OR}
-                alt="OR divider"
-                width={150}
-                height={20}
-                className="h-4 md:h-5 object-contain"
-              />
-            </div>
-
-            <div className="flex justify-center w-full">
-              <GoogleLogin
-                onSuccess={handleGoogleSignUp}
-                onError={() => {
-                  toast.error("Google sign up failed");
-                }}
-                width="100%"
-                text="signup_with"
-                shape="rectangular"
-                theme="outline"
-                logo_alignment="left"
-                useOneTap={false}
-              />
-            </div>
-
-            <p className="text-center text-[12px] md:text-[14px] text-gray-400">
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => router.push("/sign-in")}
-                className="text-primary font-semibold"
+        {/* Progress Indicator */}
+        <div className="flex justify-between items-center mt-6 mb-4">
+          {steps.map((label, idx) => (
+            <div key={label} className="flex-1 flex flex-col items-center">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm mb-1
+                  ${
+                    step === idx + 1
+                      ? "bg-white text-primary border-2 border-primary"
+                      : "bg-gray-400 text-white"
+                  }`}
               >
-                Sign In
-              </button>
-            </p>
+                {idx + 1}
+              </div>
+              <span
+                className={`text-xs text-center ${
+                  step === idx + 1 ? "text-white font-bold" : "text-gray-400"
+                }`}
+                style={
+                  step === idx + 1
+                    ? { textShadow: "0 1px 4px rgba(0,0,0,0.12)" }
+                    : {}
+                }
+              >
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className={`${
+            poppins.className
+          } w-full bg-white rounded-lg mt-4 p-4 md:p-6 ${
+            step === 1 ? "" : "max-h-[70vh] overflow-y-auto"
+          }`}
+        >
+          <form onSubmit={handleSubmit} className="mt-4 md:mt-6 space-y-4">
+            {/* Step 1: Name/Email/Password */}
+            {step === 1 && (
+              <div className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="fullName">
+                    Full Name
+                  </label>
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    name="fullName"
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="email">
+                    Email Address
+                  </label>
+                  <Input
+                    id="email"
+                    value={email}
+                    name="email"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="example@gmail.com"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="password">
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="********"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+              </div>
+            )}
+            {/* Step 2: Channel/Role */}
+            {step === 2 && (
+              <div className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs">
+                    How did you hear about us? (optional)
+                  </label>
+                  <ChannelsDropDown channel={channel} setChannel={setChannel} />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs">
+                    Role Selection
+                  </label>
+                  <RoleSelectionDropDown role={role} setRole={setRole} />
+                </div>
+              </div>
+            )}
+            {/* Step 3: Review & Submit */}
+            {step === 3 && (
+              <div className="space-y-3 md:space-y-4">
+                <h2 className="text-lg font-bold text-primary mb-2">
+                  Review your details
+                </h2>
+                <div className="text-sm text-gray-700">
+                  <div>
+                    <span className="font-semibold">Full Name:</span> {fullName}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Email:</span> {email}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Role:</span> {role}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Channel:</span> {channel}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center mt-6">
+              {step > 1 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="text-white border-primary bg-primary/80 hover:bg-primary"
+                  onClick={() => setStep(step - 1)}
+                >
+                  Back
+                </Button>
+              )}
+              <div className="flex-1" />
+              {step < 3 ? (
+                <Button
+                  type="submit"
+                  variant="default"
+                  className="bg-primary text-white"
+                  disabled={
+                    (step === 1 && (!email || !password || !fullName)) ||
+                    (step === 2 && role === "Select Role")
+                  }
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  disabled={registerUserMutation.isPending}
+                  variant="default"
+                  className="bg-primary text-white"
+                  type="submit"
+                >
+                  {registerUserMutation.isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "CREATE ACCOUNT"
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {/* Google Sign Up only on Step 1 */}
+            {step === 1 && (
+              <>
+                <div className="flex items-center justify-center my-3 md:my-4">
+                  <Image
+                    src={OR}
+                    alt="OR divider"
+                    width={150}
+                    height={20}
+                    className="h-4 md:h-5 object-contain"
+                  />
+                </div>
+                <div className="flex justify-center w-full">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSignUp}
+                    onError={() => {
+                      toast.error("Google sign up failed");
+                    }}
+                    width="100%"
+                    text="signup_with"
+                    shape="rectangular"
+                    theme="outline"
+                    logo_alignment="left"
+                    useOneTap={false}
+                  />
+                </div>
+                <p className="text-center text-[12px] md:text-[14px] text-gray-400">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => router.push("/sign-in")}
+                    className="text-primary font-semibold"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </>
+            )}
           </form>
         </div>
       </div>
