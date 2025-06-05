@@ -165,14 +165,9 @@ const LeftSideBar = () => {
         className={`${outfit.className} w-full h-full pt-4 bg-[#F5F5F5] pl-[16px] pr-[6px] overflow-y-auto sidebar [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F5F5F5] [&::-webkit-scrollbar-thumb]:bg-[#A6CCB8] [&::-webkit-scrollbar-thumb]:rounded-full`}
       >
         <div className="flex mb-[36px] items-center ml-8">
-          <UserCircle size={40} className="mr-2" />
-          <div className="flex flex-col">
-            <p className="font-bold">
-              {userData?.user?.name ? userData?.user?.name : "Not Set"}
-            </p>
-            <p className="text-sm font-normal text-[#A4A4A4] ">HR Manager</p>
-          </div>
+          {/* User details removed */}
         </div>
+
         {leftSideItems.map((item) => {
           return (
             <React.Fragment key={item.title}>

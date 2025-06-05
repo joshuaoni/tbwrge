@@ -1,11 +1,10 @@
-import { PlusCircle, Search } from "lucide-react";
+import { PlusCircle, Search, UserCircle } from "lucide-react";
 import Link from "next/link";
 import LanguageSelectorDropDown from "./language-selector-dropdown";
 import { Input } from "./ui/input";
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { FiMessageSquare } from "react-icons/fi";
 import Image from "next/image";
+import { useUserStore } from "@/hooks/use-user-store";
 
 interface DashboardHeaderProps {
   searchTerm: string;
@@ -17,11 +16,13 @@ const DashboardHeader = ({
   setSearchTerm,
 }: DashboardHeaderProps) => {
   const router = useRouter();
+  const { userData } = useUserStore();
 
   return (
-    <div className=" ml-[260px] w-full pl-16  border-b h-20 b z-20 bg-white flex flex-wrap items-center px-2 fixed top-0">
-      <div className="flex items-center w-screen justify-between flex-wrap  pr-[200px]">
-        <div className="border flex mr-auto  px-2 bg-[#F0F0F0] items-center rounded-full">
+    <div className="ml-[260px] w-[calc(100vw-260px)] border-b h-20 z-20 bg-white flex items-center px-4 pl-12 fixed top-0">
+      <div className="flex w-full items-center justify-between">
+        {/* Search */}
+        <div className="flex items-center border px-2 bg-[#F0F0F0] rounded-full mr-4">
           <Search color="#898989" />
           <Input
             placeholder="Search for jobs"
@@ -30,9 +31,8 @@ const DashboardHeader = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
-        {/* <CreateJob /> */}
-        <div className="flex items-center space-x-4 mr-[70px]">
+        <div className="flex items-center">
+          {/* Actions */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push("/dashboard/talent-pool/chat")}
@@ -48,14 +48,29 @@ const DashboardHeader = ({
               />
             </button>
             <LanguageSelectorDropDown />
+            <Link
+              href="/dashboard/create"
+              className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
+            >
+              <PlusCircle />
+              <p className="text-sm font-bold">Create New Job Post</p>
+            </Link>
           </div>
-          <Link
-            href="/dashboard/create"
-            className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
-          >
-            <PlusCircle />
-            <p className="text-sm font-bold">Create New Job Post</p>
-          </Link>
+
+          {/* User Profile Section */}
+          <div className="flex items-center gap-3 border-l px-4 min-w-0 max-w-xs overflow-hidden">
+            <UserCircle size={32} className="text-gray-600" />
+            <div className="flex flex-col min-w-0">
+              <p className="font-medium text-sm truncate overflow-ellipsis">
+                {userData?.user?.name || "Not Set"}
+              </p>
+              <p className="text-xs text-gray-500 truncate overflow-ellipsis">
+                {userData?.user?.role === "recruiter"
+                  ? "HR Manager"
+                  : "Job Seeker"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
