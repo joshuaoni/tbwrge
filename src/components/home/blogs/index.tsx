@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import { outfit } from "@/constants/app";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const BLOGS_PER_PAGE = 8;
 
@@ -337,14 +338,14 @@ const Blogs = () => {
           <motion.div
             variants={itemVariants}
             custom={blogs ? blogs.length + 3 : 3}
-            className="mt-8 md:mt-12 lg:mt-16"
+            className="mt-8 md:mt-8"
           >
-            <button
+            <Button
               onClick={() => router.push("/blog")}
-              className="text-sm px-6 md:px-8 lg:px-[30px] py-3 md:py-4 lg:py-[16px] rounded-full bg-white text-gray-900 font-semibold shadow-md hover:bg-gray-100 transition"
+              className="bg-white mt-8 md:mt-4 text-black rounded-full px-6 py-4 md:py-6 w-full md:w-fit text-sm md:text-base font-semibold shadow-none hover:bg-white/90"
             >
               View All Blogs
-            </button>
+            </Button>
           </motion.div>
         </div>
       </div>

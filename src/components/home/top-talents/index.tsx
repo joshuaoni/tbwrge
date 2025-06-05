@@ -273,7 +273,7 @@ const TopTalents = () => {
       ref={ref}
       animate="visible"
       variants={containerVariants}
-      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
+      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-12 lg:p-12`}
     >
       {/* Navigation Arrows and Frame Number (Desktop) */}
       <motion.div
@@ -453,7 +453,7 @@ const TopTalents = () => {
             backgroundPosition: "center",
           }}
           onClick={handleViewTalentPool}
-          className="mt-8 md:mt-12 text-white rounded-full px-6 py-4 md:py-6 w-full md:w-fit text-sm md:text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
+          className="mt-8 md:mt-4 text-white rounded-full px-6 py-4 md:py-6 w-full md:w-fit text-sm md:text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
         >
           View Talent Pool
         </Button>

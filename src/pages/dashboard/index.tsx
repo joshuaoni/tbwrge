@@ -207,12 +207,12 @@ const index = () => {
         </div>
         <div className="">
           <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
-            <div className="grid  md:w-[60%]  w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
+            <div className="analytics grid md:w-[60%] w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
               {analytics.map((an) => (
                 <AnalyticInfoCard {...an} />
               ))}
             </div>
-            <div className="bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
+            <div className="find-box bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-[248px] py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
               <h1 className="font-bold leading-[1.3] text-[20px] pt-4">
                 Find the Right Candidate for <br /> Your Job
               </h1>

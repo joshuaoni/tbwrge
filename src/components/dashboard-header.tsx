@@ -20,7 +20,7 @@ const DashboardHeader = ({
 
   return (
     <div className="ml-[260px] w-[calc(100vw-260px)] border-b h-20 z-20 bg-white flex items-center px-4 pl-12 fixed top-0">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between mt-2">
         {/* Search */}
         <div className="flex items-center border px-2 bg-[#F0F0F0] rounded-full mr-4">
           <Search color="#898989" />
