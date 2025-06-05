@@ -1,6 +1,7 @@
 import { UserResponse } from "@/interfaces/user-details";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import Cookies from "js-cookie";
 
 interface IUserStore {
   isLoading: boolean;
@@ -27,19 +28,31 @@ export const useUserStore = create<IUserStore>()(
         }: {
           authenticatedUser: UserResponse;
           token: string;
-        }) =>
-          set((state) => ({
+        }) => {
+          // Set user role in cookie
+          Cookies.set("userRole", authenticatedUser.role, {
+            expires: 7, // 7 days
+            path: "/",
+            sameSite: "strict",
+          });
+
+          return set((state) => ({
             userData: {
               user: authenticatedUser,
               token,
             },
             isLoading: false,
-          })),
-        removeUser: () =>
-          set((state) => ({
+          }));
+        },
+        removeUser: () => {
+          // Remove user role cookie
+          Cookies.remove("userRole", { path: "/" });
+
+          return set((state) => ({
             userData: null,
             isLoading: false,
-          })),
+          }));
+        },
       }),
       {
         name: "candivet-user-store",
