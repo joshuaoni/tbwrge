@@ -52,11 +52,11 @@ const CvDropDown = () => {
     <>
       <div
         onClick={() => setShowCvDropDown(!showCvDropDown)}
-        className="flex justify-between cursor-pointer py-3"
+        className="flex justify-between cursor-pointer py-2"
       >
         <div className="flex items-center">
           <GraduationCap size={20} className="mr-2 text-primary" />
-          <span className="">CV Tools</span>
+          <span className="text-sm">CV Tools</span>
         </div>
         {showCvDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>

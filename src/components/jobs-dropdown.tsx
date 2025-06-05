@@ -56,11 +56,11 @@ const JobsDropdown = () => {
     <>
       <div
         onClick={() => setShowJobsDropdown(!showJobsDropdown)}
-        className="flex justify-between cursor-pointer py-3"
+        className="flex justify-between cursor-pointer py-2"
       >
         <div className="flex items-center">
           <BriefcaseBusiness size={20} className="mr-2 text-primary" />
-          <span className="font-normal text-[16px]">Jobs Tools</span>
+          <span className="font-normal text-[14px]">Jobs Tools</span>
         </div>
         {showJobsDropdown ? <ChevronUp /> : <ChevronDown />}
       </div>

@@ -164,7 +164,7 @@ const LeftSideBar = () => {
       <div
         className={`${outfit.className} w-full h-full pt-4 bg-[#F5F5F5] pl-[16px] pr-[6px] overflow-y-auto sidebar [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F5F5F5] [&::-webkit-scrollbar-thumb]:bg-[#A6CCB8] [&::-webkit-scrollbar-thumb]:rounded-full`}
       >
-        <div className="flex mb-[36px] items-center ml-8">
+        <div className="flex mb-[20px] items-center ml-8">
           {/* User details removed */}
         </div>
 
@@ -209,7 +209,7 @@ const LeftSideBar = () => {
 
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
-          <h1 className="my-4 font-semibold text-[#6D6D6D] ml-8">User</h1>
+          <h1 className="my-2 font-semibold text-[#6D6D6D] ml-8">User</h1>
           <div className="mb-24 w-full">
             {userLeftSideItems.map((item) => {
               if (item.title === "Logout") {
@@ -256,7 +256,7 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       onClick={() => handleClick()}
       className={`${
         outfit.className
-      } flex relative  items-center w-full transition-all py-3  pl-6 space-x-2 p-2  ${
+      } flex relative  items-center w-full transition-all py-2 pl-6 space-x-2 p-2  ${
         item.title === "Dashboard" ? "mb-2" : "mb-0"
       } cursor-pointer ${
         isActiveRoute
@@ -272,7 +272,7 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       <div className={`${isActiveRoute ? "text-white" : "text-primary"}`}>
         {item.icon}
       </div>
-      <div className={`${outfit.className} text-[16px]`}>{item.title}</div>
+      <div className={`${outfit.className} text-[14px]`}>{item.title}</div>
     </div>
   );
 };

@@ -48,26 +48,36 @@ const DashboardHeader = ({
               />
             </button>
             <LanguageSelectorDropDown />
-            <Link
-              href="/dashboard/create"
-              className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
-            >
-              <PlusCircle />
-              <p className="text-sm font-bold">Create New Job Post</p>
-            </Link>
+            {userData?.user?.role !== "job_seeker" && (
+              <Link
+                href="/dashboard/create"
+                className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
+              >
+                <PlusCircle />
+                <p className="text-sm font-bold">Create New Job Post</p>
+              </Link>
+            )}
           </div>
 
           {/* User Profile Section */}
           <div className="flex items-center gap-3 border-l px-4 min-w-0 max-w-xs overflow-hidden">
-            <UserCircle size={32} className="text-gray-600" />
+            {userData?.user?.profile_picture ? (
+              <Image
+                src={userData?.user?.profile_picture}
+                alt={`${userData?.user?.name}`}
+                width={30}
+                height={30}
+                className="rounded-full md:w-[30px] md:h-[30px]"
+              />
+            ) : (
+              <UserCircle size={32} className="text-gray-600" />
+            )}
             <div className="flex flex-col min-w-0">
               <p className="font-medium text-sm truncate overflow-ellipsis">
                 {userData?.user?.name || "Not Set"}
               </p>
               <p className="text-xs text-gray-500 truncate overflow-ellipsis">
-                {userData?.user?.role === "recruiter"
-                  ? "HR Manager"
-                  : "Job Seeker"}
+                {userData?.user?.role}
               </p>
             </div>
           </div>

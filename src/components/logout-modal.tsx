@@ -19,19 +19,19 @@ const LogoutModal = () => {
     <Dialog>
       <DialogTrigger>
         <div
-          className={`flex relative  w-full items-center  transition-all py-3  pl-6 space-x-2 p-2  mb-3  cursor-pointer ${
+          className={`flex relative  w-full items-center  transition-all py-2  pl-6 p-2  mb-3  cursor-pointer ${
             false
               ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"
               : " font-normal"
           }`}
         >
           <div
-            className={`h-7 w-[5px] ${
+            className={`zagadat h-7 w-[5px] ${
               false ? "bg-white" : "bg-transparent"
             } absolute -left-[2px] rounded-r`}
           />
-          <LogOut className="text-primary" />
-          <span className="text-[16px]">Logout</span>
+          <LogOut className="text-primary mx-[6px]" />
+          <span className="text-[14px]">Logout</span>
         </div>
       </DialogTrigger>
       <DialogContent className="bg-white max-w-[400px]">
