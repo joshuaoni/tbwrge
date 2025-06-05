@@ -19,7 +19,23 @@ export function middleware(request: NextRequest) {
       pathname.startsWith("/dashboard/job-postings") &&
       userRole === "job_seeker"
     ) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      const url = new URL("/sign-in", request.url);
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // If job seeker trying to access create route
+    if (pathname.startsWith("/dashboard/create") && userRole === "job_seeker") {
+      const url = new URL("/sign-in", request.url);
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // If not admin trying to access admin routes
+    if (pathname.startsWith("/admin") && userRole !== "admin") {
+      const url = new URL("/sign-in", request.url);
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
     }
   }
 
