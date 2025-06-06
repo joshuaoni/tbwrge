@@ -1,4 +1,4 @@
-import { RefObject, useState, useRef } from "react";
+import { RefObject, useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -32,11 +32,23 @@ const LandingHeader = ({
     null | "recruiter" | "job_seeker"
   >(null);
   const { userData } = useUserStore();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isBlogOrTools =
     pathname?.includes("/blog") || pathname?.includes("/pricing");
-  const logoSrc = isBlogOrTools ? "/header-final.png" : "/footer-logo.png";
-  const textColor = isBlogOrTools ? "text-black" : "text-white";
+  const logoSrc =
+    isBlogOrTools || isScrolled ? "/header-final.png" : "/footer-logo.png";
+  const textColor = isBlogOrTools || isScrolled ? "text-black" : "text-white";
 
   const recruiterMenu = [
     { title: "Job Posting", path: "/dashboard/job-postings" },
@@ -103,7 +115,9 @@ const LandingHeader = ({
     <>
       <div className="w-full bg-transparent">
         <div
-          className={`fixed top-0 left-0 right-0 z-20 bg-transparent ${outfit.className}`}
+          className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${
+            isScrolled ? "bg-white shadow-md" : "bg-transparent"
+          } ${outfit.className}`}
         >
           <div
             className={`w-full max-w-[1600px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
