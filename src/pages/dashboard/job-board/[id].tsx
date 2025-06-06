@@ -21,6 +21,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { getTalentProfile } from "@/actions/talent-profile";
 import { getAppliedJobItems } from "@/actions/get-applied-job-items";
+import { useTranslation } from "react-i18next";
 
 const Section = ({
   title,
@@ -41,92 +42,110 @@ const JobHeader = ({
 }: {
   job: IGetJobOpenRes;
   timeAgo: string;
-}) => (
-  <div>
-    <Link
-      href="/dashboard/job-board"
-      className="inline-flex items-center text-gray-600 mb-6"
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="mr-2"
-      >
-        <path
-          d="M12.5 15L7.5 10L12.5 5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      Back to Jobs
-    </Link>
+}) => {
+  const { t } = useTranslation();
 
-    <div className="bg-white rounded-lg p-6 mb-6">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-          {job.company_logo ? (
-            <Image
-              src={job.company_logo}
-              alt={job.company_name}
-              width={48}
-              height={48}
-              className="object-cover w-full h-full"
-            />
-          ) : (
-            <div className="w-full h-full bg-slate-300 flex items-center justify-center">
-              <span className="text-white font-medium text-xl">
-                {job.company_name[0]}
-              </span>
-            </div>
-          )}
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
-          <div className="flex flex-col gap-1">
-            <div className="text-[15px] text-gray-600">{job.company_name}</div>
-            <div className="flex items-center gap-2 text-[14px] text-gray-600">
-              <span>{job.job_location_name}</span>
-              <span>•</span>
-              <span>{timeAgo}</span>
+  return (
+    <div>
+      <Link
+        href="/dashboard/job-board"
+        className="inline-flex items-center text-gray-600 mb-6"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="mr-2"
+        >
+          <path
+            d="M12.5 15L7.5 10L12.5 5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        {t("jobBoard.backToJobs")}
+      </Link>
+
+      <div className="bg-white rounded-lg p-6 mb-6">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+            {job.company_logo ? (
+              <Image
+                src={job.company_logo}
+                alt={job.company_name}
+                width={48}
+                height={48}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="w-full h-full bg-slate-300 flex items-center justify-center">
+                <span className="text-white font-medium text-xl">
+                  {job.company_name[0]}
+                </span>
+              </div>
+            )}
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
+            <div className="flex flex-col gap-1">
+              <div className="text-[15px] text-gray-600">
+                {job.company_name}
+              </div>
+              <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                <span>{job.job_location_name}</span>
+                <span>•</span>
+                <span>{timeAgo}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Job Type</div>
-      <div className="font-medium">{job.job_type.replace("_", " ")}</div>
-    </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Experience</div>
-      <div className="font-medium">{job.years_of_experience_required}</div>
-    </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Salary Range</div>
-      <div className="font-medium">
-        {job.salary_range_min && job.salary_range_max
-          ? `${
-              job.salary_currency || "USD"
-            } ${job.salary_range_min.toLocaleString()} - ${job.salary_range_max.toLocaleString()}`
-          : "Not specified"}
+const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.jobType")}
+        </div>
+        <div className="font-medium">{job.job_type.replace("_", " ")}</div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.experience")}
+        </div>
+        <div className="font-medium">{job.years_of_experience_required}</div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.salaryRange")}
+        </div>
+        <div className="font-medium">
+          {job.salary_range_min && job.salary_range_max
+            ? `${
+                job.salary_currency || "USD"
+              } ${job.salary_range_min.toLocaleString()} - ${job.salary_range_max.toLocaleString()}`
+            : t("jobBoard.notSpecified")}
+        </div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.location")}
+        </div>
+        <div className="font-medium">{job.job_location_name}</div>
       </div>
     </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Location</div>
-      <div className="font-medium">{job.job_location_name}</div>
-    </div>
-  </div>
-);
+  );
+};
 
 const ApplicationForm = ({
   job,
@@ -138,6 +157,7 @@ const ApplicationForm = ({
   questions: any[];
   onClose?: () => void;
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { userData } = useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -283,7 +303,9 @@ const ApplicationForm = ({
 
   return (
     <div className="bg-white p-6 rounded-lg">
-      <h2 className="text-xl font-semibold mb-6">Job Application</h2>
+      <h2 className="text-xl font-semibold mb-6">
+        {t("jobApplication.title")}
+      </h2>
       {isLoadingProfile ? (
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -292,14 +314,15 @@ const ApplicationForm = ({
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name <span className="text-red-500">*</span>
+              {t("jobApplication.fullName")}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder="Enter your name"
+              placeholder={t("jobApplication.enterYourName")}
               required
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
@@ -307,14 +330,15 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email <span className="text-red-500">*</span>
+              {t("jobApplication.email")}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder="Enter your email"
+              placeholder={t("jobApplication.enterYourEmail")}
               required
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
@@ -322,21 +346,21 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
+              {t("jobApplication.phoneNumber")}
             </label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              placeholder="Enter your phone number"
+              placeholder={t("jobApplication.enterYourPhone")}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Date of Birth
+              {t("jobApplication.dateOfBirth")}
             </label>
             <input
               type="date"
@@ -349,35 +373,35 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              LinkedIn Profile Link
+              {t("jobApplication.linkedinProfile")}
             </label>
             <input
               type="url"
               name="linkedinProfile"
               value={formData.linkedinProfile}
               onChange={handleInputChange}
-              placeholder="Enter link"
+              placeholder={t("jobApplication.enterLink")}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Current Company
+              {t("jobApplication.currentCompany")}
             </label>
             <input
               type="text"
               name="currentCompany"
               value={formData.currentCompany}
               onChange={handleInputChange}
-              placeholder="Enter N/A if none"
+              placeholder={t("jobApplication.enterNA")}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Current Position
+              {t("jobApplication.currentPosition")}
             </label>
             <input
               type="text"
@@ -391,7 +415,7 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nationality
+              {t("jobApplication.nationality")}
             </label>
             <select
               name="nationality"
@@ -399,7 +423,7 @@ const ApplicationForm = ({
               onChange={handleInputChange}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
             >
-              <option value="">Select Nationality</option>
+              <option value="">{t("jobApplication.selectNationality")}</option>
               {countries.map((country) => (
                 <option key={country.code} value={country.nationality}>
                   {country.nationality}
@@ -410,7 +434,7 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Country of Residence
+              {t("jobApplication.countryOfResidence")}
             </label>
             <select
               name="countryOfResidence"
@@ -418,7 +442,7 @@ const ApplicationForm = ({
               onChange={handleInputChange}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
             >
-              <option value="">Select Country</option>
+              <option value="">{t("jobApplication.selectCountry")}</option>
               {countries.map((country) => (
                 <option key={country.code} value={country.name}>
                   {country.name}
@@ -429,13 +453,14 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Relevant Experience <span className="text-red-500">*</span>
+              {t("jobApplication.relevantExperience")}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <textarea
               name="relevantExperience"
               value={formData.relevantExperience}
               onChange={handleInputChange}
-              placeholder="Describe your past roles"
+              placeholder={t("jobApplication.describePastRoles")}
               required
               rows={4}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
@@ -444,13 +469,14 @@ const ApplicationForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Skills Summary <span className="text-red-500">*</span>
+              {t("jobApplication.skillsSummary")}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <textarea
               name="skillsSummary"
               value={formData.skillsSummary}
               onChange={handleInputChange}
-              placeholder="Highlight your key skills"
+              placeholder={t("jobApplication.highlightSkills")}
               required
               rows={4}
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
@@ -460,7 +486,7 @@ const ApplicationForm = ({
           {job.require_cv && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload CV{" "}
+                {t("jobApplication.uploadCV")}{" "}
                 {job.require_cv && <span className="text-red-500">*</span>}
               </label>
               <input
@@ -477,7 +503,8 @@ const ApplicationForm = ({
           {job.require_cover_letter && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Cover Letter <span className="text-red-500">*</span>
+                {t("jobApplication.uploadCoverLetter")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="file"
@@ -493,7 +520,7 @@ const ApplicationForm = ({
           {job.require_voicenote && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Application Video/demo{" "}
+                {t("jobApplication.uploadVideo")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -524,7 +551,7 @@ const ApplicationForm = ({
                   onChange={(e) =>
                     handleQuestionAnswerChange(question.id, e.target.value)
                   }
-                  placeholder="Enter your answer"
+                  placeholder={t("jobApplication.enterYourAnswer")}
                   rows={3}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
@@ -559,10 +586,10 @@ const ApplicationForm = ({
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Submitting...
+                  {t("jobApplication.submitting")}
                 </span>
               ) : (
-                "Submit Application"
+                t("jobApplication.submitApplication")
               )}
             </button>
           </div>
@@ -599,7 +626,7 @@ const ApplicationForm = ({
                 </svg>
               </div>
               <h2 className="text-xl font-semibold">
-                Application Submitted Successfully!
+                {t("jobApplication.applicationSubmittedSuccessfully")}
               </h2>
             </div>
             <button
@@ -613,10 +640,7 @@ const ApplicationForm = ({
             </button>
           </div>
 
-          <p className="text-gray-600">
-            Thank you for applying! We will review your application and get back
-            to you soon.
-          </p>
+          <p className="text-gray-600">{t("jobApplication.thankYouMessage")}</p>
         </DialogContent>
       </Dialog>
     </div>
@@ -624,6 +648,7 @@ const ApplicationForm = ({
 };
 
 const JobDetailsPage = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
   const [job, setJob] = useState<IGetJobOpenRes | null>(null);
@@ -690,21 +715,21 @@ const JobDetailsPage = () => {
             <QuickInfo job={job} />
 
             {job.company_description && (
-              <Section title="About the Company">
+              <Section title={t("jobBoard.aboutCompany")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.company_description}
                 </p>
               </Section>
             )}
 
-            <Section title="Job Description">
+            <Section title={t("jobBoard.jobDescription")}>
               <div
                 className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: job.job_description }}
               />
             </Section>
 
-            <Section title="Required Skills">
+            <Section title={t("jobBoard.requiredSkills")}>
               <div className="flex flex-wrap gap-2">
                 {job.required_skills.split(",").map((skill: string) => (
                   <span
@@ -718,7 +743,7 @@ const JobDetailsPage = () => {
             </Section>
 
             {job.educational_requirements && (
-              <Section title="Educational Requirements">
+              <Section title={t("jobBoard.educationalRequirements")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.educational_requirements}
                 </p>
@@ -726,7 +751,7 @@ const JobDetailsPage = () => {
             )}
 
             {job.languages && (
-              <Section title="Languages">
+              <Section title={t("jobBoard.languages")}>
                 <div className="flex flex-wrap gap-2">
                   {job.languages.split(",").map((language: string) => (
                     <span
@@ -741,7 +766,7 @@ const JobDetailsPage = () => {
             )}
 
             {job.additional_benefits && (
-              <Section title="Additional Benefits">
+              <Section title={t("jobBoard.additionalBenefits")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.additional_benefits}
                 </p>
@@ -749,7 +774,7 @@ const JobDetailsPage = () => {
             )}
 
             {job.tags && (
-              <Section title="Tags">
+              <Section title={t("jobBoard.tags")}>
                 <div className="flex flex-wrap gap-2">
                   {job.tags.split(",").map((tag: string) => (
                     <span
@@ -788,17 +813,17 @@ const JobDetailsPage = () => {
                     </svg>
                   </div>
                   <h2 className="text-xl font-semibold">
-                    Application Submitted
+                    {t("jobApplication.applicationSubmitted")}
                   </h2>
                   <p className="text-gray-600">
-                    You have already applied for this position.
+                    {t("jobApplication.alreadyApplied")}
                   </p>
                   <div className="pt-4">
                     <Link
                       href="/dashboard/applications"
                       className="inline-flex items-center text-primary hover:text-primary/90"
                     >
-                      <span>View your applications</span>
+                      <span>{t("jobApplication.viewYourApplications")}</span>
                       <svg
                         width="20"
                         height="20"

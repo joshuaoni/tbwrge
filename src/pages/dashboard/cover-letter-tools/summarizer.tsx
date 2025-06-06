@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 interface UploadedFile {
   file: File;
@@ -18,6 +19,7 @@ interface UploadedFile {
 }
 
 const Summarizer: React.FC = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [value, setValue] = useState<string>("");
   const [prompts, setPrompts] = useState<string[]>([]);
@@ -80,14 +82,16 @@ const Summarizer: React.FC = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Cover Letter Summarizer
+        {t("coverLetterTools.summarizer.title")}
       </span>
       <section className={`${outfit.className} flex h-screen space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Cover Letter Upload</span>
+            <span className="font-bold">
+              {t("coverLetterTools.summarizer.upload.title")}
+            </span>
             <span className="font-light text-xs">
-              Add your Cover Letter here, you can upload up to 5 files max
+              {t("coverLetterTools.summarizer.upload.description")}
             </span>
             <div className="relative w-full justify-between flex flex-col items-start rounded-lg">
               <input
@@ -161,9 +165,10 @@ const Summarizer: React.FC = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?{" "}
+                {t("coverLetterTools.summarizer.customize.title")}
                 <span className="text-sm font-medium">
-                  &#40;Add up to 20 prompts&#41;
+                  {" "}
+                  {t("coverLetterTools.summarizer.customize.subTitle")}
                 </span>
               </span>
               <Plus
@@ -206,7 +211,7 @@ const Summarizer: React.FC = () => {
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
                 {" "}
-                Select Output language
+                {t("coverLetterTools.summarizer.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -226,7 +231,7 @@ const Summarizer: React.FC = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Summarize Cover Letter"
+                  t("coverLetterTools.summarizer.generateSummary")
                 )}
               </Button>
             </div>
@@ -237,18 +242,22 @@ const Summarizer: React.FC = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold text-sm">Cover Letter Summary</span>
+              <span className="font-bold text-sm">
+                {t("coverLetterTools.summarizer.generatedSummary")}
+              </span>
             </div>
             {summaries === undefined ? (
               <div className="my-4 text-center">
-                Your summary will appear here
+                {t("coverLetterTools.summarizer.summaryPlaceholder")}
               </div>
             ) : (
               <div className="flex mt-2 items-center justify-center flex-col flex-1 h-full p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] rounded-2xl">
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : summaries === undefined ? (
-                  <div>Your summary will appear here</div>
+                  <div>
+                    {t("coverLetterTools.summarizer.summaryPlaceholder")}
+                  </div>
                 ) : (
                   summaries?.map(
                     (summary: { summarized_cl: string; name: string }) => (

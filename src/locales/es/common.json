@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "dashboard": "Panel de control",
+    "jobs": "Trabajos",
+    "candidates": "Candidatos",
+    "analytics": "Análisis",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "home": "Inicio",
+    "about": "Acerca de",
+    "pricing": "Precios",
+    "blog": "Blog",
+    "community": "Comunidad"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a tu panel de control",
+    "stats": "Estadísticas",
+    "recentActivity": "Actividad reciente",
+    "quickActions": "Acciones rápidas",
+    "notifications": "Notificaciones"
+  },
+  "jobs": {
+    "title": "Ofertas de trabajo",
+    "createNew": "Crear nuevo trabajo",
+    "applications": "Aplicaciones",
+    "candidates": "Candidatos",
+    "status": "Estado",
+    "posted": "Publicado",
+    "active": "Activo",
+    "closed": "Cerrado",
+    "draft": "Borrador"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "forms": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "company": "Empresa",
+    "position": "Posición",
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Por favor ingrese un correo electrónico válido"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer contraseña",
+    "createAccount": "Crear cuenta",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes una cuenta?"
+  },
+  "language": {
+    "selectLanguage": "Seleccionar idioma",
+    "english": "Inglés",
+    "french": "Francés",
+    "spanish": "Español",
+    "german": "Alemán",
+    "arabic": "Árabe",
+    "portuguese": "Portugués"
+  }
+}

@@ -10,8 +10,10 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
+import { useTranslation } from "react-i18next";
 
 const LogoutModal = () => {
+  const { t } = useTranslation();
   const { removeUser } = useUserStore();
   const router = useRouter();
 
@@ -31,16 +33,16 @@ const LogoutModal = () => {
             } absolute -left-[2px] rounded-r`}
           />
           <LogOut className="text-primary mx-[6px]" />
-          <span className="text-[14px]">Logout</span>
+          <span className="text-[14px]">{t("logout.title")}</span>
         </div>
       </DialogTrigger>
       <DialogContent className="bg-white max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="border-b pb-6">LogOut</DialogTitle>
+          <DialogTitle className="border-b pb-6">
+            {t("logout.dialogTitle")}
+          </DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Are you sure you want to logout from your account?
-        </DialogDescription>
+        <DialogDescription>{t("logout.confirmMessage")}</DialogDescription>
 
         <Button
           onClick={() => {
@@ -49,7 +51,7 @@ const LogoutModal = () => {
           }}
           className="bg-primary text-white"
         >
-          Yes, Logout
+          {t("logout.confirmButton")}
         </Button>
       </DialogContent>
     </Dialog>

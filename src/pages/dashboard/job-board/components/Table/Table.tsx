@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { getAppliedJobItems } from "@/actions/get-applied-job-items";
 import { useUserStore } from "@/hooks/use-user-store";
+import { useTranslation } from "react-i18next";
 
 interface TableProps {
   data: IGetJobOpenRes[];
@@ -58,20 +59,28 @@ const TableSkeleton = ({ rows = 5 }: { rows?: number }) => {
 };
 
 const TableHeader = () => {
+  const { t } = useTranslation();
+
+  const headers = [
+    t("jobBoard.jobTitle"),
+    t("jobBoard.jobType"),
+    t("jobBoard.skills"),
+    t("jobBoard.languages"),
+    t("jobBoard.tags"),
+  ];
+
   return (
     <div className="hidden md:grid w-full h-[39.292px] rounded-[7.76px] pt-[11.65px] pb-[11.65px] bg-[#D6D6D6] gap-4 grid-cols-[2fr_1fr_1fr_1fr_1fr] items-center mb-4">
-      {["Job Title", "Job Type", "Skills", "Languages", "Tags"].map(
-        (text, i) => (
-          <div
-            key={i}
-            className="h-[16px] first:pl-4 text-[#898989] flex items-center justify-start"
-          >
-            <p className="font-inter font-bold text-[13.59px] leading-[100%] tracking-[5%]">
-              {text}
-            </p>
-          </div>
-        )
-      )}
+      {headers.map((text, i) => (
+        <div
+          key={i}
+          className="h-[16px] first:pl-4 text-[#898989] flex items-center justify-start"
+        >
+          <p className="font-inter font-bold text-[13.59px] leading-[100%] tracking-[5%]">
+            {text}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };
@@ -91,6 +100,8 @@ const JobDetails = ({
   companyLogo?: string;
   applied?: boolean;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="h-[51px] rounded-[10px] p-[4px] pl-0 gap-[10px] flex items-center">
       <div className="w-full h-full bg-[#F9F9F9] rounded-[10px] pl-[8px] pr-[8px] gap-[10px] flex">
@@ -119,7 +130,7 @@ const JobDetails = ({
               </span>
               {applied && (
                 <span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700 font-medium flex-shrink-0">
-                  Applied
+                  {t("jobBoard.applied")}
                 </span>
               )}
             </div>
@@ -238,6 +249,7 @@ const Tags = ({ tags }: { tags: string }) => {
 };
 
 const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const timeAgo = formatDistanceToNow(new Date(job.created_at), {
     addSuffix: true,
@@ -277,7 +289,7 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
             </span>
             {isApplied && (
               <span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700 font-medium flex-shrink-0">
-                Applied
+                {t("jobBoard.applied")}
               </span>
             )}
           </div>
@@ -332,11 +344,13 @@ const TableBodyRow = ({ job, className = "", style }: TableBodyRowProps) => {
 };
 
 const TableBody = ({ jobs }: TableBodyProps) => {
+  const { t } = useTranslation();
   console.log({ jobs });
+
   if (!jobs.length) {
     return (
       <div className="w-full py-8 text-center text-gray-500">
-        No jobs found matching your criteria
+        {t("jobBoard.noJobsFound")}
       </div>
     );
   }

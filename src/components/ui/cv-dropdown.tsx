@@ -2,7 +2,10 @@ import { ChevronDown, ChevronUp, GraduationCap } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 const CvDropDown = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathName = router.asPath;
 
@@ -10,43 +13,84 @@ const CvDropDown = () => {
     pathName.includes("/dashboard/cv-tools")
   );
 
-  const [dropDownItems, setDropDownItems] = React.useState([
+  const [dropDownItems, setDropDownItems] = React.useState(() => [
     {
       link: "/dashboard/cv-tools/summarizer",
-      title: "Summarizer",
+      title: t("tools.summarizer"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/vetting",
-      title: "Vetting",
+      title: t("tools.vetting"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/ranking",
-      title: "Matching & Ranking",
+      title: t("tools.matchingRanking"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/head-to-head",
-      title: "Head to Head",
+      title: t("tools.headToHead"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/generator",
-      title: "Generator",
+      title: t("tools.generator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/translator",
-      title: "Translator",
+      title: t("tools.translator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cv-tools/rewriter",
-      title: "Rewriter",
+      title: t("tools.rewriter"),
       icon: "Pro",
     },
   ]);
+
+  // Update dropdown items when language changes
+  React.useEffect(() => {
+    setDropDownItems([
+      {
+        link: "/dashboard/cv-tools/summarizer",
+        title: t("tools.summarizer"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/vetting",
+        title: t("tools.vetting"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/ranking",
+        title: t("tools.matchingRanking"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/head-to-head",
+        title: t("tools.headToHead"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/generator",
+        title: t("tools.generator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/translator",
+        title: t("tools.translator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cv-tools/rewriter",
+        title: t("tools.rewriter"),
+        icon: "Pro",
+      },
+    ]);
+  }, [t]);
 
   return (
     <>
@@ -56,7 +100,7 @@ const CvDropDown = () => {
       >
         <div className="flex items-center">
           <GraduationCap size={20} className="mr-2 text-primary" />
-          <span className="text-sm">CV Tools</span>
+          <span className="text-sm">{t("tools.cvTools")}</span>
         </div>
         {showCvDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>

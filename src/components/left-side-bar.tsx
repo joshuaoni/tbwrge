@@ -25,29 +25,29 @@ import CoverLetterDropDown from "./ui/coverletter-dropdown";
 import CvDropDown from "./ui/cv-dropdown";
 import { outfit } from "@/constants/app";
 import JobBoardIcon from "@/components/icons/job-board";
+import { useTranslation } from "react-i18next";
 
 const LeftSideBar = () => {
   const router = useRouter();
-
+  const { t } = useTranslation();
   const { userData } = useUserStore();
 
   const [leftSideItems, setLeftSideItems] = React.useState(() => {
     const baseItems = [
       {
-        title: "Dashboard",
+        title: t("nav.dashboard"),
         icon: <LayoutDashboard size={20} />,
         link: "/dashboard",
         active: false,
       },
-
       {
-        title: "Job Board",
+        title: t("nav.jobBoard"),
         icon: <JobBoardIcon size={20} />,
         link: "/dashboard/job-board",
         active: false,
       },
       {
-        title: "Talent Pool",
+        title: t("nav.talentPool"),
         icon: <Users2 size={20} />,
         link: "/dashboard/talent-pool",
         active: false,
@@ -57,7 +57,7 @@ const LeftSideBar = () => {
     // Only add Posted Jobs for non-job seekers
     if (userData?.user?.role !== "job_seeker") {
       baseItems.splice(1, 0, {
-        title: "Posted Jobs",
+        title: t("nav.postedJobs"),
         icon: <ClipboardList size={20} />,
         link: "/dashboard/job-postings",
         active: false,
@@ -65,7 +65,7 @@ const LeftSideBar = () => {
     }
     if (userData?.user?.role === "job_seeker") {
       baseItems.splice(1, 0, {
-        title: "My Applications",
+        title: t("nav.myApplications"),
         icon: <FileText size={20} />,
         link: "/dashboard/applications",
         active: false,
@@ -74,80 +74,148 @@ const LeftSideBar = () => {
     return baseItems;
   });
 
-  // Update leftSideItems when user role changes
+  // Update leftSideItems when user role changes or language changes
   React.useEffect(() => {
     setLeftSideItems((prevItems) => {
-      const baseItems = prevItems.filter(
-        (item) => item.title !== "Posted Jobs"
-      );
+      const baseItems = [
+        {
+          title: t("nav.dashboard"),
+          icon: <LayoutDashboard size={20} />,
+          link: "/dashboard",
+          active: false,
+        },
+        {
+          title: t("nav.jobBoard"),
+          icon: <JobBoardIcon size={20} />,
+          link: "/dashboard/job-board",
+          active: false,
+        },
+        {
+          title: t("nav.talentPool"),
+          icon: <Users2 size={20} />,
+          link: "/dashboard/talent-pool",
+          active: false,
+        },
+      ];
+
       if (userData?.user?.role !== "job_seeker") {
         baseItems.splice(1, 0, {
-          title: "Posted Jobs",
+          title: t("nav.postedJobs"),
           icon: <ClipboardList size={20} />,
           link: "/dashboard/job-postings",
           active: false,
         });
       }
+      if (userData?.user?.role === "job_seeker") {
+        baseItems.splice(1, 0, {
+          title: t("nav.myApplications"),
+          icon: <FileText size={20} />,
+          link: "/dashboard/applications",
+          active: false,
+        });
+      }
       return baseItems;
     });
-  }, [userData?.user?.role]);
+  }, [userData?.user?.role, t]);
 
-  const [extras, setExtras] = React.useState([
+  const [extras, setExtras] = React.useState(() => [
     {
-      title: "Submit An Article",
+      title: t("nav.submitArticle"),
       icon: <ScrollText size={20} />,
       link: "/dashboard/submit-article",
       active: false,
     },
     {
-      title: "Community",
+      title: t("nav.community"),
       icon: <Users2 size={20} />,
       link: "/community",
       active: false,
     },
   ]);
-  const [userLeftSideItems, setUserLeftSideItems] = React.useState([
+
+  const [userLeftSideItems, setUserLeftSideItems] = React.useState(() => [
     {
-      title: "Billings & Subscription",
+      title: t("nav.billingSubscription"),
       icon: <CreditCard size={20} />,
       link: "/dashboard/billing",
       active: false,
     },
     {
-      title: "Settings",
+      title: t("nav.settings"),
       icon: <Settings size={20} />,
       link: "/dashboard/settings/profile",
       active: false,
     },
     {
-      title: "Feedback & Support",
+      title: t("nav.feedbackSupport"),
       icon: <MessageSquare size={20} />,
       link: "/dashboard/feedback",
       active: false,
     },
     {
-      title: "Logout",
+      title: t("nav.logout"),
       icon: <LogOut size={20} />,
       link: "/dashboard/logout",
       active: false,
     },
   ]);
 
-  // Update userLeftSideItems when user role changes
+  // Update extras when language changes
+  React.useEffect(() => {
+    setExtras([
+      {
+        title: t("nav.submitArticle"),
+        icon: <ScrollText size={20} />,
+        link: "/dashboard/submit-article",
+        active: false,
+      },
+      {
+        title: t("nav.community"),
+        icon: <Users2 size={20} />,
+        link: "/community",
+        active: false,
+      },
+    ]);
+  }, [t]);
+
+  // Update userLeftSideItems when user role or language changes
   React.useEffect(() => {
     setUserLeftSideItems((prevItems) => {
-      // Remove any existing 'Admin Dashboard' item
-      const baseItems = prevItems.filter(
-        (item) => item.title !== "Admin Dashboard"
-      );
+      const baseItems = [
+        {
+          title: t("nav.billingSubscription"),
+          icon: <CreditCard size={20} />,
+          link: "/dashboard/billing",
+          active: false,
+        },
+        {
+          title: t("nav.settings"),
+          icon: <Settings size={20} />,
+          link: "/dashboard/settings/profile",
+          active: false,
+        },
+        {
+          title: t("nav.feedbackSupport"),
+          icon: <MessageSquare size={20} />,
+          link: "/dashboard/feedback",
+          active: false,
+        },
+        {
+          title: t("nav.logout"),
+          icon: <LogOut size={20} />,
+          link: "/dashboard/logout",
+          active: false,
+        },
+      ];
+
       if (userData?.user?.role === "admin") {
         // Find the index of 'Logout'
         const logoutIdx = baseItems.findIndex(
-          (item) => item.title === "Logout"
+          (item) => item.title === t("nav.logout")
         );
         // Insert 'Admin Dashboard' just above 'Logout'
         baseItems.splice(logoutIdx, 0, {
-          title: "Admin Dashboard",
+          title: t("nav.adminDashboard"),
           icon: <Crown size={20} />,
           link: "/admin",
           active: false,
@@ -155,7 +223,7 @@ const LeftSideBar = () => {
       }
       return baseItems;
     });
-  }, [userData?.user?.role]);
+  }, [userData?.user?.role, t]);
 
   return (
     <div
@@ -175,7 +243,7 @@ const LeftSideBar = () => {
                 item={item}
                 setLeftSideItems={setLeftSideItems}
               />
-              {item.title === "Dashboard" && (
+              {item.title === t("nav.dashboard") && (
                 <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
               )}
             </React.Fragment>
@@ -193,14 +261,14 @@ const LeftSideBar = () => {
         <div className="flex flex-col ">
           <div className="mb-2 w-full ">
             {extras.map((item) => {
-              if (item.title === "Logout") {
-                return <LogoutModal />;
+              if (item.title === t("nav.logout")) {
+                return <LogoutModal key="logout-modal" />;
               }
               return (
                 <LeftSideBarItem
                   key={item.title}
                   item={item}
-                  setLeftSideItems={setUserLeftSideItems}
+                  setLeftSideItems={setExtras}
                 />
               );
             })}
@@ -209,11 +277,13 @@ const LeftSideBar = () => {
 
         <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
         <div className="flex flex-col ">
-          <h1 className="my-2 font-semibold text-[#6D6D6D] ml-8">User</h1>
+          <h1 className="my-2 font-semibold text-[#6D6D6D] ml-8">
+            {t("dashboard.user")}
+          </h1>
           <div className="mb-24 w-full">
             {userLeftSideItems.map((item) => {
-              if (item.title === "Logout") {
-                return <LogoutModal />;
+              if (item.title === t("nav.logout")) {
+                return <LogoutModal key="logout-modal" />;
               }
               return (
                 <LeftSideBarItem
@@ -233,6 +303,8 @@ const LeftSideBar = () => {
 const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
   const router = useRouter();
   const pathName = usePathname();
+  const { t } = useTranslation();
+
   const isActiveRoute =
     item.link === "/dashboard/job-board"
       ? pathName?.includes("/dashboard/job-board") || false
@@ -251,13 +323,14 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
     });
     router.push(item.link);
   };
+
   return (
     <div
       onClick={() => handleClick()}
       className={`${
         outfit.className
       } flex relative  items-center w-full transition-all py-2 pl-6 space-x-2 p-2  ${
-        item.title === "Dashboard" ? "mb-2" : "mb-0"
+        item.title === t("nav.dashboard") ? "mb-2" : "mb-0"
       } cursor-pointer ${
         isActiveRoute
           ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"

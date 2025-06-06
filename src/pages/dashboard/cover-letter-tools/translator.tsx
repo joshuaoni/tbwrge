@@ -17,8 +17,10 @@ import toast from "react-hot-toast";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const Translator = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [jobDescription, setJobDescription] = useState("");
@@ -249,16 +251,18 @@ const Translator = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Cover Letter Translator
+        {t("coverLetterTools.translator.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Cover Letter Upload</span>
+            <span className="font-bold">
+              {t("coverLetterTools.translator.upload.title")}
+            </span>
             <span className="font-light text-xs">
-              Add your Cover Letter here, you can upload up to 5 files max
+              {t("coverLetterTools.translator.upload.description")}
             </span>
             <div className="relative w-full flex flex-col items-start">
               <input
@@ -327,13 +331,20 @@ const Translator = () => {
 
           {/* Job Description Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Input Cover Letter</span>
-            <div className="mt-5 bg-white">
+            <span className="font-bold">
+              {t("coverLetterTools.translator.customize.title")}
+            </span>
+            <span className="text-sm font-medium">
+              {" "}
+              {t("coverLetterTools.translator.customize.subTitle")}
+            </span>
+            <div className="mt-4 border border-gray-100 rounded-lg">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Input Cover Letter"
-                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+                rows={4}
+                className="w-full p-3 border-none outline-none rounded-lg resize-none"
+                placeholder={t("coverLetterTools.translator.promptPlaceholder")}
               />
             </div>
           </div>
@@ -342,8 +353,7 @@ const Translator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
-                Select Output language
+                {t("coverLetterTools.translator.selectTargetLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -363,7 +373,7 @@ const Translator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Translate Cover Letter"
+                  t("coverLetterTools.translator.translateCoverLetter")
                 )}
               </Button>
             </div>
@@ -374,7 +384,9 @@ const Translator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Cover Letter Translator</span>
+              <span className="font-bold text-sm">
+                {t("coverLetterTools.translator.translatedCoverLetter")}
+              </span>
             </div>
             <div className="flex flex-col items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
@@ -483,7 +495,7 @@ const Translator = () => {
 
               {!isPending && !isSuccess && (
                 <div className="h-[500px] flex items-center justify-center text-gray-400">
-                  Upload a cover letter and click "Translate" to see results
+                  {t("coverLetterTools.translator.translationPlaceholder")}
                 </div>
               )}
             </div>

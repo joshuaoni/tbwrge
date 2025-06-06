@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useUserStore } from "@/hooks/use-user-store";
+import { useTranslation } from "react-i18next";
 
 interface DashboardHeaderProps {
   searchTerm: string;
@@ -15,6 +16,7 @@ const DashboardHeader = ({
   searchTerm,
   setSearchTerm,
 }: DashboardHeaderProps) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { userData } = useUserStore();
 
@@ -25,7 +27,7 @@ const DashboardHeader = ({
         <div className="flex items-center border px-2 bg-[#F0F0F0] rounded-full mr-4">
           <Search color="#898989" />
           <Input
-            placeholder="Search for jobs"
+            placeholder={t("common.searchForJobs")}
             className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -37,24 +39,26 @@ const DashboardHeader = ({
             <button
               onClick={() => router.push("/dashboard/talent-pool/chat")}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Chat"
+              title={t("common.chat")}
             >
               <Image
                 src="/Message-Icon.png"
-                alt="Chat"
+                alt={t("common.chat")}
                 width={24}
                 height={24}
                 className="w-6 h-6"
               />
             </button>
-            <LanguageSelectorDropDown />
+            <LanguageSelectorDropDown fullPageTranslation={true} />
             {userData?.user?.role !== "job_seeker" && (
               <Link
                 href="/dashboard/create"
                 className="bg-primary cursor-pointer hover:bg-primary/90 transition-colors transform duration-300 flex items-center py-3 space-x-2 rounded-lg w-fit px-2 font-medium text-white mt-auto"
               >
                 <PlusCircle />
-                <p className="text-sm font-bold">Create New Job Post</p>
+                <p className="text-sm font-bold">
+                  {t("jobs.createNewJobPost")}
+                </p>
               </Link>
             )}
           </div>
@@ -74,7 +78,7 @@ const DashboardHeader = ({
             )}
             <div className="flex flex-col min-w-0">
               <p className="font-medium text-sm truncate overflow-ellipsis">
-                {userData?.user?.name || "Not Set"}
+                {userData?.user?.name || t("common.notSet")}
               </p>
               <p className="text-xs text-gray-500 truncate overflow-ellipsis">
                 {userData?.user?.role}

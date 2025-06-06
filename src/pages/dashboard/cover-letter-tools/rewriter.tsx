@@ -19,8 +19,10 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const ReWriter = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [summary, setSummary] = useState("");
@@ -247,14 +249,16 @@ const ReWriter = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Cover Letter ReWriter
+        {t("coverLetterTools.rewriter.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Document Upload</span>
+            <span className="font-bold">
+              {t("coverLetterTools.rewriter.documentUpload")}
+            </span>
             <span className="font-light text-xs">
-              Add your CV and Cover Letter here
+              {t("coverLetterTools.rewriter.documentUploadDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -283,14 +287,17 @@ const ReWriter = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("coverLetterTools.generator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("coverLetterTools.generator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("coverLetterTools.generator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("coverLetterTools.generator.supportedFormats")}
               </span>
             </div>
 
@@ -332,12 +339,16 @@ const ReWriter = () => {
 
           {/* Job Description Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("coverLetterTools.rewriter.jobDescriptionTitle")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t(
+                  "coverLetterTools.rewriter.jobDescriptionPlaceholder"
+                )}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -346,7 +357,7 @@ const ReWriter = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("coverLetterTools.generator.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -363,7 +374,11 @@ const ReWriter = () => {
                 }}
                 className="self-center bg-primary min-w-[100px]  text-white"
               >
-                {isPending ? <Loader2 className="animate-spin" /> : "Rewrite"}
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("coverLetterTools.rewriter.rewrite")
+                )}
               </Button>
             </div>
           </div>
@@ -372,7 +387,9 @@ const ReWriter = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Cover Letter Rewriter</span>
+              <span className="font-bold">
+                {t("coverLetterTools.rewriter.title")}
+              </span>
             </div>
             <div className="flex flex-col items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
@@ -481,7 +498,7 @@ const ReWriter = () => {
 
               {!isPending && !isSuccess && (
                 <div className="h-[500px] flex items-center justify-center text-gray-400">
-                  Upload a cover letter and click "Rewrite" to see results
+                  {t("coverLetterTools.rewriter.uploadAndRewrite")}
                 </div>
               )}
             </div>

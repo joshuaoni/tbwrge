@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "dashboard": "Painel",
+    "jobs": "Empregos",
+    "candidates": "Candidatos",
+    "analytics": "Análises",
+    "settings": "Configurações",
+    "logout": "Sair",
+    "home": "Início",
+    "about": "Sobre",
+    "pricing": "Preços",
+    "blog": "Blog",
+    "community": "Comunidade"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo ao seu painel",
+    "stats": "Estatísticas",
+    "recentActivity": "Atividade recente",
+    "quickActions": "Ações rápidas",
+    "notifications": "Notificações"
+  },
+  "jobs": {
+    "title": "Ofertas de emprego",
+    "createNew": "Criar novo emprego",
+    "applications": "Candidaturas",
+    "candidates": "Candidatos",
+    "status": "Status",
+    "posted": "Publicado",
+    "active": "Ativo",
+    "closed": "Fechado",
+    "draft": "Rascunho"
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação"
+  },
+  "forms": {
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "firstName": "Nome",
+    "lastName": "Sobrenome",
+    "company": "Empresa",
+    "position": "Posição",
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Por favor, insira um endereço de e-mail válido"
+  },
+  "auth": {
+    "signIn": "Entrar",
+    "signUp": "Cadastrar",
+    "signOut": "Sair",
+    "forgotPassword": "Esqueceu a senha?",
+    "resetPassword": "Redefinir senha",
+    "createAccount": "Criar conta",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "dontHaveAccount": "Não tem uma conta?"
+  },
+  "language": {
+    "selectLanguage": "Selecionar idioma",
+    "english": "Inglês",
+    "french": "Francês",
+    "spanish": "Espanhol",
+    "german": "Alemão",
+    "arabic": "Árabe",
+    "portuguese": "Português"
+  }
+}

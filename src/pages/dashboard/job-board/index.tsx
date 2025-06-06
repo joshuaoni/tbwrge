@@ -15,15 +15,7 @@ import { useDebounce } from "@/hooks/debounce";
 import Table from "./components/Table/Table";
 import { outfit } from "@/constants/app";
 import Link from "next/link";
-
-const JOB_TYPE = {
-  full_time: "Full Time",
-  hybrid: "Hybrid",
-  part_time: "Part Time",
-  internship: "Internship",
-};
-
-const ITEMS_PER_PAGE = 10;
+import { useTranslation } from "react-i18next";
 
 const styles = `
   @keyframes recording-pulse {
@@ -43,7 +35,10 @@ const styles = `
   }
 `;
 
+const ITEMS_PER_PAGE = 10;
+
 const JobBoardPage = () => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState<IGetJobOpenJobType>("full_time");
@@ -73,6 +68,13 @@ const JobBoardPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+
+  const JOB_TYPE = {
+    full_time: t("jobBoard.fullTime"),
+    hybrid: t("jobBoard.hybrid"),
+    part_time: t("jobBoard.partTime"),
+    internship: t("jobBoard.internship"),
+  };
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
@@ -318,7 +320,7 @@ const JobBoardPage = () => {
           href="/dashboard/applications"
           className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
         >
-          <span>View Applications</span>
+          <span>{t("jobBoard.viewApplications")}</span>
           <svg
             width="16"
             height="16"
@@ -338,7 +340,7 @@ const JobBoardPage = () => {
             <div className="relative w-[200px]">
               <input
                 className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
-                placeholder="Location"
+                placeholder={t("jobBoard.location")}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
@@ -397,11 +399,13 @@ const JobBoardPage = () => {
                     </span>
                   ))
                 ) : (
-                  <span className="text-[#333]">Skills</span>
+                  <span className="text-[#333]">{t("jobBoard.skills")}</span>
                 )}
                 <input
                   className="flex-1 bg-transparent focus:outline-none min-w-[100px]"
-                  placeholder={skills.length > 0 ? "" : "Press enter to add"}
+                  placeholder={
+                    skills.length > 0 ? "" : t("jobBoard.pressEnterToAdd")
+                  }
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -423,7 +427,7 @@ const JobBoardPage = () => {
                   className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5"
                 >
                   <div className="flex items-center gap-2">
-                    <span>Search with AI</span>
+                    <span>{t("jobBoard.searchWithAI")}</span>
                     <Image
                       src="/ai-technology.png"
                       alt="AI"
@@ -460,7 +464,7 @@ const JobBoardPage = () => {
                         setIsAIDropdownOpen(false);
                       }}
                     >
-                      Audio Search
+                      {t("jobBoard.audioSearch")}
                     </button>
                     <button
                       className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
@@ -469,7 +473,7 @@ const JobBoardPage = () => {
                         setIsAIDropdownOpen(false);
                       }}
                     >
-                      Text Search
+                      {t("jobBoard.textSearch")}
                     </button>
                   </div>
                 )}
@@ -489,17 +493,17 @@ const JobBoardPage = () => {
                   disabled={currentPage === 1}
                   className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Previous
+                  {t("jobBoard.previous")}
                 </button>
                 <span className="px-4 py-2">
-                  Page {currentPage} of {totalPages}
+                  {t("applications.page")} {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Next
+                  {t("jobBoard.next")}
                 </button>
               </div>
             )}
@@ -514,7 +518,9 @@ const JobBoardPage = () => {
         >
           <div className="bg-white rounded-lg w-[600px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">Search With AI</h2>
+              <h2 className="text-[16px] font-semibold">
+                {t("jobBoard.searchWithAI")}
+              </h2>
               <button
                 onClick={() => {
                   setIsTextSearchModalOpen(false);
@@ -546,7 +552,7 @@ Language Requirements."
                   setIsTextSearchModalOpen(false);
                 }}
               >
-                Search
+                {t("jobBoard.search")}
               </button>
             </div>
           </div>
@@ -560,7 +566,9 @@ Language Requirements."
         >
           <div className="bg-white rounded-lg w-[500px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">Search With AI</h2>
+              <h2 className="text-[16px] font-semibold">
+                {t("jobBoard.searchWithAI")}
+              </h2>
               <button
                 onClick={() => {
                   setIsRecordingModalOpen(false);
@@ -573,7 +581,9 @@ Language Requirements."
               </button>
             </div>
 
-            <p className="text-gray-600 mb-8">Please record your search</p>
+            <p className="text-gray-600 mb-8">
+              {t("jobBoard.pleaseRecordSearch")}
+            </p>
 
             <div className="flex flex-col items-center justify-center">
               <div className="w-32 h-32 rounded-full flex items-center justify-center mb-8">
@@ -670,7 +680,7 @@ Language Requirements."
                   setIsRecordingModalOpen(false);
                 }}
               >
-                Search
+                {t("jobBoard.search")}
               </button>
             </div>
           </div>

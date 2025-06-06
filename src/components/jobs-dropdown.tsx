@@ -7,50 +7,94 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 const JobsDropdown = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathName = router.asPath;
   const [showJobsDropdown, setShowJobsDropdown] = React.useState(() =>
     pathName.includes("/dashboard/job-tools")
   );
 
-  const [dropDownItems, setDropDownItems] = React.useState([
+  const [dropDownItems, setDropDownItems] = React.useState(() => [
     {
       link: "/dashboard/job-tools/generator",
-      title: "Generator",
+      title: t("tools.generator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/vetting",
-      title: "Vetting",
+      title: t("tools.vetting"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/translator",
-      title: "Translator",
+      title: t("tools.translator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/report-generator",
-      title: "Candidate Report Generator",
+      title: t("tools.candidateReportGenerator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/generate-interview-questions",
-      title: "Ai Interview and Screening Generator",
+      title: t("tools.aiInterviewScreeningGenerator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/screening-question-assistant",
-      title: "Ai Screening Questions Assistant",
+      title: t("tools.aiScreeningQuestionsAssistant"),
       icon: "Pro",
     },
     {
       link: "/dashboard/job-tools/ai-prep",
-      title: "Ai Interview Prep",
+      title: t("tools.aiInterviewPrep"),
       icon: "Pro",
     },
   ]);
+
+  // Update dropdown items when language changes
+  React.useEffect(() => {
+    setDropDownItems([
+      {
+        link: "/dashboard/job-tools/generator",
+        title: t("tools.generator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/vetting",
+        title: t("tools.vetting"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/translator",
+        title: t("tools.translator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/report-generator",
+        title: t("tools.candidateReportGenerator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/generate-interview-questions",
+        title: t("tools.aiInterviewScreeningGenerator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/screening-question-assistant",
+        title: t("tools.aiScreeningQuestionsAssistant"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/job-tools/ai-prep",
+        title: t("tools.aiInterviewPrep"),
+        icon: "Pro",
+      },
+    ]);
+  }, [t]);
 
   return (
     <>
@@ -60,7 +104,9 @@ const JobsDropdown = () => {
       >
         <div className="flex items-center">
           <BriefcaseBusiness size={20} className="mr-2 text-primary" />
-          <span className="font-normal text-[14px]">Jobs Tools</span>
+          <span className="font-normal text-[14px]">
+            {t("tools.jobsTools")}
+          </span>
         </div>
         {showJobsDropdown ? <ChevronUp /> : <ChevronDown />}
       </div>
