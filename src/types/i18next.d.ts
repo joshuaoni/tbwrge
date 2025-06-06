@@ -364,6 +364,100 @@ declare module "react-i18next" {
           arabic: string;
           portuguese: string;
         };
+        screening: {
+          title: string;
+          jobNotFound: string;
+          jobNotFoundMessage: string;
+          goBack: string;
+          jobType: string;
+          experience: string;
+          salaryRange: string;
+          location: string;
+          aboutCompany: string;
+          jobDescription: string;
+          requiredSkills: string;
+          educationalRequirements: string;
+          languages: string;
+          additionalBenefits: string;
+          tags: string;
+          screeningIntro: string;
+          typeAnswerHere: string;
+          submitting: string;
+          submitScreeningAnswers: string;
+          successTitle: string;
+          successMessage: string;
+        };
+        submitArticle: {
+          title: string;
+          articleDetails: string;
+          articleTitle: string;
+          articleContent: string;
+          articleContentNote: string;
+          uploadArticle: string;
+          uploadArticleNote: string;
+          authorInformation: string;
+          fullName: string;
+          jobTitle: string;
+          company: string;
+          uploadProfileImage: string;
+          contactInformation: string;
+          email: string;
+          agreeTerms: string;
+          submitting: string;
+          submitArticle: string;
+          enterArticleTitle: string;
+          writeArticleContent: string;
+          enterYourName: string;
+          enterJobTitle: string;
+          enterCompany: string;
+          enterEmail: string;
+        };
+        support: {
+          title: string;
+          description: string;
+          name: string;
+          email: string;
+          supportCategory: string;
+          generalInquiry: string;
+          technicalSupport: string;
+          billingInquiry: string;
+          reportProblem: string;
+          subject: string;
+          description2: string;
+          attachScreenshot: string;
+          preferredContactMethod: string;
+          phone: string;
+          submitSupport: string;
+          submitting: string;
+          faq: {
+            whatIsCandivet: {
+              title: string;
+              content: string;
+            };
+            upgradeSubscription: {
+              title: string;
+              content: string;
+            };
+            resetPassword: {
+              title: string;
+              content: string;
+            };
+            dataAfterCancel: {
+              title: string;
+              content: string;
+            };
+            createCV: {
+              title: string;
+              content: string;
+            };
+            rankingTips: {
+              title: string;
+              content: string;
+            };
+          };
+          stillHaveQuestions: string;
+          contactUs: string;
+        };
       };
     };
   }

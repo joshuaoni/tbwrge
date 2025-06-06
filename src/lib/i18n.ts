@@ -382,6 +382,110 @@ const resources = {
         arabic: "Arabic",
         portuguese: "Portuguese",
       },
+      screening: {
+        title: "Job Screening",
+        jobNotFound: "Job not found",
+        jobNotFoundMessage:
+          "The requested job could not be found or you don't have access.",
+        goBack: "Go Back",
+        jobType: "Job Type",
+        experience: "Experience",
+        salaryRange: "Salary Range",
+        location: "Location",
+        aboutCompany: "About the Company",
+        jobDescription: "Job Description",
+        requiredSkills: "Required Skills",
+        educationalRequirements: "Educational Requirements",
+        languages: "Languages",
+        additionalBenefits: "Additional Benefits",
+        tags: "Tags",
+        screeningIntro:
+          "Thank you for taking the time to apply for the {jobTitle} position at {companyName} and for sharing your qualifications and experiences with us. As the next step in our hiring process, we'd love to invite you to screening process to get to know you better.",
+        typeAnswerHere: "Type your answer here",
+        submitting: "Submitting...",
+        submitScreeningAnswers: "Submit Screening Answers",
+        successTitle: "Screening Answers Submitted Successfully!",
+        successMessage:
+          "Thank you for completing the screening questions. Your answers have been submitted successfully.",
+      },
+      submitArticle: {
+        title: "Submit an Article",
+        articleDetails: "Article Details",
+        articleTitle: "Article Title",
+        articleContent: "Article Content",
+        articleContentNote:
+          "(Optional if uploading article file. Only one allowed.)",
+        uploadArticle:
+          "Upload Article (Optional if using content above. Only one allowed.)",
+        uploadArticleNote: "",
+        authorInformation: "Author Information",
+        fullName: "Full Name",
+        jobTitle: "Job Title",
+        company: "Company",
+        uploadProfileImage: "Upload Profile Image",
+        contactInformation: "Contact Information",
+        email: "Email",
+        agreeTerms: "Agree to terms and conditions",
+        submitting: "Submitting...",
+        submitArticle: "Submit Article",
+        enterArticleTitle: "Enter article title",
+        writeArticleContent: "Write your article content here...",
+        enterYourName: "Enter your name",
+        enterJobTitle: "Enter your job title",
+        enterCompany: "Enter your company",
+        enterEmail: "Enter your email",
+      },
+      support: {
+        title: "Support",
+        description:
+          "You can contact us today! We are dedicated to solving your problems",
+        name: "Name",
+        email: "Email",
+        supportCategory: "Support Category",
+        generalInquiry: "General Inquiry",
+        technicalSupport: "Technical Support",
+        billingInquiry: "Billing Inquiry",
+        reportProblem: "Report a Problem",
+        subject: "Subject",
+        description2: "Description",
+        attachScreenshot: "Attach Screenshot",
+        preferredContactMethod: "Preferred Contact Method",
+        phone: "Phone",
+        submitSupport: "Submit Support Request",
+        submitting: "Submitting...",
+        faq: {
+          whatIsCandivet: {
+            title: "What is Candivet?",
+            content:
+              "Candivet is a powerful online platform designed to help job seekers create professional, tailored CVs and cover letters. With a focus on simplifying the job application process, Candivet provides tools for building personalized documents, optimizing content for specific job roles, and ranking candidates based on their qualifications. Whether you're applying for a new job or looking to update your professional profile, Candivet offers easy-to-use features to enhance your chances of success in the competitive job market.",
+          },
+          upgradeSubscription: {
+            title: "How to upgrade or downgrade your subscription.",
+            content:
+              "Details about subscription upgrades and downgrades go here.",
+          },
+          resetPassword: {
+            title: "How to reset your password",
+            content: "Details about resetting your password go here.",
+          },
+          dataAfterCancel: {
+            title: "What happens to your data if you cancel your subscription.",
+            content:
+              "Information about data retention after cancellation goes here.",
+          },
+          createCV: {
+            title: "How to create a tailored CV or cover letter.",
+            content: "Steps to create a CV or cover letter go here.",
+          },
+          rankingTips: {
+            title: "Tips for using the candidate ranking tool.",
+            content:
+              "Helpful tips for maximizing the candidate ranking tool go here.",
+          },
+        },
+        stillHaveQuestions: "Still have more questions?",
+        contactUs: "Contact Us",
+      },
     },
   },
   fr: {
@@ -724,6 +828,114 @@ const resources = {
         arabic: "Arabe",
         portuguese: "Portugais",
       },
+      screening: {
+        title: "Évaluation de poste",
+        jobNotFound: "Poste non trouvé",
+        jobNotFoundMessage:
+          "Le poste demandé n'a pas pu être trouvé ou vous n'avez pas accès.",
+        goBack: "Retourner",
+        jobType: "Type d'emploi",
+        experience: "Expérience",
+        salaryRange: "Fourchette salariale",
+        location: "Lieu",
+        aboutCompany: "À propos de l'entreprise",
+        jobDescription: "Description du poste",
+        requiredSkills: "Compétences requises",
+        educationalRequirements: "Exigences éducatives",
+        languages: "Langues",
+        additionalBenefits: "Avantages supplémentaires",
+        tags: "Étiquettes",
+        screeningIntro:
+          "Merci d'avoir pris le temps de postuler pour le poste de {jobTitle} chez {companyName} et de partager vos qualifications et expériences avec nous. Dans le cadre de notre processus de recrutement, nous aimerions vous inviter au processus d'évaluation pour mieux vous connaître.",
+        typeAnswerHere: "Tapez votre réponse ici",
+        submitting: "Soumission...",
+        submitScreeningAnswers: "Soumettre les réponses d'évaluation",
+        successTitle: "Réponses d'évaluation soumises avec succès !",
+        successMessage:
+          "Merci d'avoir complété les questions d'évaluation. Vos réponses ont été soumises avec succès.",
+      },
+      submitArticle: {
+        title: "Soumettre un article",
+        articleDetails: "Détails de l'article",
+        articleTitle: "Titre de l'article",
+        articleContent: "Contenu de l'article",
+        articleContentNote:
+          "(Optionnel si vous téléchargez un fichier d'article. Un seul autorisé.)",
+        uploadArticle:
+          "Télécharger un article (Optionnel si vous utilisez le contenu ci-dessus. Un seul autorisé.)",
+        uploadArticleNote: "",
+        authorInformation: "Informations sur l'auteur",
+        fullName: "Nom complet",
+        jobTitle: "Titre du poste",
+        company: "Entreprise",
+        uploadProfileImage: "Télécharger une image de profil",
+        contactInformation: "Informations de contact",
+        email: "Email",
+        agreeTerms: "Accepter les termes et conditions",
+        submitting: "Soumission...",
+        submitArticle: "Soumettre l'article",
+        enterArticleTitle: "Entrez le titre de l'article",
+        writeArticleContent: "Rédigez votre contenu d'article ici...",
+        enterYourName: "Entrez votre nom",
+        enterJobTitle: "Entrez votre titre de poste",
+        enterCompany: "Entrez votre entreprise",
+        enterEmail: "Entrez votre email",
+      },
+      support: {
+        title: "Support",
+        description:
+          "Vous pouvez nous contacter dès aujourd'hui ! Nous nous engageons à résoudre vos problèmes",
+        name: "Nom",
+        email: "Email",
+        supportCategory: "Catégorie de support",
+        generalInquiry: "Demande générale",
+        technicalSupport: "Support technique",
+        billingInquiry: "Demande de facturation",
+        reportProblem: "Signaler un problème",
+        subject: "Sujet",
+        description2: "Description",
+        attachScreenshot: "Joindre une capture d'écran",
+        preferredContactMethod: "Méthode de contact préférée",
+        phone: "Téléphone",
+        submitSupport: "Soumettre la demande de support",
+        submitting: "Soumission...",
+        faq: {
+          whatIsCandivet: {
+            title: "Qu'est-ce que Candivet ?",
+            content:
+              "Candivet est une puissante plateforme en ligne conçue pour aider les chercheurs d'emploi à créer des CV et lettres de motivation professionnels et personnalisés. En se concentrant sur la simplification du processus de candidature, Candivet fournit des outils pour créer des documents personnalisés, optimiser le contenu pour des rôles spécifiques, et classer les candidats selon leurs qualifications. Que vous postuliez pour un nouvel emploi ou que vous souhaitiez mettre à jour votre profil professionnel, Candivet offre des fonctionnalités faciles à utiliser pour améliorer vos chances de succès sur le marché du travail compétitif.",
+          },
+          upgradeSubscription: {
+            title: "Comment mettre à niveau ou rétrograder votre abonnement.",
+            content:
+              "Les détails sur les mises à niveau et rétrogradations d'abonnement sont disponibles ici.",
+          },
+          resetPassword: {
+            title: "Comment réinitialiser votre mot de passe",
+            content:
+              "Les détails sur la réinitialisation de votre mot de passe sont disponibles ici.",
+          },
+          dataAfterCancel: {
+            title: "Que devient vos données si vous annulez votre abonnement.",
+            content:
+              "Les informations sur la conservation des données après annulation sont disponibles ici.",
+          },
+          createCV: {
+            title:
+              "Comment créer un CV ou une lettre de motivation personnalisés.",
+            content:
+              "Les étapes pour créer un CV ou une lettre de motivation sont disponibles ici.",
+          },
+          rankingTips: {
+            title:
+              "Conseils pour utiliser l'outil de classement des candidats.",
+            content:
+              "Des conseils utiles pour maximiser l'outil de classement des candidats sont disponibles ici.",
+          },
+        },
+        stillHaveQuestions: "Vous avez encore des questions ?",
+        contactUs: "Contactez-nous",
+      },
     },
   },
   es: {
@@ -958,7 +1170,7 @@ const resources = {
           },
           selectOutputLanguage: "Seleccionar idioma de salida",
           generateSummary: "Resumir Carta de Presentación",
-          generating: "Generando resumen...",
+          generating: "Gerando resumen...",
           generatedSummary: "Resumen de la Carta de Presentación",
           summaryPlaceholder: "Su resumen aparecerá aquí",
           downloadFilename: "resumen-carta-presentacion.txt",
@@ -1001,7 +1213,7 @@ const resources = {
           },
           jobDescription: {
             title: "Pegue su Descripción de Trabajo aquí",
-            subTitle: "(Opcional para mejor análisis)",
+            subTitle: "(Opcional para mejor análise)",
           },
           jobDescriptionPlaceholder: "Descripción de trabajo detallada",
           vetCoverLetter: "Evaluar Carta de Presentación",
@@ -1036,7 +1248,7 @@ const resources = {
         candidateReportGenerator: "Gerador de informes de candidato",
         aiInterviewScreeningGenerator: "Gerador de entrevista y selección IA",
         aiScreeningQuestionsAssistant: "Asistente de preguntas de selección IA",
-        aiInterviewPrep: "Preparación de entrevista IA",
+        aiInterviewPrep: "Préparation d'entretien IA",
         matchingRanking: "Correspondencia y clasificación",
         headToHead: "Cara a cara",
       },
@@ -1074,6 +1286,112 @@ const resources = {
         german: "Alemán",
         arabic: "Árabe",
         portuguese: "Portugués",
+      },
+      screening: {
+        title: "Evaluación de trabajo",
+        jobNotFound: "Trabajo no encontrado",
+        jobNotFoundMessage:
+          "El trabajo solicitado no se pudo encontrar o no tienes acceso.",
+        goBack: "Volver",
+        jobType: "Tipo de trabajo",
+        experience: "Experiencia",
+        salaryRange: "Rango salarial",
+        location: "Ubicación",
+        aboutCompany: "Acerca de la empresa",
+        jobDescription: "Descripción del trabajo",
+        requiredSkills: "Habilidades requeridas",
+        educationalRequirements: "Requisitos educativos",
+        languages: "Idiomas",
+        additionalBenefits: "Beneficios adicionales",
+        tags: "Etiquetas",
+        screeningIntro:
+          "Gracias por tomarte el tiempo de aplicar para la posición de {jobTitle} en {companyName} y por compartir tus cualificaciones y experiencias con nosotros. Como el siguiente paso en nuestro proceso de contratación, nos encantaría invitarte al proceso de evaluación para conocerte mejor.",
+        typeAnswerHere: "Escribe tu respuesta aquí",
+        submitting: "Enviando...",
+        submitScreeningAnswers: "Enviar respuestas de evaluación",
+        successTitle: "¡Respuestas de evaluación enviadas exitosamente!",
+        successMessage:
+          "Gracias por completar las preguntas de evaluación. Tus respuestas han sido enviadas exitosamente.",
+      },
+      submitArticle: {
+        title: "Enviar un artículo",
+        articleDetails: "Detalles del artículo",
+        articleTitle: "Título del artículo",
+        articleContent: "Contenido del artículo",
+        articleContentNote:
+          "(Opcional si subes archivo del artículo. Solo uno permitido.)",
+        uploadArticle:
+          "Subir artículo (Opcional si usas el contenido de arriba. Solo uno permitido.)",
+        uploadArticleNote: "",
+        authorInformation: "Información del autor",
+        fullName: "Nombre completo",
+        jobTitle: "Título del trabajo",
+        company: "Empresa",
+        uploadProfileImage: "Subir imagen de perfil",
+        contactInformation: "Información de contacto",
+        email: "Email",
+        agreeTerms: "Acepto términos y condiciones",
+        submitting: "Enviando...",
+        submitArticle: "Enviar artículo",
+        enterArticleTitle: "Ingresa el título del artículo",
+        writeArticleContent: "Escribe el contenido de tu artículo aquí...",
+        enterYourName: "Ingresa tu nombre",
+        enterJobTitle: "Ingresa tu título de trabajo",
+        enterCompany: "Ingresa tu empresa",
+        enterEmail: "Ingresa tu email",
+      },
+      support: {
+        title: "Soporte",
+        description:
+          "¡Puedes contactarnos hoy! Estamos dedicados a resolver tus problemas",
+        name: "Nombre",
+        email: "Email",
+        supportCategory: "Categoría de soporte",
+        generalInquiry: "Consulta general",
+        technicalSupport: "Soporte técnico",
+        billingInquiry: "Consulta de facturación",
+        reportProblem: "Reportar un problema",
+        subject: "Asunto",
+        description2: "Descripción",
+        attachScreenshot: "Adjuntar captura de pantalla",
+        preferredContactMethod: "Método de contacto preferido",
+        phone: "Teléfono",
+        submitSupport: "Enviar solicitud de soporte",
+        submitting: "Enviando...",
+        faq: {
+          whatIsCandivet: {
+            title: "¿Qué es Candivet?",
+            content:
+              "Candivet es una poderosa plataforma en línea diseñada para ayudar a los buscadores de empleo a crear CVs y cartas de presentación profesionales y personalizadas. Con un enfoque en simplificar el proceso de solicitud de empleo, Candivet proporciona herramientas para construir documentos personalizados, optimizar contenido para roles específicos de trabajo, y clasificar candidatos basándose en sus calificaciones. Ya sea que estés aplicando para un nuevo trabajo o buscando actualizar tu perfil profesional, Candivet ofrece características fáciles de usar para mejorar tus posibilidades de éxito en el mercado laboral competitivo.",
+          },
+          upgradeSubscription: {
+            title: "Cómo actualizar o degradar tu suscripción.",
+            content:
+              "Los detalles sobre actualizaciones y degradaciones de suscripción van aquí.",
+          },
+          resetPassword: {
+            title: "Cómo restablecer tu contraseña",
+            content: "Los detalles sobre restablecer tu contraseña van aquí.",
+          },
+          dataAfterCancel: {
+            title: "Qué pasa con tus datos si cancelas tu suscripción.",
+            content:
+              "La información sobre retención de datos después de la cancelación va aquí.",
+          },
+          createCV: {
+            title: "Cómo crear un CV o carta de presentación personalizada.",
+            content:
+              "Los pasos para crear un CV o carta de presentación van aquí.",
+          },
+          rankingTips: {
+            title:
+              "Consejos para usar la herramienta de clasificación de candidatos.",
+            content:
+              "Consejos útiles para maximizar la herramienta de clasificación de candidatos van aquí.",
+          },
+        },
+        stillHaveQuestions: "¿Todavía tienes más preguntas?",
+        contactUs: "Contáctanos",
       },
     },
   },
@@ -1425,6 +1743,114 @@ const resources = {
         arabic: "Arabisch",
         portuguese: "Portugiesisch",
       },
+      screening: {
+        title: "Job Screening",
+        jobNotFound: "Job not found",
+        jobNotFoundMessage:
+          "The requested job could not be found or you don't have access.",
+        goBack: "Go Back",
+        jobType: "Job Type",
+        experience: "Experience",
+        salaryRange: "Salary Range",
+        location: "Location",
+        aboutCompany: "About the Company",
+        jobDescription: "Job Description",
+        requiredSkills: "Required Skills",
+        educationalRequirements: "Educational Requirements",
+        languages: "Languages",
+        additionalBenefits: "Additional Benefits",
+        tags: "Tags",
+        screeningIntro:
+          "Thank you for taking the time to apply for the {jobTitle} position at {companyName} and for sharing your qualifications and experiences with us. As the next step in our hiring process, we'd love to invite you to screening process to get to know you better.",
+        typeAnswerHere: "Type your answer here",
+        submitting: "Submitting...",
+        submitScreeningAnswers: "Submit Screening Answers",
+        successTitle: "Screening Answers Submitted Successfully!",
+        successMessage:
+          "Thank you for completing the screening questions. Your answers have been submitted successfully.",
+      },
+      submitArticle: {
+        title: "Submit an Article",
+        articleDetails: "Article Details",
+        articleTitle: "Article Title",
+        articleContent: "Article Content",
+        articleContentNote:
+          "(Optional if uploading article file. Only one allowed.)",
+        uploadArticle:
+          "Upload Article (Optional if using content above. Only one allowed.)",
+        uploadArticleNote: "",
+        authorInformation: "Author Information",
+        fullName: "Full Name",
+        jobTitle: "Job Title",
+        company: "Company",
+        uploadProfileImage: "Upload Profile Image",
+        contactInformation: "Contact Information",
+        email: "Email",
+        agreeTerms: "Agree to terms and conditions",
+        submitting: "Submitting...",
+        submitArticle: "Submit Article",
+        enterArticleTitle: "Enter article title",
+        writeArticleContent: "Write your article content here...",
+        enterYourName: "Enter your name",
+        enterJobTitle: "Enter your job title",
+        enterCompany: "Enter your company",
+        enterEmail: "Enter your email",
+      },
+      support: {
+        title: "Support",
+        description:
+          "Sie können uns heute kontaktieren! Wir sind darauf spezialisiert, Ihre Probleme zu lösen",
+        name: "Name",
+        email: "E-Mail",
+        supportCategory: "Support-Kategorie",
+        generalInquiry: "Allgemeine Anfrage",
+        technicalSupport: "Technischer Support",
+        billingInquiry: "Abrechnungsanfrage",
+        reportProblem: "Problem melden",
+        subject: "Betreff",
+        description2: "Beschreibung",
+        attachScreenshot: "Screenshot anhängen",
+        preferredContactMethod: "Bevorzugte Kontaktmethode",
+        phone: "Telefon",
+        submitSupport: "Support-Anfrage übermitteln",
+        submitting: "Wird übermittelt...",
+        faq: {
+          whatIsCandivet: {
+            title: "Was ist Candivet?",
+            content:
+              "Candivet ist eine leistungsstarke Online-Plattform, die Jobsuchenden dabei hilft, professionelle, maßgeschneiderte Lebensläufe und Anschreiben zu erstellen. Mit dem Fokus auf die Vereinfachung des Bewerbungsprozesses bietet Candivet Tools zum Erstellen personalisierter Dokumente, zur Optimierung von Inhalten für spezifische Stellenrollen und zur Bewertung von Kandidaten basierend auf ihren Qualifikationen. Ob Sie sich für einen neuen Job bewerben oder Ihr berufliches Profil aktualisieren möchten, Candivet bietet benutzerfreundliche Funktionen zur Verbesserung Ihrer Erfolgschancen auf dem umkämpften Arbeitsmarkt.",
+          },
+          upgradeSubscription: {
+            title: "Wie Sie Ihr Abonnement upgraden oder downgraden.",
+            content:
+              "Details zu Abonnement-Upgrades und -Downgrades finden Sie hier.",
+          },
+          resetPassword: {
+            title: "Wie Sie Ihr Passwort zurücksetzen",
+            content:
+              "Details zum Zurücksetzen Ihres Passworts finden Sie hier.",
+          },
+          dataAfterCancel: {
+            title:
+              "Was passiert mit Ihren Daten, wenn Sie Ihr Abonnement kündigen.",
+            content:
+              "Informationen zur Datenspeicherung nach der Kündigung finden Sie hier.",
+          },
+          createCV: {
+            title:
+              "Wie Sie einen maßgeschneiderten Lebenslauf oder Anschreiben erstellen.",
+            content:
+              "Schritte zum Erstellen eines Lebenslaufs oder Anschreibens finden Sie hier.",
+          },
+          rankingTips: {
+            title: "Tipps zur Verwendung des Kandidaten-Ranking-Tools.",
+            content:
+              "Hilfreiche Tipps zur Maximierung des Kandidaten-Ranking-Tools finden Sie hier.",
+          },
+        },
+        stillHaveQuestions: "Haben Sie noch weitere Fragen?",
+        contactUs: "Kontaktieren Sie uns",
+      },
     },
   },
   ar: {
@@ -1767,6 +2193,106 @@ const resources = {
         german: "الألمانية",
         arabic: "العربية",
         portuguese: "البرتغالية",
+      },
+      screening: {
+        title: "فحص الوظيفة",
+        jobNotFound: "الوظيفة غير موجودة",
+        jobNotFoundMessage:
+          "لا يمكن العثور على الوظيفة المطلوبة أو ليس لديك صلاحية الوصول.",
+        goBack: "العودة",
+        jobType: "نوع الوظيفة",
+        experience: "الخبرة",
+        salaryRange: "نطاق الراتب",
+        location: "الموقع",
+        aboutCompany: "حول الشركة",
+        jobDescription: "وصف الوظيفة",
+        requiredSkills: "المهارات المطلوبة",
+        educationalRequirements: "المتطلبات التعليمية",
+        languages: "اللغات",
+        additionalBenefits: "المنافع الإضافية",
+        tags: "العلامات",
+        screeningIntro:
+          "شكراً لك على تخصيص الوقت للتقدم لمنصب {jobTitle} في {companyName} ولمشاركة مؤهلاتك وخبراتك معنا. كخطوة تالية في عملية التوظيف، نود دعوتك لعملية الفحص للتعرف عليك أكثر.",
+        typeAnswerHere: "اكتب إجابتك هنا",
+        submitting: "جاري الإرسال...",
+        submitScreeningAnswers: "إرسال إجابات الفحص",
+        successTitle: "تم إرسال إجابات الفحص بنجاح!",
+        successMessage:
+          "شكراً لك على إكمال أسئلة الفحص. تم إرسال إجاباتك بنجاح.",
+      },
+      submitArticle: {
+        title: "إرسال مقال",
+        articleDetails: "تفاصيل المقال",
+        articleTitle: "عنوان المقال",
+        articleContent: "محتوى المقال",
+        articleContentNote:
+          "(اختياري إذا تم تحميل ملف المقال. واحد فقط مسموح.)",
+        uploadArticle:
+          "تحميل مقال (اختياري إذا كنت تستخدم المحتوى أعلاه. واحد فقط مسموح.)",
+        uploadArticleNote: "",
+        authorInformation: "معلومات المؤلف",
+        fullName: "الاسم الكامل",
+        jobTitle: "المسمى الوظيفي",
+        company: "الشركة",
+        uploadProfileImage: "تحميل صورة الملف الشخصي",
+        contactInformation: "معلومات الاتصال",
+        email: "البريد الإلكتروني",
+        agreeTerms: "أوافق على الشروط والأحكام",
+        submitting: "جاري الإرسال...",
+        submitArticle: "إرسال المقال",
+        enterArticleTitle: "أدخل عنوان المقال",
+        writeArticleContent: "اكتب محتوى مقالك هنا...",
+        enterYourName: "أدخل اسمك",
+        enterJobTitle: "أدخل مسماك الوظيفي",
+        enterCompany: "أدخل شركتك",
+        enterEmail: "أدخل بريدك الإلكتروني",
+      },
+      support: {
+        title: "الدعم",
+        description: "يمكنك التواصل معنا اليوم! نحن ملتزمون بحل مشاكلك",
+        name: "الاسم",
+        email: "البريد الإلكتروني",
+        supportCategory: "فئة الدعم",
+        generalInquiry: "استفسار عام",
+        technicalSupport: "الدعم الفني",
+        billingInquiry: "استفسار الفواتير",
+        reportProblem: "الإبلاغ عن مشكلة",
+        subject: "الموضوع",
+        description2: "الوصف",
+        attachScreenshot: "إرفاق لقطة شاشة",
+        preferredContactMethod: "طريقة الاتصال المفضلة",
+        phone: "الهاتف",
+        submitSupport: "إرسال طلب الدعم",
+        submitting: "جاري الإرسال...",
+        faq: {
+          whatIsCandivet: {
+            title: "ما هو Candivet؟",
+            content:
+              "Candivet هي منصة قوية عبر الإنترنت مصممة لمساعدة الباحثين عن العمل في إنشاء سير ذاتية ورسائل تغطية مهنية ومخصصة. مع التركيز على تبسيط عملية التقدم للوظائف، يوفر Candivet أدوات لبناء مستندات شخصية، وتحسين المحتوى لأدوار وظيفية محددة، وترتيب المرشحين بناءً على مؤهلاتهم. سواء كنت تتقدم لوظيفة جديدة أو تسعى لتحديث ملفك المهني، يقدم Candivet ميزات سهلة الاستخدام لتعزيز فرص نجاحك في سوق العمل التنافسي.",
+          },
+          upgradeSubscription: {
+            title: "كيفية ترقية أو تخفيض اشتراكك.",
+            content: "تفاصيل حول ترقيات وتخفيضات الاشتراك تجدها هنا.",
+          },
+          resetPassword: {
+            title: "كيفية إعادة تعيين كلمة المرور",
+            content: "تفاصيل حول إعادة تعيين كلمة المرور تجدها هنا.",
+          },
+          dataAfterCancel: {
+            title: "ماذا يحدث لبياناتك إذا ألغيت اشتراكك.",
+            content: "معلومات حول الاحتفاظ بالبيانات بعد الإلغاء تجدها هنا.",
+          },
+          createCV: {
+            title: "كيفية إنشاء سيرة ذاتية أو رسالة تغطية مخصصة.",
+            content: "خطوات إنشاء سيرة ذاتية أو رسالة تغطية تجدها هنا.",
+          },
+          rankingTips: {
+            title: "نصائح لاستخدام أداة ترتيب المرشحين.",
+            content: "نصائح مفيدة لتعظيم أداة ترتيب المرشحين تجدها هنا.",
+          },
+        },
+        stillHaveQuestions: "لا تزال لديك أسئلة أخرى؟",
+        contactUs: "اتصل بنا",
       },
     },
   },
@@ -2116,6 +2642,110 @@ const resources = {
         german: "Alemão",
         arabic: "Árabe",
         portuguese: "Português",
+      },
+      screening: {
+        title: "Job Screening",
+        jobNotFound: "Job not found",
+        jobNotFoundMessage:
+          "The requested job could not be found or you don't have access.",
+        goBack: "Go Back",
+        jobType: "Job Type",
+        experience: "Experience",
+        salaryRange: "Salary Range",
+        location: "Location",
+        aboutCompany: "About the Company",
+        jobDescription: "Job Description",
+        requiredSkills: "Required Skills",
+        educationalRequirements: "Educational Requirements",
+        languages: "Languages",
+        additionalBenefits: "Additional Benefits",
+        tags: "Tags",
+        screeningIntro:
+          "Thank you for taking the time to apply for the {jobTitle} position at {companyName} and for sharing your qualifications and experiences with us. As the next step in our hiring process, we'd love to invite you to screening process to get to know you better.",
+        typeAnswerHere: "Type your answer here",
+        submitting: "Submitting...",
+        submitScreeningAnswers: "Submit Screening Answers",
+        successTitle: "Screening Answers Submitted Successfully!",
+        successMessage:
+          "Thank you for completing the screening questions. Your answers have been submitted successfully.",
+      },
+      submitArticle: {
+        title: "Submit an Article",
+        articleDetails: "Article Details",
+        articleTitle: "Article Title",
+        articleContent: "Article Content",
+        articleContentNote:
+          "(Optional if uploading article file. Only one allowed.)",
+        uploadArticle:
+          "Upload Article (Optional if using content above. Only one allowed.)",
+        uploadArticleNote: "",
+        authorInformation: "Author Information",
+        fullName: "Full Name",
+        jobTitle: "Job Title",
+        company: "Company",
+        uploadProfileImage: "Upload Profile Image",
+        contactInformation: "Contact Information",
+        email: "Email",
+        agreeTerms: "Agree to terms and conditions",
+        submitting: "Submitting...",
+        submitArticle: "Submit Article",
+        enterArticleTitle: "Enter article title",
+        writeArticleContent: "Write your article content here...",
+        enterYourName: "Enter your name",
+        enterJobTitle: "Enter your job title",
+        enterCompany: "Enter your company",
+        enterEmail: "Enter your email",
+      },
+      support: {
+        title: "Support",
+        description:
+          "You can contact us today! We are dedicated to solving your problems",
+        name: "Name",
+        email: "Email",
+        supportCategory: "Support Category",
+        generalInquiry: "General Inquiry",
+        technicalSupport: "Technical Support",
+        billingInquiry: "Billing Inquiry",
+        reportProblem: "Report a Problem",
+        subject: "Subject",
+        description2: "Description",
+        attachScreenshot: "Attach Screenshot",
+        preferredContactMethod: "Preferred Contact Method",
+        phone: "Phone",
+        submitSupport: "Submit Support Request",
+        submitting: "Submitting...",
+        faq: {
+          whatIsCandivet: {
+            title: "What is Candivet?",
+            content:
+              "Candivet is a powerful online platform designed to help job seekers create professional, tailored CVs and cover letters. With a focus on simplifying the job application process, Candivet provides tools for building personalized documents, optimizing content for specific job roles, and ranking candidates based on their qualifications. Whether you're applying for a new job or looking to update your professional profile, Candivet offers easy-to-use features to enhance your chances of success in the competitive job market.",
+          },
+          upgradeSubscription: {
+            title: "How to upgrade or downgrade your subscription.",
+            content:
+              "Details about subscription upgrades and downgrades go here.",
+          },
+          resetPassword: {
+            title: "How to reset your password",
+            content: "Details about resetting your password go here.",
+          },
+          dataAfterCancel: {
+            title: "What happens to your data if you cancel your subscription.",
+            content:
+              "Information about data retention after cancellation goes here.",
+          },
+          createCV: {
+            title: "How to create a tailored CV or cover letter.",
+            content: "Steps to create a CV or cover letter go here.",
+          },
+          rankingTips: {
+            title: "Tips for using the candidate ranking tool.",
+            content:
+              "Helpful tips for maximizing the candidate ranking tool go here.",
+          },
+        },
+        stillHaveQuestions: "Still have more questions?",
+        contactUs: "Contact Us",
       },
     },
   },

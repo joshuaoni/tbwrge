@@ -20,8 +20,10 @@ import DashboardFeedbackSupportLayout from "@/components/dashboard/feedback-supp
 import { useForm } from "@/hooks/form";
 import { useUserStore } from "@/hooks/use-user-store";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const DashboardSupportPage = () => {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
   const { userData } = useUserStore();
 
@@ -41,7 +43,7 @@ const DashboardSupportPage = () => {
   return (
     <DashboardFeedbackSupportLayout>
       <p className={`${outfit.className} text-textgray`}>
-        You can contact us today! We are dedicated to solving your problems
+        {t("support.description")}
       </p>
 
       <section className={`${outfit.className} flex gap-10 items-start my-6`}>
@@ -49,32 +51,35 @@ const DashboardSupportPage = () => {
           className="w-full my-6 space-y-7 max-w-md"
           onSubmit={form.handleSubmit}
         >
-          <FeedbackSupportInputGroup label="Name" />
-          <FeedbackSupportInputGroup label="Email" />
+          <FeedbackSupportInputGroup label={t("support.name")} />
+          <FeedbackSupportInputGroup label={t("support.email")} />
           <FeedbackSupportSelectGroup
-            title="Support Category"
-            defaultValue="General Inquiry"
+            title={t("support.supportCategory")}
+            defaultValue={t("support.generalInquiry")}
             options={[
-              { label: "General Inquiry", value: "general-inquiry" },
-              { label: "Technical Support", value: "technical-support" },
-              { label: "Billing Inquiry", value: "billing-inquiry" },
-              { label: "Report a Problem", value: "report-a-problem" },
+              { label: t("support.generalInquiry"), value: "general-inquiry" },
+              {
+                label: t("support.technicalSupport"),
+                value: "technical-support",
+              },
+              { label: t("support.billingInquiry"), value: "billing-inquiry" },
+              { label: t("support.reportProblem"), value: "report-a-problem" },
             ]}
             onChange={(val) => form.setFormField("category", val)}
           />
           <FeedbackSupportInputGroup
-            label="Subject"
+            label={t("support.subject")}
             value={form.formData.subject}
             onChange={(val) => form.setFormField("subject", val)}
           />
           <FeedbackSupportTextareaGroup
-            label="Description"
+            label={t("support.description2")}
             value={form.formData.details}
             onChange={(val) => form.setFormField("details", val)}
           />
           <div>
             <label className="block text-sm  text-gray-700 mb-1">
-              Attach Screenshot
+              {t("support.attachScreenshot")}
             </label>
             <input
               type="file"
@@ -90,11 +95,11 @@ const DashboardSupportPage = () => {
             />
           </div>
           <FeedbackSupportSelectGroup
-            title="Preferred Contact Method"
-            defaultValue="Email"
+            title={t("support.preferredContactMethod")}
+            defaultValue={t("support.email")}
             options={[
-              { label: "Email", value: "email" },
-              { label: "Phone", value: "phone" },
+              { label: t("support.email"), value: "email" },
+              { label: t("support.phone"), value: "phone" },
             ]}
             onChange={(val) => form.setFormField("preferred_contact", val)}
           />
@@ -112,33 +117,28 @@ const DashboardSupportPage = () => {
           <div className="space-y-4">
             {[
               {
-                title: "What is Candivet?",
-                content:
-                  "Candivet is a powerful online platform designed to help job seekers create professional, tailored CVs and cover letters. With a focus on simplifying the job application process, Candivet provides tools for building personalized documents, optimizing content for specific job roles, and ranking candidates based on their qualifications. Whether you're applying for a new job or looking to update your professional profile, Candivet offers easy-to-use features to enhance your chances of success in the competitive job market.",
+                title: t("support.faq.whatIsCandivet.title"),
+                content: t("support.faq.whatIsCandivet.content"),
               },
               {
-                title: "How to upgrade or downgrade your subscription.",
-                content:
-                  "Details about subscription upgrades and downgrades go here.",
+                title: t("support.faq.upgradeSubscription.title"),
+                content: t("support.faq.upgradeSubscription.content"),
               },
               {
-                title: "How to reset your password",
-                content: "Details about resetting your password go here.",
+                title: t("support.faq.resetPassword.title"),
+                content: t("support.faq.resetPassword.content"),
               },
               {
-                title:
-                  "What happens to your data if you cancel your subscription.",
-                content:
-                  "Information about data retention after cancellation goes here.",
+                title: t("support.faq.dataAfterCancel.title"),
+                content: t("support.faq.dataAfterCancel.content"),
               },
               {
-                title: "How to create a tailored CV or cover letter.",
-                content: "Steps to create a CV or cover letter go here.",
+                title: t("support.faq.createCV.title"),
+                content: t("support.faq.createCV.content"),
               },
               {
-                title: "Tips for using the candidate ranking tool.",
-                content:
-                  "Helpful tips for maximizing the candidate ranking tool go here.",
+                title: t("support.faq.rankingTips.title"),
+                content: t("support.faq.rankingTips.content"),
               },
             ].map((item, i) => (
               <FeedbackSupportAccordion
@@ -151,12 +151,12 @@ const DashboardSupportPage = () => {
           </div>
 
           <p className="py-6 text-textgray text-center">
-            Still have more questions?&nbsp;
+            {t("support.stillHaveQuestions")}&nbsp;
             <Link
               href="/dashboard/feedback"
               className="text-lightgreen underline"
             >
-              Contact Us
+              {t("support.contactUs")}
             </Link>
           </p>
         </section>
