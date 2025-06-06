@@ -81,6 +81,24 @@ const LandingFooter = () => {
     }
   };
 
+  const handleRecruitersClick = () => {
+    const path = "/dashboard";
+    if (!userData?.token || userData?.user?.role !== "recruiter") {
+      router.push(`/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const handleJobSeekersClick = () => {
+    const path = "/dashboard";
+    if (!userData?.token || userData?.user?.role !== "job_seeker") {
+      router.push(`/sign-in?redirect=${encodeURIComponent(path)}`);
+    } else {
+      router.push(path);
+    }
+  };
+
   return (
     <div
       className="relative h-fit pt-12 md:pt-24 flex items-center justify-center p-4 md:p-12 md:pb-24 md:px-16 bg-black"
@@ -125,9 +143,23 @@ const LandingFooter = () => {
           <div className="text-white mb-6 md:mb-0">
             <h2 className="font-bold text-lg md:text-[20px]">How it works</h2>
             <div className="font-light mt-3 space-y-2 text-sm md:text-base">
-              <p>Recruiters</p>
-              <p>Job Seekers</p>
-              <p>All Candivet Tools</p>
+              <p
+                onClick={handleRecruitersClick}
+                className="cursor-pointer hover:underline"
+              >
+                Recruiters
+              </p>
+              <p
+                onClick={handleJobSeekersClick}
+                className="cursor-pointer hover:underline"
+              >
+                Job Seekers
+              </p>
+              <p>
+                <a href="/dashboard" className="cursor-pointer hover:underline">
+                  All Candivet Tools
+                </a>
+              </p>
             </div>
           </div>
           <div className="text-white mb-6 md:mb-0">

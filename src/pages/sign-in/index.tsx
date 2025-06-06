@@ -68,6 +68,8 @@ const Index = () => {
           router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
         }
       }
     },

@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
     }
 
     // If not admin trying to access admin routes
-    if (pathname.startsWith("/admin") && userRole !== "admin") {
+    if (pathname.startsWith("/admin") && userRole !== "root") {
       const url = new URL("/sign-in", request.url);
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);

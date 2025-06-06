@@ -208,7 +208,7 @@ const LeftSideBar = () => {
         },
       ];
 
-      if (userData?.user?.role === "admin") {
+      if (userData?.user?.role === "root") {
         // Find the index of 'Logout'
         const logoutIdx = baseItems.findIndex(
           (item) => item.title === t("nav.logout")
@@ -227,15 +227,11 @@ const LeftSideBar = () => {
 
   return (
     <div
-      className={`${outfit.className} h-screen pt-6 bg-[#F5F5F5] overflow-hidden sidebar`}
+      className={`${outfit.className} h-screen bg-[#F5F5F5] overflow-hidden sidebar`}
     >
       <div
         className={`${outfit.className} w-full h-full pt-4 bg-[#F5F5F5] pl-[16px] pr-[6px] overflow-y-auto sidebar [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#F5F5F5] [&::-webkit-scrollbar-thumb]:bg-[#A6CCB8] [&::-webkit-scrollbar-thumb]:rounded-full`}
       >
-        <div className="flex mb-[20px] items-center ml-8">
-          {/* User details removed */}
-        </div>
-
         {leftSideItems.map((item) => {
           return (
             <React.Fragment key={item.title}>
@@ -244,12 +240,12 @@ const LeftSideBar = () => {
                 setLeftSideItems={setLeftSideItems}
               />
               {item.title === t("nav.dashboard") && (
-                <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+                <div className="h-[1px] w-full bg-[#A6CCB8] my-1" />
               )}
             </React.Fragment>
           );
         })}
-        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-1" />
         <div className="flex flex-col ml-8 ">
           <div className="">
             <JobsDropdown />
@@ -257,7 +253,7 @@ const LeftSideBar = () => {
             <CvDropDown />
           </div>
         </div>
-        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+        <div className="h-[1px] w-full bg-[#A6CCB8] my-1" />
         <div className="flex flex-col ">
           <div className="mb-2 w-full ">
             {extras.map((item) => {
@@ -275,9 +271,9 @@ const LeftSideBar = () => {
           </div>
         </div>
 
-        <div className="h-[1px] w-full bg-[#A6CCB8] my-2" />
+        <div className="h-[1px] w-full bg-[#A6CCB8] mb-1" />
         <div className="flex flex-col ">
-          <h1 className="my-2 font-semibold text-[#6D6D6D] ml-8">
+          <h1 className="font-semibold text-[#6D6D6D] ml-8">
             {t("dashboard.user")}
           </h1>
           <div className="mb-24 w-full">

@@ -71,7 +71,7 @@ const DashboardHeader = ({
                 alt={`${userData?.user?.name}`}
                 width={30}
                 height={30}
-                className="rounded-full md:w-[30px] md:h-[30px]"
+                className="rounded-full md:w-[30px] md:h-[30px] object-cover"
               />
             ) : (
               <UserCircle size={32} className="text-gray-600" />
@@ -81,7 +81,13 @@ const DashboardHeader = ({
                 {userData?.user?.name || t("common.notSet")}
               </p>
               <p className="text-xs text-gray-500 truncate overflow-ellipsis">
-                {userData?.user?.role}
+                {userData?.user?.role === "root"
+                  ? "Admin"
+                  : userData?.user?.role === "recruiter"
+                  ? "Recruiter"
+                  : userData?.user?.role === "job_seeker"
+                  ? "Job Seeker"
+                  : "Not Set"}
               </p>
             </div>
           </div>
