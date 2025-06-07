@@ -85,12 +85,17 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
-        addUser(res.user);
+        addUser({
+          authenticatedUser: res.user,
+          token: res.access_token,
+        });
         // Redirect to the saved URL or default based on role
         if (res.user.role === "job_seeker") {
           router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
         }
       }
     },

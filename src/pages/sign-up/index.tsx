@@ -52,7 +52,7 @@ const SignUpPage = () => {
   const { addUser } = useUserStore();
   const searchParams = useSearchParams();
   // Get the redirect URL from query parameters
-  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+  const redirectUrl = searchParams?.get("redirect");
 
   const data = {
     fullName,
@@ -80,12 +80,17 @@ const SignUpPage = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
-        addUser(res.user);
+        addUser({
+          authenticatedUser: res.user,
+          token: res.access_token,
+        });
         // Redirect to the saved URL or default based on role
         if (res.user.role === "job_seeker") {
           router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
         }
       }
     },
