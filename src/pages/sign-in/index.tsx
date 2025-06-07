@@ -47,7 +47,7 @@ const Index = () => {
   const { addUser } = useUserStore();
 
   // Get the redirect URL from query parameters
-  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+  const redirectUrl = searchParams?.get("redirect");
 
   const signInMutation = useMutation({
     mutationFn: async () =>

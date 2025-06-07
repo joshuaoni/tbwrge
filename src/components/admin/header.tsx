@@ -31,15 +31,28 @@ function AdmindashboardHeader() {
           <BellIcon />
           <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-red rounded-full" />
         </div>
-        <div className="flex items-center justify-center gap-3">
-          <UserCircle size={40} className="mr-2" />
-          <div className="mr-2">
-            <h1 className="text-sm text-[#0F172A] font-bold">
-              {userData?.user?.name}
-            </h1>
-            <p className="text-[#64748B] text-xs">{userData?.user?.role}</p>
+
+        {/* User Profile Section */}
+        <div className="flex items-center gap-3 border-l px-4 min-w-0 max-w-xs overflow-hidden">
+          {userData?.user?.profile_picture ? (
+            <Image
+              src={userData?.user?.profile_picture}
+              alt={`${userData?.user?.name}`}
+              width={30}
+              height={30}
+              className="rounded-full md:w-[30px] md:h-[30px] object-cover"
+            />
+          ) : (
+            <UserCircle size={32} className="text-gray-600" />
+          )}
+          <div className="flex flex-col min-w-0">
+            <p className="font-medium text-sm truncate overflow-ellipsis">
+              {userData?.user?.name || "Not Set"}
+            </p>
+            <p className="text-xs text-gray-500 truncate overflow-ellipsis">
+              Admin
+            </p>
           </div>
-          <ChevronDown className="text-[#64748B]" size={20} />
         </div>
       </div>
     </header>

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useTranslation } from "react-i18next";
+import { outfit } from "@/constants/app";
 
 interface DashboardHeaderProps {
   searchTerm: string;
@@ -21,7 +22,9 @@ const DashboardHeader = ({
   const { userData } = useUserStore();
 
   return (
-    <div className="ml-[260px] w-[calc(100vw-260px)] border-b h-20 z-20 bg-white flex items-center px-4 pl-12 fixed top-0">
+    <div
+      className={`${outfit.className} ml-[260px] w-[calc(100vw-260px)] border-b h-20 z-20 bg-white flex items-center px-4 pl-12 fixed top-0`}
+    >
       <div className="flex w-full items-center justify-between mt-2">
         {/* Search */}
         <div className="flex items-center border px-2 bg-[#F0F0F0] rounded-full mr-4">
