@@ -120,7 +120,7 @@ function CreateJobOverview() {
         candidate_interview_count: 0,
         interview_link: ctx.formData.recruiter_calendar_booking_link,
         company_id: null,
-        recruiter_id: userData?.user?.id,
+        recruiter_id: ctx.formData.recruiter_id,
         job_questions: questions.map((q) => q.title),
         screening_questions: ctx.formData.screening_questions,
         hiring_flows: ctx.formData.hiring_flows,
