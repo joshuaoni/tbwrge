@@ -45,7 +45,12 @@ const LandingHeader = ({
   }, []);
 
   const isBlogOrTools =
-    pathname?.includes("/blog") || pathname?.includes("/pricing");
+    pathname?.includes("/blog") ||
+    pathname?.includes("/pricing") ||
+    pathname?.includes("/terms-of-service") ||
+    pathname?.includes("/privacy-policy") ||
+    pathname?.includes("/cookie-policy") ||
+    pathname?.includes("/disclaimer");
   const logoSrc =
     isBlogOrTools || isScrolled ? "/header-final.png" : "/footer-logo.png";
   const textColor = isBlogOrTools || isScrolled ? "text-black" : "text-white";
