@@ -306,6 +306,8 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       ? pathName?.includes("/dashboard/job-board") || false
       : item.link === "/dashboard/talent-pool"
       ? pathName?.includes("/dashboard/talent-pool") || false
+      : item.link === "/dashboard/settings/profile"
+      ? pathName?.includes("/dashboard/settings/") || false
       : pathName === item.link;
 
   const handleClick = () => {

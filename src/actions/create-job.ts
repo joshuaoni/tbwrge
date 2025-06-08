@@ -145,18 +145,29 @@ export const updateJob = async (
   jobId: string,
   data: CreateJobRequest
 ) => {
-  const options = {
-    method: "PUT",
-    url: API_CONFIG.UPDATE_JOB(jobId),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    data: JSON.stringify(data),
-  };
-  console.log("updatejob", { data });
+  try {
+    const options = {
+      method: "PUT",
+      url: API_CONFIG.UPDATE_JOB(jobId),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      data: JSON.stringify(data),
+    };
 
-  const response = await axios(options);
-  console.log({ response });
-  return response.data;
+    const response = await axios(options);
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      // Server responded with a status code outside the 2xx range
+      throw new Error(error.response.data.detail || "Failed to update job");
+    } else if (error.request) {
+      // Request was made but no response received
+      throw new Error("No response from server. Please try again.");
+    } else {
+      // Something else caused the error
+      throw new Error(error.message || "An unexpected error occurred");
+    }
+  }
 };

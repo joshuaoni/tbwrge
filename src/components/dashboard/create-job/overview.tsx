@@ -127,11 +127,16 @@ function CreateJobOverview() {
       };
 
       if (ctx.formData.job_id) {
-        return await updateJob(
-          userData?.token ?? "",
-          ctx.formData.job_id,
-          completeFormData
-        );
+        try {
+          return await updateJob(
+            userData?.token ?? "",
+            ctx.formData.job_id,
+            completeFormData
+          );
+        } catch (error: any) {
+          toast.error(error.message || "Failed to update job");
+          throw error; // Re-throw to prevent form submission
+        }
       } else {
         return await createJob(userData?.token ?? "", completeFormData);
       }
