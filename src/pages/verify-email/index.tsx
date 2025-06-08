@@ -75,7 +75,10 @@ const VerifyEmailPage = () => {
       </div>
 
       <div className="w-full max-w-[400px] mx-auto py-6 md:py-8 px-4">
-        <div className="flex items-center justify-center cursor-pointer">
+        <div
+          onClick={() => router.push("/")}
+          className="flex items-center justify-center cursor-pointer"
+        >
           <Image
             src="/footer-logo.png"
             alt=""

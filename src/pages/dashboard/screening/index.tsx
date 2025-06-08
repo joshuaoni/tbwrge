@@ -17,6 +17,7 @@ import { getJobDetail } from "@/actions/get-job-detail";
 import { useUserStore } from "@/hooks/use-user-store";
 import { submitQuestionAnswers } from "@/actions/submit-question-answers";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 // Define interface for job details
 interface JobDetail {
@@ -104,6 +105,7 @@ function Section({
 }
 
 export default function ScreeningPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const job_id = searchParams ? searchParams.get("job_id") : null;
@@ -260,15 +262,17 @@ export default function ScreeningPage() {
       <DashboardWrapper>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <h3 className="text-xl font-medium text-gray-700">Job not found</h3>
+            <h3 className="text-xl font-medium text-gray-700">
+              {t("screening.jobNotFound")}
+            </h3>
             <p className="text-gray-500 mt-2">
-              The requested job could not be found or you don't have access.
+              {t("screening.jobNotFoundMessage")}
             </p>
             <button
               onClick={() => router.back()}
               className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
             >
-              Go Back
+              {t("screening.goBack")}
             </button>
           </div>
         </div>
@@ -283,7 +287,7 @@ export default function ScreeningPage() {
           <button onClick={() => router.back()} className="mr-4">
             <ArrowLeft />
           </button>
-          <span>Job Screening</span>
+          <span>{t("screening.title")}</span>
         </h3>
 
         <div className="flex gap-8">
@@ -327,19 +331,25 @@ export default function ScreeningPage() {
             {/* Job Quick Info Cards */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Job Type</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  {t("screening.jobType")}
+                </div>
                 <div className="font-medium">
                   {jobDetail.job_type.replace("_", " ")}
                 </div>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Experience</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  {t("screening.experience")}
+                </div>
                 <div className="font-medium">
                   {jobDetail.years_of_experience_required}
                 </div>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  {t("screening.salaryRange")}
+                </div>
                 <div className="font-medium">
                   {jobDetail.salary_currency}{" "}
                   {jobDetail.salary_range_min.toLocaleString()} -{" "}
@@ -347,25 +357,27 @@ export default function ScreeningPage() {
                 </div>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Location</div>
+                <div className="text-sm text-gray-600 mb-1">
+                  {t("screening.location")}
+                </div>
                 <div className="font-medium">{jobDetail.job_location_name}</div>
               </div>
             </div>
 
-            <Section title="About the Company">
+            <Section title={t("screening.aboutCompany")}>
               <p className="text-gray-700 leading-relaxed">
                 {jobDetail.company_description}
               </p>
             </Section>
 
-            <Section title="Job Description">
+            <Section title={t("screening.jobDescription")}>
               <div
                 className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: jobDetail.job_description }}
               />
             </Section>
 
-            <Section title="Required Skills">
+            <Section title={t("screening.requiredSkills")}>
               <div className="flex flex-wrap gap-2">
                 {jobDetail.required_skills.split(",").map((skill: string) => (
                   <span
@@ -378,13 +390,13 @@ export default function ScreeningPage() {
               </div>
             </Section>
 
-            <Section title="Educational Requirements">
+            <Section title={t("screening.educationalRequirements")}>
               <p className="text-gray-700 leading-relaxed">
                 {jobDetail.educational_requirements}
               </p>
             </Section>
 
-            <Section title="Languages">
+            <Section title={t("screening.languages")}>
               <div className="flex flex-wrap gap-2">
                 {jobDetail.languages.split(",").map((language: string) => (
                   <span
@@ -397,13 +409,13 @@ export default function ScreeningPage() {
               </div>
             </Section>
 
-            <Section title="Additional Benefits">
+            <Section title={t("screening.additionalBenefits")}>
               <p className="text-gray-700 leading-relaxed">
                 {jobDetail.additional_benefits}
               </p>
             </Section>
 
-            <Section title="Tags">
+            <Section title={t("screening.tags")}>
               <div className="flex flex-wrap gap-2">
                 {jobDetail.tags.split(",").map((tag: string) => (
                   <span
@@ -420,12 +432,10 @@ export default function ScreeningPage() {
           {/* Right Column - Screening Questions */}
           <section className="w-[50%] bg-white rounded-lg p-6 h-fit">
             <p className="text-sm text-[#898989] mb-6">
-              Thank you for taking the time to apply for the{" "}
-              {jobDetail?.job_title} position at {jobDetail?.company_name} and
-              for sharing your qualifications and experiences with us.
-              <br />
-              As the next step in our hiring process, we'd love to invite you to
-              screening process to get to know you better.
+              {t("screening.screeningIntro", {
+                jobTitle: jobDetail?.job_title,
+                companyName: jobDetail?.company_name,
+              })}
             </p>
 
             {questions.map((question, i) => (
@@ -438,7 +448,7 @@ export default function ScreeningPage() {
                   <textarea
                     rows={5}
                     className="w-full mt-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-                    placeholder="Type your answer here"
+                    placeholder={t("screening.typeAnswerHere")}
                     value={question.answer}
                     onChange={(e) => handleTextareaChange(e, i)}
                   />
@@ -460,10 +470,10 @@ export default function ScreeningPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    Submitting...
+                    {t("screening.submitting")}
                   </>
                 ) : (
-                  "Submit Screening Answers"
+                  t("screening.submitScreeningAnswers")
                 )}
               </button>
             </div>
@@ -502,7 +512,7 @@ export default function ScreeningPage() {
                 </svg>
               </div>
               <h2 className="text-xl font-semibold">
-                Screening Answers Submitted Successfully!
+                {t("screening.successTitle")}
               </h2>
             </div>
             <button
@@ -516,10 +526,7 @@ export default function ScreeningPage() {
             </button>
           </div>
 
-          <p className="text-gray-600">
-            Thank you for completing the screening questions. Your answers have
-            been submitted successfully.
-          </p>
+          <p className="text-gray-600">{t("screening.successMessage")}</p>
         </DialogContent>
       </Dialog>
     </DashboardWrapper>

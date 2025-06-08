@@ -101,9 +101,9 @@ const PricingPlans = () => {
       ref={ref}
       animate="visible"
       variants={containerVariants}
-      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 lg:pt-24 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
+      className={`${outfit.className} bg-white relative h-fit pt-12 md:pt-16 flex flex-col items-center justify-center p-4 md:p-8 lg:p-12`}
     >
-      <div className="px-6 md:px-0 flex flex-col w-full my-12 pb-8 space-y-0 mb-0 md:mb-12 items-center">
+      <div className="px-6 md:px-0 flex flex-col w-full my-12 md:mt-0 pb-8 md:pb-0 space-y-0 mb-0 items-center">
         <motion.div variants={itemVariants}>
           <h1 className="text-2xl md:text-[35px] text-primary text-center font-bold p-4">
             Our Pricing Plans
@@ -250,7 +250,10 @@ const PricingPlans = () => {
           ))}
         </motion.div>
 
-        <motion.div variants={itemVariants} className="!mt-[40px]">
+        <motion.div
+          variants={itemVariants}
+          className="!mt-[40px] !md:mt-[48px]"
+        >
           <Button
             style={{
               backgroundImage: "url(/hero-bg.jpg)",
@@ -258,7 +261,7 @@ const PricingPlans = () => {
               backgroundPosition: "center",
             }}
             onClick={() => router.push("/pricing")}
-            className="text-white rounded-[16px] px-8 py-6 text-base font-semibold"
+            className="text-white rounded-full px-6 py-4 md:py-6 w-full md:w-fit text-sm md:text-base font-semibold shadow-none hover:bg-[#184C2A]/90"
           >
             See full pricing
           </Button>

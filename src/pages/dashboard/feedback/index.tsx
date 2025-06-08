@@ -17,15 +17,17 @@ import DashboardFeedbackSupportLayout from "@/components/dashboard/feedback-supp
 import { useForm } from "@/hooks/form";
 import { useUserStore } from "@/hooks/use-user-store";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const FeedbackPage = () => {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
 
   const feedbackMutation = useMutation({
     mutationFn: async (data: FeedbackSupportRequestData) =>
       await feedbackSupport(userData?.token ?? "", data),
     onSuccess: () => {
-      toast.success("Feedback submitted successfully");
+      toast.success(t("feedback.feedbackSubmitted"));
       form.resetForm();
     },
   });
@@ -37,24 +39,23 @@ const FeedbackPage = () => {
   return (
     <DashboardFeedbackSupportLayout>
       <p className={`${outfit.className} text-textgray`}>
-        You can submit feedback on new feature ideas, improvements, bugs, or
-        general comments. We value your input to enhance the Candivet platform
+        {t("feedback.description")}
       </p>
 
       <form
         className={`${outfit.className} my-6 space-y-7 max-w-md`}
         onSubmit={form.handleSubmit}
       >
-        <FeedbackSupportInputGroup label="Name" />
-        <FeedbackSupportInputGroup label="Email" />
+        <FeedbackSupportInputGroup label={t("feedback.name")} />
+        <FeedbackSupportInputGroup label={t("forms.email")} />
         <FeedbackSupportSelectGroup
-          title="Feedback Type"
-          defaultValue="New Feature Suggestion"
+          title={t("feedback.feedbackType")}
+          defaultValue={t("feedback.newFeatureSuggestion")}
           options={[
-            { label: "Feature Idea", value: "feature-idea" },
-            { label: "Improvement", value: "improvement" },
-            { label: "Bug", value: "bug" },
-            { label: "General Comment", value: "general-comment" },
+            { label: t("feedback.featureIdea"), value: "feature-idea" },
+            { label: t("feedback.improvement"), value: "improvement" },
+            { label: t("feedback.bug"), value: "bug" },
+            { label: t("feedback.generalComment"), value: "general-comment" },
           ]}
           onChange={(val) => {
             form.setFormField("subject", val);
@@ -62,13 +63,13 @@ const FeedbackPage = () => {
           }}
         />
         <FeedbackSupportTextareaGroup
-          label="Feedback Details"
+          label={t("feedback.feedbackDetails")}
           value={form.formData.details}
           onChange={(val) => form.setFormField("details", val)}
         />
         <div>
           <label className="block text-sm  text-gray-700 mb-1">
-            Attach Screenshot
+            {t("feedback.attachScreenshot")}
           </label>
           <input
             type="file"

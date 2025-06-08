@@ -22,6 +22,7 @@ import { outfit, urbanist } from "@/constants/app";
 import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 import ArticleFileGroup from "@/components/dashboard/submit-article/article-file-group";
+import { useTranslation } from "react-i18next";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -52,6 +53,7 @@ const formats = [
 ];
 
 const DashboardSubmitArticlePage = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<SubmitAnArticleRequestData>(
     INITIAL_SUBMIT_ARTICLE_REQUEST_DATA
   );
@@ -109,22 +111,25 @@ const DashboardSubmitArticlePage = () => {
         <h2
           className={classNames(urbanist.className, "text-3xl font-bold mb-6")}
         >
-          Submit an Article
+          {t("submitArticle.title")}
         </h2>
 
         <div className={`${outfit.className} flex gap-8`}>
           <section className="w-1/2">
-            <h3 className="text-lg font-semibold mb-4">Article Details</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              {t("submitArticle.articleDetails")}
+            </h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Article Title <span className="text-red-500">*</span>
+                  {t("submitArticle.articleTitle")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleSetFormData("title", e.target.value)}
-                  placeholder="Enter article title"
+                  placeholder={t("submitArticle.enterArticleTitle")}
                   required
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
@@ -133,9 +138,9 @@ const DashboardSubmitArticlePage = () => {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="block text-sm font-medium text-gray-700">
-                    Article Content
+                    {t("submitArticle.articleContent")}
                     <span className="text-xs text-gray-400 ml-2">
-                      (Optional if uploading article file. Only one allowed.)
+                      {t("submitArticle.articleContentNote")}
                     </span>
                   </label>
                   <span className="text-sm text-gray-500">
@@ -156,32 +161,35 @@ const DashboardSubmitArticlePage = () => {
                       formats={formats}
                       className="bg-gray-50 h-full"
                       style={{ height: "100%" }}
-                      placeholder="Write your article content here..."
+                      placeholder={t("submitArticle.writeArticleContent")}
                     />
                   </div>
                 </div>
               </div>
 
               <ArticleFileGroup
-                label="Upload Article (Optional if using content above. Only one allowed.)"
+                label={t("submitArticle.uploadArticle")}
                 onChange={(file) => handleSetFormData("article_upload", file)}
               />
             </div>
           </section>
 
           <section className="w-1/2">
-            <h3 className="text-lg font-semibold mb-4">Author Information</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              {t("submitArticle.authorInformation")}
+            </h3>
 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name <span className="text-red-500">*</span>
+                  {t("submitArticle.fullName")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleSetFormData("name", e.target.value)}
-                  placeholder="Enter your name"
+                  placeholder={t("submitArticle.enterYourName")}
                   required
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
@@ -189,7 +197,7 @@ const DashboardSubmitArticlePage = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Job Title
+                  {t("submitArticle.jobTitle")}
                 </label>
                 <input
                   type="text"
@@ -197,27 +205,27 @@ const DashboardSubmitArticlePage = () => {
                   onChange={(e) =>
                     handleSetFormData("job_title", e.target.value)
                   }
-                  placeholder="Enter your job title"
+                  placeholder={t("submitArticle.enterJobTitle")}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Company
+                  {t("submitArticle.company")}
                 </label>
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => handleSetFormData("company", e.target.value)}
-                  placeholder="Enter your company"
+                  placeholder={t("submitArticle.enterCompany")}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Profile Image
+                  {t("submitArticle.uploadProfileImage")}
                 </label>
                 <input
                   type="file"
@@ -232,18 +240,19 @@ const DashboardSubmitArticlePage = () => {
               </div>
 
               <h3 className="text-lg font-semibold mb-4">
-                Contact Information
+                {t("submitArticle.contactInformation")}
               </h3>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email <span className="text-red-500">*</span>
+                  {t("submitArticle.email")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleSetFormData("email", e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t("submitArticle.enterEmail")}
                   required
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
@@ -251,7 +260,7 @@ const DashboardSubmitArticlePage = () => {
 
               <div className="flex items-center">
                 <CheckBoxInput
-                  label="Agree to terms and conditions"
+                  label={t("submitArticle.agreeTerms")}
                   value={tc}
                   onChange={(val) => setTc(val)}
                 />
@@ -285,10 +294,10 @@ const DashboardSubmitArticlePage = () => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Submitting...
+                      {t("submitArticle.submitting")}
                     </span>
                   ) : (
-                    "Submit Article"
+                    t("submitArticle.submitArticle")
                   )}
                 </button>
               </div>

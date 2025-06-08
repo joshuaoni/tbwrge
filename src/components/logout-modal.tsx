@@ -10,8 +10,10 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
+import { useTranslation } from "react-i18next";
 
 const LogoutModal = () => {
+  const { t } = useTranslation();
   const { removeUser } = useUserStore();
   const router = useRouter();
 
@@ -19,28 +21,28 @@ const LogoutModal = () => {
     <Dialog>
       <DialogTrigger>
         <div
-          className={`flex relative  w-full items-center  transition-all py-3  pl-6 space-x-2 p-2  mb-3  cursor-pointer ${
+          className={`flex relative  w-full items-center  transition-all py-2  pl-6 p-2  mb-3  cursor-pointer ${
             false
               ? "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 border-l-2 border-l-primary font-bold"
               : " font-normal"
           }`}
         >
           <div
-            className={`h-7 w-[5px] ${
+            className={`zagadat h-7 w-[5px] ${
               false ? "bg-white" : "bg-transparent"
             } absolute -left-[2px] rounded-r`}
           />
-          <LogOut className="text-primary" />
-          <span className="text-[16px]">Logout</span>
+          <LogOut className="text-primary mx-[6px]" />
+          <span className="text-[14px]">{t("logout.title")}</span>
         </div>
       </DialogTrigger>
       <DialogContent className="bg-white max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="border-b pb-6">LogOut</DialogTitle>
+          <DialogTitle className="border-b pb-6">
+            {t("logout.dialogTitle")}
+          </DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Are you sure you want to logout from your account?
-        </DialogDescription>
+        <DialogDescription>{t("logout.confirmMessage")}</DialogDescription>
 
         <Button
           onClick={() => {
@@ -49,7 +51,7 @@ const LogoutModal = () => {
           }}
           className="bg-primary text-white"
         >
-          Yes, Logout
+          {t("logout.confirmButton")}
         </Button>
       </DialogContent>
     </Dialog>

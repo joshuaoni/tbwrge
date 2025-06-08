@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "candidates": "Candidates",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "logout": "Logout",
+    "home": "Home",
+    "about": "About",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "community": "Community"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "stats": "Statistics",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "notifications": "Notifications"
+  },
+  "jobs": {
+    "title": "Job Postings",
+    "createNew": "Create New Job",
+    "applications": "Applications",
+    "candidates": "Candidates",
+    "status": "Status",
+    "posted": "Posted",
+    "active": "Active",
+    "closed": "Closed",
+    "draft": "Draft"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "forms": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "company": "Company",
+    "position": "Position",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "language": {
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "french": "French",
+    "spanish": "Spanish",
+    "german": "German",
+    "arabic": "Arabic",
+    "portuguese": "Portuguese"
+  }
+}

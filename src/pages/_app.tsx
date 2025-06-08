@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google"; // Corrected import path
 import { Toaster } from "react-hot-toast";
+import "@/lib/i18n"; // Initialize i18n
 
 const outfit = Inter({
   subsets: ["latin"], // specify subsets

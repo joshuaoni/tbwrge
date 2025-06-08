@@ -26,6 +26,7 @@ import { outfit } from "@/constants/app";
 import ActivityFeed from "@/components/activity-feed";
 import ArticlesCommunity from "@/components/articles-community";
 import { AnalyticInfoCard } from "@/components/analytics/analytic-info-card";
+import { useTranslation } from "react-i18next";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -33,6 +34,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 });
 
 const index = () => {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
   const { data, error } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -51,22 +53,22 @@ const index = () => {
     }[]
   >([
     {
-      title: "Total Jobs Posts",
+      title: t("dashboard.totalJobPosts"),
       value: 12,
       icon: <BriefcaseBusiness size={20} className="text-primary" />,
     },
     {
-      title: "Qualified Applicants",
+      title: t("dashboard.qualifiedApplicants"),
       value: 69,
       icon: <User className="w-6 h-6 text-primary" />,
     },
     {
-      title: "Rejected Candidates",
+      title: t("dashboard.rejectedCandidates"),
       value: 1023,
       icon: <User className="w-6 h-6 text-primary" />,
     },
     {
-      title: "Total Applications",
+      title: t("dashboard.totalApplications"),
       icon: <File className="w-6 h-6 text-primary" />,
       value: 2107,
     },
@@ -74,27 +76,27 @@ const index = () => {
   useEffect(() => {
     setAnalytics([
       {
-        title: "Total Jobs Posts",
+        title: t("dashboard.totalJobPosts"),
         value: data?.total_job_posts,
         icon: <BriefcaseBusiness size={20} className="text-primary" />,
       },
       {
-        title: "Qualified Applicants",
+        title: t("dashboard.qualifiedApplicants"),
         value: data?.qualified_candidates,
         icon: <User className="w-6 h-6 text-primary" />,
       },
       {
-        title: "Rejected Candidates",
+        title: t("dashboard.rejectedCandidates"),
         value: data?.rejected_candidates,
         icon: <User className="w-6 h-6 text-primary" />,
       },
       {
-        title: "Total Applications",
+        title: t("dashboard.totalApplications"),
         icon: <File className="w-6 h-6 text-primary" />,
         value: data?.total_applications,
       },
     ]);
-  }, [data]);
+  }, [data, t]);
 
   const activities = [
     {
@@ -203,26 +205,22 @@ const index = () => {
     <DashboardWrapper>
       <div className={`${outfit.className} flex flex-col pb-12`}>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold">{t("nav.dashboard")}</h1>
         </div>
         <div className="">
           <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
-            <div className="grid  md:w-[60%]  w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
-              {analytics.map((an) => (
-                <AnalyticInfoCard {...an} />
+            <div className="analytics grid md:w-[60%] w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
+              {analytics.map((an, index) => (
+                <AnalyticInfoCard key={index} {...an} />
               ))}
             </div>
-            <div className="bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-fit py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
+            <div className="find-box bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-[248px] py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
               <h1 className="font-bold leading-[1.3] text-[20px] pt-4">
-                Find the Right Candidate for <br /> Your Job
+                {t("dashboard.findRightCandidate")}
               </h1>
-              <p className="text-[12px]">
-                Accelerate your hiring with tools like CV vetting, job post
-                creation, cover letter translation, and more designed to
-                simplify your workflow.
-              </p>
+              <p className="text-[12px]">{t("dashboard.accelerateHiring")}</p>
               <Button className="bg-white  md:w-[60%] text-base py-[20px] self-center text-[14px] text-primary font-bold ">
-                Subscribe for premium
+                {t("dashboard.subscribePremium")}
               </Button>
             </div>
           </div>
@@ -230,8 +228,9 @@ const index = () => {
         <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6 mt-[50px]">
           <div className="bg-[#F9F9F9] rounded-lg p-4">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Activity</h2>
-              <AllActivityDropDown />
+              <h2 className="text-lg font-semibold">
+                {t("dashboard.recentActivity")}
+              </h2>
             </div>
             <div className="rounded-lg p-6 px-2">
               <ActivityFeed activities={activities} />

@@ -16,10 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAppliedJobs, AppliedJob } from "@/actions/get-applied-jobs";
+import { useTranslation } from "react-i18next";
 
 const ITEMS_PER_PAGE = 25;
 
 const ApplicationsPage = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { userData } = useUserStore();
   const [jobs, setJobs] = useState<AppliedJob[]>([]);
@@ -81,9 +83,9 @@ const ApplicationsPage = () => {
     <DashboardWrapper>
       <div className={`${outfit.className} max-w-[1400px] w-full mx-auto py-8`}>
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">My Applications</h1>
+          <h1 className="text-2xl font-semibold">{t("applications.title")}</h1>
           <div className="text-sm text-gray-500">
-            Showing {jobs.length} applications
+            {t("applications.showingApplications", { count: jobs.length })}
           </div>
         </div>
 
@@ -91,22 +93,22 @@ const ApplicationsPage = () => {
           <TableHeader className="h-[39.292px] mb-4">
             <TableRow className="bg-[#D6D6D6]">
               <TableHead className="w-[25%] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]">
-                Job Title
+                {t("jobBoard.jobTitle")}
               </TableHead>
               <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-                Application ID
+                {t("applications.applicationId")}
               </TableHead>
               <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-                Status
+                {t("jobs.status")}
               </TableHead>
               <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-                Applied Date
+                {t("applications.appliedDate")}
               </TableHead>
               <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-                Company
+                {t("applications.company")}
               </TableHead>
               <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
-                Fit Score
+                {t("applications.fitScore")}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -171,7 +173,8 @@ const ApplicationsPage = () => {
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    {t(`jobBoard.${job.status}`) ||
+                      job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -188,7 +191,9 @@ const ApplicationsPage = () => {
 
         {jobs.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No applications found</p>
+            <p className="text-gray-500">
+              {t("applications.noApplicationsFound")}
+            </p>
           </div>
         )}
 
@@ -198,15 +203,17 @@ const ApplicationsPage = () => {
             disabled={currentPage === 0}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Previous
+            {t("jobBoard.previous")}
           </button>
-          <div className="text-sm text-gray-700">Page {currentPage + 1}</div>
+          <div className="text-sm text-gray-700">
+            {t("applications.page")} {currentPage + 1}
+          </div>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={!hasMore}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Next
+            {t("jobBoard.next")}
           </button>
         </div>
       </div>

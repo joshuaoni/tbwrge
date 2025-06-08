@@ -47,7 +47,7 @@ const Index = () => {
   const { addUser } = useUserStore();
 
   // Get the redirect URL from query parameters
-  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+  const redirectUrl = searchParams?.get("redirect");
 
   const signInMutation = useMutation({
     mutationFn: async () =>
@@ -68,6 +68,8 @@ const Index = () => {
           router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
         }
       }
     },
@@ -83,14 +85,25 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
-        addUser(res.user);
+        toast.success("Login successful");
+        addUser({
+          authenticatedUser: res.user,
+          token: res.access_token,
+        });
         // Redirect to the saved URL or default based on role
         if (res.user.role === "job_seeker") {
           router.push(redirectUrl || "/dashboard/job-board");
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
+        } else {
+          router.push(redirectUrl || "/dashboard");
         }
       }
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Login failed");
     },
   });
 
@@ -126,7 +139,10 @@ const Index = () => {
       </div>
 
       <div className="w-full max-w-[400px] mx-auto py-6 md:py-8 px-4">
-        <div className="flex items-center justify-center cursor-pointer">
+        <div
+          onClick={() => router.push("/")}
+          className="flex items-center justify-center cursor-pointer"
+        >
           <Image
             src="/footer-logo.png"
             alt=""

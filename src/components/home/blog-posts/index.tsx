@@ -296,7 +296,7 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
+      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
     >
       <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
         <Image

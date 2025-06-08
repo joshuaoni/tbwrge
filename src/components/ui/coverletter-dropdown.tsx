@@ -2,7 +2,10 @@ import { ChevronDown, ChevronUp, File } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 const CoverLetterDropDown = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathName = router.asPath;
 
@@ -10,48 +13,84 @@ const CoverLetterDropDown = () => {
     () => pathName.includes("/dashboard/cover-letter-tools")
   );
 
-  const [dropDownItems, setDropDownItems] = React.useState([
+  const [dropDownItems, setDropDownItems] = React.useState(() => [
     {
       link: "/dashboard/cover-letter-tools/summarizer",
-      title: "Summarizer",
+      title: t("tools.summarizer"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/vetting",
-      title: "Vetting",
+      title: t("tools.vetting"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/ranking",
-
-      title: "Ranking",
+      title: t("tools.ranking"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/generator",
-      title: "Generator",
+      title: t("tools.generator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/translator",
-      title: "Translator",
+      title: t("tools.translator"),
       icon: "Pro",
     },
     {
       link: "/dashboard/cover-letter-tools/rewriter",
-      title: "Rewriter",
+      title: t("tools.rewriter"),
       icon: "Pro",
     },
   ]);
+
+  // Update dropdown items when language changes
+  React.useEffect(() => {
+    setDropDownItems([
+      {
+        link: "/dashboard/cover-letter-tools/summarizer",
+        title: t("tools.summarizer"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cover-letter-tools/vetting",
+        title: t("tools.vetting"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cover-letter-tools/ranking",
+        title: t("tools.ranking"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cover-letter-tools/generator",
+        title: t("tools.generator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cover-letter-tools/translator",
+        title: t("tools.translator"),
+        icon: "Pro",
+      },
+      {
+        link: "/dashboard/cover-letter-tools/rewriter",
+        title: t("tools.rewriter"),
+        icon: "Pro",
+      },
+    ]);
+  }, [t]);
+
   return (
     <>
       <div
         onClick={() => setShowCoverLetterDropDown(!showCoverLetterDropDown)}
-        className="flex justify-between cursor-pointer py-3"
+        className="flex justify-between cursor-pointer py-2"
       >
         <div className="flex items-center">
           <File size={20} className="mr-2 text-primary" />
-          <span className="">Cover Letter Tools</span>
+          <span className="text-sm">{t("tools.coverLetterTools")}</span>
         </div>
         {showCoverLetterDropDown ? <ChevronUp /> : <ChevronDown />}
       </div>

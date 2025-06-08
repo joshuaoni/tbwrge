@@ -30,13 +30,6 @@ const JobPostings = () => {
   const router = useRouter();
   const { userData } = useUserStore();
 
-  // Protect route from job seekers
-  useEffect(() => {
-    if (userData?.user?.role === "job_seeker") {
-      router.push("/dashboard/job-board");
-    }
-  }, [userData?.user?.role, router]);
-
   // Fetch job data if jobId is in URL
   const { data: jobs } = useQuery({
     queryKey: ["job-openings"],
@@ -68,11 +61,6 @@ const JobPostings = () => {
     }
   }, [searchParams, jobs]);
 
-  // If user is a job seeker, don't render the page content
-  if (userData?.user?.role === "job_seeker") {
-    return null;
-  }
-
   return (
     <DashboardWrapper>
       <div
@@ -101,7 +89,7 @@ const JobPostings = () => {
                 </Button>
               </div>
 
-              {currentView === "openings" ? (
+              {/* {currentView === "openings" ? (
                 <div>
                   <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -121,7 +109,7 @@ const JobPostings = () => {
                 <button className=" bg-[#F0F0F0] flex h-[35px] px-4 w-[100px] justify-between items-center ml-auto space-x-4 text-gray-500 text-[12px] rounded-full">
                   Repost Job
                 </button>
-              )}
+              )} */}
             </>
           )}
         </div>

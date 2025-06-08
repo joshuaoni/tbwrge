@@ -28,8 +28,10 @@ import toast from "react-hot-toast";
 import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const Generator = () => {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -262,7 +264,7 @@ const Generator = () => {
     }));
 
     if (files.length + newFiles.length > 5) {
-      alert("You can only upload up to 5 files.");
+      alert(t("coverLetterTools.common.maxFilesError"));
       return;
     }
 
@@ -286,14 +288,16 @@ const Generator = () => {
     }
 
     if (!templateRef) {
-      toast.error("Cannot generate PDF - template not available");
+      toast.error(t("coverLetterTools.generator.templateNotAvailable"));
       return;
     }
 
     try {
       setIsGeneratingPDF(true);
       setActiveTemplate(template);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(
+        t("coverLetterTools.generator.generatingPDF")
+      );
 
       // Create a container for the content with exact dimensions of a US Letter page
       const container = document.createElement("div");
@@ -423,10 +427,12 @@ const Generator = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("coverLetterTools.generator.pdfSuccess"), {
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("coverLetterTools.generator.pdfError"));
     } finally {
       setIsGeneratingPDF(false);
       setActiveTemplate(null);
@@ -436,14 +442,16 @@ const Generator = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Cover Letter Generator
+        {t("coverLetterTools.generator.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV Upload</span>
+            <span className="font-bold">
+              {t("coverLetterTools.generator.cvUpload")}
+            </span>
             <span className="font-light text-xs">
-              Add your CV and/or Old Cover Letter here
+              {t("coverLetterTools.generator.cvUploadDescription")}
             </span>
             <div className="relative w-full justify-between flex flex-col items-start rounded-lg">
               <input
@@ -472,14 +480,17 @@ const Generator = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("coverLetterTools.generator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("coverLetterTools.generator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("coverLetterTools.generator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("coverLetterTools.generator.supportedFormats")}
               </span>
             </div>
 
@@ -517,9 +528,9 @@ const Generator = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Additional Details?{" "}
+                {t("coverLetterTools.generator.additionalDetails")}{" "}
                 <span className="text-sm font-medium">
-                  &#40;Education, Experience, Skills.. etc&#41;
+                  {t("coverLetterTools.generator.additionalDetailsSubtext")}
                 </span>
               </span>
               <Plus
@@ -535,7 +546,9 @@ const Generator = () => {
             <textarea
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Add details (optional)"
+              placeholder={t(
+                "coverLetterTools.generator.addDetailsPlaceholder"
+              )}
               className="h-32 mt-3 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
             />
 
@@ -561,12 +574,16 @@ const Generator = () => {
           </div>
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("coverLetterTools.generator.jobDescriptionTitle")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t(
+                  "coverLetterTools.generator.jobDescriptionPlaceholder"
+                )}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -574,7 +591,9 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">Record Voicenote</span>
+              <span className="font-medium text-base">
+                {t("coverLetterTools.generator.recordVoicenote")}
+              </span>
             </div>
 
             {!audioBlob ? (
@@ -582,7 +601,7 @@ const Generator = () => {
                 <div className="bg-gray-50 rounded-lg p-2 mt-2">
                   <div className="flex items-center w-full">
                     <span className="text-xs text-gray-600 mr-1 whitespace-nowrap shrink-0">
-                      Recording...
+                      {t("coverLetterTools.generator.recording")}
                     </span>
                     <div className="flex-1 mx-1 overflow-hidden">
                       <div className="flex items-center gap-0 justify-between">
@@ -625,7 +644,9 @@ const Generator = () => {
                   className="h-[38px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-3 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
                   onClick={handleStartRecording}
                 >
-                  <span className="text-sm text-gray-500 flex-1">Record</span>
+                  <span className="text-sm text-gray-500 flex-1">
+                    {t("coverLetterTools.generator.record")}
+                  </span>
                   <Mic className="w-4 h-4 text-[#009379]" />
                 </div>
               )
@@ -700,7 +721,7 @@ const Generator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("coverLetterTools.generator.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -720,7 +741,7 @@ const Generator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Cover Letter"
+                  t("coverLetterTools.generator.generateCoverLetter")
                 )}
               </Button>
             </div>
@@ -730,7 +751,9 @@ const Generator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Cover Letter Generator</span>
+              <span className="font-bold">
+                {t("coverLetterTools.generator.title")}
+              </span>
             </div>
             <div className="flex flex-col items-center justify-center flex-1 h-full">
               {isPending && <Loader2 className="animate-spin" />}
@@ -742,7 +765,9 @@ const Generator = () => {
                         <button
                           onClick={() => downloadPDF("template1")}
                           className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all flex items-center justify-center"
-                          aria-label="Download cover letter as PDF"
+                          aria-label={t(
+                            "coverLetterTools.generator.downloadCoverLetterAsPDF"
+                          )}
                           disabled={isGeneratingPDF}
                         >
                           {isGeneratingPDF && activeTemplate === "template1" ? (
@@ -752,7 +777,9 @@ const Generator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                          Download Template 1 as PDF
+                          {t(
+                            "coverLetterTools.generator.downloadTemplate1AsPDF"
+                          )}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>
@@ -771,7 +798,9 @@ const Generator = () => {
                         <button
                           onClick={() => downloadPDF("template2")}
                           className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all flex items-center justify-center"
-                          aria-label="Download cover letter as PDF"
+                          aria-label={t(
+                            "coverLetterTools.generator.downloadCoverLetterAsPDF"
+                          )}
                           disabled={isGeneratingPDF}
                         >
                           {isGeneratingPDF && activeTemplate === "template2" ? (
@@ -781,7 +810,9 @@ const Generator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                          Download Template 2 as PDF
+                          {t(
+                            "coverLetterTools.generator.downloadTemplate2AsPDF"
+                          )}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>
@@ -800,7 +831,9 @@ const Generator = () => {
                         <button
                           onClick={() => downloadPDF("template3")}
                           className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all flex items-center justify-center"
-                          aria-label="Download cover letter as PDF"
+                          aria-label={t(
+                            "coverLetterTools.generator.downloadCoverLetterAsPDF"
+                          )}
                           disabled={isGeneratingPDF}
                         >
                           {isGeneratingPDF && activeTemplate === "template3" ? (
@@ -810,7 +843,9 @@ const Generator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                          Download Template 3 as PDF
+                          {t(
+                            "coverLetterTools.generator.downloadTemplate3AsPDF"
+                          )}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>

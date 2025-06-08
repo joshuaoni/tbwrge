@@ -20,7 +20,7 @@ function AdminDashboardSidebar() {
     <aside
       className={`${outfit.className} bg-[#F5F5F5] w-[300px] pt-2 px-3.5 pl-4 h-screen fixed left-0 top-0 overflow-y-auto`}
     >
-      <Link href="/admin" className="flex ml-4 items-center px-2.5">
+      <Link href="/admin" className="flex ml-[14px] mt-4 items-center px-2.5">
         <div className="flex items-center cursor-pointer justify-center">
           <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
             <Image
@@ -39,16 +39,16 @@ function AdminDashboardSidebar() {
         </div>
       </Link>
 
-      <div className="flex items-center justify-center gap-3 mt-12">
+      {/* <div className="flex items-center justify-center gap-3 mt-12">
         <UserCircle size={40} className="text-black" />
         <div className="mr-6">
           <h1 className="text-lg font-bold">{userData?.user?.name}</h1>
           <p className="text-[#A4A4A4] text-sm">{userData?.user?.role}</p>
         </div>
         <MoreIcon />
-      </div>
+      </div> */}
 
-      <ul className="mt-10">
+      <ul className="mt-6">
         {[
           { icon: DashboardIcon, title: "Dashboard", path: "/admin" },
           { icon: MenuBoardIcon, title: "Support", path: "/admin/support" },
@@ -64,18 +64,18 @@ function AdminDashboardSidebar() {
             <Link
               href={item.path}
               className={classNames(
-                "flex relative items-center w-full transition-all pl-8 gap-x-4 mb-3 cursor-pointer",
+                "flex relative items-center w-full transition-all pl-8 gap-x-2 cursor-pointer",
                 "before:h-9 before:w-[6px] before:absolute before:-left-[1px] before:rounded-r",
                 {
                   "before:bg-white": item.path === pathname,
-                  "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 font-bold py-4":
+                  "bg-primary text-white hover:bg-primary/80 transition-colors transform duration-300 font-bold py-2":
                     item.path === pathname,
                   "text-[#64748B] font-medium py-2": item.path !== pathname,
                 }
               )}
             >
               <item.icon color={item.path === pathname ? "white" : "#64748B"} />
-              <span>{item.title}</span>
+              <span className="text-sm">{item.title}</span>
             </Link>
           </li>
         ))}

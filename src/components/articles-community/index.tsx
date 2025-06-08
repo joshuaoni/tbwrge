@@ -8,6 +8,7 @@ import { TrashIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 const PostCard = ({
   post,
@@ -19,6 +20,7 @@ const PostCard = ({
   upvoteMutation,
   isBlog = false,
 }: any) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const handleClick = () => {
     if (isBlog) {
@@ -40,14 +42,16 @@ const PostCard = ({
               : "bg-[#E0F7F4] text-[#009379]"
           }`}
         >
-          {isBlog ? "Article" : "Post"}
+          {isBlog
+            ? t("articlesCommunity.article")
+            : t("articlesCommunity.post")}
         </span>
       </div>
       <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
         {post.user?.profile_picture || post.user?.photo ? (
           <Image
             src={post.user.profile_picture || post.user.photo}
-            alt={post.user.name || "User"}
+            alt={post.user.name || t("articlesCommunity.anonymous")}
             width={30}
             height={30}
             className="rounded-full md:w-[30px] md:h-[30px]"
@@ -58,7 +62,8 @@ const PostCard = ({
         <div>
           <div className="flex items-center gap-1 md:gap-2">
             <h3 className="text-xs md:text-sm font-medium">
-              {post.user?.name || "Anonymous"} {post.user?.last_name || ""}
+              {post.user?.name || t("articlesCommunity.anonymous")}{" "}
+              {post.user?.last_name || ""}
             </h3>
             <span className="text-[10px] md:text-xs text-black">•</span>
             <p className="text-[10px] md:text-xs text-black">
@@ -84,11 +89,15 @@ const PostCard = ({
         <div className="flex items-center gap-4">
           <div className="flex flex-col font-semibold">
             <p className="text-xs md:text-sm font-medium">{post.comments}</p>
-            <p className="text-xs md:text-sm text-black">Comment</p>
+            <p className="text-xs md:text-sm text-black">
+              {t("articlesCommunity.comment")}
+            </p>
           </div>
           <div className="flex flex-col">
             <p className="text-xs md:text-sm text-black">{post.upvotes}</p>
-            <p className="text-xs md:text-sm">Upvotes</p>
+            <p className="text-xs md:text-sm">
+              {t("articlesCommunity.upvotes")}
+            </p>
           </div>
         </div>
       )}
@@ -97,6 +106,7 @@ const PostCard = ({
 };
 
 const ArticlesCommunity = () => {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
   const {
     data: posts = [],
@@ -126,14 +136,17 @@ const ArticlesCommunity = () => {
   return (
     <div className="bg-[#F9F9F9] rounded-lg p-4">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold">Articles & Community</h2>
-        <AllActivityDropDown />
+        <h2 className="text-lg font-semibold">
+          {t("articlesCommunity.title")}
+        </h2>
       </div>
       <div className="space-y-4">
         {postsLoading ? (
-          <div>Loading posts...</div>
+          <div>{t("articlesCommunity.loadingPosts")}</div>
         ) : postsError ? (
-          <div className="text-red-500">Error loading articles.</div>
+          <div className="text-red-500">
+            {t("articlesCommunity.errorLoadingArticles")}
+          </div>
         ) : (
           posts
             .slice(0, 3)
@@ -151,16 +164,18 @@ const ArticlesCommunity = () => {
             ))
         )}
         {blogsLoading ? (
-          <div>Loading blogs...</div>
+          <div>{t("articlesCommunity.loadingBlogs")}</div>
         ) : blogsError ? (
-          <div className="text-red-500">Error loading blogs.</div>
+          <div className="text-red-500">
+            {t("articlesCommunity.errorLoadingBlogs")}
+          </div>
         ) : (
           blogs.slice(0, 1).map((blog: BlogItem) => (
             <PostCard
               key={blog.id}
               post={{
                 ...blog,
-                user: blog.user || { name: "Anonymous" },
+                user: blog.user || { name: t("articlesCommunity.anonymous") },
                 created_at:
                   blog.created_at ||
                   blog.updated_at ||

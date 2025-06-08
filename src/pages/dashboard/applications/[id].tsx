@@ -21,6 +21,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { getTalentProfile } from "@/actions/talent-profile";
 import { getAppliedJobItems } from "@/actions/get-applied-job-items";
+import { useTranslation } from "react-i18next";
 
 const Section = ({
   title,
@@ -41,94 +42,113 @@ const JobHeader = ({
 }: {
   job: IGetJobOpenRes;
   timeAgo: string;
-}) => (
-  <div>
-    <Link
-      href="/dashboard/applications"
-      className="inline-flex items-center text-gray-600 mb-6"
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="mr-2"
-      >
-        <path
-          d="M12.5 15L7.5 10L12.5 5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      Back to Applications
-    </Link>
+}) => {
+  const { t } = useTranslation();
 
-    <div className="bg-white rounded-lg p-6 mb-6">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-          {job.company_logo ? (
-            <Image
-              src={job.company_logo}
-              alt={job.company_name}
-              width={48}
-              height={48}
-              className="object-cover w-full h-full"
-            />
-          ) : (
-            <div className="w-full h-full bg-slate-300 flex items-center justify-center">
-              <span className="text-white font-medium text-xl">
-                {job.company_name[0]}
-              </span>
-            </div>
-          )}
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
-          <div className="flex flex-col gap-1">
-            <div className="text-[15px] text-gray-600">{job.company_name}</div>
-            <div className="flex items-center gap-2 text-[14px] text-gray-600">
-              <span>{job.job_location_name}</span>
-              <span>•</span>
-              <span>{timeAgo}</span>
+  return (
+    <div>
+      <Link
+        href="/dashboard/applications"
+        className="inline-flex items-center text-gray-600 mb-6"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="mr-2"
+        >
+          <path
+            d="M12.5 15L7.5 10L12.5 5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        {t("jobBoard.backToApplications")}
+      </Link>
+
+      <div className="bg-white rounded-lg p-6 mb-6">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+            {job.company_logo ? (
+              <Image
+                src={job.company_logo}
+                alt={job.company_name}
+                width={48}
+                height={48}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="w-full h-full bg-slate-300 flex items-center justify-center">
+                <span className="text-white font-medium text-xl">
+                  {job.company_name[0]}
+                </span>
+              </div>
+            )}
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
+            <div className="flex flex-col gap-1">
+              <div className="text-[15px] text-gray-600">
+                {job.company_name}
+              </div>
+              <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                <span>{job.job_location_name}</span>
+                <span>•</span>
+                <span>{timeAgo}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Job Type</div>
-      <div className="font-medium">{job.job_type.replace("_", " ")}</div>
-    </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Experience</div>
-      <div className="font-medium">{job.years_of_experience_required}</div>
-    </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Salary Range</div>
-      <div className="font-medium">
-        {job.salary_range_min && job.salary_range_max
-          ? `${
-              job.salary_currency || "USD"
-            } ${job.salary_range_min.toLocaleString()} - ${job.salary_range_max.toLocaleString()}`
-          : "Not specified"}
+const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.jobType")}
+        </div>
+        <div className="font-medium">{job.job_type.replace("_", " ")}</div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.experience")}
+        </div>
+        <div className="font-medium">{job.years_of_experience_required}</div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.salaryRange")}
+        </div>
+        <div className="font-medium">
+          {job.salary_range_min && job.salary_range_max
+            ? `${
+                job.salary_currency || "USD"
+              } ${job.salary_range_min.toLocaleString()} - ${job.salary_range_max.toLocaleString()}`
+            : t("jobBoard.notSpecified")}
+        </div>
+      </div>
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="text-sm text-gray-600 mb-1">
+          {t("jobBoard.location")}
+        </div>
+        <div className="font-medium">{job.job_location_name}</div>
       </div>
     </div>
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="text-sm text-gray-600 mb-1">Location</div>
-      <div className="font-medium">{job.job_location_name}</div>
-    </div>
-  </div>
-);
+  );
+};
 
 const ApplicationDetailsPage = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
   const [job, setJob] = useState<IGetJobOpenRes | null>(null);
@@ -195,21 +215,21 @@ const ApplicationDetailsPage = () => {
             <QuickInfo job={job} />
 
             {job.company_description && (
-              <Section title="About the Company">
+              <Section title={t("jobBoard.aboutCompany")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.company_description}
                 </p>
               </Section>
             )}
 
-            <Section title="Job Description">
+            <Section title={t("jobBoard.jobDescription")}>
               <div
                 className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: job.job_description }}
               />
             </Section>
 
-            <Section title="Required Skills">
+            <Section title={t("jobBoard.requiredSkills")}>
               <div className="flex flex-wrap gap-2">
                 {job.required_skills.split(",").map((skill: string) => (
                   <span
@@ -223,7 +243,7 @@ const ApplicationDetailsPage = () => {
             </Section>
 
             {job.educational_requirements && (
-              <Section title="Educational Requirements">
+              <Section title={t("jobBoard.educationalRequirements")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.educational_requirements}
                 </p>
@@ -231,7 +251,7 @@ const ApplicationDetailsPage = () => {
             )}
 
             {job.languages && (
-              <Section title="Languages">
+              <Section title={t("jobBoard.languages")}>
                 <div className="flex flex-wrap gap-2">
                   {job.languages.split(",").map((language: string) => (
                     <span
@@ -246,7 +266,7 @@ const ApplicationDetailsPage = () => {
             )}
 
             {job.additional_benefits && (
-              <Section title="Additional Benefits">
+              <Section title={t("jobBoard.additionalBenefits")}>
                 <p className="text-gray-700 leading-relaxed">
                   {job.additional_benefits}
                 </p>
@@ -254,7 +274,7 @@ const ApplicationDetailsPage = () => {
             )}
 
             {job.tags && (
-              <Section title="Tags">
+              <Section title={t("jobBoard.tags")}>
                 <div className="flex flex-wrap gap-2">
                   {job.tags.split(",").map((tag: string) => (
                     <span
@@ -291,16 +311,18 @@ const ApplicationDetailsPage = () => {
                     />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold">Application Submitted</h2>
+                <h2 className="text-xl font-semibold">
+                  {t("jobApplication.applicationSubmitted")}
+                </h2>
                 <p className="text-gray-600">
-                  You have already applied for this position.
+                  {t("jobApplication.alreadyApplied")}
                 </p>
                 <div className="pt-4">
                   <Link
                     href="/dashboard/applications"
                     className="inline-flex items-center text-primary hover:text-primary/90"
                   >
-                    <span>View your applications</span>
+                    <span>{t("jobApplication.viewYourApplications")}</span>
                     <svg
                       width="20"
                       height="20"

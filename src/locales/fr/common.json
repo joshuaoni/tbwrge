@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "jobs": "Emplois",
+    "candidates": "Candidats",
+    "analytics": "Analyses",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "home": "Accueil",
+    "about": "À propos",
+    "pricing": "Tarification",
+    "blog": "Blog",
+    "community": "Communauté"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue sur votre tableau de bord",
+    "stats": "Statistiques",
+    "recentActivity": "Activité récente",
+    "quickActions": "Actions rapides",
+    "notifications": "Notifications"
+  },
+  "jobs": {
+    "title": "Offres d'emploi",
+    "createNew": "Créer un nouvel emploi",
+    "applications": "Candidatures",
+    "candidates": "Candidats",
+    "status": "Statut",
+    "posted": "Publié",
+    "active": "Actif",
+    "closed": "Fermé",
+    "draft": "Brouillon"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "info": "Information"
+  },
+  "forms": {
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "company": "Entreprise",
+    "position": "Poste",
+    "required": "Ce champ est requis",
+    "invalidEmail": "Veuillez saisir une adresse email valide"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se déconnecter",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "createAccount": "Créer un compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?"
+  },
+  "language": {
+    "selectLanguage": "Sélectionner la langue",
+    "english": "Anglais",
+    "french": "Français",
+    "spanish": "Espagnol",
+    "german": "Allemand",
+    "arabic": "Arabe",
+    "portuguese": "Portugais"
+  }
+}

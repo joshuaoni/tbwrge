@@ -47,7 +47,7 @@ export const getCurrentJobOpenings = async (page: number = 0) => {
     method: "POST",
     url: API_CONFIG.GET_JOB_OPEN,
     data: {
-      limit: 3,
+      limit: 8,
       page,
     },
   });

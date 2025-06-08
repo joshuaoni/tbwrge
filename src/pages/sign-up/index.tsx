@@ -6,15 +6,17 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import OR from "../../../public/images/OR.png";
 import candivetlogowhite from "../../../public/images/candivet-logo.png";
-import GOOGLEICON from "../../../public/images/icons/google-icon.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
+import { loginUserWithGoogle } from "@/actions/login-with-google";
+import { useUserStore } from "@/hooks/use-user-store";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -44,8 +46,17 @@ const SignUpPage = () => {
   const [channel, setChannel] = React.useState("Select Channel");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [step, setStep] = React.useState(1);
+  const [showRoleModal, setShowRoleModal] = React.useState(false);
+  const [selectedGoogleRole, setSelectedGoogleRole] =
+    React.useState("Select Role");
+  const [googleResponse, setGoogleResponse] = React.useState<any>(null);
   const router = useRouter();
   const isMobile = useIsMobile();
+  const { addUser } = useUserStore();
+  const searchParams = useSearchParams();
+  // Get the redirect URL from query parameters
+  const redirectUrl = searchParams?.get("redirect");
 
   const data = {
     fullName,
@@ -66,13 +77,109 @@ const SignUpPage = () => {
     },
   });
 
+  const signUpWithGoogleMutation = useMutation({
+    mutationFn: async (token: string) =>
+      await loginUserWithGoogle({
+        token,
+        role: selectedGoogleRole.toLowerCase(),
+      }),
+    onSuccess: (res) => {
+      if (res.user != null) {
+        toast.success("Sign up successful");
+        addUser({
+          authenticatedUser: res.user,
+          token: res.access_token,
+        });
+        // Redirect to the saved URL or default based on role
+        if (res.user.role === "job_seeker") {
+          router.push(redirectUrl || "/dashboard/job-board");
+        } else if (res.user.role === "recruiter") {
+          router.push(redirectUrl || "/dashboard");
+        } else if (res.user.role === "root") {
+          router.push(redirectUrl || "/admin");
+        }
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Google sign up failed");
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (step < 3) {
+      setStep(step + 1);
+      return;
+    }
     registerUserMutation.mutate();
   };
 
+  const handleGoogleButtonClick = () => {
+    setShowRoleModal(true);
+  };
+
+  const handleRoleSelect = () => {
+    if (selectedGoogleRole === "Select Role") {
+      toast.error("Please select a role");
+      return;
+    }
+    setShowRoleModal(false);
+    // If we have a stored Google response, process it now
+    if (googleResponse) {
+      signUpWithGoogleMutation.mutate(googleResponse.credential);
+      setGoogleResponse(null);
+    }
+  };
+
+  const handleGoogleSignUp = (response: any) => {
+    if (response.credential) {
+      // Store the response and show role selection if not already shown
+      setGoogleResponse(response);
+      if (!showRoleModal) {
+        setShowRoleModal(true);
+      }
+    } else {
+      toast.error("Google sign up failed");
+    }
+  };
+
+  // Progress indicator
+  const steps = ["Account Info", "Channel & Role", "Review & Submit"];
+
   return (
     <div className="min-h-screen w-full bg-darkgreen overflow-y-auto relative">
+      {/* Role Selection Modal */}
+      {showRoleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className={`${poppins.className} text-xl font-semibold mb-4`}>
+              Select Your Role
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Please select your role before continuing with Google sign-up
+            </p>
+            <RoleSelectionDropDown
+              role={selectedGoogleRole}
+              setRole={setSelectedGoogleRole}
+            />
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowRoleModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRoleSelect}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isMobile && (
         <>
           <DecorativeCircles position="top" />
@@ -90,8 +197,11 @@ const SignUpPage = () => {
         </button>
       </div>
 
-      <div className="w-full max-w-[400px] mx-auto py-6 md:py-8 px-4">
-        <div className="flex items-center justify-center cursor-pointer">
+      <div className="w-full max-w-[400px] mx-auto py-6 md:py-0 md:pt-4 px-4">
+        <div
+          onClick={() => router.push("/")}
+          className="flex items-center justify-center cursor-pointer"
+        >
           <Image
             src="/footer-logo.png"
             alt=""
@@ -106,131 +216,225 @@ const SignUpPage = () => {
           </h1>
         </div>
 
-        <div
-          className={`${poppins.className} w-full bg-white rounded-lg mt-4 p-4 md:p-6`}
-        >
-          <h1 className="text-[18px] md:text-[20px] text-center font-bold text-primary">
-            Create an Account
-          </h1>
-          <p className="text-[12px] md:text-[14px] text-[#4A5568] text-center mt-2">
-            Welcome to simplified candidate vetting
-          </p>
-
-          <form onSubmit={handleSubmit} className="mt-4 md:mt-6 space-y-4">
-            <div className="space-y-3 md:space-y-4">
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="fullName">
-                  Full Name
-                </label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  name="fullName"
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="email">
-                  Email Address
-                </label>
-                <Input
-                  id="email"
-                  value={email}
-                  name="email"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@gmail.com"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs" htmlFor="password">
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="********"
-                  className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs">
-                  How did you hear about us? (optional)
-                </label>
-                <ChannelsDropDown channel={channel} setChannel={setChannel} />
-              </div>
-
-              <div className="space-y-1.5 md:space-y-2">
-                <label className="text-[10px] md:text-xs">Role Selection</label>
-                <RoleSelectionDropDown role={role} setRole={setRole} />
-              </div>
-            </div>
-
-            <Button
-              disabled={
-                registerUserMutation.isPending ||
-                !email ||
-                !password ||
-                !fullName ||
-                role === "Select Role"
-              }
-              variant="default"
-              className="bg-primary text-white w-full h-10 md:h-11 text-sm md:text-base"
-              type="submit"
-            >
-              {registerUserMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                "CREATE ACCOUNT"
-              )}
-            </Button>
-
-            <div className="flex items-center justify-center my-3 md:my-4">
-              <Image
-                src={OR}
-                alt="OR divider"
-                width={150}
-                height={20}
-                className="h-4 md:h-5 object-contain"
-              />
-            </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 bg-white text-black border border-gray-200 h-10 md:h-11 text-sm md:text-base"
-              onClick={() => {
-                /* Handle Google sign in */
-              }}
-            >
-              <Image
-                src={GOOGLEICON}
-                alt="Google"
-                width={18}
-                height={18}
-                className="w-[16px] h-[16px] md:w-[18px] md:h-[18px]"
-              />
-              <span className="text-[14px]">Continue with Google</span>
-            </Button>
-
-            <p className="text-center text-[12px] md:text-[14px] text-gray-400">
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => router.push("/sign-in")}
-                className="text-primary font-semibold"
+        {/* Progress Indicator */}
+        <div className="flex justify-between items-center mt-6 mb-4">
+          {steps.map((label, idx) => (
+            <div key={label} className="flex-1 flex flex-col items-center">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm mb-1
+                  ${
+                    step === idx + 1
+                      ? "bg-white text-primary border-2 border-primary"
+                      : "bg-gray-400 text-white"
+                  }`}
               >
-                Sign In
-              </button>
-            </p>
+                {idx + 1}
+              </div>
+              <span
+                className={`text-xs text-center ${
+                  step === idx + 1 ? "text-white font-bold" : "text-gray-400"
+                }`}
+                style={
+                  step === idx + 1
+                    ? { textShadow: "0 1px 4px rgba(0,0,0,0.12)" }
+                    : {}
+                }
+              >
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className={`${
+            poppins.className
+          } w-full bg-white rounded-lg mt-4 p-4 md:p-6 ${
+            step === 1 ? "" : "max-h-[70vh] overflow-y-auto"
+          }`}
+        >
+          <form onSubmit={handleSubmit} className="mt-4 md:mt-6 space-y-4">
+            {/* Step 1: Name/Email/Password */}
+            {step === 1 && (
+              <div className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="fullName">
+                    Full Name
+                  </label>
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    name="fullName"
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="email">
+                    Email Address
+                  </label>
+                  <Input
+                    id="email"
+                    value={email}
+                    name="email"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="example@gmail.com"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs" htmlFor="password">
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="********"
+                    className="w-full bg-[#EDF2F7] py-5 md:py-6 border-none text-sm md:text-base placeholder:text-[12px] md:placeholder:text-sm"
+                  />
+                </div>
+              </div>
+            )}
+            {/* Step 2: Channel/Role */}
+            {step === 2 && (
+              <div className="space-y-3 md:space-y-4">
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs">
+                    How did you hear about us? (optional)
+                  </label>
+                  <ChannelsDropDown channel={channel} setChannel={setChannel} />
+                </div>
+                <div className="space-y-1.5 md:space-y-2">
+                  <label className="text-[10px] md:text-xs">
+                    Role Selection
+                  </label>
+                  <RoleSelectionDropDown role={role} setRole={setRole} />
+                </div>
+              </div>
+            )}
+            {/* Step 3: Review & Submit */}
+            {step === 3 && (
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4 shadow-sm border border-gray-200">
+                  <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                    <span>Review your details</span>
+                  </h2>
+                  <ul className="space-y-2">
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Full Name:
+                      </span>
+                      <span className="ml-2 text-gray-900">{fullName}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Email:
+                      </span>
+                      <span className="ml-2 text-gray-900">{email}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">Role:</span>
+                      <span className="ml-2 text-gray-900">{role}</span>
+                    </li>
+                    <li>
+                      <span className="font-semibold text-gray-700">
+                        Channel:
+                      </span>
+                      <span className="ml-2 text-gray-900">{channel}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center mt-6">
+              {step > 1 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="text-white border-primary bg-primary/80 hover:bg-primary"
+                  onClick={() => setStep(step - 1)}
+                >
+                  Back
+                </Button>
+              )}
+              <div className="flex-1" />
+              {step < 3 ? (
+                <Button
+                  type="submit"
+                  variant="default"
+                  className="bg-primary text-white"
+                  disabled={
+                    (step === 1 && (!email || !password || !fullName)) ||
+                    (step === 2 && role === "Select Role")
+                  }
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  disabled={registerUserMutation.isPending}
+                  variant="default"
+                  className="bg-primary text-white"
+                  type="submit"
+                >
+                  {registerUserMutation.isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "CREATE ACCOUNT"
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {/* Google Sign Up only on Step 1 */}
+            {step === 1 && (
+              <>
+                <div className="flex items-center justify-center my-3 md:my-4">
+                  <Image
+                    src={OR}
+                    alt="OR divider"
+                    width={150}
+                    height={20}
+                    className="h-4 md:h-5 object-contain"
+                  />
+                </div>
+                <div className="flex justify-center w-full">
+                  <div className="w-full">
+                    <GoogleLogin
+                      onSuccess={handleGoogleSignUp}
+                      onError={() => {
+                        toast.error("Google sign up failed");
+                      }}
+                      width="100%"
+                      text="signup_with"
+                      shape="rectangular"
+                      theme="outline"
+                      logo_alignment="left"
+                      useOneTap={false}
+                      containerProps={{
+                        onClick: handleGoogleButtonClick,
+                      }}
+                    />
+                  </div>
+                </div>
+                <p className="text-center text-[12px] md:text-[14px] text-gray-400">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => router.push("/sign-in")}
+                    className="text-primary font-semibold"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </>
+            )}
           </form>
         </div>
       </div>
