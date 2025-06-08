@@ -231,7 +231,6 @@ const index = () => {
               <h2 className="text-lg font-semibold">
                 {t("dashboard.recentActivity")}
               </h2>
-              <AllActivityDropDown />
             </div>
             <div className="rounded-lg p-6 px-2">
               <ActivityFeed activities={activities} />

@@ -96,10 +96,10 @@ const CurrentOpenings = ({
         ))}
       </div>
       <div className="mt-8">
-        <BulkActionsJobsPopUp
+        {/* <BulkActionsJobsPopUp
           jobIds={selectedJobs.map((job) => job.id)}
           status="open"
-        />
+        /> */}
       </div>
       <Table className="mt-2">
         <TableHeader className="h-[39.292px] mb-4">

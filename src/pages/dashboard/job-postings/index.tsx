@@ -89,7 +89,7 @@ const JobPostings = () => {
                 </Button>
               </div>
 
-              {currentView === "openings" ? (
+              {/* {currentView === "openings" ? (
                 <div>
                   <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -109,7 +109,7 @@ const JobPostings = () => {
                 <button className=" bg-[#F0F0F0] flex h-[35px] px-4 w-[100px] justify-between items-center ml-auto space-x-4 text-gray-500 text-[12px] rounded-full">
                   Repost Job
                 </button>
-              )}
+              )} */}
             </>
           )}
         </div>

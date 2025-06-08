@@ -139,7 +139,6 @@ const ArticlesCommunity = () => {
         <h2 className="text-lg font-semibold">
           {t("articlesCommunity.title")}
         </h2>
-        <AllActivityDropDown />
       </div>
       <div className="space-y-4">
         {postsLoading ? (

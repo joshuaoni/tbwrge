@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useUserStore } from "@/hooks/use-user-store";
+import { toast } from "react-hot-toast";
 
 interface BulkActionsJobsPopUpProps {
   jobIds: string[];
@@ -29,6 +30,12 @@ export const BulkActionsJobsPopUp = (props: BulkActionsJobsPopUpProps) => {
         token: userData?.token,
       });
       console.log("done bulk action", response);
+    },
+    onSuccess: () => {
+      toast.success("Bulk action successful");
+    },
+    onError: () => {
+      toast.error("Bulk action failed");
     },
   });
   return (

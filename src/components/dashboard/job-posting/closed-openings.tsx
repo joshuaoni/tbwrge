@@ -89,10 +89,12 @@ const ClosedOpenings = () => {
           </div>
         ))}
       </div>
-      <BulkActionsJobsPopUp
-        jobIds={selectedJobs.map((job) => job.id)}
-        status="closed"
-      />
+      <div className="mt-8">
+        {/* <BulkActionsJobsPopUp
+          jobIds={selectedJobs.map((job) => job.id)}
+          status="closed"
+        /> */}
+      </div>
       <Table className="mt-2">
         <TableHeader className="h-[39.292px] mb-4">
           <TableRow className="bg-[#D6D6D6]">
