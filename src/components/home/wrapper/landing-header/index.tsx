@@ -168,7 +168,7 @@ const LandingHeader = ({
                 <Button
                   onClick={() => router.push("/sign-up")}
                   className={`bg-transparent hover:bg-white/20 ${
-                    isBlogOrTools
+                    isBlogOrTools || isScrolled
                       ? "text-black border-black/40 hover:bg-black/10"
                       : "text-white border-white"
                   } border rounded-full`}
