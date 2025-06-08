@@ -2,7 +2,13 @@
 import { API_CONFIG } from "@/constants/api_config";
 import axios from "axios";
 
-export const loginUserWithGoogle = async ({ token }: { token: string }) => {
+export const loginUserWithGoogle = async ({
+  token,
+  role,
+}: {
+  token: string;
+  role?: string;
+}) => {
   try {
     const options = {
       method: "POST",
@@ -10,6 +16,7 @@ export const loginUserWithGoogle = async ({ token }: { token: string }) => {
       headers: { "Content-Type": "application/json" },
       data: JSON.stringify({
         token,
+        role: role == "recruiter" ? "recruiter" : "job_seeker",
       }),
     };
     const response = await axios(options);

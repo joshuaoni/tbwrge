@@ -47,6 +47,10 @@ const SignUpPage = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [step, setStep] = React.useState(1);
+  const [showRoleModal, setShowRoleModal] = React.useState(false);
+  const [selectedGoogleRole, setSelectedGoogleRole] =
+    React.useState("Select Role");
+  const [googleResponse, setGoogleResponse] = React.useState<any>(null);
   const router = useRouter();
   const isMobile = useIsMobile();
   const { addUser } = useUserStore();
@@ -77,9 +81,11 @@ const SignUpPage = () => {
     mutationFn: async (token: string) =>
       await loginUserWithGoogle({
         token,
+        role: selectedGoogleRole.toLowerCase(),
       }),
     onSuccess: (res) => {
       if (res.user != null) {
+        toast.success("Sign up successful");
         addUser({
           authenticatedUser: res.user,
           token: res.access_token,
@@ -108,9 +114,30 @@ const SignUpPage = () => {
     registerUserMutation.mutate();
   };
 
+  const handleGoogleButtonClick = () => {
+    setShowRoleModal(true);
+  };
+
+  const handleRoleSelect = () => {
+    if (selectedGoogleRole === "Select Role") {
+      toast.error("Please select a role");
+      return;
+    }
+    setShowRoleModal(false);
+    // If we have a stored Google response, process it now
+    if (googleResponse) {
+      signUpWithGoogleMutation.mutate(googleResponse.credential);
+      setGoogleResponse(null);
+    }
+  };
+
   const handleGoogleSignUp = (response: any) => {
     if (response.credential) {
-      signUpWithGoogleMutation.mutate(response.credential);
+      // Store the response and show role selection if not already shown
+      setGoogleResponse(response);
+      if (!showRoleModal) {
+        setShowRoleModal(true);
+      }
     } else {
       toast.error("Google sign up failed");
     }
@@ -121,6 +148,38 @@ const SignUpPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-darkgreen overflow-y-auto relative">
+      {/* Role Selection Modal */}
+      {showRoleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className={`${poppins.className} text-xl font-semibold mb-4`}>
+              Select Your Role
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Please select your role before continuing with Google sign-up
+            </p>
+            <RoleSelectionDropDown
+              role={selectedGoogleRole}
+              setRole={setSelectedGoogleRole}
+            />
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowRoleModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRoleSelect}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isMobile && (
         <>
           <DecorativeCircles position="top" />
@@ -346,18 +405,23 @@ const SignUpPage = () => {
                   />
                 </div>
                 <div className="flex justify-center w-full">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSignUp}
-                    onError={() => {
-                      toast.error("Google sign up failed");
-                    }}
-                    width="100%"
-                    text="signup_with"
-                    shape="rectangular"
-                    theme="outline"
-                    logo_alignment="left"
-                    useOneTap={false}
-                  />
+                  <div className="w-full">
+                    <GoogleLogin
+                      onSuccess={handleGoogleSignUp}
+                      onError={() => {
+                        toast.error("Google sign up failed");
+                      }}
+                      width="100%"
+                      text="signup_with"
+                      shape="rectangular"
+                      theme="outline"
+                      logo_alignment="left"
+                      useOneTap={false}
+                      containerProps={{
+                        onClick: handleGoogleButtonClick,
+                      }}
+                    />
+                  </div>
                 </div>
                 <p className="text-center text-[12px] md:text-[14px] text-gray-400">
                   Already have an account?{" "}

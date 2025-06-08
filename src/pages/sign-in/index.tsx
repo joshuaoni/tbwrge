@@ -85,6 +85,7 @@ const Index = () => {
       }),
     onSuccess: (res) => {
       if (res.user != null) {
+        toast.success("Login successful");
         addUser({
           authenticatedUser: res.user,
           token: res.access_token,
@@ -96,8 +97,13 @@ const Index = () => {
           router.push(redirectUrl || "/dashboard");
         } else if (res.user.role === "root") {
           router.push(redirectUrl || "/admin");
+        } else {
+          router.push(redirectUrl || "/dashboard");
         }
       }
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Login failed");
     },
   });
 
