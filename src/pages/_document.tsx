@@ -13,6 +13,22 @@ export default function Document() {
         <link rel="icon" href="/footer-logo.png" />
         <link rel="apple-touch-icon" href="/footer-logo.png" />
         <meta name="theme-color" content="#065844" />
+
+        {/* Google Analytics */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-HCGCS9E392"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-HCGCS9E392');
+            `,
+          }}
+        />
       </Head>
       <body className="antialiased">
         <Main />
