@@ -45,7 +45,12 @@ const LandingHeader = ({
   }, []);
 
   const isBlogOrTools =
-    pathname?.includes("/blog") || pathname?.includes("/pricing");
+    pathname?.includes("/blog") ||
+    pathname?.includes("/pricing") ||
+    pathname?.includes("/terms-of-service") ||
+    pathname?.includes("/privacy-policy") ||
+    pathname?.includes("/cookie-policy") ||
+    pathname?.includes("/disclaimer");
   const logoSrc =
     isBlogOrTools || isScrolled ? "/header-final.png" : "/footer-logo.png";
   const textColor = isBlogOrTools || isScrolled ? "text-black" : "text-white";
@@ -163,7 +168,7 @@ const LandingHeader = ({
                 <Button
                   onClick={() => router.push("/sign-up")}
                   className={`bg-transparent hover:bg-white/20 ${
-                    isBlogOrTools
+                    isBlogOrTools || isScrolled
                       ? "text-black border-black/40 hover:bg-black/10"
                       : "text-white border-white"
                   } border rounded-full`}

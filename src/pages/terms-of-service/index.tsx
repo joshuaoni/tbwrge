@@ -1,8 +1,11 @@
 import LandingWrapper from "@/components/home/wrapper/landing-wrapper";
+import { outfit } from "@/constants/app";
 
 const TermsOfService = () => (
   <LandingWrapper>
-    <div className="flex justify-center items-start min-h-[60vh] py-16 px-2">
+    <div
+      className={`${outfit.className} flex justify-center items-start min-h-[60vh] py-16 px-2`}
+    >
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 md:p-12">
         <h1 className="text-4xl font-bold mb-8 text-center">
           Terms of Service
