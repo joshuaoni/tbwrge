@@ -75,6 +75,7 @@ export const API_CONFIG = {
     `${MAIN_URL}/profile/update-member/${member_id}/`,
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
+  DELETE_ACCOUNT: `${MAIN_URL}/profile/delete-account/`,
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,
