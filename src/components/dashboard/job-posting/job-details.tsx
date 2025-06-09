@@ -18,7 +18,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { ICandidate } from "@/interfaces/candidate";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Copy, Lock, Pencil } from "lucide-react";
 import React, { useEffect } from "react";
 import JobDetailsOptions from "./job-details-options";
 import { formatDistanceToNow } from "date-fns";
@@ -27,6 +27,10 @@ import { BulkActionsJobsPopUp } from "@/components/ui/bulk-actions-jobs";
 import { IJob } from "@/interfaces/job";
 import CandidateDetails from "./candidate-details";
 import { getApplicationItem } from "@/actions/get-application-item";
+import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
+import { bulkAction } from "@/actions/bulk-action";
+import { useMutation } from "@tanstack/react-query";
 
 const JobDetails = ({
   setCurrentView,
@@ -37,6 +41,7 @@ const JobDetails = ({
   selectedJob: any;
   setApplicationId: (val: string) => void;
 }) => {
+  const router = useRouter();
   const { userData } = useUserStore();
   const [applicants, setApplicants] = React.useState<any[]>([]);
   const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
@@ -48,6 +53,7 @@ const JobDetails = ({
   >("all");
   const [view, setView] = React.useState<"list" | "candidate">("list");
   const [selectedCandidate, setSelectedCandidate] = React.useState<any>(null);
+  const [open, setOpen] = React.useState(false);
 
   const { data: applicationsData, refetch: refetchApplications } = useQuery({
     queryKey: ["job-applications", selectedJob?.id, selectedTab],
@@ -60,6 +66,24 @@ const JobDetails = ({
       return response;
     },
     enabled: !!selectedJob?.id,
+  });
+
+  const closeJobMutation = useMutation({
+    mutationFn: async () => {
+      return await bulkAction({
+        status: "closed",
+        jobIds: [selectedJob.id],
+        token: userData?.token,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Job closed successfully!");
+      refetchApplications();
+      setOpen(false);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to close job");
+    },
   });
 
   useEffect(() => {
@@ -181,19 +205,59 @@ const JobDetails = ({
             </PopoverTrigger>
             <PopoverContent className="w-[150px] p-0 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)] rounded-[10px] border-none">
               <div className="flex flex-col bg-white rounded-[10px]">
-                <button className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 rounded-t-[10px]">
+                <button
+                  onClick={() =>
+                    router.push(`/dashboard/job-board/edit/${selectedJob.id}`)
+                  }
+                  className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 rounded-t-[10px] flex items-center gap-2"
+                >
+                  <Pencil className="w-3 h-3" />
                   Edit Job
                 </button>
-                <button className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700">
+                <button
+                  onClick={() => {
+                    const jobDetailsLink = `${window.location.origin}/dashboard/job-board/${selectedJob.id}`;
+                    navigator.clipboard.writeText(jobDetailsLink);
+                    toast.success("Job link copied to clipboard!");
+                    setOpen(false);
+                  }}
+                  className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
+                >
+                  <Copy className="w-3 h-3" />
                   Copy Job link
                 </button>
-                <button className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700">
-                  Copy Job embed code
+                <button
+                  onClick={() => {
+                    const jobEmbedLink = `${window.location.origin}/embedded-job-post/${selectedJob.id}`;
+                    const embedCode = `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="${jobEmbedLink}"></iframe>`;
+                    navigator.clipboard.writeText(embedCode);
+                    toast.success("Embed code copied to clipboard!");
+                    setOpen(false);
+                  }}
+                  className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy embed code
                 </button>
-                <button className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700">
-                  Copy Screening Link
+                <button
+                  onClick={() => {
+                    const screeningLink = `${window.location.origin}/dashboard/screening?job_id=${selectedJob.id}`;
+                    navigator.clipboard.writeText(screeningLink);
+                    toast.success("Screening link copied to clipboard!");
+                    setOpen(false);
+                  }}
+                  className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy screening link
                 </button>
-                <button className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 rounded-b-[10px]">
+                <button
+                  onClick={() => {
+                    closeJobMutation.mutate();
+                  }}
+                  className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2 rounded-b-[10px]"
+                >
+                  <Lock className="w-3 h-3" />
                   Close Job
                 </button>
               </div>
@@ -204,12 +268,12 @@ const JobDetails = ({
         <div className="flex flex-col gap-2 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)] p-2 rounded-[10px] bg-white">
           <div className="flex items-center gap-[50px] justify-between">
             <span className="text-[24px] font-extrabold">Tools</span>
-            <Button
+            {/* <Button
               variant="ghost"
               className="bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[120px] text-[10px] rounded-full hover:bg-gray-200"
             >
               Top 5 Candidates <CaretDownIcon className="ml-1 h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
           <Button className="bg-[#009379] w-fit text-white font-semibold hover:bg-[#009379] hover:text-white/90 h-[40px] px-[18px] text-sm rounded-[16px] mt-4 mr-auto">
             Summarize <CaretDownIcon className="ml-1 h-4 w-4" />
@@ -231,19 +295,19 @@ const JobDetails = ({
           color="[#2B95D7]"
         />
         <div className="flex-1" />
-        <Button
+        {/* <Button
           variant="ghost"
           className="bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[150px] text-[10px] rounded-full hover:bg-gray-200"
         >
           Rank By: Years of Exp <CaretDownIcon className="ml-1 h-4 w-4" />
-        </Button>
+        </Button> */}
       </div>
 
       <div className="mb-2">
-        <BulkActionsJobsPopUp
+        {/* <BulkActionsJobsPopUp
           jobIds={selectedJobs.map((job) => job.id)}
           status="open"
-        />
+        /> */}
       </div>
 
       <div className="bg-[#F0F0F0] rounded-lg p-4">

@@ -302,7 +302,7 @@ export default function ScreeningPage() {
                       alt={jobDetail.company_name}
                       width={48}
                       height={48}
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                     />
                   ) : (
                     <div className="w-full h-full bg-slate-300 flex items-center justify-center">
