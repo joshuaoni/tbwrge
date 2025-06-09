@@ -363,6 +363,7 @@ declare module "react-i18next" {
           german: string;
           arabic: string;
           portuguese: string;
+          chinese: string;
         };
         screening: {
           title: string;
