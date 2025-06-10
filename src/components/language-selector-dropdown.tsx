@@ -40,6 +40,7 @@ const LanguageSelectorDropDown = ({
         de: t("language.german"),
         ar: t("language.arabic"),
         pt: t("language.portuguese"),
+        zh: t("language.chinese"),
       };
       return languageMap[i18n.language] || t("language.english");
     }
@@ -54,8 +55,17 @@ const LanguageSelectorDropDown = ({
         { code: "de", name: t("language.german") },
         { code: "ar", name: t("language.arabic") },
         { code: "pt", name: t("language.portuguese") },
+        { code: "zh", name: t("language.chinese") },
       ]
-    : ["English", "French", "Spanish", "German", "Arabic", "Portugese"];
+    : [
+        "English",
+        "French",
+        "Spanish",
+        "German",
+        "Arabic",
+        "Portugese",
+        "Chinese",
+      ];
 
   const handleLanguageSelect = (
     selectedLanguage: string | { code: string; name: string }
@@ -81,6 +91,7 @@ const LanguageSelectorDropDown = ({
         de: t("language.german"),
         ar: t("language.arabic"),
         pt: t("language.portuguese"),
+        zh: t("language.chinese"),
       };
       setLanguage(languageMap[i18n.language] || t("language.english"));
     }
@@ -90,7 +101,7 @@ const LanguageSelectorDropDown = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
-          className="bg-white border border-lightgreen px-4 flex items-center justify-between space-x-12 py-3 rounded-md cursor-pointer outline-none"
+          className="text-sm bg-white border border-lightgreen px-4 flex items-center justify-between space-x-12 py-3 rounded-md cursor-pointer outline-none"
           style={{ position: "relative" }}
         >
           {!outputLanguage && (

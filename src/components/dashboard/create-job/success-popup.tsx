@@ -10,12 +10,16 @@ interface SuccessPopupProps {
   isOpen: boolean;
   onClose: () => void;
   jobLink: string;
+  jobEmbedLink: string;
+  postedJobLink: string;
 }
 
 export function JobCreatedSuccessPopup({
   isOpen,
   onClose,
   jobLink,
+  jobEmbedLink,
+  postedJobLink,
 }: SuccessPopupProps) {
   const [copied, setCopied] = useState(false);
 
@@ -32,7 +36,7 @@ export function JobCreatedSuccessPopup({
   };
 
   const getEmbedCode = () => {
-    return `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="${jobLink}"></iframe>`;
+    return `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="${jobEmbedLink}"></iframe>`;
   };
 
   return (
@@ -193,7 +197,7 @@ export function JobCreatedSuccessPopup({
 
         <Button
           className="w-full bg-primary hover:bg-primary/90 text-white"
-          onClick={() => window.open(jobLink, "_blank")}
+          onClick={() => window.open(postedJobLink, "_blank")}
         >
           View Posted Job
         </Button>

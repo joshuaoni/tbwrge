@@ -12,6 +12,7 @@ The application supports multiple languages:
 - German (de)
 - Arabic (ar)
 - Portuguese (pt)
+- Chinese (zh) - Mandarin
 
 ## Architecture
 

@@ -52,18 +52,14 @@ const PrivacyAndSecuritySettingsPage = () => {
 
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      if (!userData?.token || !userData?.user?.id)
-        throw new Error("No token or user ID available");
-      return await deleteAccount(userData.token, userData.user.id);
+      if (!userData?.token) throw new Error("No token available");
+      return await deleteAccount(userData.token);
     },
     onSuccess: () => {
       toast.success("Account deleted successfully");
-      // Clear any local storage or state
-      localStorage.clear();
-      // Redirect to home page
-      router.push("/");
+      router.push("/sign-in");
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast.error(error.message || "Failed to delete account");
     },
   });
@@ -148,12 +144,12 @@ const PrivacyAndSecuritySettingsPage = () => {
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="Delete Account" titleClass="text-red">
-        <CheckBoxInput
-          label="I understand this account would delete all my data"
-          onChange={() => setShowDeleteConfirmation(true)}
-        />
-      </CheckBoxSectionWrapper>
+      <button
+        onClick={() => setShowDeleteConfirmation(true)}
+        className="mt-4 px-4 py-2 text-white bg-red hover:bg-red/80 rounded-lg transition-colors text-sm font-medium"
+      >
+        Delete Account
+      </button>
 
       {/* Delete Account Confirmation Dialog */}
       <Dialog

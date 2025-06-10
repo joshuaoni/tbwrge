@@ -16,6 +16,7 @@ import { BriefcaseBusiness, File, ShoppingBag, User } from "lucide-react";
 import React, { useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const CurrentOpenings = ({
   setCurrentView,
@@ -25,6 +26,7 @@ const CurrentOpenings = ({
   setSelectedJob: React.Dispatch<React.SetStateAction<any>>;
 }) => {
   const { userData } = useUserStore();
+  const router = useRouter();
   const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
   const { data } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -46,6 +48,7 @@ const CurrentOpenings = ({
       return response;
     },
   });
+
   const [stats, setStats] = React.useState([
     {
       title: "Total Job Posts",
@@ -82,6 +85,7 @@ const CurrentOpenings = ({
       },
     ]);
   }, [data]);
+
   return (
     <section>
       <div className="flex items-center space-x-8">
@@ -130,7 +134,11 @@ const CurrentOpenings = ({
             <TableRow
               className="cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
               onClick={() => {
-                setCurrentView("details"), setSelectedJob(job);
+                setSelectedJob(job);
+                router.push(
+                  `/dashboard/job-postings?jobId=${job.id}&view=details`
+                );
+                setCurrentView("details");
               }}
               key={job.id}
             >

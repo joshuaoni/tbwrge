@@ -47,6 +47,8 @@ function CreateJobOverview() {
   const [newQuestion, setNewQuestion] = useState<string>("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [createdJobLink, setCreatedJobLink] = useState("");
+  const [createdJobEmbedLink, setCreatedJobEmbedLink] = useState("");
+  const [postedJobLink, setPostedJobLink] = useState("");
   const [jobId, setJobId] = useState<string | null>(null);
 
   const handleInputChange = (
@@ -142,8 +144,12 @@ function CreateJobOverview() {
       }
     },
     onSuccess: (data) => {
-      const jobDetailsLink = `${window.location.origin}/dashboard/job-postings?jobId=${data.id}&view=details`;
+      const jobDetailsLink = `${window.location.origin}/dashboard/job-board/${data.id}`;
+      const jobEmbedLink = `${window.location.origin}/embedded-job-post/${data.id}`;
+      const postedJobLink = `${window.location.origin}/dashboard/job-postings?jobId=${data.id}&view=details`;
       setCreatedJobLink(jobDetailsLink);
+      setCreatedJobEmbedLink(jobEmbedLink);
+      setPostedJobLink(postedJobLink);
       setShowSuccessPopup(true);
     },
     onError: (error) => {
@@ -551,6 +557,8 @@ function CreateJobOverview() {
         isOpen={showSuccessPopup}
         onClose={() => setShowSuccessPopup(false)}
         jobLink={createdJobLink}
+        jobEmbedLink={createdJobEmbedLink}
+        postedJobLink={postedJobLink}
       />
     </div>
   );
