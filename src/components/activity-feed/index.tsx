@@ -32,21 +32,17 @@ const ActivityFeed = ({ activities }: ActivityFeedProps) => {
               </div>
             </div>
             <div className="flex flex-col">
-              <p className="text-sm text-[#111827] leading-5">
-                <span className="text-sm font-semibold">
-                  {activity.userName}
-                </span>
+              <p className="text-[12px] text-[#111827] leading-5">
+                <span className="font-semibold">{activity.userName}</span>
                 {" applied for the job "}
-                <span className="text-sm font-semibold">
-                  {activity.jobTitle}
-                </span>
+                <span className="font-semibold">{activity.jobTitle}</span>
               </p>
-              <span className="text-sm text-[#6B7280] mt-0.5">
+              <span className="text-[12px] text-[#6B7280] mt-0.5">
                 {activity.timeAgo}
               </span>
             </div>
           </div>
-          <span className="mr-2 px-2 py-1 text-sm font-medium text-[#2563EB] bg-[rgba(55,125,255,0.2)] rounded-[6px]">
+          <span className="mr-2 px-2 py-1 text-[13px] font-medium text-[#2563EB] bg-[rgba(55,125,255,0.2)] rounded-[6px]">
             {activity.status}
           </span>
         </div>

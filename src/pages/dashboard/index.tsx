@@ -205,21 +205,21 @@ const index = () => {
     <DashboardWrapper>
       <div className={`${outfit.className} flex flex-col pb-12`}>
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-bold">{t("nav.dashboard")}</h1>
+          <h1 className="text-2xl font-bold">{t("nav.dashboard")}</h1>
         </div>
         <div className="">
-          <div className="flex flex-col md:flex-row h-[40%] mt-4 justify-between items-center">
+          <div className="flex flex-col md:flex-row h-[40%]  mt-8 justify-between items-center">
             <div className="analytics grid md:w-[60%] w-[70%] grid-cols-1 md:grid-cols-2 gap-6  ">
               {analytics.map((an, index) => (
                 <AnalyticInfoCard key={index} {...an} />
               ))}
             </div>
             <div className="find-box bg-[linear-gradient(119.31deg,#29AB91_0%,#004A37_55.79%,#11453B_100%)] rounded-lg shadow-lg mt-4 md:mt-0 md:w-[40%] h-[248px] py-6 ml-8  text-white flex flex-col p-4 justify-center space-y-4 text-center border">
-              <h1 className="font-bold leading-[1.3] text-sm pt-4">
+              <h1 className="font-bold leading-[1.3] text-[20px] pt-4">
                 {t("dashboard.findRightCandidate")}
               </h1>
-              <p className="text-sm">{t("dashboard.accelerateHiring")}</p>
-              <Button className="bg-white  md:w-[60%] text-sm leading-[1.5] py-[20px] self-center text-[14px] text-primary font-bold ">
+              <p className="text-[12px]">{t("dashboard.accelerateHiring")}</p>
+              <Button className="bg-white  md:w-[60%] text-base py-[20px] self-center text-[14px] text-primary font-bold ">
                 {t("dashboard.subscribePremium")}
               </Button>
             </div>
@@ -228,7 +228,7 @@ const index = () => {
         <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6 mt-[50px]">
           <div className="bg-[#F9F9F9] rounded-lg p-4">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-sm font-semibold">
+              <h2 className="text-lg font-semibold">
                 {t("dashboard.recentActivity")}
               </h2>
             </div>
