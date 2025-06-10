@@ -17,7 +17,7 @@ export function AnalyticInfoCard({
         <div className="p-2 pl-0 rounded">{icon}</div>
         <span className="text-sm font-light text-gray-600">{title}</span>
       </div>
-      <h1 className="text-2xl font-bold mt-4">{value}</h1>
+      <h1 className="text-sm font-bold mt-4">{value}</h1>
     </div>
   );
 }
