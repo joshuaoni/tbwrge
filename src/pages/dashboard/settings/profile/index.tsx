@@ -10,8 +10,10 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const ProfileSettingsPage = () => {
+  const { t } = useTranslation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -67,7 +69,12 @@ const ProfileSettingsPage = () => {
     if (file) {
       // Check file size (1MB limit)
       if (file.size > 1024 * 1024) {
-        toast.error("File size should be less than 1MB");
+        toast.error(
+          t(
+            "settings.profile.fileSizeError",
+            "File size should be less than 1MB"
+          )
+        );
         return;
       }
 
@@ -170,10 +177,15 @@ const ProfileSettingsPage = () => {
       // Invalidate profile query to refetch updated data
       queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-      toast.success("Profile updated successfully");
+      toast.success(
+        t("settings.profile.profileUpdated", "Profile updated successfully")
+      );
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update profile");
+      toast.error(
+        error.message ||
+          t("settings.profile.profileUpdateError", "Failed to update profile")
+      );
     },
   });
 
@@ -193,10 +205,15 @@ const ProfileSettingsPage = () => {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast.success("Password updated successfully");
+      toast.success(
+        t("settings.profile.passwordUpdated", "Password updated successfully")
+      );
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update password");
+      toast.error(
+        error.message ||
+          t("settings.profile.passwordUpdateError", "Failed to update password")
+      );
     },
   });
 
@@ -233,9 +250,13 @@ const ProfileSettingsPage = () => {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-sm text-[#999999]">
-            {profilePicture ? profilePicture.name : "no file selected"}
+            {profilePicture
+              ? profilePicture.name
+              : t("settings.profile.noFileSelected", "no file selected")}
           </span>
-          <span className="text-sm text-[#999999]">max image size is 1mb</span>
+          <span className="text-sm text-[#999999]">
+            {t("settings.profile.maxImageSize", "max image size is 1mb")}
+          </span>
         </div>
       </div>
 
@@ -243,40 +264,40 @@ const ProfileSettingsPage = () => {
         className={`${outfit.className} grid grid-cols-2 gap-x-7 gap-y-4 mt-4`}
       >
         <ProfileInputGroup
-          label="First Name"
+          label={t("settings.profile.firstName", "First Name")}
           value={firstName}
           onChange={setFirstName}
         />
         <ProfileInputGroup
-          label="Last Name"
+          label={t("settings.profile.lastName", "Last Name")}
           value={lastName}
           onChange={setLastName}
         />
         <ProfileInputGroup
-          label="Email Address"
+          label={t("settings.profile.emailAddress", "Email Address")}
           value={email}
           onChange={setEmail}
         />
         <ProfileInputGroup
-          label="Location"
+          label={t("settings.profile.location", "Location")}
           value={location}
           onChange={setLocation}
         />
         <div className="w-full flex items-center gap-x-2">
           <ProfileInputGroup
-            label="Country Code"
+            label={t("settings.profile.countryCode", "Country Code")}
             className="w-3/12"
             value={countryCode}
             onChange={setCountryCode}
           />
           <ProfileInputGroup
-            label="Phone Number"
+            label={t("settings.profile.phoneNumber", "Phone Number")}
             value={phoneNumber}
             onChange={setPhoneNumber}
           />
         </div>
         <ProfileInputGroup
-          label="User ID"
+          label={t("settings.profile.userId", "User ID")}
           value={userId}
           onChange={setUserId}
         />
@@ -307,19 +328,19 @@ const ProfileSettingsPage = () => {
         <ProfileInputGroup
           value={currentPassword}
           onChange={setCurrentPassword}
-          label="Current Password"
+          label={t("settings.profile.currentPassword", "Current Password")}
           className="w-1/2 col-span-2"
           type="password"
         />
         <ProfileInputGroup
-          label="New Password"
+          label={t("settings.profile.newPassword", "New Password")}
           value={newPassword}
           onChange={setNewPassword}
           className="w-1/2 col-span-2"
           type="password"
         />
         <ProfileInputGroup
-          label="Confirm Password"
+          label={t("settings.profile.confirmPassword", "Confirm Password")}
           value={confirmPassword}
           onChange={setConfirmPassword}
           className="w-1/2 col-span-2"

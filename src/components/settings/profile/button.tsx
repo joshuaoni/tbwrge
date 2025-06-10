@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function ProfileSettingsButton({
   action,
@@ -9,6 +10,8 @@ function ProfileSettingsButton({
   loading: boolean;
   disabled?: boolean;
 }) {
+  const { t } = useTranslation();
+
   return (
     <button
       onClick={() => action()}
@@ -17,7 +20,11 @@ function ProfileSettingsButton({
       }`}
       disabled={disabled || loading}
     >
-      {loading ? <Loader2 className="animate-spin" /> : "Save Changes "}
+      {loading ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        t("settings.profile.saveChanges", "Save Changes")
+      )}
     </button>
   );
 }
