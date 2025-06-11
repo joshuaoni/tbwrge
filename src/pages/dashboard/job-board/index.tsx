@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { FiMic, FiSquare, FiPlay, FiTrash2, FiPause } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
+import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 import {
   formatDateAndDifference,
   getJobOpen,
@@ -10,8 +12,11 @@ import {
   IGetJobOpenJobType,
   IGetJobOpenRes,
 } from "@/actions/get-jobs-open";
+import { jobAISearch, JobAISearchRequest } from "@/actions/job-ai-search";
+import { transcribeAudio } from "@/actions/transcribe-audio";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
+import { useUserStore } from "@/hooks/use-user-store";
 import Table from "./components/Table/Table";
 import { outfit } from "@/constants/app";
 import Link from "next/link";
@@ -68,6 +73,13 @@ const JobBoardPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<IGetJobOpenRes[] | null>(
+    null
+  );
+  const [isAISearchActive, setIsAISearchActive] = useState(false);
+
+  const { userData } = useUserStore();
 
   const JOB_TYPE = {
     full_time: t("jobBoard.fullTime"),
@@ -78,17 +90,53 @@ const JobBoardPage = () => {
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
-    mutationFn: async (data) => await getJobOpen(data),
+    mutationFn: async (data) => {
+      // If AI search is active, return the search results
+      if (isAISearchActive) {
+        return searchResults || [];
+      }
+      return await getJobOpen(data);
+    },
+  });
+
+  const aiSearchMutation = useMutation({
+    mutationFn: async (text: string) => {
+      return jobAISearch(userData?.token ?? "", { text }, currentPage - 1);
+    },
+    onSuccess: (data) => {
+      console.log("Job AI search successful", data);
+      setSearchResults(data as IGetJobOpenRes[]);
+      setIsAISearchActive(true);
+    },
+    onError: (error) => {
+      console.error("Job AI search failed", error);
+      toast.error("Failed to perform AI search. Please try again.");
+    },
   });
 
   useEffect(() => {
-    mutation.mutate({
-      search_term: searchTerm,
-      job_type: jobType,
-      skills: debouncedSkills,
-      location: debouncedLocation,
-    });
-  }, [searchTerm, jobType, debouncedSkills, debouncedLocation]);
+    if (!isAISearchActive) {
+      mutation.mutate({
+        search_term: searchTerm,
+        job_type: jobType,
+        skills: debouncedSkills,
+        location: debouncedLocation,
+      });
+    }
+  }, [
+    searchTerm,
+    jobType,
+    debouncedSkills,
+    debouncedLocation,
+    isAISearchActive,
+  ]);
+
+  // Clear AI search when searchTerm changes
+  useEffect(() => {
+    if (isAISearchActive && searchTerm) {
+      clearAISearch();
+    }
+  }, [searchTerm]);
 
   // Handle click outside for AI dropdown
   useEffect(() => {
@@ -289,6 +337,62 @@ const JobBoardPage = () => {
     }
   };
 
+  const handleSearchWithAudio = async () => {
+    if (!audioURL || !userData?.token) return;
+    setIsSearching(true);
+    try {
+      // Get the audio blob from the URL
+      const response = await fetch(audioURL);
+      const audioBlob = await response.blob();
+
+      // Transcribe the audio
+      let transcribedText = await transcribeAudio(userData.token, audioBlob);
+      transcribedText = transcribedText ? transcribedText : "";
+
+      // Close recording modal and open text search modal with transcribed text
+      setIsRecordingModalOpen(false);
+      setIsTextSearchModalOpen(true);
+      setTextSearchInput(transcribedText);
+
+      // Clean up
+      deleteRecording();
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+      toast.error("Failed to transcribe audio. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleTextSearch = async () => {
+    if (!textSearchInput.trim() || !userData?.token) {
+      toast.error("Please enter search text");
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      await aiSearchMutation.mutateAsync(textSearchInput.trim());
+
+      // Close the modal
+      setIsTextSearchModalOpen(false);
+
+      // Clear the search input
+      setTextSearchInput("");
+    } catch (error) {
+      console.error("Text search failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Add function to clear search results
+  const clearAISearch = () => {
+    setSearchResults(null);
+    setIsAISearchActive(false);
+  };
+
   // Clean up resources on unmount
   useEffect(() => {
     return () => {
@@ -301,12 +405,15 @@ const JobBoardPage = () => {
     };
   }, []);
 
-  // Pagination logic
-  const totalItems = mutation.data?.length || 0;
+  // Pagination logic - use appropriate data source
+  const displayData = isAISearchActive
+    ? searchResults || []
+    : mutation.data || [];
+  const totalItems = displayData.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentPageItems = mutation.data?.slice(startIndex, endIndex) || [];
+  const currentPageItems = displayData.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -347,7 +454,13 @@ const JobBoardPage = () => {
                 className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                 placeholder={t("jobBoard.location")}
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => {
+                  // Clear AI search when using regular filter
+                  if (isAISearchActive) {
+                    clearAISearch();
+                  }
+                  setLocation(e.target.value);
+                }}
               />
             </div>
 
@@ -355,9 +468,13 @@ const JobBoardPage = () => {
               <select
                 className="text-sm w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] appearance-none cursor-pointer"
                 value={jobType}
-                onChange={(e) =>
-                  setJobType(e.target.value as IGetJobOpenJobType)
-                }
+                onChange={(e) => {
+                  // Clear AI search when using regular filter
+                  if (isAISearchActive) {
+                    clearAISearch();
+                  }
+                  setJobType(e.target.value as IGetJobOpenJobType);
+                }}
               >
                 {Object.entries(JOB_TYPE).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -394,9 +511,13 @@ const JobBoardPage = () => {
                     >
                       {skill}
                       <button
-                        onClick={() =>
-                          setSkills(skills.filter((_, i) => i !== index))
-                        }
+                        onClick={() => {
+                          // Clear AI search when modifying skills
+                          if (isAISearchActive) {
+                            clearAISearch();
+                          }
+                          setSkills(skills.filter((_, i) => i !== index));
+                        }}
                         className="text-gray-500 hover:text-gray-700"
                       >
                         ×
@@ -414,10 +535,20 @@ const JobBoardPage = () => {
                     skills.length > 0 ? "" : t("jobBoard.pressEnterToAdd")
                   }
                   value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
+                  onChange={(e) => {
+                    // Clear AI search when typing in skills
+                    if (isAISearchActive) {
+                      clearAISearch();
+                    }
+                    setSkillInput(e.target.value);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && skillInput.trim()) {
                       e.preventDefault();
+                      // Clear AI search when adding skills
+                      if (isAISearchActive) {
+                        clearAISearch();
+                      }
                       setSkills([...skills, skillInput.trim()]);
                       setSkillInput("");
                     }
@@ -492,7 +623,10 @@ const JobBoardPage = () => {
 
           {/* Job Table */}
           <div className="w-full">
-            <Table data={currentPageItems} isLoading={mutation.isPending} />
+            <Table
+              data={currentPageItems}
+              isLoading={isSearching || mutation.isPending}
+            />
 
             {/* Pagination */}
             {totalPages > 1 && (
@@ -550,13 +684,18 @@ const JobBoardPage = () => {
               />
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm"
-                onClick={() => {
-                  // Handle text search
-                  setIsTextSearchModalOpen(false);
-                }}
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm flex items-center gap-2"
+                onClick={handleTextSearch}
+                disabled={isSearching || !textSearchInput.trim()}
               >
-                {t("jobBoard.search")}
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  t("jobBoard.search")
+                )}
               </button>
             </div>
           </div>
@@ -679,12 +818,17 @@ const JobBoardPage = () => {
 
               <button
                 className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm"
-                onClick={() => {
-                  // Handle search with recorded audio
-                  setIsRecordingModalOpen(false);
-                }}
+                onClick={handleSearchWithAudio}
+                disabled={!audioURL || isSearching}
               >
-                {t("jobBoard.search")}
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  t("jobBoard.search")
+                )}
               </button>
             </div>
           </div>

@@ -333,22 +333,15 @@ export default function TalentPool() {
 
   const handleSearchWithAudio = async () => {
     if (!audioURL || !userData?.token) return;
-
+    setIsSearching(true);
     try {
       // Get the audio blob from the URL
       const response = await fetch(audioURL);
       const audioBlob = await response.blob();
 
-      // Download the audio file to local machine for debugging
-      const downloadLink = document.createElement("a");
-      downloadLink.href = audioURL;
-      downloadLink.download = "audio-recording.wav";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-
       // Transcribe the audio
-      const transcribedText = await transcribeAudio(userData.token, audioBlob);
+      let transcribedText = await transcribeAudio(userData.token, audioBlob);
+      transcribedText = transcribedText ? transcribedText : "";
 
       // Close recording modal and open text search modal with transcribed text
       setIsRecordingModalOpen(false);
@@ -359,6 +352,9 @@ export default function TalentPool() {
       deleteRecording();
     } catch (error) {
       console.error("Error transcribing audio:", error);
+      toast.error("Failed to transcribe audio. Please try again.");
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -859,10 +855,10 @@ Language Requirements."
                 disabled={isSearching || !textSearchInput.trim()}
               >
                 {isSearching ? (
-                  <>
+                  <span className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Searching...
-                  </>
+                  </span>
                 ) : (
                   "Search"
                 )}
@@ -985,9 +981,16 @@ Language Requirements."
               <button
                 className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
                 onClick={handleSearchWithAudio}
-                disabled={!audioURL}
+                disabled={!audioURL || isSearching}
               >
-                Search
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
           </div>
