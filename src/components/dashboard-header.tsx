@@ -31,7 +31,7 @@ const DashboardHeader = ({
           <Search color="#898989" />
           <Input
             placeholder={t("common.searchForJobs")}
-            className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
+            className="bg-[#F0F0F0] text-sm border-none placeholder:text-[#898989] w-52 rounded-full outline-none focus:outline-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -83,7 +83,8 @@ const DashboardHeader = ({
               <p className="font-medium text-sm truncate overflow-ellipsis">
                 {userData?.user?.name || t("common.notSet")}
               </p>
-              <p className="text-xs text-gray-500 truncate overflow-ellipsis">
+              {/* <p className="text-xs text-gray-500 truncate overflow-ellipsis"> */}
+              <p className="text-sm text-gray-500 truncate overflow-ellipsis">
                 {userData?.user?.role === "root"
                   ? "Admin"
                   : userData?.user?.role === "recruiter"

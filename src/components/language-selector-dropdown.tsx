@@ -101,7 +101,7 @@ const LanguageSelectorDropDown = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
-          className="bg-white border border-lightgreen px-4 flex items-center justify-between space-x-12 py-3 rounded-md cursor-pointer outline-none"
+          className="text-sm bg-white border border-lightgreen px-4 flex items-center justify-between space-x-12 py-3 rounded-md cursor-pointer outline-none"
           style={{ position: "relative" }}
         >
           {!outputLanguage && (
