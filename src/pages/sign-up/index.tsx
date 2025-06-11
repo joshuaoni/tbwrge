@@ -376,6 +376,7 @@ const SignUpPage = () => {
                     onError={() => {
                       toast.error("Google sign up failed");
                     }}
+                    text="signup_with"
                   />
                 </div>
 
