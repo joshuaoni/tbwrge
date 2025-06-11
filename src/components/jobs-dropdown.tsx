@@ -137,12 +137,12 @@ const JobsDropdown = () => {
                   } absolute -left-[2px] rounded-r `}
                 />
                 <div className="flex ml-3 items-center">
-                  <Image
+                  {/* <Image
                     src="/gem.png"
                     alt={item.title}
                     width={20}
                     height={20}
-                  />
+                  /> */}
                   <span className="ml-2 text-sm">{item.title}</span>
                 </div>
               </div>
