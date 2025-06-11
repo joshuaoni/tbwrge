@@ -369,25 +369,16 @@ const SignUpPage = () => {
                     className="h-4 md:h-5 object-contain"
                   />
                 </div>
-                <div className="flex justify-center w-full">
-                  <div className="w-full">
-                    <GoogleLogin
-                      onSuccess={handleGoogleSignUp}
-                      onError={() => {
-                        toast.error("Google sign up failed");
-                      }}
-                      width="100%"
-                      text="signup_with"
-                      shape="rectangular"
-                      theme="outline"
-                      logo_alignment="left"
-                      useOneTap={false}
-                      containerProps={{
-                        onClick: handleGoogleButtonClick,
-                      }}
-                    />
-                  </div>
+
+                <div className="flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSignUp}
+                    onError={() => {
+                      toast.error("Google sign up failed");
+                    }}
+                  />
                 </div>
+
                 <p className="text-center text-[12px] md:text-[14px] text-gray-400">
                   Already have an account?{" "}
                   <button
