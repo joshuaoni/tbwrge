@@ -132,7 +132,7 @@ const JobDetails = ({
   );
 
   return (
-    <section className="px-6 py-4 bg-white">
+    <section className="bg-white">
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-3">
           <button
@@ -160,7 +160,9 @@ const JobDetails = ({
               </div>
             )}
             <div className="flex flex-col">
-              <h2 className="text-base font-medium">{selectedJob.job_title}</h2>
+              <h2 className="text-sm leading-[24px] font-medium">
+                {selectedJob.job_title}
+              </h2>
               <p className="text-sm text-gray-500">
                 {selectedJob.company_name} -{" "}
                 {formatDistanceToNow(new Date(selectedJob.created_at), {
@@ -267,7 +269,7 @@ const JobDetails = ({
 
         <div className="flex flex-col gap-2 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)] p-2 rounded-[10px] bg-white">
           <div className="flex items-center gap-[50px] justify-between">
-            <span className="text-[24px] font-extrabold">Tools</span>
+            <span className="text-[14px] font-extrabold">Tools</span>
             {/* <Button
               variant="ghost"
               className="bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[120px] text-[10px] rounded-full hover:bg-gray-200"
@@ -540,7 +542,7 @@ const JobDetails = ({
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-700 mb-1">
+            <h3 className="text-sm font-medium text-gray-700 mb-1">
               No candidates found
             </h3>
             <p className="text-sm text-gray-500 max-w-md">

@@ -316,30 +316,35 @@ const JobBoardPage = () => {
     <DashboardWrapper searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className={`${outfit.className} min-h-screen bg-white`}>
-        <Link
-          href="/dashboard/applications"
-          className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+        <div
+          className={`${outfit.className} flex items-center justify-between mb-2`}
         >
-          <span>{t("jobBoard.viewApplications")}</span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <h1 className="text-sm font-semibold">Job Board</h1>
+          <Link
+            href="/dashboard/applications"
+            className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
           >
-            <path d="M1 8H15M15 8L8 1M15 8L8 15" />
-          </svg>
-        </Link>
+            <span>{t("jobBoard.viewApplications")}</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M1 8H15M15 8L8 1M15 8L8 15" />
+            </svg>
+          </Link>
+        </div>
         <div className="w-full mx-auto">
           {/* Filters */}
-          <div className="w-full max-w-screen-lg flex flex-wrap gap-4 mt-4">
+          <div className="w-full max-w-screen-lg flex flex-wrap gap-4">
             <div className="relative w-[200px]">
               <input
-                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
+                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                 placeholder={t("jobBoard.location")}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -348,7 +353,7 @@ const JobBoardPage = () => {
 
             <div className="relative w-[200px]">
               <select
-                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] appearance-none cursor-pointer"
+                className="text-sm w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] appearance-none cursor-pointer"
                 value={jobType}
                 onChange={(e) =>
                   setJobType(e.target.value as IGetJobOpenJobType)
@@ -399,10 +404,12 @@ const JobBoardPage = () => {
                     </span>
                   ))
                 ) : (
-                  <span className="text-[#333]">{t("jobBoard.skills")}</span>
+                  <span className="text-[#333] text-sm">
+                    {t("jobBoard.skills")}
+                  </span>
                 )}
                 <input
-                  className="flex-1 bg-transparent focus:outline-none min-w-[100px]"
+                  className="flex-1 bg-transparent focus:outline-none min-w-[100px] text-sm"
                   placeholder={
                     skills.length > 0 ? "" : t("jobBoard.pressEnterToAdd")
                   }
@@ -427,7 +434,9 @@ const JobBoardPage = () => {
                   className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5"
                 >
                   <div className="flex items-center gap-2">
-                    <span>{t("jobBoard.searchWithAI")}</span>
+                    <span className="text-sm">
+                      {t("jobBoard.searchWithAI")}
+                    </span>
                     <Image
                       src="/ai-technology.png"
                       alt="AI"
@@ -458,7 +467,7 @@ const JobBoardPage = () => {
                 {isAIDropdownOpen && (
                   <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                     <button
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
                       onClick={() => {
                         setIsRecordingModalOpen(true);
                         setIsAIDropdownOpen(false);
@@ -467,7 +476,7 @@ const JobBoardPage = () => {
                       {t("jobBoard.audioSearch")}
                     </button>
                     <button
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t text-sm"
                       onClick={() => {
                         setIsTextSearchModalOpen(true);
                         setIsAIDropdownOpen(false);
@@ -482,7 +491,7 @@ const JobBoardPage = () => {
           </div>
 
           {/* Job Table */}
-          <div className="w-full mt-8">
+          <div className="w-full">
             <Table data={currentPageItems} isLoading={mutation.isPending} />
 
             {/* Pagination */}
@@ -491,17 +500,17 @@ const JobBoardPage = () => {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-sm px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("jobBoard.previous")}
                 </button>
-                <span className="px-4 py-2">
+                <span className="text-sm px-4 py-2">
                   {t("applications.page")} {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-sm px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("jobBoard.next")}
                 </button>
@@ -518,7 +527,7 @@ const JobBoardPage = () => {
         >
           <div className="bg-white rounded-lg w-[600px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">
+              <h2 className="text-[14px] font-semibold">
                 {t("jobBoard.searchWithAI")}
               </h2>
               <button
@@ -546,7 +555,7 @@ Language Requirements."
               />
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm"
                 onClick={() => {
                   // Handle text search
                   setIsTextSearchModalOpen(false);
@@ -566,7 +575,7 @@ Language Requirements."
         >
           <div className="bg-white rounded-lg w-[500px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">
+              <h2 className="text-[14px] font-semibold">
                 {t("jobBoard.searchWithAI")}
               </h2>
               <button
@@ -581,7 +590,7 @@ Language Requirements."
               </button>
             </div>
 
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-8 text-sm">
               {t("jobBoard.pleaseRecordSearch")}
             </p>
 
@@ -674,7 +683,7 @@ Language Requirements."
               )}
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm"
                 onClick={() => {
                   // Handle search with recorded audio
                   setIsRecordingModalOpen(false);
