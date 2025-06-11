@@ -235,8 +235,8 @@ const index = () => {
                 {t("dashboard.recentActivity")}
               </h2>
             </div>
-            <div className="rounded-lg p-6 px-2">
-              <ActivityFeed activities={activities} />
+            <div className="rounded-lg p-6 px-2 pt-2">
+              <ActivityFeed />
             </div>
           </div>
 
