@@ -23,6 +23,7 @@ function BillingManageView() {
 
   return (
     <div className={`${outfit.className}`}>
+      <h1 className="text-2xl font-semibold mb-4">Billing</h1>
       <section className="flex items-center my-6 gap-6">
         <div className="w-full border border-lightgreen p-4 space-y-8 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
@@ -72,7 +73,7 @@ function BillingManageView() {
         </div>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-6">
         <h3 className="font-medium text-xl">Invoices</h3>
         <span className="text-textgray">Manage invoice and new receipts</span>
 

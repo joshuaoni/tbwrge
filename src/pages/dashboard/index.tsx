@@ -227,7 +227,7 @@ const index = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6 mt-[50px]">
+        <div className="grid grid-cols-1 md:grid-cols-[1.15fr_1fr] gap-6 mt-8">
           <div className="bg-[#F9F9F9] rounded-lg p-4">
             <div className="flex justify-between items-center mb-6">
               {/* <h2 className="text-lg font-semibold"> */}

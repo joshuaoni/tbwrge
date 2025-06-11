@@ -117,7 +117,7 @@ const AdminFeedbackPage = () => {
         </div>
       </section>
 
-      <section className={`${outfit.className} mt-10 space-y-10`}>
+      <section className={`${outfit.className} mt-10 space-y-4`}>
         <div className="flex items-center gap-6">
           {["Open Feedbacks", "Closed Feedbacks"].map((item, i) => (
             <button

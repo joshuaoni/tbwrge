@@ -401,9 +401,7 @@ export default function TalentPool() {
   return (
     <DashboardWrapper>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div
-        className={`${outfit.className} flex items-center justify-between mb-6`}
-      >
+      <div className={`${outfit.className} flex items-center justify-between`}>
         <h1 className="text-2xl font-semibold">Talent Pool</h1>
         {isJobSeeker ? (
           <>
@@ -476,8 +474,8 @@ export default function TalentPool() {
           isJobSeeker ? "pointer-events-none opacity-60" : ""
         }`}
       >
-        <div className="py-6  min-h-screen">
-          <div className=" mx-auto bg-white p-4 rounded-lg ">
+        <div className="py-4 min-h-screen">
+          <div className=" mx-auto bg-white rounded-lg ">
             {/* Filters */}
             <div className="flex items-center gap-3">
               <div className="border flex items-center px-2 bg-[#F0F0F0] rounded-lg w-[300px] mb-4">

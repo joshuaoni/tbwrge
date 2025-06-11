@@ -105,7 +105,7 @@ const TeamsAndCollaborationSettingsPage = () => {
 
   return (
     <DashboardSettingsLayout>
-      <div className="h-screen flex flex-col space-y-8">
+      <div className="h-screen flex flex-col space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">

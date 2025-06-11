@@ -12,7 +12,7 @@ function ProfileSettingsButton({
   return (
     <button
       onClick={() => action()}
-      className={`w-fit text-white text-xs my-8 bg-primary py-3 px-4 rounded-lg ${
+      className={`w-fit text-white text-xs my-2 bg-primary py-3 px-4 rounded-lg ${
         disabled || loading ? "opacity-50" : ""
       }`}
       disabled={disabled || loading}

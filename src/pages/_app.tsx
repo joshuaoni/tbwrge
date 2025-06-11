@@ -6,11 +6,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { AppProps } from "next/app";
-import { Inter } from "next/font/google"; // Corrected import path
+import { Inter, Outfit } from "next/font/google"; // Corrected import path
 import { Toaster } from "react-hot-toast";
 import "@/lib/i18n"; // Initialize i18n
 
-const outfit = Inter({
+const outfit = Outfit({
   subsets: ["latin"], // specify subsets
   weight: ["400", "700", "100", "200", "300", "400", "500", "600"], // specify weights you need
 });

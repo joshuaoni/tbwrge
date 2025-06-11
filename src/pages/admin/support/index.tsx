@@ -84,7 +84,7 @@ const AdminSupportPage = () => {
         className={`${
           outfit.className
         } w-full flex items-start justify-between ${
-          tab === "Open Tickets" ? "mb-10" : ""
+          tab === "Open Tickets" ? "mb-4" : ""
         }`}
       >
         <AdminDashboardSearchBox
@@ -122,8 +122,8 @@ const AdminSupportPage = () => {
       </section>
 
       <section
-        className={`${outfit.className} mt-10 space-y-10 ${
-          tab === "Open Tickets" ? "mb-10" : ""
+        className={`${outfit.className} mt-6 space-y-4 ${
+          tab === "Open Tickets" ? "mb-4" : ""
         }`}
       >
         <div className="flex items-center gap-6">

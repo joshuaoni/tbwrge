@@ -426,7 +426,7 @@ const AdminDashboardPage = () => {
         ))}
       </section>
 
-      <section className={`${outfit.className} mt-10 space-y-10`}>
+      <section className={`${outfit.className} mt-6 space-y-4`}>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-6">
             {["Active Users", "Suspended Users", "Deleted Users"].map((tab) => (
@@ -492,7 +492,7 @@ const AdminDashboardPage = () => {
                         <UserCircle size={40} className="text-gray-400" />
                       )}
                       <div>
-                        <p className="font-medium text-sm text-[#333]">
+                        <p className="font-medium text-sm text-[#333] truncate">
                           {user.name}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -515,18 +515,18 @@ const AdminDashboardPage = () => {
                       </span>
                     </td>
                     <td className="py-3 px-6 text-left">{user.email}</td>
-                    <td className="py-3 px-6 space-x-6">
+                    <td className="py-3 px-6 space-x-4 flex items-center">
                       {!user.deleted && (
                         <>
                           <button
-                            className="bg-[#2563EB] text-white px-10 py-2 rounded-3xl text-sm font-semibold"
+                            className="bg-[#2563EB] text-white w-[90px] py-2 rounded-3xl text-sm font-semibold"
                             onClick={() => setUserToEdit(user)}
                           >
                             Edit
                           </button>
                           {user.suspend ? (
                             <button
-                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              className="bg-[#2563EB] text-white w-[90px] py-2 rounded-3xl text-sm font-semibold"
                               onClick={() => handleUnsuspend(user)}
                               disabled={editMutation.isPending}
                             >
@@ -534,7 +534,7 @@ const AdminDashboardPage = () => {
                             </button>
                           ) : (
                             <button
-                              className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                              className="bg-[#2563EB] text-white w-[90px] py-2 rounded-3xl text-sm font-semibold"
                               onClick={() => handleSuspend(user)}
                               disabled={editMutation.isPending}
                             >
@@ -542,7 +542,7 @@ const AdminDashboardPage = () => {
                             </button>
                           )}
                           <button
-                            className="bg-[#2563EB] text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                            className="bg-[#2563EB] text-white w-[90px] py-2 rounded-3xl text-sm font-semibold"
                             onClick={() => setUserToDelete(user)}
                           >
                             Delete

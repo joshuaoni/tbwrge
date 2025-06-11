@@ -16,9 +16,7 @@ const DashboardFeedbackSupportLayout = ({
 
   return (
     <DashboardWrapper>
-      <header
-        className={`${outfit.className} pl-6 flex items-center gap-6 mb-10`}
-      >
+      <header className={`${outfit.className} flex items-center gap-6 mb-4`}>
         {[
           { name: "Feedback", route: "/feedback" },
           { name: "Support", route: "/support" },
@@ -35,7 +33,7 @@ const DashboardFeedbackSupportLayout = ({
         ))}
       </header>
 
-      <div className="px-6">{children}</div>
+      <div className="">{children}</div>
     </DashboardWrapper>
   );
 };

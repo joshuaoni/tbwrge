@@ -107,9 +107,12 @@ const DashboardSubmitArticlePage = () => {
 
   return (
     <DashboardWrapper>
-      <div className={`${outfit.className} bg-white p-6 rounded-lg`}>
+      <div className={`${outfit.className} bg-white rounded-lg`}>
         <h2
-          className={classNames(urbanist.className, "text-3xl font-bold mb-6")}
+          className={classNames(
+            outfit.className,
+            "text-2xl font-semibold mb-4"
+          )}
         >
           {t("submitArticle.title")}
         </h2>
