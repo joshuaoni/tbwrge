@@ -35,7 +35,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   }, [userData, isLoading, router]);
 
   return (
-    <div className="flex w-full max-w-[1600px] mx-auto">
+    <div className="flex w-full max-w-[1800px] mx-auto">
       <SidebarProvider className="">
         <Sidebar className={`${outfit.className} bg-[#F5F5F5] z-30`}>
           <SidebarHeader className="bg-[#F5F5F5] ">
