@@ -9,7 +9,6 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import OR from "../../../public/images/OR.png";
-import candivetlogowhite from "../../../public/images/candivet-logo.png";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
@@ -107,7 +106,7 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (step < 3) {
+    if (step < 2) {
       setStep(step + 1);
       return;
     }
@@ -144,7 +143,7 @@ const SignUpPage = () => {
   };
 
   // Progress indicator
-  const steps = ["Account Info", "Channel & Role", "Review & Submit"];
+  const steps = ["Account Info", "Channel & Role"];
 
   return (
     <div className="min-h-screen w-full bg-darkgreen overflow-y-auto relative">
@@ -316,40 +315,6 @@ const SignUpPage = () => {
                 </div>
               </div>
             )}
-            {/* Step 3: Review & Submit */}
-            {step === 3 && (
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4 shadow-sm border border-gray-200">
-                  <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-                    <span>Review your details</span>
-                  </h2>
-                  <ul className="space-y-2">
-                    <li>
-                      <span className="font-semibold text-gray-700">
-                        Full Name:
-                      </span>
-                      <span className="ml-2 text-gray-900">{fullName}</span>
-                    </li>
-                    <li>
-                      <span className="font-semibold text-gray-700">
-                        Email:
-                      </span>
-                      <span className="ml-2 text-gray-900">{email}</span>
-                    </li>
-                    <li>
-                      <span className="font-semibold text-gray-700">Role:</span>
-                      <span className="ml-2 text-gray-900">{role}</span>
-                    </li>
-                    <li>
-                      <span className="font-semibold text-gray-700">
-                        Channel:
-                      </span>
-                      <span className="ml-2 text-gray-900">{channel}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            )}
 
             {/* Navigation Buttons */}
             <div className="flex justify-between items-center mt-6">
@@ -364,7 +329,7 @@ const SignUpPage = () => {
                 </Button>
               )}
               <div className="flex-1" />
-              {step < 3 ? (
+              {step < 2 ? (
                 <Button
                   type="submit"
                   variant="default"
