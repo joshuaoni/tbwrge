@@ -45,7 +45,7 @@ const LandingHeader = ({
   }, []);
 
   const isBlogOrTools =
-    pathname?.includes("/blog") ||
+    pathname === "/blog" ||
     pathname?.includes("/pricing") ||
     pathname?.includes("/terms-of-service") ||
     pathname?.includes("/privacy-policy") ||
