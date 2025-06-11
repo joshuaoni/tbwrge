@@ -31,7 +31,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <div className="mb-8">
-    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    s<h2 className="text-sm font-semibold mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -49,7 +49,7 @@ const JobHeader = ({
     <div>
       <Link
         href="/dashboard/job-board"
-        className="inline-flex items-center text-gray-600 mb-6"
+        className="inline-flex items-center text-gray-600 mb-6 text-sm"
       >
         <svg
           width="20"
@@ -57,7 +57,7 @@ const JobHeader = ({
           viewBox="0 0 20 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="mr-2"
+          className=""
         >
           <path
             d="M12.5 15L7.5 10L12.5 5"
@@ -90,11 +90,9 @@ const JobHeader = ({
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
+            <h1 className="text-sm font-semibold mb-2">{job.job_title}</h1>
             <div className="flex flex-col gap-1">
-              <div className="text-[15px] text-gray-600">
-                {job.company_name}
-              </div>
+              <div className="text-sm text-gray-600">{job.company_name}</div>
               <div className="flex items-center gap-2 text-[14px] text-gray-600">
                 <span>{job.job_location_name}</span>
                 <span>•</span>
@@ -117,19 +115,23 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => {
         <div className="text-sm text-gray-600 mb-1">
           {t("jobBoard.jobType")}
         </div>
-        <div className="font-medium">{job.job_type.replace("_", " ")}</div>
+        <div className="font-medium text-sm">
+          {job.job_type.replace("_", " ")}
+        </div>
       </div>
       <div className="bg-gray-50 rounded-lg p-4">
         <div className="text-sm text-gray-600 mb-1">
           {t("jobBoard.experience")}
         </div>
-        <div className="font-medium">{job.years_of_experience_required}</div>
+        <div className="font-medium text-sm">
+          {job.years_of_experience_required}
+        </div>
       </div>
       <div className="bg-gray-50 rounded-lg p-4">
         <div className="text-sm text-gray-600 mb-1">
           {t("jobBoard.salaryRange")}
         </div>
-        <div className="font-medium">
+        <div className="font-medium text-sm">
           {job.salary_range_min && job.salary_range_max
             ? `${
                 job.salary_currency || "USD"
@@ -303,7 +305,7 @@ const ApplicationForm = ({
 
   return (
     <div className="bg-white p-6 rounded-lg">
-      <h2 className="text-xl font-semibold mb-6">
+      <h2 className="text-sm font-semibold mb-6">
         {t("jobApplication.title")}
       </h2>
       {isLoadingProfile ? (
@@ -324,7 +326,7 @@ const ApplicationForm = ({
               onChange={handleInputChange}
               placeholder={t("jobApplication.enterYourName")}
               required
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -340,7 +342,7 @@ const ApplicationForm = ({
               onChange={handleInputChange}
               placeholder={t("jobApplication.enterYourEmail")}
               required
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -354,7 +356,7 @@ const ApplicationForm = ({
               value={formData.phone}
               onChange={handleInputChange}
               placeholder={t("jobApplication.enterYourPhone")}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -367,7 +369,7 @@ const ApplicationForm = ({
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light] text-sm"
             />
           </div>
 
@@ -381,7 +383,7 @@ const ApplicationForm = ({
               value={formData.linkedinProfile}
               onChange={handleInputChange}
               placeholder={t("jobApplication.enterLink")}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -395,7 +397,7 @@ const ApplicationForm = ({
               value={formData.currentCompany}
               onChange={handleInputChange}
               placeholder={t("jobApplication.enterNA")}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -409,7 +411,7 @@ const ApplicationForm = ({
               value={formData.currentPosition}
               onChange={handleInputChange}
               placeholder="Manager, etc..."
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -421,7 +423,7 @@ const ApplicationForm = ({
               name="nationality"
               value={formData.nationality}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] text-sm"
             >
               <option value="">{t("jobApplication.selectNationality")}</option>
               {countries.map((country) => (
@@ -440,7 +442,7 @@ const ApplicationForm = ({
               name="countryOfResidence"
               value={formData.countryOfResidence}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] text-sm"
             >
               <option value="">{t("jobApplication.selectCountry")}</option>
               {countries.map((country) => (
@@ -463,7 +465,7 @@ const ApplicationForm = ({
               placeholder={t("jobApplication.describePastRoles")}
               required
               rows={4}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -479,7 +481,7 @@ const ApplicationForm = ({
               placeholder={t("jobApplication.highlightSkills")}
               required
               rows={4}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
             />
           </div>
 
@@ -495,7 +497,7 @@ const ApplicationForm = ({
                 onChange={handleFileChange}
                 accept=".pdf,.doc,.docx"
                 required={job.require_cv}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
               />
             </div>
           )}
@@ -512,7 +514,7 @@ const ApplicationForm = ({
                 onChange={handleFileChange}
                 accept=".pdf,.doc,.docx"
                 required={job.require_cover_letter}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
               />
             </div>
           )}
@@ -529,7 +531,7 @@ const ApplicationForm = ({
                 onChange={handleFileChange}
                 accept="video/*"
                 required={job.require_voicenote}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
               />
             </div>
           )}
@@ -553,7 +555,7 @@ const ApplicationForm = ({
                   }
                   placeholder={t("jobApplication.enterYourAnswer")}
                   rows={3}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
                 />
               </div>
             ))}
@@ -562,7 +564,7 @@ const ApplicationForm = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
@@ -625,7 +627,7 @@ const ApplicationForm = ({
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-sm font-semibold">
                 {t("jobApplication.applicationSubmittedSuccessfully")}
               </h2>
             </div>
@@ -640,7 +642,9 @@ const ApplicationForm = ({
             </button>
           </div>
 
-          <p className="text-gray-600">{t("jobApplication.thankYouMessage")}</p>
+          <p className="text-gray-600 text-sm">
+            {t("jobApplication.thankYouMessage")}
+          </p>
         </DialogContent>
       </Dialog>
     </div>
@@ -705,9 +709,7 @@ const JobDetailsPage = () => {
 
   return (
     <DashboardWrapper>
-      <div
-        className={`${outfit.className} details max-w-[1400px] w-full mx-auto py-8`}
-      >
+      <div className={`${outfit.className} details w-full mx-auto`}>
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">
@@ -716,7 +718,7 @@ const JobDetailsPage = () => {
 
             {job.company_description && (
               <Section title={t("jobBoard.aboutCompany")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.company_description}
                 </p>
               </Section>
@@ -724,7 +726,7 @@ const JobDetailsPage = () => {
 
             <Section title={t("jobBoard.jobDescription")}>
               <div
-                className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
                 dangerouslySetInnerHTML={{ __html: job.job_description }}
               />
             </Section>
@@ -744,7 +746,7 @@ const JobDetailsPage = () => {
 
             {job.educational_requirements && (
               <Section title={t("jobBoard.educationalRequirements")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.educational_requirements}
                 </p>
               </Section>
@@ -767,7 +769,7 @@ const JobDetailsPage = () => {
 
             {job.additional_benefits && (
               <Section title={t("jobBoard.additionalBenefits")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.additional_benefits}
                 </p>
               </Section>
@@ -812,10 +814,10 @@ const JobDetailsPage = () => {
                       />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="text-sm font-semibold">
                     {t("jobApplication.applicationSubmitted")}
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm">
                     {t("jobApplication.alreadyApplied")}
                   </p>
                   <div className="pt-4">
@@ -823,7 +825,9 @@ const JobDetailsPage = () => {
                       href="/dashboard/applications"
                       className="inline-flex items-center text-primary hover:text-primary/90"
                     >
-                      <span>{t("jobApplication.viewYourApplications")}</span>
+                      <span className="text-sm">
+                        {t("jobApplication.viewYourApplications")}
+                      </span>
                       <svg
                         width="20"
                         height="20"

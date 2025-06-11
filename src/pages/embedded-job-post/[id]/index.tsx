@@ -701,9 +701,7 @@ const JobDetailsPage = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg">
-      <div
-        className={`${outfit.className} details max-w-[1400px] w-full mx-auto py-8`}
-      >
+      <div className={`${outfit.className} details w-full mx-auto`}>
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">

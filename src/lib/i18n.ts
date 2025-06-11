@@ -92,6 +92,8 @@ const resources = {
         accepted: "Accepted",
         shortlisted: "Shortlisted",
         rejected: "Rejected",
+        jobDescriptionPlaceholder:
+          "Please provide the job description here\n\nFor more accurate results, please include the following in your write-up: Title, Years of Experience (YOE), Location, Job Type, Skills, Education, Salary Range and Language Requirements.",
       },
       jobApplication: {
         title: "Job Application",
@@ -578,6 +580,8 @@ const resources = {
         accepted: "Accepté",
         shortlisted: "Présélectionné",
         rejected: "Rejeté",
+        jobDescriptionPlaceholder:
+          "Veuillez fournir la description du poste ici\n\nPour des résultats plus précis, veuillez inclure les éléments suivants dans votre description : Titre, Années d'expérience (YOE), Localisation, Type d'emploi, Compétences, Éducation, Fourchette salariale et Exigences linguistiques.",
       },
       jobApplication: {
         title: "Candidature d'emploi",
@@ -1030,6 +1034,8 @@ const resources = {
         accepted: "Aceptado",
         shortlisted: "Preseleccionado",
         rejected: "Rechazado",
+        jobDescriptionPlaceholder:
+          "Por favor proporciona la descripción del trabajo aquí\n\nPara obtener resultados más precisos, incluye lo siguiente en tu descripción: Título, Años de Experiencia (YOE), Ubicación, Tipo de Trabajo, Habilidades, Educación, Rango Salarial y Requisitos de Idioma.",
       },
       jobApplication: {
         title: "Solicitud de trabajo",
@@ -1487,6 +1493,8 @@ const resources = {
         accepted: "Akzeptiert",
         shortlisted: "Shortlisted",
         rejected: "Abgelehnt",
+        jobDescriptionPlaceholder:
+          "Bitte geben Sie hier die Stellenbeschreibung an\n\nFür genauere Ergebnisse fügen Sie bitte Folgendes in Ihre Beschreibung ein: Titel, Berufserfahrung (YOE), Standort, Stellentyp, Fähigkeiten, Bildung, Gehaltsbereich und Sprachanforderungen.",
       },
       jobApplication: {
         title: "Stellenbewerbung",
@@ -1946,6 +1954,8 @@ const resources = {
         accepted: "مقبول",
         shortlisted: "في القائمة المختصرة",
         rejected: "مرفوض",
+        jobDescriptionPlaceholder:
+          "يرجى تقديم وصف الوظيفة هنا\n\nللحصول على نتائج أكثر دقة، يرجى تضمين ما يلي في وصفك: العنوان، سنوات الخبرة (YOE)، الموقع، نوع الوظيفة، المهارات، التعليم، نطاق الراتب ومتطلبات اللغة.",
       },
       jobApplication: {
         title: "طلب التوظيف",
@@ -2391,6 +2401,8 @@ const resources = {
         accepted: "Aceito",
         shortlisted: "Pré-selecionado",
         rejected: "Rejeitado",
+        jobDescriptionPlaceholder:
+          "Por favor, forneça a descrição do trabalho aqui\n\nPara resultados mais precisos, inclua o seguinte na sua descrição: Título, Anos de Experiência (YOE), Localização, Tipo de Trabalho, Habilidades, Educação, Faixa Salarial e Requisitos de Idioma.",
       },
       jobApplication: {
         title: "Candidatura de emprego",
@@ -2844,6 +2856,8 @@ const resources = {
         accepted: "已接受",
         shortlisted: "入围",
         rejected: "被拒绝",
+        jobDescriptionPlaceholder:
+          "请在此提供职位描述\n\n为了获得更准确的结果，请在您的描述中包含以下内容：职位、工作经验年限（YOE）、地点、工作类型、技能、教育背景、薪资范围和语言要求。",
       },
       jobApplication: {
         title: "职位申请",

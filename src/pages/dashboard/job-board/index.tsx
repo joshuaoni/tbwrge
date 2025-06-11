@@ -545,12 +545,7 @@ const JobBoardPage = () => {
               <textarea
                 value={textSearchInput}
                 onChange={(e) => setTextSearchInput(e.target.value)}
-                placeholder="Please provide the job description here
-
-For more accurate results, please include the following in 
-your write-up: Title, Years of Experience (YOE), Location, 
-Job Type, Skills, Education, Salary Range and 
-Language Requirements."
+                placeholder={t("jobBoard.jobDescriptionPlaceholder")}
                 className="w-full h-48 p-4 border border-gray-300 bg-gray-100 rounded-lg mb-6 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
 
