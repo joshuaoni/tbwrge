@@ -8,6 +8,7 @@ import { getTalentItem, TalentItem } from "@/actions/talent";
 import { startChat } from "@/actions/start-chat";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useUserStore } from "@/hooks/use-user-store";
+import Image from "next/image";
 
 export default function CandidateProfile() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function CandidateProfile() {
 
   return (
     <DashboardWrapper>
-      <div className="mx-auto bg-white p-6">
+      <div className="mx-auto bg-white">
         <div className="flex justify-between mb-4 items-center">
           <div className="flex items-center">
             <ChevronLeft
@@ -54,16 +55,35 @@ export default function CandidateProfile() {
                 router.back();
               }}
             />
-            <h2 className="text-2xl font-semibold">
-              {data?.name ?? "Loading.."}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-semibold">
+                {data?.name ?? "Loading.."}
+              </h2>
+              <div className="relative">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
+                  {data?.profile_photo ? (
+                    <Image
+                      src={data?.profile_photo}
+                      alt={data?.name ?? "Profile photo"}
+                      width={48}
+                      height={48}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-200 text-2xl font-semibold text-gray-600">
+                      {data?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[#2D62A8]  cursor-pointer text-sm">
               Generate Candidate Report
             </span>
             <button
-              className="bg-[#009379] px-7 py-4 text-sm text-white rounded-3xl disabled:opacity-70"
+              className="bg-[#009379] px-7 py-3 text-sm text-white rounded-3xl disabled:opacity-70"
               onClick={handleStartChat}
               disabled={isLoading}
             >

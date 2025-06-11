@@ -119,7 +119,7 @@ export default function JoinTalentPool() {
 
   return (
     <DashboardWrapper>
-      <div className={`${outfit.className} max-w-[1200px] mx-auto py-8`}>
+      <div className={`${outfit.className} mx-auto`}>
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
             <button

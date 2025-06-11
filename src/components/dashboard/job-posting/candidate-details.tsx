@@ -65,9 +65,9 @@ const CandidateDetails = ({
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="px-6 py-4">
+      <div>
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentView("details")}
@@ -75,22 +75,22 @@ const CandidateDetails = ({
             >
               <ArrowLeft className="w-4 h-4 text-gray-600" />
             </button>
-            <h1 className="text-xl font-semibold">{applicant.name}</h1>
+            <h1 className="text-sm font-semibold">{applicant.name}</h1>
           </div>
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              className="text-[#009379] border border-[#009379] hover:bg-[#009379] hover:text-white px-6"
+              className="text-sm text-[#009379] border border-[#009379] hover:bg-[#009379] hover:text-white px-6"
             >
               Generate Candidate Report
             </Button>
             <Button
               variant="ghost"
-              className="text-red-500 border border-red-500 hover:bg-red-500 hover:text-white hover:bg-red px-6"
+              className="text-sm text-red-500 border border-red-500 hover:bg-red-500 hover:text-white hover:bg-red px-6"
             >
               Reject Candidate
             </Button>
-            <Button className="bg-[#009379] text-white hover:bg-[#009379]/90 px-6">
+            <Button className="bg-[#009379] text-sm text-white hover:bg-[#009379]/90 px-6">
               Mark as Fit
             </Button>
           </div>
@@ -103,13 +103,13 @@ const CandidateDetails = ({
             {/* Profile Overview */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="flex items-start justify-between mb-4">
-                <h2 className="text-lg font-semibold">Profile Overview</h2>
+                <h2 className="text-sm font-semibold">Profile Overview</h2>
                 <div className="flex flex-col items-center gap-2">
-                  <h2 className="text-lg font-semibold">Fit Score</h2>
+                  <h2 className="text-sm font-semibold">Fit Score</h2>
                   <div className="flex items-center justify-center">
                     <div className="relative w-16 h-16">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-[16px] font-bold text-[#009379]">
+                        <span className="text-sm font-bold text-[#009379]">
                           {candidate.fit_score}%
                         </span>
                       </div>
@@ -226,7 +226,7 @@ const CandidateDetails = ({
 
             {/* Profile Summary */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-lg font-semibold mb-4">Profile Summary</h2>
+              <h2 className="text-sm font-semibold mb-4">Profile Summary</h2>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {applicant.professional_summary}
               </p>
@@ -234,18 +234,18 @@ const CandidateDetails = ({
 
             {/* AI-Powered Insights */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-sm font-semibold mb-4">
                 AI-Powered Insights
               </h2>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                  <h3 className="text-xs font-medium mb-2">Key Skills</h3>
                   <p className="text-sm text-gray-600">
                     {candidate.skills_summary}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium mb-2">Strengths</h3>
+                  <h3 className="text-xs font-medium mb-2">Strengths</h3>
                   <p className="text-sm text-gray-600">{candidate.strength}</p>
                 </div>
                 <div>
@@ -279,7 +279,7 @@ const CandidateDetails = ({
                 className="flex items-center gap-4 cursor-pointer"
                 onClick={() => setIsQuestionsOpen(!isQuestionsOpen)}
               >
-                <h2 className="text-lg font-semibold mb-4">Other Questions</h2>
+                <h2 className="text-sm font-semibold mb-4">Other Questions</h2>
                 {isQuestionsOpen ? (
                   <ChevronUp className="w-5 h-5 mb-4 text-gray-600 transition-transform duration-300" />
                 ) : (
@@ -322,7 +322,7 @@ const CandidateDetails = ({
           <div className="grid grid-cols-[0.8fr_2fr] gap-6">
             {/* Supporting Documents */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-sm font-semibold mb-4">
                 Supporting Documents
               </h2>
               <div className="space-y-3">
@@ -488,7 +488,7 @@ const CandidateDetails = ({
             {/* Add Notes */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Add Notes</h2>
+                <h2 className="text-sm font-semibold">Add Notes</h2>
                 <button
                   onClick={() => {
                     if (isAddingNote) {
@@ -556,13 +556,13 @@ const CandidateDetails = ({
             {/* Screening Questions */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="bg-white rounded-lg p-4 mb-4 border border-gray-100">
-                <h2 className="text-lg font-semibold mb-4">
+                <h2 className="text-sm font-semibold mb-4">
                   Screening Fit Score
                 </h2>
                 <div className="flex items-center justify-center">
                   <div className="relative w-24 h-24">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-[20px] font-bold text-[#009379]">
+                      <span className="text-sm font-bold text-[#009379]">
                         {candidate.screening_fit_score}%
                       </span>
                     </div>
@@ -608,7 +608,7 @@ const CandidateDetails = ({
 
             {/*Screening: AI-Powered Insights*/}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-sm font-semibold mb-4">
                 Screening: AI-Powered Insights
               </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
