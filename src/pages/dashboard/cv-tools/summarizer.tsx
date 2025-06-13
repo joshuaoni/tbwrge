@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 interface UploadedFile {
   file: File;
@@ -18,6 +19,7 @@ interface UploadedFile {
 }
 
 const Summarizer: React.FC = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
@@ -36,7 +38,7 @@ const Summarizer: React.FC = () => {
     );
 
     if (files.length + newFiles.length > 5) {
-      alert("You can only upload up to 5 files.");
+      alert(t("cvTools.common.maxFilesError", { max: 5 }));
       return;
     }
 
@@ -83,14 +85,14 @@ const Summarizer: React.FC = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        CV Summarizer
+        {t("cvTools.summarizer.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV Upload</span>
+            <span className="font-bold">{t("cvTools.common.cvUpload")}</span>
             <span className="font-light text-xs">
-              Add your CVs here, you can upload up to 5 files max
+              {t("cvTools.common.cvUploadDescription")}
             </span>
             <div className="relative w-full justify-between flex flex-col items-start rounded-lg">
               <input
@@ -119,14 +121,17 @@ const Summarizer: React.FC = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("cvTools.common.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("cvTools.common.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("cvTools.common.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("cvTools.common.supportedFormats")}
               </span>
             </div>
 
@@ -162,12 +167,14 @@ const Summarizer: React.FC = () => {
 
           {/* Job Description Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("cvTools.common.jobDescriptionTitle")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("cvTools.common.jobDescriptionPlaceholder")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -177,9 +184,9 @@ const Summarizer: React.FC = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?{" "}
+                {t("cvTools.common.customizeResults")}{" "}
                 <span className="text-sm font-medium">
-                  &#40;Add up to 20 prompts&#41;
+                  {t("cvTools.common.addPrompts")}
                 </span>
               </span>
               <Plus
@@ -193,7 +200,7 @@ const Summarizer: React.FC = () => {
               />
             </div>
             <Input
-              placeholder="Input Prompt"
+              placeholder={t("cvTools.common.inputPrompt")}
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
@@ -221,8 +228,7 @@ const Summarizer: React.FC = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
-                Select Output language
+                {t("cvTools.common.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -242,7 +248,7 @@ const Summarizer: React.FC = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Summarize CV"
+                  t("cvTools.summarizer.summarizeCV")
                 )}
               </Button>
             </div>
@@ -253,14 +259,16 @@ const Summarizer: React.FC = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] min-h-[200px] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Summary</span>
+              <span className="font-bold">
+                {t("cvTools.summarizer.resultTitle")}
+              </span>
             </div>
             <div className="flex mt-2 items-center justify-center flex-col flex-1 h-full p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] rounded-2xl">
               {isPending ? (
                 <Loader2 className="animate-spin" />
               ) : summaries === undefined ? (
                 <div className="text-center text-sm text-gray-500 pt-10">
-                  Your summary will appear here
+                  {t("cvTools.summarizer.summaryPlaceholder")}
                 </div>
               ) : (
                 summaries?.map(

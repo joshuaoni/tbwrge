@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { TbCircles } from "react-icons/tb";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
+import { useTranslation } from "react-i18next";
 
 interface CandidateInfo {
   relevance_of_experience: number;
@@ -39,6 +40,7 @@ interface ReportData {
 }
 
 const HeadToHead = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
@@ -48,7 +50,7 @@ const HeadToHead = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
     if (files.length + selectedFiles.length > 2) {
-      alert("You can only upload up to 2 files.");
+      alert(t("cvTools.common.maxFilesError", { max: 2 }));
       return;
     }
     setFiles((prev) => [...prev, ...selectedFiles]);
@@ -93,14 +95,14 @@ const HeadToHead = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        CV Head to Head
+        {t("cvTools.headToHead.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV Upload</span>
+            <span className="font-bold">{t("cvTools.common.cvUpload")}</span>
             <span className="font-light text-xs">
-              Add your CVs here, and you can upload up to 2 files max
+              {t("cvTools.common.cvUploadDescription2Files")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -129,14 +131,17 @@ const HeadToHead = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("cvTools.common.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("cvTools.common.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("cvTools.common.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("cvTools.common.supportedFormats")}
               </span>
             </div>
 
@@ -169,12 +174,14 @@ const HeadToHead = () => {
           </div>
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("cvTools.common.jobDescriptionTitle")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("cvTools.common.jobDescriptionPlaceholder")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -184,9 +191,9 @@ const HeadToHead = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?{" "}
+                {t("cvTools.common.customizeResults")}{" "}
                 <span className="text-sm font-medium">
-                  &#40;Add up to 20 prompts&#41;
+                  {t("cvTools.common.addPrompts")}
                 </span>
               </span>
               <Plus
@@ -200,7 +207,7 @@ const HeadToHead = () => {
               />
             </div>
             <Input
-              placeholder="Input Prompt"
+              placeholder={t("cvTools.common.inputPrompt")}
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
@@ -228,7 +235,7 @@ const HeadToHead = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("cvTools.common.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -248,7 +255,7 @@ const HeadToHead = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Report"
+                  t("cvTools.headToHead.generateReport")
                 )}
               </Button>
             </div>
@@ -258,7 +265,9 @@ const HeadToHead = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] min-h-[200px] mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Head To Head</span>
+              <span className="font-bold">
+                {t("cvTools.headToHead.resultTitle")}
+              </span>
             </div>
             <div className="flex flex-col items-center justify-center gap-4  h-full mt-4">
               {isPending && <Loader2 className="animate-spin" />}
