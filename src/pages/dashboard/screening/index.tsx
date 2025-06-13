@@ -97,8 +97,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-lg p-6 mb-6">
-      <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <div className="bg-white rounded-lg pt-6">
+      <h2 className="text-sm font-semibold mb-4">{title}</h2>
       {children}
     </div>
   );
@@ -282,10 +282,10 @@ export default function ScreeningPage() {
 
   return (
     <DashboardWrapper>
-      <div className={`${outfit.className} container mx-auto py-8 px-4`}>
-        <h3 className="text-3xl font-semibold py-4">
-          <button onClick={() => router.back()} className="mr-4">
-            <ArrowLeft />
+      <div className={`${outfit.className} container mx-auto`}>
+        <h3 className="text-sm font-semibold flex items-center gap-1">
+          <button onClick={() => router.back()} className="">
+            <ArrowLeft size={16} />
           </button>
           <span>{t("screening.title")}</span>
         </h3>
@@ -293,7 +293,7 @@ export default function ScreeningPage() {
         <div className="flex gap-8">
           {/* Left Column - Job Details */}
           <section className="w-[50%]">
-            <div className="bg-white rounded-lg p-6 mb-6">
+            <div className="bg-white rounded-lg pt-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                   {jobDetail.company_logo ? (
@@ -313,14 +313,14 @@ export default function ScreeningPage() {
                   )}
                 </div>
                 <div>
-                  <h1 className="text-2xl font-semibold mb-2">
+                  <h1 className="text-sm font-semibold mb-2">
                     {jobDetail.job_title}
                   </h1>
                   <div className="flex flex-col gap-1">
-                    <div className="text-[15px] text-gray-600">
+                    <div className="text-sm text-gray-600">
                       {jobDetail.company_name}
                     </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
                       <span>{jobDetail.job_location_name}</span>
                     </div>
                   </div>
@@ -329,12 +329,12 @@ export default function ScreeningPage() {
             </div>
 
             {/* Job Quick Info Cards */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="text-sm text-gray-600 mb-1">
                   {t("screening.jobType")}
                 </div>
-                <div className="font-medium">
+                <div className="font-medium text-sm">
                   {jobDetail.job_type.replace("_", " ")}
                 </div>
               </div>
@@ -342,7 +342,7 @@ export default function ScreeningPage() {
                 <div className="text-sm text-gray-600 mb-1">
                   {t("screening.experience")}
                 </div>
-                <div className="font-medium">
+                <div className="font-medium text-sm">
                   {jobDetail.years_of_experience_required}
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default function ScreeningPage() {
                 <div className="text-sm text-gray-600 mb-1">
                   {t("screening.salaryRange")}
                 </div>
-                <div className="font-medium">
+                <div className="font-medium text-sm">
                   {jobDetail.salary_currency}{" "}
                   {jobDetail.salary_range_min.toLocaleString()} -{" "}
                   {jobDetail.salary_range_max.toLocaleString()}
@@ -360,19 +360,21 @@ export default function ScreeningPage() {
                 <div className="text-sm text-gray-600 mb-1">
                   {t("screening.location")}
                 </div>
-                <div className="font-medium">{jobDetail.job_location_name}</div>
+                <div className="font-medium text-sm">
+                  {jobDetail.job_location_name}
+                </div>
               </div>
             </div>
 
             <Section title={t("screening.aboutCompany")}>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {jobDetail.company_description}
               </p>
             </Section>
 
             <Section title={t("screening.jobDescription")}>
               <div
-                className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
                 dangerouslySetInnerHTML={{ __html: jobDetail.job_description }}
               />
             </Section>
@@ -391,7 +393,7 @@ export default function ScreeningPage() {
             </Section>
 
             <Section title={t("screening.educationalRequirements")}>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {jobDetail.educational_requirements}
               </p>
             </Section>
@@ -410,7 +412,7 @@ export default function ScreeningPage() {
             </Section>
 
             <Section title={t("screening.additionalBenefits")}>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {jobDetail.additional_benefits}
               </p>
             </Section>
@@ -447,7 +449,7 @@ export default function ScreeningPage() {
 
                   <textarea
                     rows={5}
-                    className="w-full mt-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                    className="w-full text-sm mt-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                     placeholder={t("screening.typeAnswerHere")}
                     value={question.answer}
                     onChange={(e) => handleTextareaChange(e, i)}
@@ -465,7 +467,7 @@ export default function ScreeningPage() {
                 disabled={
                   isSubmitting || questions.some((q) => !q.answer.trim())
                 }
-                className="bg-[#009379] text-white p-3 rounded-lg font-medium hover:bg-[#009379]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-[#009379] text-sm text-white p-3 rounded-lg font-medium hover:bg-[#009379]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>

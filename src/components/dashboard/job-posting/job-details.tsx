@@ -133,8 +133,8 @@ const JobDetails = ({
 
   return (
     <section className="bg-white">
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => setCurrentView("openings")}
             className="hover:bg-gray-100 p-1 rounded-full transition-colors"
