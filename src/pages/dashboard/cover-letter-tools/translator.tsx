@@ -101,14 +101,16 @@ const Translator = () => {
     }
 
     if (!templateRef) {
-      toast.error("Cannot generate PDF - template not available");
+      toast.error(t("coverLetterTools.generator.templateNotAvailable"));
       return;
     }
 
     try {
       setIsGeneratingPDF(true);
       setActiveTemplate(template);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(
+        t("coverLetterTools.generator.generatingPDF")
+      );
 
       // Create a container for the content with exact dimensions of a US Letter page
       const container = document.createElement("div");
@@ -238,10 +240,12 @@ const Translator = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("coverLetterTools.generator.pdfSuccess"), {
+        id: toastId,
+      });
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("coverLetterTools.generator.pdfError"));
     } finally {
       setIsGeneratingPDF(false);
       setActiveTemplate(null);
@@ -290,14 +294,17 @@ const Translator = () => {
                   className="w-fit h-8 object-cover"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("coverLetterTools.generator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("coverLetterTools.generator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB per file is allowed
+                  {t("coverLetterTools.generator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("coverLetterTools.generator.supportedFormats")}
               </span>
             </div>
 
@@ -408,7 +415,7 @@ const Translator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 download-tooltip">
-                          Download Template 1 as PDF
+                          {t("coverLetterTools.generator.downloadTemplate1")}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>
@@ -437,7 +444,7 @@ const Translator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 download-tooltip">
-                          Download Template 2 as PDF
+                          {t("coverLetterTools.generator.downloadTemplate2")}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>
@@ -466,7 +473,7 @@ const Translator = () => {
                           )}
                         </button>
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 download-tooltip">
-                          Download Template 3 as PDF
+                          {t("coverLetterTools.generator.downloadTemplate3")}
                           <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                         </div>
                       </div>

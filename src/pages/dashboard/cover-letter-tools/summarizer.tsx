@@ -120,14 +120,17 @@ const Summarizer: React.FC = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("coverLetterTools.generator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("coverLetterTools.generator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("coverLetterTools.generator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("coverLetterTools.generator.supportedFormats")}
               </span>
             </div>
 
@@ -182,7 +185,9 @@ const Summarizer: React.FC = () => {
               />
             </div>
             <Input
-              placeholder="Input Prompt"
+              placeholder={t(
+                "coverLetterTools.summarizer.customize.inputPrompt"
+              )}
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
