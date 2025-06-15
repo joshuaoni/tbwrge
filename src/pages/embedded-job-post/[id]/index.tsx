@@ -251,7 +251,7 @@ const ApplicationForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    //
     try {
       // Submit job application
       const applicationResponse = await submitJobApplication(
