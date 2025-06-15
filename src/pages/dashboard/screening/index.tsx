@@ -232,9 +232,9 @@ export default function ScreeningPage() {
 
       // Submit answers
       await submitQuestionAnswers(
-        userData.token,
         application_id,
-        formattedAnswers
+        formattedAnswers,
+        userData.token
       );
 
       // Show success popup
