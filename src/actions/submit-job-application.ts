@@ -63,8 +63,8 @@ export interface JobApplicationFormData {
 }
 
 export const submitJobApplication = async (
-  token: string,
-  formData: JobApplicationFormData
+  formData: JobApplicationFormData,
+  token?: string
 ): Promise<JobApplicationResponse> => {
   try {
     const data = new FormData();

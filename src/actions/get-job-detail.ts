@@ -7,7 +7,7 @@ export const getJobDetail = async ({
   token,
 }: {
   job_id: string;
-  token: any;
+  token?: any;
 }) => {
   try {
     const options = {
