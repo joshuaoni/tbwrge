@@ -260,23 +260,26 @@ const ApplicationForm = ({
 
     try {
       // Submit job application
-      const applicationResponse = await submitJobApplication(userData?.token!, {
-        job_id: jobId as string,
-        name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone || undefined,
-        date_of_birth: formData.dateOfBirth || undefined,
-        linkedin: formData.linkedinProfile || undefined,
-        current_company: formData.currentCompany || undefined,
-        current_position: formData.currentPosition || undefined,
-        nationality: formData.nationality || undefined,
-        country_of_residence: formData.countryOfResidence || undefined,
-        experience: formData.relevantExperience,
-        skills: formData.skillsSummary,
-        cv: formData.cv || undefined,
-        cover_letter: formData.coverLetter || undefined,
-        voicenote: formData.voicenote || undefined,
-      });
+      const applicationResponse = await submitJobApplication(
+        {
+          job_id: jobId as string,
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone || undefined,
+          date_of_birth: formData.dateOfBirth || undefined,
+          linkedin: formData.linkedinProfile || undefined,
+          current_company: formData.currentCompany || undefined,
+          current_position: formData.currentPosition || undefined,
+          nationality: formData.nationality || undefined,
+          country_of_residence: formData.countryOfResidence || undefined,
+          experience: formData.relevantExperience,
+          skills: formData.skillsSummary,
+          cv: formData.cv || undefined,
+          cover_letter: formData.coverLetter || undefined,
+          voicenote: formData.voicenote || undefined,
+        },
+        userData?.token!
+      );
 
       // Submit question answers if there are any
       if (questions.length > 0) {
@@ -287,9 +290,9 @@ const ApplicationForm = ({
 
         console.log("applicationResponse", applicationResponse);
         await submitQuestionAnswers(
-          userData?.token!,
           applicationResponse.id,
-          formattedAnswers
+          formattedAnswers,
+          userData?.token!
         );
       }
 
