@@ -25,7 +25,7 @@ interface TableBodyRowProps {
 
 const TableSkeleton = ({ rows = 5 }: { rows?: number }) => {
   return (
-    <div className="w-full my-4" data-testid="table-skeleton">
+    <div className="w-full" data-testid="table-skeleton">
       <div className="w-full h-[39.292px] rounded-[7.76px] bg-gray-200 mb-4 hidden md:block" />
       {Array.from({ length: rows }).map((_, index) => (
         <div
@@ -374,7 +374,7 @@ const Table = ({ data = [], isLoading = false }: TableProps) => {
   }
 
   return (
-    <div className="w-full my-4">
+    <div className="w-full">
       <TableHeader />
       <TableBody jobs={data} />
     </div>

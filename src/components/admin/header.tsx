@@ -21,7 +21,7 @@ function AdmindashboardHeader() {
     <header
       className={classNames(
         outfit.className,
-        "sticky top-0 w-full flex justify-between items-center py-6 px-6 bg-white border-b border-gray-100"
+        "flex justify-between items-center py-6 px-6 bg-white border-b border-gray-100"
       )}
     >
       <h2 className="text-[#0F172A] text-2xl font-bold">{title}</h2>

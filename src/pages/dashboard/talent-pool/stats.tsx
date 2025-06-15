@@ -203,8 +203,8 @@ export default function TalentPoolStats() {
 
   return (
     <DashboardWrapper>
-      <div className={`${outfit.className} max-w-[1200px] mx-auto p-6`}>
-        <div className="flex items-center mb-8">
+      <div className={`${outfit.className} mx-auto`}>
+        <div className="flex items-center mb-4">
           <Link
             href="/dashboard/talent-pool/edit-profile"
             className="text-gray-600 hover:text-gray-900"

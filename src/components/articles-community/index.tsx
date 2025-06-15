@@ -35,6 +35,13 @@ const PostCard = ({
       onClick={handleClick}
     >
       <div className="absolute top-3 right-3">
+        {/* <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            isBlog
+              ? "bg-[#E2D8FD] text-[#6B21A8]"
+              : "bg-[#E0F7F4] text-[#009379]"
+          }`}
+        > */}
         <span
           className={`px-3 py-1 rounded-full text-sm font-semibold ${
             isBlog
@@ -61,19 +68,27 @@ const PostCard = ({
         )}
         <div>
           <div className="flex items-center gap-1 md:gap-2">
+            {/* <h3 className="text-xs md:text-sm font-medium"> */}
             <h3 className="text-sm font-medium">
               {post.user?.name || t("articlesCommunity.anonymous")}{" "}
               {post.user?.last_name || ""}
             </h3>
+            {/* <span className="text-[10px] md:text-xs text-black">•</span> */}
             <span className="text-sm text-black">•</span>
+            {/* <p className="text-[10px] md:text-xs text-black"> */}
             <p className="text-sm text-black">
               {new Date(post.created_at).toLocaleDateString()}
             </p>
           </div>
         </div>
       </div>
+      {/* <h2
+        className={`text-base md:text-[16px] font-semibold text-[#1E2937] mb-2 ${
+          isBlog ? "line-clamp-2" : ""
+        }`}
+      > */}
       <h2
-        className={`text-sm font-semibold text-[#1E2937] mb-2 ${
+        className={`text-sm leading-[1.5] font-semibold text-[#1E2937] mb-2 ${
           isBlog ? "line-clamp-2" : ""
         }`}
       >
@@ -88,14 +103,16 @@ const PostCard = ({
       {!isBlog && (
         <div className="flex items-center gap-4">
           <div className="flex flex-col font-semibold">
-            <p className="text-sm font-medium">{post.comments}</p>
-            <p className="text-sm text-black">
+            <p className="text-xs md:text-sm font-medium">{post.comments}</p>
+            <p className="text-xs md:text-sm text-black">
               {t("articlesCommunity.comment")}
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-sm text-black">{post.upvotes}</p>
-            <p className="text-sm">{t("articlesCommunity.upvotes")}</p>
+            <p className="text-xs md:text-sm text-black">{post.upvotes}</p>
+            <p className="text-xs md:text-sm">
+              {t("articlesCommunity.upvotes")}
+            </p>
           </div>
         </div>
       )}
@@ -134,14 +151,17 @@ const ArticlesCommunity = () => {
   return (
     <div className="bg-[#F9F9F9] rounded-lg p-4">
       <div className="flex justify-between items-center mb-6">
+        {/* <h2 className="text-lg font-semibold"> */}
         <h2 className="text-sm font-semibold">
           {t("articlesCommunity.title")}
         </h2>
       </div>
       <div className="space-y-4">
         {postsLoading ? (
-          <div>{t("articlesCommunity.loadingPosts")}</div>
+          // <div>{t("articlesCommunity.loadingPosts")}</div>
+          <div className="text-sm">{t("articlesCommunity.loadingPosts")}</div>
         ) : postsError ? (
+          // <div className="text-red-500">
           <div className="text-sm text-red-500">
             {t("articlesCommunity.errorLoadingArticles")}
           </div>
@@ -162,8 +182,10 @@ const ArticlesCommunity = () => {
             ))
         )}
         {blogsLoading ? (
+          // <div>{t("articlesCommunity.loadingBlogs")}</div>
           <div className="text-sm">{t("articlesCommunity.loadingBlogs")}</div>
         ) : blogsError ? (
+          // <div className="text-red-500">
           <div className="text-sm text-red-500">
             {t("articlesCommunity.errorLoadingBlogs")}
           </div>

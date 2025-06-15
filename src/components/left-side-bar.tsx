@@ -308,6 +308,8 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       ? pathName?.includes("/dashboard/talent-pool") || false
       : item.link === "/dashboard/settings/profile"
       ? pathName?.includes("/dashboard/settings/") || false
+      : item.link === "/dashboard/applications"
+      ? pathName?.includes("/dashboard/applications") || false
       : pathName === item.link;
 
   const handleClick = () => {

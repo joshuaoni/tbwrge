@@ -112,6 +112,7 @@ const Index = () => {
     signInWithGoogleMutation.mutate(response.credential);
   };
   const errorMessage: any = (error: any) => {
+    toast.error("Google sign in failed");
     console.log(error);
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

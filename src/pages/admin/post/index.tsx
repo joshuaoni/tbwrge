@@ -203,7 +203,7 @@ const PostABlogPage = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex items-center justify-center flex-col gap-20">
+        <div className="w-full flex items-center justify-center flex-col gap-8">
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Article Image
@@ -225,7 +225,7 @@ const PostABlogPage = () => {
         </div>
       </form>
 
-      <div className={`${outfit.className} mt-10 space-y-10`}>
+      <div className={`${outfit.className} mt-10 space-y-4`}>
         <div className="flex items-center gap-6">
           {["Pending Approval", "Approved"].map((tab) => (
             <button

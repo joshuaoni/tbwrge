@@ -254,23 +254,26 @@ const ApplicationForm = ({
 
     try {
       // Submit job application
-      const applicationResponse = await submitJobApplication(userData?.token!, {
-        job_id: jobId as string,
-        name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone || undefined,
-        date_of_birth: formData.dateOfBirth || undefined,
-        linkedin: formData.linkedinProfile || undefined,
-        current_company: formData.currentCompany || undefined,
-        current_position: formData.currentPosition || undefined,
-        nationality: formData.nationality || undefined,
-        country_of_residence: formData.countryOfResidence || undefined,
-        experience: formData.relevantExperience,
-        skills: formData.skillsSummary,
-        cv: formData.cv || undefined,
-        cover_letter: formData.coverLetter || undefined,
-        voicenote: formData.voicenote || undefined,
-      });
+      const applicationResponse = await submitJobApplication(
+        // userData?.token!,
+        {
+          job_id: jobId as string,
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone || undefined,
+          date_of_birth: formData.dateOfBirth || undefined,
+          linkedin: formData.linkedinProfile || undefined,
+          current_company: formData.currentCompany || undefined,
+          current_position: formData.currentPosition || undefined,
+          nationality: formData.nationality || undefined,
+          country_of_residence: formData.countryOfResidence || undefined,
+          experience: formData.relevantExperience,
+          skills: formData.skillsSummary,
+          cv: formData.cv || undefined,
+          cover_letter: formData.coverLetter || undefined,
+          voicenote: formData.voicenote || undefined,
+        }
+      );
 
       // Submit question answers if there are any
       if (questions.length > 0) {
@@ -281,7 +284,7 @@ const ApplicationForm = ({
 
         console.log("applicationResponse", applicationResponse);
         await submitQuestionAnswers(
-          userData?.token!,
+          // userData?.token!,
           applicationResponse.id,
           formattedAnswers
         );
@@ -655,7 +658,7 @@ const JobDetailsPage = () => {
 
   useEffect(() => {
     const fetchJobAndCheckApplication = async () => {
-      if (!id || !userData?.token) return;
+      if (!id) return;
 
       try {
         setIsLoading(true);
@@ -664,13 +667,13 @@ const JobDetailsPage = () => {
         // Fetch job details
         const jobData = await getJobDetail({
           job_id: id as string,
-          token: userData.token,
+          // token: userData.token,
         });
         setJob(jobData);
 
         // Check if user has already applied
-        const appliedJobs = await getAppliedJobItems(userData.token);
-        setHasApplied(appliedJobs.includes(id as string));
+        // const appliedJobs = await getAppliedJobItems(userData.token);
+        // setHasApplied(appliedJobs.includes(id as string));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch job");
       } finally {
@@ -679,7 +682,7 @@ const JobDetailsPage = () => {
     };
 
     fetchJobAndCheckApplication();
-  }, [id, userData?.token]);
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -701,9 +704,7 @@ const JobDetailsPage = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg">
-      <div
-        className={`${outfit.className} details max-w-[1400px] w-full mx-auto py-8`}
-      >
+      <div className={`${outfit.className} details w-full mx-auto`}>
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">

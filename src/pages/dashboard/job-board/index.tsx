@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { FiMic, FiSquare, FiPlay, FiTrash2, FiPause } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
+import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 import {
   formatDateAndDifference,
   getJobOpen,
@@ -10,8 +12,11 @@ import {
   IGetJobOpenJobType,
   IGetJobOpenRes,
 } from "@/actions/get-jobs-open";
+import { jobAISearch, JobAISearchRequest } from "@/actions/job-ai-search";
+import { transcribeAudio } from "@/actions/transcribe-audio";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { useDebounce } from "@/hooks/debounce";
+import { useUserStore } from "@/hooks/use-user-store";
 import Table from "./components/Table/Table";
 import { outfit } from "@/constants/app";
 import Link from "next/link";
@@ -68,6 +73,13 @@ const JobBoardPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<IGetJobOpenRes[] | null>(
+    null
+  );
+  const [isAISearchActive, setIsAISearchActive] = useState(false);
+
+  const { userData } = useUserStore();
 
   const JOB_TYPE = {
     full_time: t("jobBoard.fullTime"),
@@ -78,17 +90,53 @@ const JobBoardPage = () => {
 
   const mutation = useMutation<IGetJobOpenRes[], Error, IGetJobOpen>({
     mutationKey: ["get-jobs-open"],
-    mutationFn: async (data) => await getJobOpen(data),
+    mutationFn: async (data) => {
+      // If AI search is active, return the search results
+      if (isAISearchActive) {
+        return searchResults || [];
+      }
+      return await getJobOpen(data);
+    },
+  });
+
+  const aiSearchMutation = useMutation({
+    mutationFn: async (text: string) => {
+      return jobAISearch(userData?.token ?? "", { text }, currentPage - 1);
+    },
+    onSuccess: (data) => {
+      console.log("Job AI search successful", data);
+      setSearchResults(data as IGetJobOpenRes[]);
+      setIsAISearchActive(true);
+    },
+    onError: (error) => {
+      console.error("Job AI search failed", error);
+      toast.error("Failed to perform AI search. Please try again.");
+    },
   });
 
   useEffect(() => {
-    mutation.mutate({
-      search_term: searchTerm,
-      job_type: jobType,
-      skills: debouncedSkills,
-      location: debouncedLocation,
-    });
-  }, [searchTerm, jobType, debouncedSkills, debouncedLocation]);
+    if (!isAISearchActive) {
+      mutation.mutate({
+        search_term: searchTerm,
+        job_type: jobType,
+        skills: debouncedSkills,
+        location: debouncedLocation,
+      });
+    }
+  }, [
+    searchTerm,
+    jobType,
+    debouncedSkills,
+    debouncedLocation,
+    isAISearchActive,
+  ]);
+
+  // Clear AI search when searchTerm changes
+  useEffect(() => {
+    if (isAISearchActive && searchTerm) {
+      clearAISearch();
+    }
+  }, [searchTerm]);
 
   // Handle click outside for AI dropdown
   useEffect(() => {
@@ -289,6 +337,62 @@ const JobBoardPage = () => {
     }
   };
 
+  const handleSearchWithAudio = async () => {
+    if (!audioURL || !userData?.token) return;
+    setIsSearching(true);
+    try {
+      // Get the audio blob from the URL
+      const response = await fetch(audioURL);
+      const audioBlob = await response.blob();
+
+      // Transcribe the audio
+      let transcribedText = await transcribeAudio(userData.token, audioBlob);
+      transcribedText = transcribedText ? transcribedText : "";
+
+      // Close recording modal and open text search modal with transcribed text
+      setIsRecordingModalOpen(false);
+      setIsTextSearchModalOpen(true);
+      setTextSearchInput(transcribedText);
+
+      // Clean up
+      deleteRecording();
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+      toast.error("Failed to transcribe audio. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleTextSearch = async () => {
+    if (!textSearchInput.trim() || !userData?.token) {
+      toast.error("Please enter search text");
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      await aiSearchMutation.mutateAsync(textSearchInput.trim());
+
+      // Close the modal
+      setIsTextSearchModalOpen(false);
+
+      // Clear the search input
+      setTextSearchInput("");
+    } catch (error) {
+      console.error("Text search failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Add function to clear search results
+  const clearAISearch = () => {
+    setSearchResults(null);
+    setIsAISearchActive(false);
+  };
+
   // Clean up resources on unmount
   useEffect(() => {
     return () => {
@@ -301,12 +405,15 @@ const JobBoardPage = () => {
     };
   }, []);
 
-  // Pagination logic
-  const totalItems = mutation.data?.length || 0;
+  // Pagination logic - use appropriate data source
+  const displayData = isAISearchActive
+    ? searchResults || []
+    : mutation.data || [];
+  const totalItems = displayData.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentPageItems = mutation.data?.slice(startIndex, endIndex) || [];
+  const currentPageItems = displayData.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -316,43 +423,58 @@ const JobBoardPage = () => {
     <DashboardWrapper searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className={`${outfit.className} min-h-screen bg-white`}>
-        <Link
-          href="/dashboard/applications"
-          className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+        <div
+          className={`${outfit.className} flex items-center justify-between mb-2`}
         >
-          <span>{t("jobBoard.viewApplications")}</span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <h1 className="text-sm font-semibold">Job Board</h1>
+          <Link
+            href="/dashboard/applications"
+            className="flex justify-end items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
           >
-            <path d="M1 8H15M15 8L8 1M15 8L8 15" />
-          </svg>
-        </Link>
+            <span>{t("jobBoard.viewApplications")}</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M1 8H15M15 8L8 1M15 8L8 15" />
+            </svg>
+          </Link>
+        </div>
         <div className="w-full mx-auto">
           {/* Filters */}
-          <div className="w-full max-w-screen-lg flex flex-wrap gap-4 mt-4">
+          <div className="w-full max-w-screen-lg flex flex-wrap gap-4">
             <div className="relative w-[200px]">
               <input
-                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
+                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                 placeholder={t("jobBoard.location")}
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => {
+                  // Clear AI search when using regular filter
+                  if (isAISearchActive) {
+                    clearAISearch();
+                  }
+                  setLocation(e.target.value);
+                }}
               />
             </div>
 
             <div className="relative w-[200px]">
               <select
-                className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] appearance-none cursor-pointer"
+                className="text-sm w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] appearance-none cursor-pointer"
                 value={jobType}
-                onChange={(e) =>
-                  setJobType(e.target.value as IGetJobOpenJobType)
-                }
+                onChange={(e) => {
+                  // Clear AI search when using regular filter
+                  if (isAISearchActive) {
+                    clearAISearch();
+                  }
+                  setJobType(e.target.value as IGetJobOpenJobType);
+                }}
               >
                 {Object.entries(JOB_TYPE).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -389,9 +511,13 @@ const JobBoardPage = () => {
                     >
                       {skill}
                       <button
-                        onClick={() =>
-                          setSkills(skills.filter((_, i) => i !== index))
-                        }
+                        onClick={() => {
+                          // Clear AI search when modifying skills
+                          if (isAISearchActive) {
+                            clearAISearch();
+                          }
+                          setSkills(skills.filter((_, i) => i !== index));
+                        }}
                         className="text-gray-500 hover:text-gray-700"
                       >
                         ×
@@ -399,18 +525,30 @@ const JobBoardPage = () => {
                     </span>
                   ))
                 ) : (
-                  <span className="text-[#333]">{t("jobBoard.skills")}</span>
+                  <span className="text-[#333] text-sm">
+                    {t("jobBoard.skills")}
+                  </span>
                 )}
                 <input
-                  className="flex-1 bg-transparent focus:outline-none min-w-[100px]"
+                  className="flex-1 bg-transparent focus:outline-none min-w-[100px] text-sm"
                   placeholder={
                     skills.length > 0 ? "" : t("jobBoard.pressEnterToAdd")
                   }
                   value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
+                  onChange={(e) => {
+                    // Clear AI search when typing in skills
+                    if (isAISearchActive) {
+                      clearAISearch();
+                    }
+                    setSkillInput(e.target.value);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && skillInput.trim()) {
                       e.preventDefault();
+                      // Clear AI search when adding skills
+                      if (isAISearchActive) {
+                        clearAISearch();
+                      }
                       setSkills([...skills, skillInput.trim()]);
                       setSkillInput("");
                     }
@@ -427,7 +565,9 @@ const JobBoardPage = () => {
                   className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5"
                 >
                   <div className="flex items-center gap-2">
-                    <span>{t("jobBoard.searchWithAI")}</span>
+                    <span className="text-sm">
+                      {t("jobBoard.searchWithAI")}
+                    </span>
                     <Image
                       src="/ai-technology.png"
                       alt="AI"
@@ -458,7 +598,7 @@ const JobBoardPage = () => {
                 {isAIDropdownOpen && (
                   <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                     <button
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
                       onClick={() => {
                         setIsRecordingModalOpen(true);
                         setIsAIDropdownOpen(false);
@@ -467,7 +607,7 @@ const JobBoardPage = () => {
                       {t("jobBoard.audioSearch")}
                     </button>
                     <button
-                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t text-sm"
                       onClick={() => {
                         setIsTextSearchModalOpen(true);
                         setIsAIDropdownOpen(false);
@@ -482,8 +622,11 @@ const JobBoardPage = () => {
           </div>
 
           {/* Job Table */}
-          <div className="w-full mt-8">
-            <Table data={currentPageItems} isLoading={mutation.isPending} />
+          <div className="w-full">
+            <Table
+              data={currentPageItems}
+              isLoading={isSearching || mutation.isPending}
+            />
 
             {/* Pagination */}
             {totalPages > 1 && (
@@ -491,17 +634,17 @@ const JobBoardPage = () => {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-sm px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("jobBoard.previous")}
                 </button>
-                <span className="px-4 py-2">
+                <span className="text-sm px-4 py-2">
                   {t("applications.page")} {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-sm px-4 py-2 rounded-lg bg-[#ebebeb] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("jobBoard.next")}
                 </button>
@@ -518,7 +661,7 @@ const JobBoardPage = () => {
         >
           <div className="bg-white rounded-lg w-[600px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">
+              <h2 className="text-[14px] font-semibold">
                 {t("jobBoard.searchWithAI")}
               </h2>
               <button
@@ -536,23 +679,23 @@ const JobBoardPage = () => {
               <textarea
                 value={textSearchInput}
                 onChange={(e) => setTextSearchInput(e.target.value)}
-                placeholder="Please provide the job description here
-
-For more accurate results, please include the following in 
-your write-up: Title, Years of Experience (YOE), Location, 
-Job Type, Skills, Education, Salary Range and 
-Language Requirements."
+                placeholder={t("jobBoard.jobDescriptionPlaceholder")}
                 className="w-full h-48 p-4 border border-gray-300 bg-gray-100 rounded-lg mb-6 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
-                onClick={() => {
-                  // Handle text search
-                  setIsTextSearchModalOpen(false);
-                }}
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm flex items-center gap-2"
+                onClick={handleTextSearch}
+                disabled={isSearching || !textSearchInput.trim()}
               >
-                {t("jobBoard.search")}
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  t("jobBoard.search")
+                )}
               </button>
             </div>
           </div>
@@ -566,7 +709,7 @@ Language Requirements."
         >
           <div className="bg-white rounded-lg w-[500px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">
+              <h2 className="text-[14px] font-semibold">
                 {t("jobBoard.searchWithAI")}
               </h2>
               <button
@@ -581,7 +724,7 @@ Language Requirements."
               </button>
             </div>
 
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 mb-8 text-sm">
               {t("jobBoard.pleaseRecordSearch")}
             </p>
 
@@ -674,13 +817,18 @@ Language Requirements."
               )}
 
               <button
-                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
-                onClick={() => {
-                  // Handle search with recorded audio
-                  setIsRecordingModalOpen(false);
-                }}
+                className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors text-sm"
+                onClick={handleSearchWithAudio}
+                disabled={!audioURL || isSearching}
               >
-                {t("jobBoard.search")}
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  t("jobBoard.search")
+                )}
               </button>
             </div>
           </div>

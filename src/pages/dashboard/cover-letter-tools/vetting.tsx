@@ -120,14 +120,17 @@ const Vetting = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("coverLetterTools.generator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("coverLetterTools.generator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("coverLetterTools.generator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("coverLetterTools.generator.supportedFormats")}
               </span>
             </div>
 
@@ -209,9 +212,9 @@ const Vetting = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Want to customize your results?{" "}
+                {t("coverLetterTools.vetting.customizeResults")}{" "}
                 <span className="text-sm font-medium">
-                  &#40;Add up to 20 prompts&#41;
+                  {t("coverLetterTools.vetting.addPrompts")}
                 </span>
               </span>
               <Plus
@@ -225,7 +228,7 @@ const Vetting = () => {
               />
             </div>
             <Input
-              placeholder="Input Prompt"
+              placeholder={t("coverLetterTools.vetting.inputPrompt")}
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
@@ -253,7 +256,7 @@ const Vetting = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("coverLetterTools.vetting.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}

@@ -10,21 +10,65 @@ export interface TalentItem {
   email: string;
   phone: string;
   nationality: string;
+  country_of_residence: string;
   date_of_birth: string;
   linkedin: string;
   current_position: string;
   current_company: string;
-  professional_summary: string;
-  years_of_experience: number;
-  country_of_residence: string;
-  skills_summary: string;
-  strength: string;
-  areas_for_development: string;
-  culture_fit: string;
-  languages: string;
+  professional_summary: string | null;
+  years_of_experience: number | null;
+  experience_summary: string | null;
+  skills_summary: string | null;
+  salary_currency: string | null;
+  salary_range_min: number | null;
+  salary_range_max: number | null;
+  ai_insights: string | null;
+  cv: string | null;
+  cover_letter: string | null;
+  voicenote: string | null;
+  profile_photo: string | null;
+  strength: string | null;
+  areas_for_development: string | null;
+  culture_fit: string | null;
+  languages: string | null;
   key_skills: number;
-  cv: string;
-  cover_letter: string;
+  visibility_score: number;
+  profile_recommendations: string | null;
+}
+
+export interface TalentItemResponse {
+  id: string;
+  reference: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  email: string;
+  phone: string;
+  nationality: string;
+  country_of_residence: string;
+  date_of_birth: string;
+  linkedin: string;
+  current_position: string;
+  current_company: string;
+  professional_summary: string | null;
+  years_of_experience: number | null;
+  experience_summary: string | null;
+  skills_summary: string | null;
+  salary_currency: string | null;
+  salary_range_min: number | null;
+  salary_range_max: number | null;
+  ai_insights: string | null;
+  cv: string | null;
+  cover_letter: string | null;
+  voicenote: string | null;
+  profile_photo: string | null;
+  strength: string | null;
+  areas_for_development: string | null;
+  culture_fit: string | null;
+  languages: string | null;
+  key_skills: number;
+  visibility_score: number;
+  profile_recommendations: string | null;
 }
 
 export const getTalents = async (
@@ -51,14 +95,17 @@ export const getPublicTalents = async (page: number = 0) => {
   return response.data;
 };
 
-export const getTalentItem = async (token: string, talent_id: string) => {
+export const getTalentItem = async (
+  token: string,
+  talent_id: string
+): Promise<TalentItemResponse> => {
   const response = await axios({
     method: "GET",
     url: API_CONFIG.GET_TALENT_ITEM(talent_id),
     headers: { Authorization: `Bearer ${token}` },
   });
   console.log("talent-item", { response });
-  return response.data;
+  return response.data as TalentItemResponse;
 };
 
 interface ProfileStatsRequest {

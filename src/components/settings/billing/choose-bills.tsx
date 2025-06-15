@@ -428,7 +428,7 @@ function BillingChooseView() {
       </div>
 
       {/* Detailed Features Table */}
-      <div className="w-full text-[12px] max-w-[1400px] mx-auto px-4 md:px-0 md:pb-16 mb-16">
+      <div className="w-full text-[12px] mx-auto px-4 md:px-0 md:pb-16 mb-16">
         {/* Mobile Features Carousel */}
         <div className="relative block md:hidden w-full mt-8">
           <div className="overflow-hidden">

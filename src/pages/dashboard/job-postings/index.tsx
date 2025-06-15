@@ -66,11 +66,11 @@ const JobPostings = () => {
       <div
         className={`${outfit.className} pb-[30px] flex flex-col min-h-full w-full max-w-full`}
       >
-        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-          {currentView != "details" && currentView != "candidatedetail" && (
+        {currentView != "details" && currentView != "candidatedetail" && (
+          <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
             <>
               <div className="flex flex-row items-center gap-4 sm:gap-6 flex-wrap">
-                <h1 className="text-xl font-bold">
+                <h1 className="text-sm font-bold">
                   {currentView === "openings"
                     ? "Current Openings"
                     : "Closed Jobs"}
@@ -111,8 +111,8 @@ const JobPostings = () => {
                 </button>
               )} */}
             </>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="flex-1">
           {currentView === "openings" && (

@@ -81,12 +81,12 @@ const ApplicationsPage = () => {
 
   return (
     <DashboardWrapper>
-      <div className={`${outfit.className} max-w-[1400px] w-full mx-auto py-8`}>
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">{t("applications.title")}</h1>
-          <div className="text-sm text-gray-500">
+      <div className={`${outfit.className} w-full mx-auto`}>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-sm font-semibold">{t("applications.title")}</h1>
+          {/* <div className="text-sm text-gray-500">
             {t("applications.showingApplications", { count: jobs.length })}
-          </div>
+          </div> */}
         </div>
 
         <Table className="mt-2">
@@ -191,13 +191,13 @@ const ApplicationsPage = () => {
 
         {jobs.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">
+            <p className="text-gray-500 text-sm">
               {t("applications.noApplicationsFound")}
             </p>
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-6">
+        <div className="flex items-center justify-center space-x-4 mt-6">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}

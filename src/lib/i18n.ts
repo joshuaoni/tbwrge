@@ -92,6 +92,8 @@ const resources = {
         accepted: "Accepted",
         shortlisted: "Shortlisted",
         rejected: "Rejected",
+        jobDescriptionPlaceholder:
+          "Please provide the job description here\n\nFor more accurate results, please include the following in your write-up: Title, Years of Experience (YOE), Location, Job Type, Skills, Education, Salary Range and Language Requirements.",
       },
       jobApplication: {
         title: "Job Application",
@@ -224,6 +226,7 @@ const resources = {
           customize: {
             title: "Want to customize your results?",
             subTitle: "(Add up to 20 prompts)",
+            inputPrompt: "Input Prompt",
           },
           length: {
             label: "Summary Length",
@@ -278,6 +281,10 @@ const resources = {
             subTitle: "(Optional for better analysis)",
           },
           jobDescriptionPlaceholder: "Detailed Job Description",
+          customizeResults: "Want to customize your results?",
+          addPrompts: "(Add up to 20 prompts)",
+          inputPrompt: "Input Prompt",
+          selectOutputLanguage: "Select Output language",
           vetCoverLetter: "Vet Cover Letter",
           analyzing: "Analyzing...",
           vettingResults: "Cover Letter Vet",
@@ -578,6 +585,8 @@ const resources = {
         accepted: "Accepté",
         shortlisted: "Présélectionné",
         rejected: "Rejeté",
+        jobDescriptionPlaceholder:
+          "Veuillez fournir la description du poste ici\n\nPour des résultats plus précis, veuillez inclure les éléments suivants dans votre description : Titre, Années d'expérience (YOE), Localisation, Type d'emploi, Compétences, Éducation, Fourchette salariale et Exigences linguistiques.",
       },
       jobApplication: {
         title: "Candidature d'emploi",
@@ -705,6 +714,43 @@ const resources = {
           summary: "Résumé de la lettre de motivation",
           summaryPlaceholder: "Votre résumé apparaîtra ici",
         },
+        summarizer: {
+          title: "Résumeur de lettre de motivation",
+          description:
+            "Générez des résumés concis de vos lettres de motivation pour examiner rapidement les points clés",
+          upload: {
+            title: "Téléchargement de lettre de motivation",
+            description:
+              "Ajoutez votre lettre de motivation ici, vous pouvez télécharger jusqu'à 5 fichiers maximum",
+            selectFile: "Sélectionner un fichier",
+          },
+          customize: {
+            title: "Voulez-vous personnaliser vos résultats ?",
+            subTitle: "(Ajouter jusqu'à 20 invites)",
+            inputPrompt: "Saisir une invite",
+          },
+          length: {
+            label: "Longueur du résumé",
+            short: "Court",
+            medium: "Moyen",
+            long: "Long",
+          },
+          selectOutputLanguage: "Sélectionner la langue de sortie",
+          generateSummary: "Résumer la lettre de motivation",
+          generating: "Génération du résumé...",
+          generatedSummary: "Résumé de la lettre de motivation",
+          summaryPlaceholder: "Votre résumé apparaîtra ici",
+          downloadFilename: "resume-lettre-motivation.txt",
+          summaryGenerated: "Résumé généré avec succès !",
+          generationError: "Erreur lors de la génération du résumé",
+          exampleSummaries: {
+            short:
+              "Résumé professionnel bref mettant en évidence les qualifications clés et l'intérêt pour le poste.",
+            medium:
+              "Résumé complet décrivant l'expérience pertinente, les compétences et la motivation pour le rôle avec des exemples spécifiques et des réalisations.",
+            long: "Résumé détaillé fournissant un contexte étendu, des réalisations et un alignement avec les valeurs de l'entreprise, démontrant une forte adéquation pour le poste à travers des exemples concrets et une progression de carrière.",
+          },
+        },
         translator: {
           title: "Traducteur de lettre de motivation",
           uploadTitle: "Téléchargement de lettre de motivation",
@@ -726,6 +772,7 @@ const resources = {
           customizeResults: "Voulez-vous personnaliser vos résultats ?",
           addPrompts: "(Ajouter jusqu'à 20 invites)",
           inputPrompt: "Saisir une invite",
+          selectOutputLanguage: "Sélectionner la langue de sortie",
           vetCoverLetter: "Évaluer la lettre de motivation",
           coverLetterVet: "Évaluation de lettre de motivation",
           vettingError:
@@ -1030,6 +1077,8 @@ const resources = {
         accepted: "Aceptado",
         shortlisted: "Preseleccionado",
         rejected: "Rechazado",
+        jobDescriptionPlaceholder:
+          "Por favor proporciona la descripción del trabajo aquí\n\nPara obtener resultados más precisos, incluye lo siguiente en tu descripción: Título, Años de Experiencia (YOE), Ubicación, Tipo de Trabajo, Habilidades, Educación, Rango Salarial y Requisitos de Idioma.",
       },
       jobApplication: {
         title: "Solicitud de trabajo",
@@ -1163,6 +1212,7 @@ const resources = {
           customize: {
             title: "¿Quiere personalizar sus resultados?",
             subTitle: "(Agregue hasta 20 instrucciones)",
+            inputPrompt: "Ingresar indicación",
           },
           length: {
             label: "Longitud del resumen",
@@ -1226,6 +1276,10 @@ const resources = {
           score: "Puntuación",
           analysis: "Análisis",
           recommendations: "Recomendaciones",
+          customizeResults: "¿Quieres personalizar tus resultados?",
+          addPrompts: "(Agregar hasta 20 instrucciones)",
+          inputPrompt: "Ingresar indicación",
+          selectOutputLanguage: "Seleccionar idioma de salida",
         },
         common: {
           maxFilesError: "Solo puedes subir hasta 5 archivos.",
@@ -1487,6 +1541,8 @@ const resources = {
         accepted: "Akzeptiert",
         shortlisted: "Shortlisted",
         rejected: "Abgelehnt",
+        jobDescriptionPlaceholder:
+          "Bitte geben Sie hier die Stellenbeschreibung an\n\nFür genauere Ergebnisse fügen Sie bitte Folgendes in Ihre Beschreibung ein: Titel, Berufserfahrung (YOE), Standort, Stellentyp, Fähigkeiten, Bildung, Gehaltsbereich und Sprachanforderungen.",
       },
       jobApplication: {
         title: "Stellenbewerbung",
@@ -1620,6 +1676,7 @@ const resources = {
           customize: {
             title: "Möchten Sie Ihre Ergebnisse anpassen?",
             subTitle: "(Fügen Sie bis zu 20 Anweisungen hinzu)",
+            inputPrompt: "Prompt eingeben",
           },
           length: {
             label: "Zusammenfassungslänge",
@@ -1683,6 +1740,10 @@ const resources = {
           score: "Bewertung",
           analysis: "Analyse",
           recommendations: "Empfehlungen",
+          customizeResults: "Möchten Sie Ihre Ergebnisse anpassen?",
+          addPrompts: "(Fügen Sie bis zu 20 Anweisungen hinzu)",
+          inputPrompt: "Prompt eingeben",
+          selectOutputLanguage: "Ausgabesprache auswählen",
         },
         common: {
           maxFilesError: "Sie können nur bis zu 5 Dateien hochladen.",
@@ -1946,6 +2007,8 @@ const resources = {
         accepted: "مقبول",
         shortlisted: "في القائمة المختصرة",
         rejected: "مرفوض",
+        jobDescriptionPlaceholder:
+          "يرجى تقديم وصف الوظيفة هنا\n\nللحصول على نتائج أكثر دقة، يرجى تضمين ما يلي في وصفك: العنوان، سنوات الخبرة (YOE)، الموقع، نوع الوظيفة، المهارات، التعليم، نطاق الراتب ومتطلبات اللغة.",
       },
       jobApplication: {
         title: "طلب التوظيف",
@@ -2074,6 +2137,7 @@ const resources = {
           customize: {
             title: "هل تريد تخصيص نتائجك؟",
             subTitle: "(أضف حتى 20 تعليمة)",
+            inputPrompt: "إدخال تعليمة",
           },
           length: {
             label: "طول الملخص",
@@ -2136,6 +2200,10 @@ const resources = {
           score: "النتيجة",
           analysis: "التحليل",
           recommendations: "التوصيات",
+          customizeResults: "هل تريد تخصيص نتائجك؟",
+          addPrompts: "(أضف حتى 20 تعليمة)",
+          inputPrompt: "إدخال تعليمة",
+          selectOutputLanguage: "اختر لغة الإخراج",
         },
         common: {
           maxFilesError: "يمكنك رفع 5 ملفات فقط كحد أقصى.",
@@ -2391,6 +2459,8 @@ const resources = {
         accepted: "Aceito",
         shortlisted: "Pré-selecionado",
         rejected: "Rejeitado",
+        jobDescriptionPlaceholder:
+          "Por favor, forneça a descrição do trabalho aqui\n\nPara resultados mais precisos, inclua o seguinte na sua descrição: Título, Anos de Experiência (YOE), Localização, Tipo de Trabalho, Habilidades, Educação, Faixa Salarial e Requisitos de Idioma.",
       },
       jobApplication: {
         title: "Candidatura de emprego",
@@ -2524,6 +2594,7 @@ const resources = {
           customize: {
             title: "Quer personalizar seus resultados?",
             subTitle: "(Adicione até 20 instruções)",
+            inputPrompt: "Inserir instrução",
           },
           length: {
             label: "Comprimento do resumo",
@@ -2586,6 +2657,10 @@ const resources = {
           score: "Pontuação",
           analysis: "Análise",
           recommendations: "Recomendações",
+          customizeResults: "Quer personalizar seus resultados?",
+          addPrompts: "(Adicionar até 20 instruções)",
+          inputPrompt: "Inserir instrução",
+          selectOutputLanguage: "Selecionar idioma de saída",
         },
         common: {
           maxFilesError: "Você só pode enviar até 5 arquivos.",
@@ -2844,6 +2919,8 @@ const resources = {
         accepted: "已接受",
         shortlisted: "入围",
         rejected: "被拒绝",
+        jobDescriptionPlaceholder:
+          "请在此提供职位描述\n\n为了获得更准确的结果，请在您的描述中包含以下内容：职位、工作经验年限（YOE）、地点、工作类型、技能、教育背景、薪资范围和语言要求。",
       },
       jobApplication: {
         title: "职位申请",
@@ -2974,6 +3051,7 @@ const resources = {
           customize: {
             title: "自定义摘要",
             subTitle: "选择摘要长度和输出语言",
+            inputPrompt: "输入提示",
           },
           length: {
             label: "摘要长度",
@@ -3030,6 +3108,10 @@ const resources = {
           score: "评分",
           analysis: "分析",
           recommendations: "建议",
+          customizeResults: "您想自定义您的结果吗？",
+          addPrompts: "(添加最多20个提示)",
+          inputPrompt: "输入提示",
+          selectOutputLanguage: "选择输出语言",
         },
         common: {
           maxFilesError: "您最多只能上传5个文件。",

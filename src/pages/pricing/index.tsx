@@ -479,7 +479,7 @@ const PricingPage = () => {
         {/* Detailed Features Table */}
         <motion.div
           variants={containerVariants}
-          className="w-full text-[12px] max-w-[1400px] mx-auto px-4 md:px-16 md:pb-16 mb-16"
+          className="w-full text-[12px] mx-auto px-4 md:px-16 md:pb-16 mb-16"
         >
           {/* Mobile Features Carousel */}
           <motion.div

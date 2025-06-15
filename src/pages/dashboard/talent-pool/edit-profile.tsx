@@ -555,7 +555,7 @@ export default function EditTalentPool() {
 
   return (
     <DashboardWrapper>
-      <div className="mx-auto bg-white p-6">
+      <div className="mx-auto bg-white">
         <div className="flex justify-between mb-4 items-center">
           <div className="flex items-center">
             <Link href="/dashboard/talent-pool" className="hover:text-primary">

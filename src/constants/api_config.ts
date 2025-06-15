@@ -76,6 +76,7 @@ export const API_CONFIG = {
   GET_TEAMS: `${MAIN_URL}/profile/get-teams/`,
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
   DELETE_ACCOUNT: `${MAIN_URL}/profile/delete-account/`,
+  GET_ACTIVITIES: `${MAIN_URL}/profile/get-activities/`,
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,
@@ -117,6 +118,7 @@ export const API_CONFIG = {
   UPDATE_TALENT_PROFILE: `${MAIN_URL}/talent/update-profile/`,
   TALENT_AI_SEARCH: (page: number = 0) =>
     `${MAIN_URL}/talent/ai-search/${page}/`,
+  JOB_AI_SEARCH: (page: number = 0) => `${MAIN_URL}/job/ai-search/${page}/`,
   GET_PROFILE_STATS: `${MAIN_URL}/talent/get-profile-stats/`,
 
   GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,

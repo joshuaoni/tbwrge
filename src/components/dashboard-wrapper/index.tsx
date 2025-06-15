@@ -35,11 +35,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   }, [userData, isLoading, router]);
 
   return (
-    <div className="flex w-full max-w-[1600px] mx-auto">
-      <DashboardHeader
-        searchTerm={searchTerm || ""}
-        setSearchTerm={setSearchTerm || (() => {})}
-      />
+    <div className="flex w-full max-w-[1800px] mx-auto">
       <SidebarProvider className="">
         <Sidebar className={`${outfit.className} bg-[#F5F5F5] z-30`}>
           <SidebarHeader className="bg-[#F5F5F5] ">
@@ -69,14 +65,20 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
             <LeftSideBar />
           </SidebarContent>
         </Sidebar>
-        {!startCreateJobFlow ? (
-          <main className="bg-white px-[70px] pr-[30px] flex-1 p-4 pt-24 overflow-x-hidden">
-            <SidebarTrigger />
-            {children}
-          </main>
-        ) : (
-          <CreateJobFlow setStartCreateJobFlow={setStartCreateJobFlow} />
-        )}
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader
+            searchTerm={searchTerm || ""}
+            setSearchTerm={setSearchTerm || (() => {})}
+          />
+          {!startCreateJobFlow ? (
+            <main className="bg-white px-[70px] pr-[30px] flex-1 p-4 pt-8 overflow-x-hidden">
+              {/* <SidebarTrigger /> */}
+              {children}
+            </main>
+          ) : (
+            <CreateJobFlow setStartCreateJobFlow={setStartCreateJobFlow} />
+          )}
+        </div>
       </SidebarProvider>
     </div>
   );

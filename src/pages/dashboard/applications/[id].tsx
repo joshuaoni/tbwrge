@@ -31,7 +31,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <div className="mb-8">
-    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <h2 className="text-sm font-semibold mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -49,7 +49,7 @@ const JobHeader = ({
     <div>
       <Link
         href="/dashboard/applications"
-        className="inline-flex items-center text-gray-600 mb-6"
+        className="inline-flex items-center text-gray-600 mb-6 text-sm"
       >
         <svg
           width="20"
@@ -57,7 +57,7 @@ const JobHeader = ({
           viewBox="0 0 20 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="mr-2"
+          className=""
         >
           <path
             d="M12.5 15L7.5 10L12.5 5"
@@ -83,18 +83,16 @@ const JobHeader = ({
               />
             ) : (
               <div className="w-full h-full bg-slate-300 flex items-center justify-center">
-                <span className="text-white font-medium text-xl">
+                <span className="text-white font-medium text-sm">
                   {job.company_name[0]}
                 </span>
               </div>
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-semibold mb-2">{job.job_title}</h1>
+            <h1 className="text-sm font-semibold mb-2">{job.job_title}</h1>
             <div className="flex flex-col gap-1">
-              <div className="text-[15px] text-gray-600">
-                {job.company_name}
-              </div>
+              <div className="text-sm text-gray-600">{job.company_name}</div>
               <div className="flex items-center gap-2 text-[14px] text-gray-600">
                 <span>{job.job_location_name}</span>
                 <span>•</span>
@@ -129,7 +127,7 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => {
         <div className="text-sm text-gray-600 mb-1">
           {t("jobBoard.salaryRange")}
         </div>
-        <div className="font-medium">
+        <div className="font-medium text-sm">
           {job.salary_range_min && job.salary_range_max
             ? `${
                 job.salary_currency || "USD"
@@ -141,7 +139,7 @@ const QuickInfo = ({ job }: { job: IGetJobOpenRes }) => {
         <div className="text-sm text-gray-600 mb-1">
           {t("jobBoard.location")}
         </div>
-        <div className="font-medium">{job.job_location_name}</div>
+        <div className="font-medium text-sm">{job.job_location_name}</div>
       </div>
     </div>
   );
@@ -205,9 +203,7 @@ const ApplicationDetailsPage = () => {
 
   return (
     <DashboardWrapper>
-      <div
-        className={`${outfit.className} details max-w-[1400px] w-full mx-auto py-8`}
-      >
+      <div className={`${outfit.className} details w-full mx-auto`}>
         <div className="flex gap-8">
           {/* Left column - Job details */}
           <div className="w-1/2">
@@ -216,7 +212,7 @@ const ApplicationDetailsPage = () => {
 
             {job.company_description && (
               <Section title={t("jobBoard.aboutCompany")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.company_description}
                 </p>
               </Section>
@@ -224,7 +220,7 @@ const ApplicationDetailsPage = () => {
 
             <Section title={t("jobBoard.jobDescription")}>
               <div
-                className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
                 dangerouslySetInnerHTML={{ __html: job.job_description }}
               />
             </Section>
@@ -244,7 +240,7 @@ const ApplicationDetailsPage = () => {
 
             {job.educational_requirements && (
               <Section title={t("jobBoard.educationalRequirements")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.educational_requirements}
                 </p>
               </Section>
@@ -267,7 +263,7 @@ const ApplicationDetailsPage = () => {
 
             {job.additional_benefits && (
               <Section title={t("jobBoard.additionalBenefits")}>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed text-sm">
                   {job.additional_benefits}
                 </p>
               </Section>
@@ -311,10 +307,10 @@ const ApplicationDetailsPage = () => {
                     />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-sm font-semibold">
                   {t("jobApplication.applicationSubmitted")}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm">
                   {t("jobApplication.alreadyApplied")}
                 </p>
                 <div className="pt-4">
@@ -322,7 +318,9 @@ const ApplicationDetailsPage = () => {
                     href="/dashboard/applications"
                     className="inline-flex items-center text-primary hover:text-primary/90"
                   >
-                    <span>{t("jobApplication.viewYourApplications")}</span>
+                    <span className="text-sm">
+                      {t("jobApplication.viewYourApplications")}
+                    </span>
                     <svg
                       width="20"
                       height="20"

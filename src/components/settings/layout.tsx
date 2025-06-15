@@ -12,9 +12,7 @@ const DashboardSettingsLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <DashboardWrapper>
-      <header
-        className={`${outfit.className} flex pl-6 items-center gap-6 mb-10`}
-      >
+      <header className={`${outfit.className} flex items-center gap-6 mb-4`}>
         {[
           { name: "Profile Settings", route: "/profile" },
           { name: "Notifications Settings", route: "/notifications" },
@@ -34,7 +32,7 @@ const DashboardSettingsLayout = ({ children }: { children: ReactNode }) => {
         ))}
       </header>
 
-      <div className={`${outfit.className} px-6`}>{children}</div>
+      <div className={`${outfit.className}`}>{children}</div>
     </DashboardWrapper>
   );
 };

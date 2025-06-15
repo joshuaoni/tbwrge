@@ -333,22 +333,15 @@ export default function TalentPool() {
 
   const handleSearchWithAudio = async () => {
     if (!audioURL || !userData?.token) return;
-
+    setIsSearching(true);
     try {
       // Get the audio blob from the URL
       const response = await fetch(audioURL);
       const audioBlob = await response.blob();
 
-      // Download the audio file to local machine for debugging
-      const downloadLink = document.createElement("a");
-      downloadLink.href = audioURL;
-      downloadLink.download = "audio-recording.wav";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-
       // Transcribe the audio
-      const transcribedText = await transcribeAudio(userData.token, audioBlob);
+      let transcribedText = await transcribeAudio(userData.token, audioBlob);
+      transcribedText = transcribedText ? transcribedText : "";
 
       // Close recording modal and open text search modal with transcribed text
       setIsRecordingModalOpen(false);
@@ -359,6 +352,9 @@ export default function TalentPool() {
       deleteRecording();
     } catch (error) {
       console.error("Error transcribing audio:", error);
+      toast.error("Failed to transcribe audio. Please try again.");
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -405,9 +401,7 @@ export default function TalentPool() {
   return (
     <DashboardWrapper>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div
-        className={`${outfit.className} flex items-center justify-between mb-6`}
-      >
+      <div className={`${outfit.className} flex items-center justify-between`}>
         <h1 className="text-2xl font-semibold">Talent Pool</h1>
         {isJobSeeker ? (
           <>
@@ -480,8 +474,8 @@ export default function TalentPool() {
           isJobSeeker ? "pointer-events-none opacity-60" : ""
         }`}
       >
-        <div className="py-6  min-h-screen">
-          <div className=" mx-auto bg-white p-4 rounded-lg ">
+        <div className="py-4 min-h-screen">
+          <div className=" mx-auto bg-white rounded-lg ">
             {/* Filters */}
             <div className="flex items-center gap-3">
               <div className="border flex items-center px-2 bg-[#F0F0F0] rounded-lg w-[300px] mb-4">
@@ -859,10 +853,10 @@ Language Requirements."
                 disabled={isSearching || !textSearchInput.trim()}
               >
                 {isSearching ? (
-                  <>
+                  <span className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Searching...
-                  </>
+                  </span>
                 ) : (
                   "Search"
                 )}
@@ -985,9 +979,16 @@ Language Requirements."
               <button
                 className="w-fit px-8 py-2 bg-primary text-white rounded-lg hover:bg-black/90 transition-colors"
                 onClick={handleSearchWithAudio}
-                disabled={!audioURL}
+                disabled={!audioURL || isSearching}
               >
-                Search
+                {isSearching ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Searching...
+                  </span>
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
           </div>

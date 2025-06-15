@@ -7,9 +7,9 @@ interface QuestionAnswer {
 }
 
 export const submitQuestionAnswers = async (
-  token: string,
   applicationId: string,
-  answers: QuestionAnswer[]
+  answers: QuestionAnswer[],
+  token?: string
 ) => {
   const url = `https://api.candivet.com/job/submit-application-answers/${applicationId}/`;
   console.log({ answers, url });
