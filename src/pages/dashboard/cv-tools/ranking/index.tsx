@@ -93,14 +93,14 @@ const Ranking = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("cvTools.ranking.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">{t("cvTools.common.cvUpload")}</span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("cvTools.common.cvUploadDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
@@ -193,7 +193,7 @@ const Ranking = () => {
           {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">
+              <span className="font-bold text-sm">
                 {t("cvTools.common.customizeResults")}{" "}
                 <span className="text-sm font-medium">
                   {t("cvTools.common.addPrompts")}
@@ -268,7 +268,7 @@ const Ranking = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">
+              <span className="font-bold text-sm">
                 {t("cvTools.ranking.resultTitle")}
               </span>
               {isSuccess && (

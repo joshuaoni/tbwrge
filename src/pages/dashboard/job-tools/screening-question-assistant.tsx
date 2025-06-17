@@ -301,10 +301,10 @@ const AiScreeningAssistant = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.screeningAssistant.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
@@ -312,7 +312,7 @@ const AiScreeningAssistant = () => {
             <span className="font-bold">
               {t("jobTools.screeningAssistant.cvUpload")}
             </span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("jobTools.screeningAssistant.uploadRequired")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
@@ -461,7 +461,7 @@ const AiScreeningAssistant = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-sm font-semibold">
                 {t("jobTools.screeningAssistant.responsesTitle")}
               </h2>
               {isSuccess && data && (
@@ -535,7 +535,7 @@ const AiScreeningAssistant = () => {
                 <div className="space-y-6">
                   {data.questions.map((item, qIndex) => (
                     <div key={qIndex} className="space-y-2">
-                      <p className="font-medium text-base">
+                      <p className="font-medium text-sm">
                         Q{qIndex + 1}. "{item.question}"
                       </p>
 

@@ -429,16 +429,16 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("cvTools.generator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">
+              <span className="font-bold text-sm">
                 {t("cvTools.generator.profileDescription")}{" "}
-                <span className="text-xs font-normal">
+                <span className="text-sm font-normal">
                   {t("cvTools.generator.profileDescriptionSubtext")}
                 </span>
               </span>
@@ -459,7 +459,7 @@ const Generator = () => {
                 placeholder={t(
                   "cvTools.generator.profileDescriptionPlaceholder"
                 )}
-                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm text-sm"
               />
             </div>
 
@@ -488,7 +488,7 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">
+              <span className="font-medium text-sm">
                 {t("cvTools.generator.recordVoicenote")}
               </span>
             </div>
@@ -648,7 +648,7 @@ const Generator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit min-w-full w-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold text-lg">
+              <span className="font-bold text-sm">
                 {t("cvTools.generator.resultTitle")}
               </span>
             </div>

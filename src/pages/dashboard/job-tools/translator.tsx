@@ -182,10 +182,10 @@ const Translator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.translator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
@@ -193,7 +193,7 @@ const Translator = () => {
             <span className="font-bold">
               {t("jobTools.translator.jobAdUpload")}
             </span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("jobTools.translator.addJobDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
@@ -201,7 +201,7 @@ const Translator = () => {
                 onChange={handleFileChange}
                 type="file"
                 accept=".pdf, .doc, .docx, .txt"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 text-sm"
               />
               <div
                 className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"

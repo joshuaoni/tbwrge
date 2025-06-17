@@ -95,10 +95,10 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.reportGenerator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
@@ -106,7 +106,7 @@ const Generator = () => {
             <span className="font-bold">
               {t("jobTools.reportGenerator.documentUpload")}
             </span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("jobTools.reportGenerator.addDocuments")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">

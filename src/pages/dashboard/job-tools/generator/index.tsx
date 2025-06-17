@@ -470,10 +470,10 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <h2 className={`${outfit.className} font-bold text-[24px]`}>
+      <h2 className={`${outfit.className} font-bold text-[14px]`}>
         {t("jobTools.generator.title")}
       </h2>
-      <section className={`${outfit.className} flex space-x-4 `}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
@@ -527,7 +527,7 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">
+              <span className="font-medium text-sm">
                 {t("jobTools.generator.recordVoicenote")}
               </span>
             </div>
@@ -657,7 +657,7 @@ const Generator = () => {
           {/* Add Company Information Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">
+              <span className="font-medium text-sm">
                 {t("jobTools.generator.companyInformation")}
               </span>
             </div>

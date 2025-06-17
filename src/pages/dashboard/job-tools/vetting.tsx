@@ -115,16 +115,16 @@ const Vetting = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.vetting.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">
               {t("jobTools.vetting.jobAdUpload")}
             </span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("jobTools.vetting.addJobDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">

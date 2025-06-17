@@ -441,16 +441,16 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("coverLetterTools.generator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold">
               {t("coverLetterTools.generator.cvUpload")}
             </span>
-            <span className="font-light text-xs">
+            <span className="font-light text-sm">
               {t("coverLetterTools.generator.cvUploadDescription")}
             </span>
             <div className="relative w-full justify-between flex flex-col items-start rounded-lg">
@@ -460,7 +460,7 @@ const Generator = () => {
                 type="file"
                 accept=".pdf, .doc, .docx, .txt"
                 multiple
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 text-sm"
               />
               <div
                 className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
@@ -591,7 +591,7 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">
+              <span className="font-medium text-sm">
                 {t("coverLetterTools.generator.recordVoicenote")}
               </span>
             </div>

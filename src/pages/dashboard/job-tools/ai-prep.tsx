@@ -344,10 +344,10 @@ const AiInterviewPrep = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
+      <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.interviewPrep.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
@@ -481,7 +481,7 @@ const AiInterviewPrep = () => {
         <div className="w-[50%] mb-12">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-sm font-semibold">
                 {t("jobTools.interviewPrep.questionsTitle")}
               </h2>
               {isSuccess && questions && (
