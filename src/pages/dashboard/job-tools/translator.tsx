@@ -15,8 +15,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
+import { useTranslation } from "react-i18next";
 
 const Translator = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any[]>([]);
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [jobDescription, setJobDescription] = useState("");
@@ -59,10 +61,10 @@ const Translator = () => {
   const downloadTranslatedContentAsPDF = async () => {
     try {
       setIsGeneratingPDF(true);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(t("jobTools.translator.generatingPDF"));
 
       if (!translatedContentRef.current || !translated) {
-        toast.error("Cannot generate PDF - content not available", {
+        toast.error(t("jobTools.translator.pdfNotAvailable"), {
           id: toastId,
         });
         setIsGeneratingPDF(false);
@@ -154,11 +156,11 @@ const Translator = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("jobTools.translator.pdfGenerated"), { id: toastId });
       setIsGeneratingPDF(false);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("jobTools.translator.pdfError"));
       setIsGeneratingPDF(false);
     }
   };
@@ -181,16 +183,18 @@ const Translator = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Job Translator
+        {t("jobTools.translator.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Job Ad Upload</span>
+            <span className="font-bold">
+              {t("jobTools.translator.jobAdUpload")}
+            </span>
             <span className="font-light text-xs">
-              Add your Job Description here, you can upload up to 5 files max
+              {t("jobTools.translator.addJobDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -217,14 +221,17 @@ const Translator = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("jobTools.translator.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("jobTools.translator.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("jobTools.translator.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("jobTools.translator.supportedFormats")}
               </span>
             </div>
 
@@ -266,12 +273,14 @@ const Translator = () => {
           </div>
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("jobTools.translator.pasteJobDescription")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("jobTools.translator.detailedJobDescription")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -281,8 +290,7 @@ const Translator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
-                Select Output language
+                {t("jobTools.translator.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -302,7 +310,7 @@ const Translator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Translate Job "
+                  t("jobTools.translator.translateJob")
                 )}
               </Button>
             </div>
@@ -313,13 +321,15 @@ const Translator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Job Translator</span>
+              <span className="font-bold">
+                {t("jobTools.translator.title")}
+              </span>
               {translated && (
                 <div className="relative download-button-container">
                   <button
                     onClick={downloadTranslatedContentAsPDF}
                     className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all"
-                    aria-label="Download translation as PDF"
+                    aria-label={t("jobTools.translator.downloadPDF")}
                     disabled={isGeneratingPDF}
                   >
                     {isGeneratingPDF ? (
@@ -330,7 +340,7 @@ const Translator = () => {
                   </button>
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black text-white text-xs rounded p-2 opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 download-tooltip">
                     <div className="tooltip-arrow absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black"></div>
-                    Download translation as PDF
+                    {t("jobTools.translator.downloadPDF")}
                   </div>
                   <style jsx>{`
                     .download-button-container {

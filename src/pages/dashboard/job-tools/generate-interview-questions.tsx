@@ -17,6 +17,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
+import { useTranslation } from "react-i18next";
 
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -67,6 +68,7 @@ const InterviewScreeningGenerator = () => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const { userData } = useUserStore();
+  const { t } = useTranslation();
 
   const downloadTxtFile = () => {
     if (!questions) return;
@@ -332,16 +334,18 @@ const InterviewScreeningGenerator = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        Interview & Screening Questions Generator
+        {t("jobTools.interviewQuestions.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Job Ad Upload</span>
+            <span className="font-bold">
+              {t("jobTools.interviewQuestions.jobAdUpload")}
+            </span>
             <span className="font-light text-xs">
-              Add your Job Description here, you can upload up to 5 files max
+              {t("jobTools.interviewQuestions.addJobDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -368,15 +372,13 @@ const InterviewScreeningGenerator = () => {
                   src={uploadIcon}
                   alt="Upload Icon"
                 />
-                <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
-                </span>
+                <span>{t("jobTools.interviewQuestions.dragFiles")}</span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("jobTools.interviewQuestions.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("jobTools.interviewQuestions.supportedFormats")}
               </span>
             </div>
 
@@ -418,12 +420,16 @@ const InterviewScreeningGenerator = () => {
           </div>
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("jobTools.interviewQuestions.pasteJobDescription")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t(
+                  "jobTools.interviewQuestions.detailedJobDescription"
+                )}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -433,7 +439,7 @@ const InterviewScreeningGenerator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("jobTools.interviewQuestions.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -447,7 +453,11 @@ const InterviewScreeningGenerator = () => {
                 onClick={() => generateQuestions()}
                 disabled={(!files.length && !jobDescription) || isPending}
               >
-                {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("jobTools.interviewQuestions.generate")
+                )}
               </Button>
             </div>
           </div>
@@ -458,7 +468,7 @@ const InterviewScreeningGenerator = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">
-                Interview Questions | Screening Questions
+                {t("jobTools.interviewQuestions.questionsTitle")}
               </h2>
               {isSuccess && questions && (
                 <div className="flex gap-2">
@@ -512,8 +522,7 @@ const InterviewScreeningGenerator = () => {
 
             {!isPending && !isSuccess && !isError && (
               <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
-                Generated interview and screening questions will be displayed
-                here
+                {t("jobTools.interviewQuestions.questionsPlaceholder")}
               </div>
             )}
 

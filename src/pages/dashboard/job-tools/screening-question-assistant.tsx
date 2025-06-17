@@ -18,6 +18,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
+import { useTranslation } from "react-i18next";
 // import './style.css'
 // import '@/styles/globals.css'
 //
@@ -58,6 +59,7 @@ const formats = [
 ];
 
 const AiScreeningAssistant = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<File[]>([]);
   const [screeningQuestion, setScreeningQuestion] = useState("");
   const [jobAd, setJobAd] = useState("");
@@ -71,12 +73,20 @@ const AiScreeningAssistant = () => {
 
     try {
       setIsGeneratingPDF(true);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(
+        t("jobTools.screeningAssistant.generatingPDF", "Generating PDF...")
+      );
 
       if (!resultsRef.current) {
-        toast.error("Cannot generate PDF - content not available", {
-          id: toastId,
-        });
+        toast.error(
+          t(
+            "jobTools.screeningAssistant.pdfNotAvailable",
+            "Cannot generate PDF - content not available"
+          ),
+          {
+            id: toastId,
+          }
+        );
         setIsGeneratingPDF(false);
         return;
       }
@@ -108,16 +118,28 @@ const AiScreeningAssistant = () => {
       // Add title
       pdf.setFontSize(18);
       pdf.setTextColor(0, 0, 0);
-      pdf.text("Screening Questions Responses", pageWidth / 2, margin, {
-        align: "center",
-      });
+      pdf.text(
+        t(
+          "jobTools.screeningAssistant.responsesTitle",
+          "Screening Questions Responses"
+        ),
+        pageWidth / 2,
+        margin,
+        {
+          align: "center",
+        }
+      );
 
       // Add job role if available
       let yPosition = margin + 30;
       if (data.role) {
         pdf.setFontSize(14);
         pdf.setFont("helvetica", "bold");
-        pdf.text("Job Role: ", margin, yPosition);
+        pdf.text(
+          t("jobTools.screeningAssistant.jobRole", "Job Role:") + " ",
+          margin,
+          yPosition
+        );
         pdf.setFont("helvetica", "normal");
         const roleText = data.role;
         pdf.text(roleText, margin + 70, yPosition);
@@ -157,7 +179,11 @@ const AiScreeningAssistant = () => {
         // Answer heading
         pdf.setFontSize(11);
         pdf.setTextColor(39, 174, 96);
-        pdf.text("Suggested Answer:", margin + 15, yPosition);
+        pdf.text(
+          t("jobTools.screeningAssistant.suggestedAnswer", "Suggested Answer:"),
+          margin + 15,
+          yPosition
+        );
         yPosition += 20;
 
         // Answer text
@@ -189,10 +215,21 @@ const AiScreeningAssistant = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(
+        t(
+          "jobTools.screeningAssistant.pdfGenerated",
+          "PDF generated successfully"
+        ),
+        { id: toastId }
+      );
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(
+        t(
+          "jobTools.screeningAssistant.pdfError",
+          "Failed to generate PDF. Please try again."
+        )
+      );
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -241,7 +278,12 @@ const AiScreeningAssistant = () => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles);
       if (files.length + newFiles.length > 5) {
-        alert("You can only upload a maximum of 5 files.");
+        alert(
+          t(
+            "jobTools.screeningAssistant.maxFilesError",
+            "You can only upload a maximum of 5 files."
+          )
+        );
       } else {
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
       }
@@ -260,17 +302,18 @@ const AiScreeningAssistant = () => {
   return (
     <DashboardWrapper>
       <span className={`${outfit.className} font-bold text-xl`}>
-        AI Screening Question Assistant
+        {t("jobTools.screeningAssistant.title")}
       </span>
       <section className={`${outfit.className} flex space-x-4`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV & Cover Letter Upload</span>
+            <span className="font-bold">
+              {t("jobTools.screeningAssistant.cvUpload")}
+            </span>
             <span className="font-light text-xs">
-              You need to upload at least your CV, you can upload up to 5 files
-              max
+              {t("jobTools.screeningAssistant.uploadRequired")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -298,14 +341,17 @@ const AiScreeningAssistant = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("jobTools.screeningAssistant.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("jobTools.screeningAssistant.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("jobTools.screeningAssistant.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("jobTools.screeningAssistant.supportedFormats")}
               </span>
             </div>
 
@@ -348,12 +394,16 @@ const AiScreeningAssistant = () => {
 
           {/* Screening Questions */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Screening Questions Here</span>
+            <span className="font-bold">
+              {t("jobTools.screeningAssistant.pasteScreeningQuestions")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={screeningQuestion}
                 onChange={(e) => setScreeningQuestion(e.target.value)}
-                placeholder="Input screening questions here"
+                placeholder={t(
+                  "jobTools.screeningAssistant.inputScreeningQuestions"
+                )}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -361,12 +411,14 @@ const AiScreeningAssistant = () => {
 
           {/* Job Ad */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Job Ad Here</span>
+            <span className="font-bold">
+              {t("jobTools.screeningAssistant.pasteJobAd")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobAd}
                 onChange={(e) => setJobAd(e.target.value)}
-                placeholder="Input job ad here"
+                placeholder={t("jobTools.screeningAssistant.inputJobAd")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -376,7 +428,7 @@ const AiScreeningAssistant = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("jobTools.screeningAssistant.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -395,7 +447,11 @@ const AiScreeningAssistant = () => {
                   isPending
                 }
               >
-                {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("jobTools.screeningAssistant.generate")
+                )}
               </Button>
             </div>
           </div>
@@ -406,14 +462,14 @@ const AiScreeningAssistant = () => {
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">
-                Screening Questions Responses
+                {t("jobTools.screeningAssistant.responsesTitle")}
               </h2>
               {isSuccess && data && (
                 <div className="relative download-button-container">
                   <button
                     onClick={handleDownload}
                     className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all"
-                    aria-label="Download responses as PDF"
+                    aria-label={t("jobTools.screeningAssistant.downloadPDF")}
                     disabled={isGeneratingPDF}
                   >
                     {isGeneratingPDF ? (
@@ -424,7 +480,7 @@ const AiScreeningAssistant = () => {
                   </button>
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black text-white text-xs rounded p-2 opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 download-tooltip">
                     <div className="tooltip-arrow absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black"></div>
-                    Download as PDF
+                    {t("jobTools.screeningAssistant.downloadPDF")}
                   </div>
                 </div>
               )}
@@ -458,7 +514,7 @@ const AiScreeningAssistant = () => {
 
             {!isPending && !isSuccess && !isError && (
               <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
-                Generated responses will be displayed here
+                {t("jobTools.screeningAssistant.responsesPlaceholder")}
               </div>
             )}
 
@@ -470,7 +526,8 @@ const AiScreeningAssistant = () => {
                 {data.role && (
                   <div>
                     <h3 className="font-bold">
-                      Job Role: <span className="font-normal">{data.role}</span>
+                      {t("jobTools.screeningAssistant.jobRole")}{" "}
+                      <span className="font-normal">{data.role}</span>
                     </h3>
                   </div>
                 )}
@@ -489,7 +546,7 @@ const AiScreeningAssistant = () => {
                           </div>
                           <div>
                             <span className="font-medium">
-                              Suggested Answer:{" "}
+                              {t("jobTools.screeningAssistant.suggestedAnswer")}{" "}
                             </span>
                             <span>"{item.suggested_answer}"</span>
                           </div>
@@ -503,7 +560,7 @@ const AiScreeningAssistant = () => {
 
             {isError && (
               <div className="text-red-500 mt-4 text-center p-4">
-                An error occurred while generating responses. Please try again.
+                {t("jobTools.screeningAssistant.errorGenerating")}
               </div>
             )}
           </div>

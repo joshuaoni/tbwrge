@@ -39,6 +39,11 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  if (pathname === "/dashboard/settings") {
+    const url = new URL("/dashboard/settings/profile", request.url);
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 }
 

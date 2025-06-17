@@ -8,8 +8,10 @@ import { updateSettings } from "@/actions/update-settings";
 import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 import { getProfileSettings } from "@/actions/get-profile-settings";
+import { useTranslation } from "react-i18next";
 
 const NotificationsSettingsPage = () => {
+  const { t } = useTranslation();
   const [jobUpdates, setJobUpdates] = useState(false);
   const [jobCommunityUpdates, setJobCommunityUpdates] = useState(false);
   const [platformAnnouncements, setPlatformAnnouncements] = useState(false);
@@ -47,7 +49,12 @@ const NotificationsSettingsPage = () => {
       return response;
     },
     onSuccess: () => {
-      toast.success("Notification  Updated Successfully");
+      toast.success(
+        t(
+          "settings.notifications.notificationUpdated",
+          "Notification Updated Successfully"
+        )
+      );
     },
   });
   const { data } = useQuery({
@@ -75,94 +82,140 @@ const NotificationsSettingsPage = () => {
 
   return (
     <DashboardSettingsLayout>
-      <SettingsHeader>Notification Preferences</SettingsHeader>
+      <SettingsHeader>
+        {t("settings.notifications.title", "Notification Preferences")}
+      </SettingsHeader>
 
-      <CheckBoxSectionWrapper title="Email Notification">
+      <CheckBoxSectionWrapper
+        title={t(
+          "settings.notifications.emailNotification",
+          "Email Notification"
+        )}
+      >
         <CheckBoxInput
           value={jobUpdates}
           onChange={(value) => {
             setJobUpdates(value), UpdateSettings.mutate();
           }}
-          label="Job Updates"
+          label={t("settings.notifications.jobUpdates", "Job Updates")}
         />
         <CheckBoxInput
           value={jobCommunityUpdates}
           onChange={(val) => {
             setJobCommunityUpdates(val), UpdateSettings.mutate();
           }}
-          label="Job and Community Updates"
+          label={t(
+            "settings.notifications.jobCommunityUpdates",
+            "Job and Community Updates"
+          )}
         />
         <CheckBoxInput
           value={platformAnnouncements}
           onChange={(val) => {
             setPlatformAnnouncements(val), UpdateSettings.mutate();
           }}
-          label="Platform Announcements"
+          label={t(
+            "settings.notifications.platformAnnouncements",
+            "Platform Announcements"
+          )}
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="Whatsapp Notification">
+      <CheckBoxSectionWrapper
+        title={t(
+          "settings.notifications.whatsappNotification",
+          "Whatsapp Notification"
+        )}
+      >
         <CheckBoxInput
           value={whatsappJobUpdates}
           onChange={(val) => {
             setWhatsappJobUpdates(val), UpdateSettings.mutate();
           }}
-          label="Job Updates"
+          label={t("settings.notifications.jobUpdates", "Job Updates")}
         />
         <CheckBoxInput
           value={whatsappJobCommunityUpdates}
           onChange={(val) => {
             setWhatsappJobCommunityUpdates(val), UpdateSettings.mutate();
           }}
-          label="Job and Community Updates"
+          label={t(
+            "settings.notifications.jobCommunityUpdates",
+            "Job and Community Updates"
+          )}
         />
         <CheckBoxInput
           value={whatsappPlatformAnnouncements}
           onChange={(val) => {
             setWhatsappPlatformAnnouncements(val), UpdateSettings.mutate();
           }}
-          label="Platform Announcements"
+          label={t(
+            "settings.notifications.platformAnnouncements",
+            "Platform Announcements"
+          )}
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="Telegram Notification">
+      <CheckBoxSectionWrapper
+        title={t(
+          "settings.notifications.telegramNotification",
+          "Telegram Notification"
+        )}
+      >
         <CheckBoxInput
           value={telegramJobUpdates}
           onChange={(val) => {
             setTelegramJobUpdates(val), UpdateSettings.mutate();
           }}
-          label="Job Updates"
+          label={t("settings.notifications.jobUpdates", "Job Updates")}
         />
         <CheckBoxInput
           value={telegramJobCommunityUpdates}
           onChange={(val) => {
             setTelegramJobCommunityUpdates(val), UpdateSettings.mutate();
           }}
-          label="Job and Community Updates"
+          label={t(
+            "settings.notifications.jobCommunityUpdates",
+            "Job and Community Updates"
+          )}
         />
         <CheckBoxInput
           value={telegramPlatformAnnouncements}
           onChange={(val) => {
             setTelegramPlatformAnnouncements(val), UpdateSettings.mutate();
           }}
-          label="Platform Announcements"
+          label={t(
+            "settings.notifications.platformAnnouncements",
+            "Platform Announcements"
+          )}
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="InApp Notification">
+      <CheckBoxSectionWrapper
+        title={t(
+          "settings.notifications.inAppNotification",
+          "InApp Notification"
+        )}
+      >
         <CheckBoxInput
           value={responseToCandidateResponse}
           onChange={(val) => {
             setResponseToCandidateResponse(val), UpdateSettings.mutate();
           }}
-          label="Response to Candidate Response"
+          label={t(
+            "settings.notifications.responseToCandidateResponse",
+            "Response to Candidate Response"
+          )}
         />
         <CheckBoxInput
           value={statusUpdates}
           onChange={(val) => {
             setStatusUpdates(val), UpdateSettings.mutate();
           }}
-          label="Status updates for candidates and jobs"
+          label={t(
+            "settings.notifications.statusUpdates",
+            "Status updates for candidates and jobs"
+          )}
         />
       </CheckBoxSectionWrapper>
     </DashboardSettingsLayout>
