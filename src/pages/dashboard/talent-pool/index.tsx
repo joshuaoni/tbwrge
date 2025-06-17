@@ -402,13 +402,13 @@ export default function TalentPool() {
     <DashboardWrapper>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className={`${outfit.className} flex items-center justify-between`}>
-        <h1 className="text-2xl font-semibold">Talent Pool</h1>
+        <h1 className="text-sm font-semibold">Talent Pool</h1>
         {isJobSeeker ? (
           <>
             {!userData?.user?.joined_talent_pool ? (
               <Link
                 href="/dashboard/talent-pool/join-talent-pool"
-                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
               >
                 <span>Join our Talent Pool</span>
                 <svg
@@ -427,7 +427,7 @@ export default function TalentPool() {
             ) : (
               <Link
                 href="/dashboard/talent-pool/edit-profile"
-                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
               >
                 <span>Edit Talent Pool Profile</span>
                 <svg
@@ -450,7 +450,7 @@ export default function TalentPool() {
           isAISearchActive && (
             <button
               onClick={clearAISearch}
-              className="text-primary hover:text-primary/90 font-medium text-[16px] flex items-center gap-2"
+              className="text-primary hover:text-primary/90 font-medium text-[14px] flex items-center gap-2"
             >
               <span>Clear AI Search</span>
               <svg
@@ -474,7 +474,7 @@ export default function TalentPool() {
           isJobSeeker ? "pointer-events-none opacity-60" : ""
         }`}
       >
-        <div className="py-4 min-h-screen">
+        <div className="py-1 min-h-screen">
           <div className=" mx-auto bg-white rounded-lg ">
             {/* Filters */}
             <div className="flex items-center gap-3">
@@ -500,7 +500,7 @@ export default function TalentPool() {
                   <input
                     type="text"
                     placeholder="Location"
-                    className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
+                    className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                     value={type === "location" ? searchVal : ""}
                     onChange={(e) => {
                       // Clear AI search when using regular filter
@@ -545,7 +545,7 @@ export default function TalentPool() {
                       <span className="text-[#333]">Skills</span>
                     )}
                     <input
-                      className="flex-1 bg-transparent focus:outline-none min-w-[100px]"
+                      className="flex-1 bg-transparent focus:outline-none min-w-[100px] text-sm"
                       placeholder={
                         type === "skills" && searchVal
                           ? ""
@@ -586,9 +586,9 @@ export default function TalentPool() {
                 <div className="relative w-[200px]" ref={dropdownRef}>
                   <button
                     onClick={() => setIsAIDropdownOpen(!isAIDropdownOpen)}
-                    className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5"
+                    className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5 text-sm"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-sm">
                       <span>Search with AI</span>
                       <Image
                         src="/ai-technology.png"
@@ -620,7 +620,7 @@ export default function TalentPool() {
                   {isAIDropdownOpen && (
                     <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                       <button
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
                         onClick={() => {
                           setIsRecordingModalOpen(true);
                           setIsAIDropdownOpen(false);
@@ -629,7 +629,7 @@ export default function TalentPool() {
                         Audio Search
                       </button>
                       <button
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t text-sm"
                         onClick={() => {
                           setIsTextSearchModalOpen(true);
                           setIsAIDropdownOpen(false);
@@ -675,19 +675,19 @@ export default function TalentPool() {
                     <TableHead className="w-[40px] pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       <input type="checkbox" className="rounded-sm" />
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       CANDIDATE NAME
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       LOCATION
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       SKILLS
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       MOST RECENT POSITION
                     </TableHead>
-                    <TableHead className=" text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
+                    <TableHead className="text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
                       ATTACHMENTS
                     </TableHead>
                   </TableRow>

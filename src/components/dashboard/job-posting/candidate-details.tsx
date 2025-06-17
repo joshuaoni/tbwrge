@@ -61,8 +61,6 @@ const CandidateDetails = ({
     }
   };
 
-  console.log({ candidate });
-
   return (
     <div className="bg-white min-h-screen">
       <div>

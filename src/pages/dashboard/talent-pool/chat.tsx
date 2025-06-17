@@ -716,7 +716,7 @@ export default function ChatPage() {
               <input
                 type="text"
                 placeholder="Search for any user"
-                className="w-full pl-10 p-2 border rounded-lg bg-white"
+                className="w-full pl-10 p-2 border rounded-lg bg-white text-sm"
               />
             </div>
           </div>
@@ -725,7 +725,7 @@ export default function ChatPage() {
           <div className="flex-1 overflow-y-auto">
             <ul>
               {isLoadingChats ? (
-                <li className="px-6 py-4 text-center text-gray-500">
+                <li className="px-6 py-4 text-center text-gray-500 text-sm">
                   Loading chats...
                 </li>
               ) : chats && chats.length > 0 ? (
@@ -772,7 +772,7 @@ export default function ChatPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center">
-                              <h3 className="font-medium text-gray-900 truncate">
+                              <h3 className="font-medium text-gray-900 truncate text-sm">
                                 {otherUser.name} {otherUser.last_name || ""}
                               </h3>
                               <span className="text-sm text-gray-500 flex-shrink-0">
@@ -809,7 +809,7 @@ export default function ChatPage() {
                     );
                   })
               ) : (
-                <li className="px-6 py-4 text-center text-gray-500">
+                <li className="px-6 py-4 text-center text-gray-500 text-sm">
                   No chats found
                 </li>
               )}
@@ -833,7 +833,7 @@ export default function ChatPage() {
                       className="w-9 h-9 rounded-full object-cover border border-gray-200"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-sm font-semibold">
                     {otherUser.name} {otherUser.last_name || ""}
                   </h3>
                 </div>
@@ -873,7 +873,7 @@ export default function ChatPage() {
               {/* Messages Area - Scrollable */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {isLoadingMessages ? (
-                  <div className="text-center py-4 text-gray-500">
+                  <div className="text-center py-4 text-gray-500 text-sm">
                     Loading messages...
                   </div>
                 ) : localMessages.length > 0 ? (
@@ -985,7 +985,7 @@ export default function ChatPage() {
                     <div ref={messagesEndRef} />
                   </>
                 ) : (
-                  <div className="text-center py-4 text-gray-500">
+                  <div className="text-center py-4 text-gray-500 text-sm">
                     No messages yet
                   </div>
                 )}
@@ -1058,7 +1058,7 @@ export default function ChatPage() {
                         }
                       }}
                       placeholder="Write your message..."
-                      className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px]"
+                      className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px] text-sm"
                       disabled={isSending}
                     />
                     <div className="w-full outline-none pointer-events-none min-h-[24px]">
@@ -1148,7 +1148,7 @@ export default function ChatPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-700 mb-1">
+                <h3 className="text-sm font-medium text-gray-700 mb-1">
                   No chat selected
                 </h3>
                 <p className="text-sm text-gray-500 max-w-md">

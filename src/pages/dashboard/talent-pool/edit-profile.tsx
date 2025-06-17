@@ -557,22 +557,25 @@ export default function EditTalentPool() {
     <DashboardWrapper>
       <div className="mx-auto bg-white">
         <div className="flex justify-between mb-4 items-center">
-          <div className="flex items-center">
-            <Link href="/dashboard/talent-pool" className="hover:text-primary">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/talent-pool"
+              className="hover:text-primary hover:bg-gray-100 p-1 rounded-full transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 text-gray-600" />
             </Link>
-            <div className="flex items-center gap-6 ml-2">
-              <h2 className="text-2xl font-semibold">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold">
                 {editedData.name || "Profile"}
               </h2>
               <div className="relative">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100">
                   {editedData.profile_photo ? (
                     <Image
                       src={editedData.profile_photo}
                       alt={editedData.name || "Profile photo"}
-                      width={48}
-                      height={48}
+                      width={36}
+                      height={36}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -596,7 +599,7 @@ export default function EditTalentPool() {
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard/talent-pool/stats"
-              className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+              className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
             >
               <span>View Talent Pool Stats</span>
               <svg
@@ -619,12 +622,12 @@ export default function EditTalentPool() {
           {/* Profile Overview */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-10">
-              <h2 className="text-lg font-semibold">Profile Overview</h2>
+              <h2 className="text-sm font-semibold">Profile Overview</h2>
               {editingSection === "overview" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
                     Cancel
                   </button>
@@ -860,12 +863,12 @@ export default function EditTalentPool() {
           {/* Profile Summary */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">Profile Summary</h2>
+              <h2 className="text-sm font-semibold">Profile Summary</h2>
               {editingSection === "summary" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
                     Cancel
                   </button>
@@ -904,7 +907,7 @@ export default function EditTalentPool() {
           {/* AI-Powered Insights */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">AI-Powered Insights</h2>
+              <h2 className="text-sm font-semibold">AI-Powered Insights</h2>
             </div>
             <div className="space-y-6">
               <div>
@@ -949,12 +952,12 @@ export default function EditTalentPool() {
           {/* Supporting Documents */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">Supporting Documents</h2>
+              <h2 className="text-sm font-semibold">Supporting Documents</h2>
               {editingSection === "documents" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
                     Cancel
                   </button>

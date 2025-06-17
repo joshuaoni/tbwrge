@@ -212,7 +212,7 @@ export default function TalentPoolStats() {
             <ArrowLeft className="w-4 h-4 text-gray-600" />
           </Link>
           <div className="text-xl flex items-center font-medium ml-2">
-            <h2 className="text-2xl font-semibold">Talent Pool Stats</h2>
+            <h2 className="text-sm font-semibold">Talent Pool Stats</h2>
           </div>
         </div>
 
@@ -277,7 +277,7 @@ export default function TalentPoolStats() {
             <div className="grid grid-cols-2 gap-4">
               {/* Who is viewing your profile? */}
               <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-                <h3 className="font-medium mb-4">
+                <h3 className="font-medium mb-4 text-sm">
                   Who is viewing your profile?
                 </h3>
                 <div className="space-y-3">
@@ -297,7 +297,7 @@ export default function TalentPoolStats() {
 
               {/* Where are people viewing your profile from? */}
               <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-                <h3 className="font-medium mb-4">
+                <h3 className="font-medium mb-4 text-sm">
                   Where are people viewing your profile from?
                 </h3>
                 <div className="space-y-3">
@@ -322,7 +322,7 @@ export default function TalentPoolStats() {
           <div className="space-y-4">
             {/* AI-Powered Insights */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-sm font-semibold mb-4">
                 AI-Powered Profile Recommendations
               </h2>
               <div className="space-y-2">
@@ -338,7 +338,9 @@ export default function TalentPoolStats() {
 
             {/* AI-Powered Recommended Tools */}
             <div className="bg-white rounded-lg p-5 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h3 className="font-medium mb-4">AI-Powered Recommended Tools</h3>
+              <h3 className="font-medium mb-4 text-sm">
+                AI-Powered Recommended Tools
+              </h3>
               <div className="space-y-4">
                 {profileStatsMutation.data?.ai_tool_suggestions.map(
                   (tool, index) => {
