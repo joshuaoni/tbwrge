@@ -219,7 +219,7 @@ const ProfileSettingsPage = () => {
 
   return (
     <DashboardSettingsLayout>
-      <div className={`${outfit.className} flex items-center gap-6`}>
+      <div className={`${outfit.className} flex items-center gap-6 text-sm`}>
         <div className="relative">
           <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
             {profilePicturePreview ? (

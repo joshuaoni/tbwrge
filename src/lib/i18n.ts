@@ -763,6 +763,13 @@ const resources = {
         contactUs: "Contact Us",
       },
       settings: {
+        header: {
+          profileSettings: "Profile Settings",
+          notificationsSettings: "Notifications Settings",
+          teamsCollaboration: "Teams and collaboration",
+          privacySecurity: "Privacy & Security",
+          integrations: "Integrations",
+        },
         profile: {
           noFileSelected: "no file selected",
           maxImageSize: "max image size is 1mb",
@@ -1647,6 +1654,13 @@ const resources = {
         contactUs: "Contactez-nous",
       },
       settings: {
+        header: {
+          profileSettings: "Paramètres de profil",
+          notificationsSettings: "Paramètres de notifications",
+          teamsCollaboration: "Équipes et collaboration",
+          privacySecurity: "Confidentialité et sécurité",
+          integrations: "Intégrations",
+        },
         profile: {
           noFileSelected: "aucun fichier sélectionné",
           maxImageSize: "taille d'image maximale de 1 Mo",
@@ -2495,6 +2509,13 @@ const resources = {
         contactUs: "Contáctanos",
       },
       settings: {
+        header: {
+          profileSettings: "Configuración del perfil",
+          notificationsSettings: "Configuración de notificaciones",
+          teamsCollaboration: "Equipos y colaboración",
+          privacySecurity: "Privacidad y seguridad",
+          integrations: "Integraciones",
+        },
         profile: {
           noFileSelected: "ningún archivo seleccionado",
           maxImageSize: "tamaño máximo de imagen es 1mb",
@@ -3349,6 +3370,13 @@ const resources = {
         contactUs: "Kontaktieren Sie uns",
       },
       settings: {
+        header: {
+          profileSettings: "Profil-Einstellungen",
+          notificationsSettings: "Benachrichtigungseinstellungen",
+          teamsCollaboration: "Teams & Zusammenarbeit",
+          privacySecurity: "Datenschutz & Sicherheit",
+          integrations: "Integrationen",
+        },
         profile: {
           noFileSelected: "keine Datei ausgewählt",
           maxImageSize: "maximale Bildgröße ist 1MB",
@@ -4175,6 +4203,13 @@ const resources = {
         contactUs: "اتصل بنا",
       },
       settings: {
+        header: {
+          profileSettings: "إعدادات الملف الشخصي",
+          notificationsSettings: "إعدادات الإشعارات",
+          teamsCollaboration: "الفرق والتعاون",
+          privacySecurity: "الخصوصية والأمان",
+          integrations: "التكاملات",
+        },
         profile: {
           noFileSelected: "لم يتم اختيار ملف",
           maxImageSize: "الحد الأقصى لحجم الصورة هو 1 ميجابايت",
@@ -5021,6 +5056,13 @@ const resources = {
         contactUs: "Fale Conosco",
       },
       settings: {
+        header: {
+          profileSettings: "Configurações do perfil",
+          notificationsSettings: "Configurações de notificações",
+          teamsCollaboration: "Equipes e Colaboração",
+          privacySecurity: "Privacidade e Segurança",
+          integrations: "Integrações",
+        },
         profile: {
           noFileSelected: "nenhum arquivo selecionado",
           maxImageSize: "tamanho máximo da imagem é 1mb",
@@ -5859,6 +5901,13 @@ const resources = {
         contactUs: "联系我们",
       },
       settings: {
+        header: {
+          profileSettings: "个人资料设置",
+          notificationsSettings: "通知设置",
+          teamsCollaboration: "团队与协作",
+          privacySecurity: "隐私与安全",
+          integrations: "集成",
+        },
         profile: {
           noFileSelected: "未选择文件",
           maxImageSize: "图片最大大小为1mb",
