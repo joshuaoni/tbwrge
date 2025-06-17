@@ -16,7 +16,9 @@ const DashboardFeedbackSupportLayout = ({
 
   return (
     <DashboardWrapper>
-      <header className={`${outfit.className} flex items-center gap-6 mb-4`}>
+      <header
+        className={`${outfit.className} flex items-center gap-6 mb-4 text-sm`}
+      >
         {[
           { name: "Feedback", route: "/feedback" },
           { name: "Support", route: "/support" },

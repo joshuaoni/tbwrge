@@ -23,8 +23,8 @@ function BillingManageView() {
 
   return (
     <div className={`${outfit.className}`}>
-      <h1 className="text-2xl font-semibold mb-4">Billing</h1>
-      <section className="flex items-center my-6 gap-6">
+      <h1 className="text-sm font-semibold">Billing</h1>
+      <section className="flex items-center my-6 mt-4 gap-6 text-sm">
         <div className="w-full border border-lightgreen p-4 space-y-8 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
             <div>
@@ -74,23 +74,23 @@ function BillingManageView() {
       </section>
 
       <section className="mt-6">
-        <h3 className="font-medium text-xl">Invoices</h3>
+        <h3 className="font-medium text-sm">Invoices</h3>
         <span className="text-textgray">Manage invoice and new receipts</span>
 
         <div className="bg-[#F0F0F0] rounded-xl p-4 mt-4">
           <Table className="w-full">
             <TableHeader>
               <TableRow className="bg-[#D6D6D6] h-[39.292px]">
-                <TableHead className="pl-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-left first:rounded-l-xl last:rounded-r-xl">
+                <TableHead className="pl-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-left first:rounded-l-xl last:rounded-r-xl">
                   DATE
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
                   AMOUNT
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
                   PLAN
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
                   RECEIPT
                 </TableHead>
               </TableRow>

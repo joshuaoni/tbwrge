@@ -42,13 +42,15 @@ const DashboardSupportPage = () => {
 
   return (
     <DashboardFeedbackSupportLayout>
-      <p className={`${outfit.className} text-textgray`}>
+      <p className={`${outfit.className} text-textgray text-sm`}>
         {t("support.description")}
       </p>
 
-      <section className={`${outfit.className} flex gap-10 items-start my-6`}>
+      <section
+        className={`${outfit.className} flex gap-10 items-start my-4 text-sm`}
+      >
         <form
-          className="w-full my-6 space-y-7 max-w-md"
+          className="w-full my-6 mt-0 space-y-4 max-w-md text-sm"
           onSubmit={form.handleSubmit}
         >
           <FeedbackSupportInputGroup label={t("support.name")} />

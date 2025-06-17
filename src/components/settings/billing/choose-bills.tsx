@@ -294,10 +294,11 @@ function BillingChooseView() {
     <div className={`${outfit.className} space-y-6`}>
       <button
         onClick={() => ctx.goTo("manage")}
-        className="flex items-center gap-2 text-xl font-bold"
+        className="hover:bg-gray-100 p-1 rounded-full transition-colors flex items-center gap-1"
       >
-        <ArrowLeft />
-        <span>Manage Subscription</span>
+        <ArrowLeft className="w-4 h-4 text-gray-600" />
+
+        <span className="text-sm font-semibold">Manage Subscription</span>
       </button>
       {/* Mobile View with Slider */}
       <div className="relative block md:hidden w-full mt-8">
@@ -374,7 +375,7 @@ function BillingChooseView() {
       </div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
+      <div className="!mt-0 hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
         {plans.map((plan, index) => (
           <div
             key={index}
