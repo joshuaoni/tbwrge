@@ -84,12 +84,12 @@ const IntegrationSettingsPage = () => {
         />
       </div> */}
 
-      <div className={`${outfit.className} space-y-4 mt-8`}>
-        <h4 className="mb-6 font-medium text-lg">
+      <div className={`${outfit.className} space-y-4 mt-4`}>
+        <h4 className="mb-4 font-medium text-sm">
           {t("settings.integration.calendar", "Calendar")}
         </h4>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 text-sm">
           <div className="flex flex-col items-startcenter gap-4">
             <SocialConnection
               logo="/images/calendly.png"
@@ -131,7 +131,7 @@ const IntegrationSettingsPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center text-sm">
           <button
             onClick={() => UpdateCalendarLinks.mutate()}
             disabled={UpdateCalendarLinks.isPending}

@@ -130,7 +130,7 @@ const TeamsAndCollaborationSettingsPage = () => {
       <div className="h-screen flex flex-col space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-sm font-bold text-gray-800">
             {t("settings.teams.title", "Teams & Collaboration")}
           </h1>
           <AddTeamMember />
@@ -145,7 +145,7 @@ const TeamsAndCollaborationSettingsPage = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`font-medium ${
+              className={`font-medium text-sm ${
                 activeTab === tab ? "text-[#2563EB]" : ""
               }`}
             >
@@ -154,8 +154,8 @@ const TeamsAndCollaborationSettingsPage = () => {
           ))}
         </div>
 
-        <div className="overflow-hidden rounded-xl">
-          <table className="w-full bg-white border-separate border-spacing-0">
+        <div className="overflow-hidden rounded-xl text-sm">
+          <table className="text-sm w-full bg-white border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
                 <th className="py-3 px-6 text-left rounded-tl-xl">
@@ -283,14 +283,14 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToDelete}
         onOpenChange={() => setMemberToDelete(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
             <DialogTitle>
-              {t("settings.teams.deleteMember", "Delete Team Member")}
+              {t("settings.teams.deleteConfirmTitle", "Delete Team Member")}
             </DialogTitle>
             <DialogDescription>
               {t(
-                "settings.teams.deleteConfirmation",
+                "settings.teams.deleteConfirmMessage",
                 "Are you sure you want to delete {{name}}? This action cannot be undone.",
                 { name: memberToDelete?.user?.name }
               )}
@@ -324,14 +324,14 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToSuspend}
         onOpenChange={() => setMemberToSuspend(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
             <DialogTitle>
-              {t("settings.teams.suspendMember", "Suspend Team Member")}
+              {t("settings.teams.suspendConfirmTitle", "Suspend Team Member")}
             </DialogTitle>
             <DialogDescription>
               {t(
-                "settings.teams.suspendConfirmation",
+                "settings.teams.suspendConfirmMessage",
                 "Are you sure you want to suspend {{name}}? This action can be undone later.",
                 { name: memberToSuspend?.user?.name }
               )}
@@ -371,14 +371,17 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToUnsuspend}
         onOpenChange={() => setMemberToUnsuspend(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
             <DialogTitle>
-              {t("settings.teams.unsuspendMember", "Unsuspend Team Member")}
+              {t(
+                "settings.teams.unsuspendConfirmTitle",
+                "Unsuspend Team Member"
+              )}
             </DialogTitle>
             <DialogDescription>
               {t(
-                "settings.teams.unsuspendConfirmation",
+                "settings.teams.unsuspendConfirmMessage",
                 "Are you sure you want to unsuspend {{name}}? They will regain access to the platform.",
                 { name: memberToUnsuspend?.user?.name }
               )}

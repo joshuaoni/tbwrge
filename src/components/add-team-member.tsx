@@ -50,7 +50,7 @@ const AddTeamMember = () => {
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogTrigger>
-        <div className="flex items-center bg-primary  transition-colors duration-300 px-4 py-2 rounded-lg text-white font-medium shadow-lg">
+        <div className="flex items-center bg-primary  transition-colors duration-300 px-4 py-2 rounded-lg text-white font-medium shadow-lg text-sm">
           <PlusCircle className="mr-2" />
           {t("settings.teams.addTeamMember", "Add a Team Member")}
         </div>
@@ -61,9 +61,9 @@ const AddTeamMember = () => {
             {t("settings.teams.addTeamMemberTitle", "Add Team Member")}
           </DialogTitle>
         </DialogHeader>
-        <label>{t("settings.teams.name", "Name")}</label>
+        <label className="text-sm">{t("settings.teams.name", "Name")}</label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
-        <label>{t("settings.teams.email", "Email")}</label>
+        <label className="text-sm">{t("settings.teams.email", "Email")}</label>
         <Input value={email} onChange={(e) => setEmail(e.target.value)} />
         <Button
           onClick={() => {
