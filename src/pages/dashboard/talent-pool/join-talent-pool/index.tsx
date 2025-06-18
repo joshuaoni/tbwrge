@@ -3,6 +3,7 @@ import { useState } from "react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { countries } from "@/constants/countries";
 import { outfit } from "@/constants/app";
 import { joinTalentPool } from "@/actions/join-talent-pool";
@@ -12,6 +13,7 @@ import toast from "react-hot-toast";
 
 export default function JoinTalentPool() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { userData, addUser } = useUserStore();
   const [formData, setFormData] = useState({
     name: "",
@@ -128,7 +130,9 @@ export default function JoinTalentPool() {
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
-            <h1 className="text-xl font-semibold">Join Talent Pool</h1>
+            <h1 className="text-xl font-semibold">
+              {t("talentPool.join.title")}
+            </h1>
           </div>
           <div className="flex items-center gap-4">
             <label className="cursor-pointer">
@@ -140,7 +144,7 @@ export default function JoinTalentPool() {
               />
               <div className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800">
                 <span className="border border-gray-300 rounded-md px-3 py-1.5">
-                  Upload Profile Picture
+                  {t("talentPool.join.uploadProfilePicture")}
                 </span>
                 {profilePictureUrl && (
                   <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -163,14 +167,15 @@ export default function JoinTalentPool() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name <span className="text-red-500">*</span>
+                {t("talentPool.join.fullName")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="Enter your name"
+                placeholder={t("talentPool.join.enterName")}
                 required
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
@@ -178,14 +183,15 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
+                {t("talentPool.join.email")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Enter your email"
+                placeholder={t("talentPool.join.enterEmail")}
                 required
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
@@ -193,21 +199,21 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
+                {t("talentPool.join.phone")}
               </label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
-                placeholder="Enter your phone number"
+                placeholder={t("talentPool.join.enterPhone")}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date of Birth
+                {t("talentPool.join.dateOfBirth")}
               </label>
               <input
                 type="date"
@@ -220,49 +226,49 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                LinkedIn Profile Link
+                {t("talentPool.join.linkedin")}
               </label>
               <input
                 type="url"
                 name="linkedin"
                 value={formData.linkedin}
                 onChange={handleInputChange}
-                placeholder="Enter link"
+                placeholder={t("talentPool.join.enterLink")}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Company
+                {t("talentPool.join.currentCompany")}
               </label>
               <input
                 type="text"
                 name="current_company"
                 value={formData.current_company}
                 onChange={handleInputChange}
-                placeholder="Enter N/A if none"
+                placeholder={t("talentPool.join.enterNA")}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Position
+                {t("talentPool.join.currentPosition")}
               </label>
               <input
                 type="text"
                 name="current_position"
                 value={formData.current_position}
                 onChange={handleInputChange}
-                placeholder="Manager, etc..."
+                placeholder={t("talentPool.join.managerEtc")}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nationality
+                {t("talentPool.join.nationality")}
               </label>
               <select
                 name="nationality"
@@ -270,7 +276,9 @@ export default function JoinTalentPool() {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
               >
-                <option value="">Select Nationality</option>
+                <option value="">
+                  {t("talentPool.join.selectNationality")}
+                </option>
                 {countries.map((country) => (
                   <option key={country.code} value={country.nationality}>
                     {country.nationality}
@@ -284,7 +292,7 @@ export default function JoinTalentPool() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Country of Residence
+                {t("talentPool.join.selectCountry")}
               </label>
               <select
                 name="country_of_residence"
@@ -292,7 +300,7 @@ export default function JoinTalentPool() {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
               >
-                <option value="">Select Country</option>
+                <option value="">{t("talentPool.join.selectCountry")}</option>
                 {countries.map((country) => (
                   <option key={country.code} value={country.name}>
                     {country.name}
@@ -303,14 +311,14 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Relevant Experience (Max 200 words){" "}
+                {t("talentPool.join.relevantExperience")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <textarea
                 name="experience_summary"
                 value={formData.experience_summary}
                 onChange={handleInputChange}
-                placeholder="Describe your past roles"
+                placeholder={t("talentPool.join.describePastRoles")}
                 required
                 rows={4}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
@@ -319,14 +327,14 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Skills Summary (Max 100 words){" "}
+                {t("talentPool.join.skillsSummary")}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <textarea
                 name="skills_summary"
                 value={formData.skills_summary}
                 onChange={handleInputChange}
-                placeholder="Highlight your key Skills"
+                placeholder={t("talentPool.join.highlightSkills")}
                 required
                 rows={4}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
@@ -336,27 +344,27 @@ export default function JoinTalentPool() {
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Salary Range Min
+                  {t("talentPool.join.salaryRangeMin")}
                 </label>
                 <input
                   type="number"
                   name="salary_range_min"
                   value={formData.salary_range_min || ""}
                   onChange={handleInputChange}
-                  placeholder="Enter minimum salary"
+                  placeholder={t("talentPool.join.enterMinSalary")}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
               </div>
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Salary Range Max
+                  {t("talentPool.join.salaryRangeMax")}
                 </label>
                 <input
                   type="number"
                   name="salary_range_max"
                   value={formData.salary_range_max || ""}
                   onChange={handleInputChange}
-                  placeholder="Enter maximum salary"
+                  placeholder={t("talentPool.join.enterMaxSalary")}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                 />
               </div>
@@ -364,7 +372,8 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload CV <span className="text-red-500">*</span>
+                {t("talentPool.join.uploadCV")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="file"
@@ -377,7 +386,7 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Cover Letter (Optional)
+                {t("talentPool.join.uploadCoverLetter")}
               </label>
               <input
                 type="file"
@@ -389,7 +398,7 @@ export default function JoinTalentPool() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload Introduction Voicenote (Max 1min)
+                {t("talentPool.join.uploadVoicenote")}
               </label>
               <input
                 type="file"
@@ -409,7 +418,9 @@ export default function JoinTalentPool() {
                     : "hover:bg-[#000000]/90"
                 }`}
               >
-                {joinMutation.isPending ? "Joining..." : "Join"}
+                {joinMutation.isPending
+                  ? t("talentPool.join.joining")
+                  : t("talentPool.join.join")}
               </button>
             </div>
           </div>

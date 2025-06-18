@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import { FaFilePdf } from "react-icons/fa";
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ import Image from "next/image";
 export default function CandidateProfile() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const { userData } = useUserStore();
 
@@ -57,7 +59,7 @@ export default function CandidateProfile() {
             />
             <div className="flex items-center gap-2">
               <h2 className="text-2xl font-semibold">
-                {data?.name ?? "Loading.."}
+                {data?.name ?? t("talentPool.messages.loading")}
               </h2>
               <div className="relative">
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
@@ -80,14 +82,16 @@ export default function CandidateProfile() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[#2D62A8]  cursor-pointer text-sm">
-              Generate Candidate Report
+              {t("talentPool.details.generateReport")}
             </span>
             <button
               className="bg-[#009379] px-7 py-3 text-sm text-white rounded-3xl disabled:opacity-70"
               onClick={handleStartChat}
               disabled={isLoading}
             >
-              {isLoading ? "Starting Chat..." : "Start Chat"}
+              {isLoading
+                ? t("talentPool.details.startingChat")
+                : t("talentPool.details.startChat")}
             </button>
           </div>
         </div>
@@ -96,39 +100,49 @@ export default function CandidateProfile() {
           {/* Profile Overview */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-10">
-              <h2 className="text-lg font-semibold">Profile Overview</h2>
+              <h2 className="text-lg font-semibold">
+                {t("talentPool.details.profileOverview")}
+              </h2>
             </div>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Email</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.email")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.email ?? "Not provided"}
+                    {data?.email ?? t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Phone</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.phone")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.phone ?? "Not provided"}
+                    {data?.phone ?? t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">DOB</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.dob")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.date_of_birth ?? "Not provided"}
+                    {data?.date_of_birth ?? t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">LinkedIn</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.linkedin")}
+                  </p>
                   <p className="text-sm text-gray-500 cursor-pointer hover:underline">
                     {data?.linkedin ? (
                       <a
@@ -136,10 +150,10 @@ export default function CandidateProfile() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        View Profile
+                        {t("talentPool.details.viewProfile")}
                       </a>
                     ) : (
-                      "Not provided"
+                      t("talentPool.details.notProvided")
                     )}
                   </p>
                 </div>
@@ -148,45 +162,58 @@ export default function CandidateProfile() {
               <div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-black w-[120px]">
-                    Current Position
+                    {t("talentPool.details.currentPosition")}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {data?.current_position ?? "Not provided"}
+                    {data?.current_position ??
+                      t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Company</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.company")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.current_company ?? "Not provided"}
+                    {data?.current_company ??
+                      t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Nationality</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.nationality")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.nationality ?? "Not provided"}
+                    {data?.nationality ?? t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Location</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.search.location")}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    {data?.country_of_residence ?? "Not provided"}
+                    {data?.country_of_residence ??
+                      t("talentPool.details.notProvided")}
                   </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Salary Range</p>
-                  <p className="text-sm text-gray-500">{"Not provided"}</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.details.salaryRange")}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {t("talentPool.details.notProvided")}
+                  </p>
                 </div>
                 <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
               </div>
@@ -195,50 +222,61 @@ export default function CandidateProfile() {
 
           {/* Profile Summary */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">Profile Summary</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {t("talentPool.details.profileSummary")}
+            </h2>
             <p className="text-sm text-gray-600 leading-relaxed">
               {data?.professional_summary ??
-                "summary not provided by application"}
+                t("talentPool.details.summaryNotProvided")}
             </p>
           </div>
 
           {/* AI-Powered Insights */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">AI-Powered Insights</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {t("talentPool.details.aiInsights")}
+            </h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.details.keySkills")}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {data?.skills_summary ?? "No skills information available"}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium mb-2">Strengths</h3>
-                <p className="text-sm text-gray-600">
-                  {data?.strength ?? "No strengths information available"}
+                  {data?.skills_summary ?? t("talentPool.details.noSkillsInfo")}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-2">
-                  Areas for Development
+                  {t("talentPool.details.strengths")}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {data?.strength ?? t("talentPool.details.noStrengthsInfo")}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.details.areasForDevelopment")}
                 </h3>
                 <p className="text-sm text-gray-600">
                   {data?.areas_for_development ??
-                    "No development areas identified"}
+                    t("talentPool.details.noDevelopmentAreas")}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-2">
-                  Culture Fit Indicators
+                  {t("talentPool.details.cultureFit")}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {data?.culture_fit ?? "No culture fit information available"}
+                  {data?.culture_fit ??
+                    t("talentPool.details.noCultureFitInfo")}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-2">Languages</h3>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.details.languages")}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {data?.languages ?? "No language information available"}
+                  {data?.languages ?? t("talentPool.details.noLanguagesInfo")}
                 </p>
               </div>
             </div>
@@ -248,7 +286,9 @@ export default function CandidateProfile() {
         <div className="grid md:grid-cols-3 gap-4 mt-8">
           {/* Supporting Documents */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">Supporting Documents</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {t("talentPool.details.supportingDocuments")}
+            </h2>
             <div className="space-y-3">
               {data?.cv && (
                 <a
@@ -296,8 +336,13 @@ export default function CandidateProfile() {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{data?.name}'s CV</p>
-                    <p className="text-xs text-gray-500">Click to view</p>
+                    <p className="text-sm font-medium">
+                      {data?.name}
+                      {t("talentPool.details.cvSuffix")}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {t("talentPool.details.clickToView")}
+                    </p>
                   </div>
                 </a>
               )}
@@ -349,9 +394,12 @@ export default function CandidateProfile() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium">
-                      {data?.name}'s Cover Letter
+                      {data?.name}
+                      {t("talentPool.details.coverLetterSuffix")}
                     </p>
-                    <p className="text-xs text-gray-500">Click to view</p>
+                    <p className="text-xs text-gray-500">
+                      {t("talentPool.details.clickToView")}
+                    </p>
                   </div>
                 </a>
               )}
