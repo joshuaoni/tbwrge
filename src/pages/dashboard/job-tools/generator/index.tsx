@@ -27,8 +27,10 @@ import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-gener
 import { outfit } from "@/constants/app";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const Generator = () => {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -172,10 +174,10 @@ const Generator = () => {
   const downloadJobPostAsPDF = async () => {
     try {
       setIsGeneratingPDF(true);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(t("jobTools.generator.generatingPDF"));
 
       if (!jobPostRef.current) {
-        toast.error("Cannot generate PDF - content not available", {
+        toast.error(t("jobTools.generator.pdfNotAvailable"), {
           id: toastId,
         });
         setIsGeneratingPDF(false);
@@ -267,11 +269,11 @@ const Generator = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("jobTools.generator.pdfGenerated"), { id: toastId });
       setIsGeneratingPDF(false);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("jobTools.generator.pdfError"));
       setIsGeneratingPDF(false);
     }
   };
@@ -468,17 +470,17 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <h2 className={`${outfit.className} font-bold text-[24px]`}>
-        Job Post Generator
+      <h2 className={`${outfit.className} font-bold text-[14px]`}>
+        {t("jobTools.generator.title")}
       </h2>
-      <section className={`${outfit.className} flex space-x-4 `}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
               <span className="font-bold">
-                Please Describe the Job Below{" "}
+                {t("jobTools.generator.describeJob")}{" "}
                 <span className="font-normal text-xs">
-                  (You can add up to 20 prompts)
+                  {t("jobTools.generator.addPrompts")}
                 </span>
               </span>
               <Plus
@@ -495,7 +497,7 @@ const Generator = () => {
               <textarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("jobTools.generator.detailedJobDescription")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -525,7 +527,9 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">Record Voicenote</span>
+              <span className="font-medium text-sm">
+                {t("jobTools.generator.recordVoicenote")}
+              </span>
             </div>
 
             {!audioBlob ? (
@@ -533,7 +537,7 @@ const Generator = () => {
                 <div className="bg-gray-50 rounded-lg p-2 mt-2">
                   <div className="flex items-center w-full">
                     <span className="text-xs text-gray-600 mr-1 whitespace-nowrap shrink-0">
-                      Recording...
+                      {t("jobTools.generator.recording")}
                     </span>
                     <div className="flex-1 mx-1 overflow-hidden">
                       <div className="flex items-center gap-0 justify-between">
@@ -576,7 +580,9 @@ const Generator = () => {
                   className="h-[38px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-3 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
                   onClick={handleStartRecording}
                 >
-                  <span className="text-sm text-gray-500 flex-1">Record</span>
+                  <span className="text-sm text-gray-500 flex-1">
+                    {t("jobTools.generator.record")}
+                  </span>
                   <Mic className="w-4 h-4 text-[#009379]" />
                 </div>
               )
@@ -651,14 +657,16 @@ const Generator = () => {
           {/* Add Company Information Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">Company Information</span>
+              <span className="font-medium text-sm">
+                {t("jobTools.generator.companyInformation")}
+              </span>
             </div>
 
             {!showNewCompanyForm ? (
               <>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-gray-500">
-                    Select a company
+                    {t("jobTools.generator.selectCompany")}
                   </span>
                   <button
                     type="button"
@@ -673,7 +681,7 @@ const Generator = () => {
                     className="text-sm text-primary flex items-center hover:underline"
                   >
                     <PlusCircle className="w-4 h-4 mr-1" />
-                    Add New Company
+                    {t("jobTools.generator.addNewCompany")}
                   </button>
                 </div>
 
@@ -706,7 +714,7 @@ const Generator = () => {
                       </div>
                     ) : (
                       <span className="text-sm text-gray-500">
-                        Select a company
+                        {t("jobTools.generator.selectCompany")}
                       </span>
                     )}
                     <svg
@@ -735,7 +743,7 @@ const Generator = () => {
                     >
                       {isLoadingCompanies ? (
                         <div className="p-2 text-sm text-center text-gray-500">
-                          Loading companies...
+                          {t("jobTools.generator.loadingCompanies")}
                         </div>
                       ) : companies.length > 0 ? (
                         <div
@@ -771,7 +779,7 @@ const Generator = () => {
                         </div>
                       ) : (
                         <div className="p-2 text-sm text-center text-gray-500">
-                          No companies found
+                          {t("jobTools.generator.noCompaniesFound")}
                         </div>
                       )}
                     </div>
@@ -782,45 +790,47 @@ const Generator = () => {
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    Company Name
+                    {t("jobTools.generator.companyName")}
                   </label>
                   <input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Enter company name"
+                    placeholder={t("jobTools.generator.enterCompanyName")}
                     className="h-[38px] w-full bg-[#F8F9FF] border border-gray-200 rounded-lg px-3 focus:outline-none focus:ring-1 focus:ring-[#009379]"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    Company Website
+                    {t("jobTools.generator.companyWebsite")}
                   </label>
                   <input
                     type="text"
                     value={companyWebsite}
                     onChange={(e) => setCompanyWebsite(e.target.value)}
-                    placeholder="Enter company website"
+                    placeholder={t("jobTools.generator.enterCompanyWebsite")}
                     className="h-[38px] w-full bg-[#F8F9FF] border border-gray-200 rounded-lg px-3 focus:outline-none focus:ring-1 focus:ring-[#009379]"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    Company Description
+                    {t("jobTools.generator.companyDescription")}
                   </label>
                   <textarea
                     value={companyDescription}
                     onChange={(e) => setCompanyDescription(e.target.value)}
-                    placeholder="Enter company description"
+                    placeholder={t(
+                      "jobTools.generator.enterCompanyDescription"
+                    )}
                     className="w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-[#009379] resize-none h-24"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    Company Logo (optional)
+                    {t("jobTools.generator.companyLogo")}
                   </label>
                   <div className="flex items-center">
                     <input
@@ -834,10 +844,12 @@ const Generator = () => {
                       htmlFor="company-logo-upload"
                       className="cursor-pointer h-[38px] px-3 flex items-center bg-[#F8F9FF] border border-gray-200 rounded-lg hover:bg-[#F0F2FF]"
                     >
-                      Choose File
+                      {t("jobTools.generator.chooseFile")}
                     </label>
                     <span className="ml-3 text-sm text-gray-500">
-                      {companyLogo ? companyLogo.name : "No file chosen"}
+                      {companyLogo
+                        ? companyLogo.name
+                        : t("jobTools.generator.noFileChosen")}
                     </span>
                   </div>
                 </div>
@@ -850,7 +862,7 @@ const Generator = () => {
                   }}
                   className="text-sm text-primary hover:underline mt-2"
                 >
-                  ← Back to selecting a company
+                  {t("jobTools.generator.backToSelecting")}
                 </button>
               </div>
             )}
@@ -859,7 +871,7 @@ const Generator = () => {
           <div className="flex items-center h-fit mt-4 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("jobTools.generator.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -879,7 +891,7 @@ const Generator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate Job Post"
+                  t("jobTools.generator.generateJobPost")
                 )}
               </Button>
             </div>
@@ -890,13 +902,15 @@ const Generator = () => {
         <div className="w-[50%] mb-12">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">Job Post Generator</span>
+              <span className="font-bold">
+                {t("jobTools.generator.jobPostGenerator")}
+              </span>
               {mutationIsSuccess && (
                 <div className="relative download-button-container group">
                   <button
                     onClick={downloadJobPostAsPDF}
                     className="bg-accent hover:bg-accent/90 text-white p-2 rounded-full shadow-md transition-all flex items-center justify-center"
-                    aria-label="Download job post as PDF"
+                    aria-label={t("jobTools.generator.downloadPDF")}
                     disabled={isGeneratingPDF}
                   >
                     {isGeneratingPDF ? (
@@ -906,7 +920,7 @@ const Generator = () => {
                     )}
                   </button>
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    Download job post as PDF
+                    {t("jobTools.generator.downloadPDF")}
                     <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                   </div>
                 </div>

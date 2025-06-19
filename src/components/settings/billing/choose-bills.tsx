@@ -6,6 +6,7 @@ import { BillingContext } from "@/providers/billing.context";
 import classNames from "classnames";
 import { ArrowLeft, Check, ChevronRight, ChevronLeft, X } from "lucide-react";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const plans = [
   {
@@ -54,7 +55,7 @@ const plans = [
   },
 ];
 
-const pricingPlans = [
+let pricingPlans = [
   {
     name: "Basic",
     price: "Free",
@@ -269,35 +270,230 @@ const renderFeatureLabel = (label: string, subLabel?: string) => {
 
 function BillingChooseView() {
   const ctx = useContext(BillingContext);
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentFeatureSlide, setCurrentFeatureSlide] = useState(0);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % plans.length);
+    setCurrentSlide((prev) => (prev + 1) % translatedPlans.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + plans.length) % plans.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + translatedPlans.length) % translatedPlans.length
+    );
   };
 
   const nextFeatureSlide = () => {
-    setCurrentFeatureSlide((prev) => (prev + 1) % pricingPlans.length);
+    setCurrentFeatureSlide(
+      (prev) => (prev + 1) % translatedPricingPlans.length
+    );
   };
 
   const prevFeatureSlide = () => {
     setCurrentFeatureSlide(
-      (prev) => (prev - 1 + pricingPlans.length) % pricingPlans.length
+      (prev) =>
+        (prev - 1 + translatedPricingPlans.length) %
+        translatedPricingPlans.length
     );
   };
+
+  // Get translated plans data
+  const getTranslatedPlans = () => [
+    {
+      plan: t("settings.billing.plans.free.name"),
+      price: "0",
+      title: t("settings.billing.plans.free.title"),
+      description: t("settings.billing.plans.free.description"),
+      features: t("settings.billing.plans.free.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+    {
+      plan: t("settings.billing.plans.basic.name"),
+      price: "9.99",
+      title: t("settings.billing.plans.basic.title"),
+      description: t("settings.billing.plans.basic.description"),
+      features: t("settings.billing.plans.basic.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+    {
+      plan: t("settings.billing.plans.pro.name"),
+      price: "99",
+      title: t("settings.billing.plans.pro.title"),
+      description: t("settings.billing.plans.pro.description"),
+      features: t("settings.billing.plans.pro.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+    {
+      plan: t("settings.billing.plans.enterprise.name"),
+      price: "500+",
+      title: t("settings.billing.plans.enterprise.title"),
+      description: t("settings.billing.plans.enterprise.description"),
+      features: t("settings.billing.plans.enterprise.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+  ];
+
+  const translatedPlans = getTranslatedPlans();
+
+  // Get translated pricing plans data
+  const getTranslatedPricingPlans = () => [
+    {
+      name: t("settings.billing.planDetails.basicFree.name"),
+      price: t("settings.billing.planDetails.basicFree.price"),
+      access: t("settings.billing.planDetails.basicFree.access"),
+      userType: t("settings.billing.planDetails.basicFree.userType"),
+      jobPosting: false,
+      applicantsLimit: false,
+      applicationTracking: false,
+      jobBoardAccess: t(
+        "settings.billing.planDetails.basicFree.jobBoardAccess"
+      ),
+      candidateReportGenerator: false,
+      jobTools: t("settings.billing.planDetails.basicFree.jobTools", {
+        returnObjects: true,
+      }),
+      cvTools: t("settings.billing.planDetails.basicFree.cvTools", {
+        returnObjects: true,
+      }),
+      coverLetterTools: t(
+        "settings.billing.planDetails.basicFree.coverLetterTools",
+        { returnObjects: true }
+      ),
+      communityAccess: t(
+        "settings.billing.planDetails.basicFree.communityAccess"
+      ),
+      submitArticle: false,
+      feedbackSupport: false,
+    },
+    {
+      name: t("settings.billing.planDetails.basicJobSeekers.name"),
+      price: t("settings.billing.planDetails.basicJobSeekers.price"),
+      access: t("settings.billing.planDetails.basicJobSeekers.access"),
+      userType: t("settings.billing.planDetails.basicJobSeekers.userType"),
+      jobPosting: false,
+      applicantsLimit: false,
+      applicationTracking: false,
+      jobBoardAccess: t(
+        "settings.billing.planDetails.basicJobSeekers.jobBoardAccess"
+      ),
+      candidateReportGenerator: false,
+      jobTools: t("settings.billing.planDetails.basicJobSeekers.jobTools", {
+        returnObjects: true,
+      }),
+      cvTools: t("settings.billing.planDetails.basicJobSeekers.cvTools", {
+        returnObjects: true,
+      }),
+      coverLetterTools: t(
+        "settings.billing.planDetails.basicJobSeekers.coverLetterTools",
+        { returnObjects: true }
+      ),
+      communityAccess: t(
+        "settings.billing.planDetails.basicJobSeekers.communityAccess"
+      ),
+      submitArticle: false,
+      feedbackSupport: t(
+        "settings.billing.planDetails.basicJobSeekers.feedbackSupport"
+      ),
+    },
+    {
+      name: t("settings.billing.planDetails.premiumRecruiters.name"),
+      price: t("settings.billing.planDetails.premiumRecruiters.price"),
+      access: t("settings.billing.planDetails.premiumRecruiters.access"),
+      userType: t("settings.billing.planDetails.premiumRecruiters.userType"),
+      jobPosting: t(
+        "settings.billing.planDetails.premiumRecruiters.jobPosting"
+      ),
+      applicantsLimit: t(
+        "settings.billing.planDetails.premiumRecruiters.applicantsLimit"
+      ),
+      applicationTracking: t(
+        "settings.billing.planDetails.premiumRecruiters.applicationTracking"
+      ),
+      jobBoardAccess: t(
+        "settings.billing.planDetails.premiumRecruiters.jobBoardAccess"
+      ),
+      candidateReportGenerator: t(
+        "settings.billing.planDetails.premiumRecruiters.candidateReportGenerator"
+      ),
+      jobTools: t("settings.billing.planDetails.premiumRecruiters.jobTools", {
+        returnObjects: true,
+      }),
+      cvTools: t("settings.billing.planDetails.premiumRecruiters.cvTools", {
+        returnObjects: true,
+      }),
+      coverLetterTools: t(
+        "settings.billing.planDetails.premiumRecruiters.coverLetterTools",
+        { returnObjects: true }
+      ),
+      communityAccess: t(
+        "settings.billing.planDetails.premiumRecruiters.communityAccess"
+      ),
+      submitArticle: t(
+        "settings.billing.planDetails.premiumRecruiters.submitArticle"
+      ),
+      feedbackSupport: t(
+        "settings.billing.planDetails.premiumRecruiters.feedbackSupport"
+      ),
+    },
+    {
+      name: t("settings.billing.planDetails.enterprise.name"),
+      price: t("settings.billing.planDetails.enterprise.price"),
+      access: t("settings.billing.planDetails.enterprise.access"),
+      userType: t("settings.billing.planDetails.enterprise.userType"),
+      jobPosting: t("settings.billing.planDetails.enterprise.jobPosting"),
+      applicantsLimit: t(
+        "settings.billing.planDetails.enterprise.applicantsLimit"
+      ),
+      applicationTracking: t(
+        "settings.billing.planDetails.enterprise.applicationTracking"
+      ),
+      jobBoardAccess: t(
+        "settings.billing.planDetails.enterprise.jobBoardAccess"
+      ),
+      candidateReportGenerator: t(
+        "settings.billing.planDetails.enterprise.candidateReportGenerator"
+      ),
+      jobTools: t("settings.billing.planDetails.enterprise.jobTools", {
+        returnObjects: true,
+      }),
+      cvTools: t("settings.billing.planDetails.enterprise.cvTools", {
+        returnObjects: true,
+      }),
+      coverLetterTools: t(
+        "settings.billing.planDetails.enterprise.coverLetterTools",
+        { returnObjects: true }
+      ),
+      communityAccess: t(
+        "settings.billing.planDetails.enterprise.communityAccess"
+      ),
+      submitArticle: t("settings.billing.planDetails.enterprise.submitArticle"),
+      feedbackSupport: t(
+        "settings.billing.planDetails.enterprise.feedbackSupport"
+      ),
+    },
+  ];
+
+  const translatedPricingPlans = getTranslatedPricingPlans();
+
+  // Override static pricingPlans with translated version
+  pricingPlans = translatedPricingPlans as any;
 
   return (
     <div className={`${outfit.className} space-y-6`}>
       <button
         onClick={() => ctx.goTo("manage")}
-        className="flex items-center gap-2 text-xl font-bold"
+        className="hover:bg-gray-100 p-1 rounded-full transition-colors flex items-center gap-1"
       >
-        <ArrowLeft />
-        <span>Manage Subscription</span>
+        <ArrowLeft className="w-4 h-4 text-gray-600" />
+
+        <span className="text-sm font-semibold">
+          {t("settings.billing.manageSubscription")}
+        </span>
       </button>
       {/* Mobile View with Slider */}
       <div className="relative block md:hidden w-full mt-8">
@@ -306,7 +502,7 @@ function BillingChooseView() {
             className="flex transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
-            {plans.map((plan, index) => (
+            {translatedPlans.map((plan, index) => (
               <div key={index} className="w-full flex-shrink-0 px-4">
                 <div
                   className={`flex flex-col ${
@@ -321,8 +517,11 @@ function BillingChooseView() {
                     <div>
                       <span className="text-[40px] font-extrabold">
                         €{plan.price}
-                        {plan.plan === "Enterprise" ? null : (
-                          <span className="text-sm font-semibold">/month</span>
+                        {plan.plan ===
+                        t("settings.billing.plans.enterprise.name") ? null : (
+                          <span className="text-sm font-semibold">
+                            {t("settings.billing.planDetails.month")}
+                          </span>
                         )}
                       </span>
                     </div>
@@ -351,7 +550,7 @@ function BillingChooseView() {
 
                   <div className="mt-2">
                     <Button className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold">
-                      Get Started
+                      {t("settings.billing.getStarted")}
                     </Button>
                   </div>
                 </div>
@@ -374,12 +573,12 @@ function BillingChooseView() {
       </div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
-        {plans.map((plan, index) => (
+      <div className="!mt-0 hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-4 md:px-0">
+        {translatedPlans.map((plan, index) => (
           <div
             key={index}
             className={`flex flex-col ${
-              plan.plan === "Enterprise"
+              plan.plan === t("settings.billing.plans.enterprise.name")
                 ? "bg-primary text-white"
                 : "bg-white text-black"
             } h-[420px] w-full border border-[#F8F9FF] rounded-[20px] shadow-[34.85px_29.63px_48.34px_0px_#3366FF0D] p-[40px_30px]`}
@@ -390,8 +589,11 @@ function BillingChooseView() {
               <div>
                 <span className="text-[40px] font-extrabold">
                   €{plan.price}
-                  {plan.plan === "Enterprise" ? null : (
-                    <span className="text-sm font-semibold">/month</span>
+                  {plan.plan ===
+                  t("settings.billing.plans.enterprise.name") ? null : (
+                    <span className="text-sm font-semibold">
+                      {t("settings.billing.planDetails.month")}
+                    </span>
                   )}
                 </span>
               </div>
@@ -420,7 +622,7 @@ function BillingChooseView() {
 
             <div className="mt-2">
               <Button className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold">
-                Get Started
+                {t("settings.billing.getStarted")}
               </Button>
             </div>
           </div>
@@ -438,11 +640,12 @@ function BillingChooseView() {
                 transform: `translateX(-${currentFeatureSlide * 100}%)`,
               }}
             >
-              {pricingPlans.map((plan, index) => (
+              {translatedPricingPlans.map((plan, index) => (
                 <div key={index} className="w-full h-fit flex-shrink-0 px-4">
                   <div
                     className={`${outfit.className} flex flex-col ${
-                      plan.name === "Enterprise"
+                      plan.name ===
+                      t("settings.billing.planDetails.enterprise.name")
                         ? "bg-primary text-white"
                         : "bg-white"
                     } rounded-[20px] shadow-lg p-4`}
@@ -459,7 +662,7 @@ function BillingChooseView() {
                               {plan.price.split("€")[1].split("/")[0]}
                             </span>
                             <span className="text-[16px] text-gray-500 ml-1">
-                              /month
+                              {t("settings.billing.planDetails.month")}
                             </span>
                           </>
                         ) : (
@@ -470,24 +673,32 @@ function BillingChooseView() {
 
                     <div className="">
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Dashboard</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.dashboard")}
+                        </span>
                         <span className="ml-2">{plan.access}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">User Type</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.userType")}
+                        </span>
                         <span className="ml-2">{plan.userType}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Job Posting</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.jobPosting")}
+                        </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.jobPosting)}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Applicants Limits</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.applicantsLimits")}
+                        </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.applicantsLimit)}
                         </span>
@@ -495,7 +706,7 @@ function BillingChooseView() {
 
                       <div className="flex items-center justify-between text-[13px] py-2">
                         <span className="font-bold">
-                          Application Tracking System
+                          {t("settings.billing.features.applicationTracking")}
                         </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.applicationTracking)}
@@ -503,13 +714,17 @@ function BillingChooseView() {
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Job board Access</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.jobBoardAccess")}
+                        </span>
                         <span className="ml-2">{plan.jobBoardAccess}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
                         <span className="font-bold">
-                          Candidate Report Generator
+                          {t(
+                            "settings.billing.features.candidateReportGenerator"
+                          )}
                         </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.candidateReportGenerator)}
@@ -520,50 +735,74 @@ function BillingChooseView() {
                       <div className="py-2">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-[13px]">
-                            Job Tools
+                            {t("settings.billing.features.jobTools")}
                           </span>
                           <span className="text-xs bg-black text-white px-2 py-1 rounded-[4px]">
-                            Most Popular
+                            {t("settings.billing.features.mostPopular")}
                           </span>
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Generator</span>
                             <span>
-                              {renderCheckOrValue(plan.jobTools.generator)}
+                              {t("settings.billing.features.generator")}
                             </span>
-                          </div>
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span>Translator</span>
-                            <span>
-                              {renderCheckOrValue(plan.jobTools.translator)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span>Vetting</span>
-                            <span>
-                              {renderCheckOrValue(plan.jobTools.vetting)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span>Interview Prep</span>
-                            <span>
-                              {renderCheckOrValue(plan.jobTools.interviewPrep)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-[13px]">
-                            <span>AI Screening Assistant</span>
                             <span>
                               {renderCheckOrValue(
-                                plan.jobTools.aiScreeningAssistant
+                                (plan.jobTools as any).generator
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Q Generator</span>
+                            <span>
+                              {t("settings.billing.features.translator")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.jobTools.screeningQGenerator
+                                (plan.jobTools as any).translator
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[13px]">
+                            <span>
+                              {t("settings.billing.features.vetting")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.jobTools as any).vetting
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[13px]">
+                            <span>
+                              {t("settings.billing.features.interviewPrep")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.jobTools as any).interviewPrep
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[13px]">
+                            <span>
+                              {t(
+                                "settings.billing.features.aiScreeningAssistant"
+                              )}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.jobTools as any).aiScreeningAssistant
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-[13px]">
+                            <span>
+                              {t(
+                                "settings.billing.features.screeningQGenerator"
+                              )}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.jobTools as any).screeningQGenerator
                               )}
                             </span>
                           </div>
@@ -574,53 +813,81 @@ function BillingChooseView() {
                       <div className="py-2">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-[13px]">
-                            CV Tools
+                            {t("settings.billing.features.cvTools")}
                           </span>
                           <span className="text-xs bg-black text-white px-2 py-1 rounded-[4px]">
-                            Most Popular
+                            {t("settings.billing.features.mostPopular")}
                           </span>
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Summarizer</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.summarizer)}
+                              {t("settings.billing.features.summarizer")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).summarizer
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Vetting</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.vetting)}
+                              {t("settings.billing.features.vetting")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).vetting
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Matching & Ranking</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.matchingRanking)}
+                              {t("settings.billing.features.matchingRanking")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).matchingRanking
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Head to Head</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.headToHead)}
+                              {t("settings.billing.features.headToHead")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).headToHead
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Generator</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.generator)}
+                              {t("settings.billing.features.generator")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).generator
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Translator</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.translator)}
+                              {t("settings.billing.features.translator")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).translator
+                              )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Rewriter</span>
                             <span>
-                              {renderCheckOrValue(plan.cvTools.rewriter)}
+                              {t("settings.billing.features.rewriter")}
+                            </span>
+                            <span>
+                              {renderCheckOrValue(
+                                (plan.cvTools as any).rewriter
+                              )}
                             </span>
                           </div>
                         </div>
@@ -630,66 +897,80 @@ function BillingChooseView() {
                       <div className="py-2">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-[13px]">
-                            Cover Letter Tools
+                            {t("settings.billing.features.coverLetterTools")}
                           </span>
                           <span className="text-xs bg-black text-white px-2 py-1 rounded-[4px]">
-                            Most Popular
+                            {t("settings.billing.features.mostPopular")}
                           </span>
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Summarizer</span>
+                            <span>
+                              {t("settings.billing.features.summarizer")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.summarizer
+                                (plan.coverLetterTools as any).summarizer
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Vetting</span>
+                            <span>
+                              {t("settings.billing.features.vetting")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.vetting
+                                (plan.coverLetterTools as any).vetting
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Matching & Ranking</span>
+                            <span>
+                              {t("settings.billing.features.matchingRanking")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.matchingRanking
+                                (plan.coverLetterTools as any).matchingRanking
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Head to Head</span>
+                            <span>
+                              {t("settings.billing.features.headToHead")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.headToHead
+                                (plan.coverLetterTools as any).headToHead
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Generator</span>
+                            <span>
+                              {t("settings.billing.features.generator")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.generator
+                                (plan.coverLetterTools as any).generator
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Translator</span>
+                            <span>
+                              {t("settings.billing.features.translator")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.translator
+                                (plan.coverLetterTools as any).translator
                               )}
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-[13px]">
-                            <span>Rewriter</span>
+                            <span>
+                              {t("settings.billing.features.rewriter")}
+                            </span>
                             <span>
                               {renderCheckOrValue(
-                                plan.coverLetterTools.rewriter
+                                (plan.coverLetterTools as any).rewriter
                               )}
                             </span>
                           </div>
@@ -697,19 +978,25 @@ function BillingChooseView() {
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Community Access</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.communityAccess")}
+                        </span>
                         <span className="ml-2">{plan.communityAccess}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Submit an Article</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.submitArticle")}
+                        </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.submitArticle)}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between text-[13px] py-2">
-                        <span className="font-bold">Feedback & Support</span>
+                        <span className="font-bold">
+                          {t("settings.billing.features.feedbackSupport")}
+                        </span>
                         <span className="ml-2">
                           {renderCheckOrValue(plan.feedbackSupport)}
                         </span>
@@ -735,7 +1022,7 @@ function BillingChooseView() {
 
           {/* Slide indicators */}
           <div className="flex justify-center gap-2">
-            {pricingPlans.map((_, index) => (
+            {translatedPricingPlans.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentFeatureSlide(index)}
@@ -759,48 +1046,78 @@ function BillingChooseView() {
               >
                 <div className="h-[64px] mb-6">
                   <h2 className="text-[14px] h-full flex items-center justify-center m-[8px] border-b-[2px] border-black pb-2 font-bold text-center">
-                    Features
+                    {t("settings.billing.features.features")}
                   </h2>
                 </div>
-                {renderFeatureLabel("Dashboard")}
-                {renderFeatureLabel("User Type", "Most Popular")}
-                {renderFeatureLabel("Job Posting")}
-                {renderFeatureLabel("Applicants Limits")}
-                {renderFeatureLabel("Application Tracking System")}
-                {renderFeatureLabel("Job board Access")}
-                {renderFeatureLabel("Candidate Report Generator")}
-                {renderFeatureLabel("Job Tools", "Most Popular")}
+                {renderFeatureLabel(t("settings.billing.features.dashboard"))}
+                {renderFeatureLabel(
+                  t("settings.billing.features.userType"),
+                  t("settings.billing.features.mostPopular")
+                )}
+                {renderFeatureLabel(t("settings.billing.features.jobPosting"))}
+                {renderFeatureLabel(
+                  t("settings.billing.features.applicantsLimits")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.applicationTracking")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.jobBoardAccess")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.candidateReportGenerator")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.jobTools"),
+                  t("settings.billing.features.mostPopular")
+                )}
                 <div className="[&>*]:p-4 [&>*]:h-[40px] [&>*]:flex [&>*]:items-center">
-                  <div>Generator</div>
-                  <div>Translator</div>
-                  <div>Vetting</div>
-                  <div>AI Interview Prep</div>
-                  <div>AI Screening Questions Assistant</div>
-                  <div>Screening/Interview Q Generator</div>
+                  <div>{t("settings.billing.features.generator")}</div>
+                  <div>{t("settings.billing.features.translator")}</div>
+                  <div>{t("settings.billing.features.vetting")}</div>
+                  <div>{t("settings.billing.features.interviewPrep")}</div>
+                  <div>
+                    {t("settings.billing.features.aiScreeningAssistant")}
+                  </div>
+                  <div>
+                    {t("settings.billing.features.screeningQGenerator")}
+                  </div>
                 </div>
-                {renderFeatureLabel("CV Tools", "Most Popular")}
+                {renderFeatureLabel(
+                  t("settings.billing.features.cvTools"),
+                  t("settings.billing.features.mostPopular")
+                )}
                 <div className="[&>*]:p-4 [&>*]:h-[40px] [&>*]:flex [&>*]:items-center">
-                  <div>Summarizer</div>
-                  <div>Vetting</div>
-                  <div>Matching & Ranking</div>
-                  <div>Head to Head</div>
-                  <div>Generator</div>
-                  <div>Translator</div>
-                  <div>Rewriter</div>
+                  <div>{t("settings.billing.features.summarizer")}</div>
+                  <div>{t("settings.billing.features.vetting")}</div>
+                  <div>{t("settings.billing.features.matchingRanking")}</div>
+                  <div>{t("settings.billing.features.headToHead")}</div>
+                  <div>{t("settings.billing.features.generator")}</div>
+                  <div>{t("settings.billing.features.translator")}</div>
+                  <div>{t("settings.billing.features.rewriter")}</div>
                 </div>
-                {renderFeatureLabel("Cover Letter Tools", "Most Popular")}
+                {renderFeatureLabel(
+                  t("settings.billing.features.coverLetterTools"),
+                  t("settings.billing.features.mostPopular")
+                )}
                 <div className="[&>*]:p-4 [&>*]:h-[40px] [&>*]:flex [&>*]:items-center">
-                  <div>Summarizer</div>
-                  <div>Vetting</div>
-                  <div>Matching & Ranking</div>
-                  <div>Head to Head</div>
-                  <div>Generator</div>
-                  <div>Translator</div>
-                  <div>Rewriter</div>
+                  <div>{t("settings.billing.features.summarizer")}</div>
+                  <div>{t("settings.billing.features.vetting")}</div>
+                  <div>{t("settings.billing.features.matchingRanking")}</div>
+                  <div>{t("settings.billing.features.headToHead")}</div>
+                  <div>{t("settings.billing.features.generator")}</div>
+                  <div>{t("settings.billing.features.translator")}</div>
+                  <div>{t("settings.billing.features.rewriter")}</div>
                 </div>
-                {renderFeatureLabel("Community Access")}
-                {renderFeatureLabel("Submit an Article")}
-                {renderFeatureLabel("Feedback & Support")}
+                {renderFeatureLabel(
+                  t("settings.billing.features.communityAccess")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.submitArticle")
+                )}
+                {renderFeatureLabel(
+                  t("settings.billing.features.feedbackSupport")
+                )}
               </div>
 
               {/* Basic Plan Column */}
@@ -808,56 +1125,73 @@ function BillingChooseView() {
                 className={`${outfit.className} rounded-[30px] border-t-[8px] bg-gray-50 border-t-gray-50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px]`}
               >
                 <div className="p-2 text-center h-[62px] border-b-0 mb-8">
-                  <div className="font-bold text-[14px]">Basic</div>
+                  <div className="font-bold text-[14px]">
+                    {t("settings.billing.planDetails.basicFree.name")}
+                  </div>
                   <div className="text-[20px] font-extrabold  border-b-[2px] border-black pb-2">
-                    Free
+                    {t("settings.billing.planDetails.basicFree.price")}
                   </div>
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {pricingPlans[0].access}
+                  {translatedPricingPlans[0].access}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {pricingPlans[0].userType}
+                  {translatedPricingPlans[0].userType}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {renderCheckOrValue(pricingPlans[0].jobPosting)}
+                  {renderCheckOrValue(translatedPricingPlans[0].jobPosting)}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {renderCheckOrValue(pricingPlans[0].applicantsLimit)}
+                  {renderCheckOrValue(
+                    translatedPricingPlans[0].applicantsLimit
+                  )}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {renderCheckOrValue(pricingPlans[0].applicationTracking)}
+                  {renderCheckOrValue(
+                    translatedPricingPlans[0].applicationTracking
+                  )}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {pricingPlans[0].jobBoardAccess}
+                  {translatedPricingPlans[0].jobBoardAccess}
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
-                  {renderCheckOrValue(pricingPlans[0].candidateReportGenerator)}
+                  {renderCheckOrValue(
+                    translatedPricingPlans[0].candidateReportGenerator
+                  )}
                 </div>
                 <div className="!h-fit mt-[40px]">
                   <div className="[&>*]:h-[40px] [&>*]:flex [&>*]:items-center [&>*]:justify-center">
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].jobTools.generator)}
-                    </div>
-                    <div>
-                      {renderCheckOrValue(pricingPlans[0].jobTools.translator)}
-                    </div>
-                    <div>
-                      {renderCheckOrValue(pricingPlans[0].jobTools.vetting)}
-                    </div>
-                    <div>
                       {renderCheckOrValue(
-                        pricingPlans[0].jobTools.interviewPrep
+                        (translatedPricingPlans[0].jobTools as any).generator
                       )}
                     </div>
                     <div>
                       {renderCheckOrValue(
-                        pricingPlans[0].jobTools.aiScreeningAssistant
+                        (translatedPricingPlans[0].jobTools as any).translator
                       )}
                     </div>
                     <div>
                       {renderCheckOrValue(
-                        pricingPlans[0].jobTools.screeningQGenerator
+                        (translatedPricingPlans[0].jobTools as any).vetting
+                      )}
+                    </div>
+                    <div>
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].jobTools as any)
+                          .interviewPrep
+                      )}
+                    </div>
+                    <div>
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].jobTools as any)
+                          .aiScreeningAssistant
+                      )}
+                    </div>
+                    <div>
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].jobTools as any)
+                          .screeningQGenerator
                       )}
                     </div>
                   </div>
@@ -865,27 +1199,40 @@ function BillingChooseView() {
                 <div className="!h-fit mt-[40px]">
                   <div className="[&>*]:h-[40px] [&>*]:flex [&>*]:items-center [&>*]:justify-center">
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.summarizer)}
-                    </div>
-                    <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.vetting)}
-                    </div>
-                    <div>
                       {renderCheckOrValue(
-                        pricingPlans[0].cvTools.matchingRanking
+                        (translatedPricingPlans[0].cvTools as any).summarizer
                       )}
                     </div>
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.headToHead)}
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any).vetting
+                      )}
                     </div>
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.generator)}
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any)
+                          .matchingRanking
+                      )}
                     </div>
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.translator)}
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any).headToHead
+                      )}
                     </div>
                     <div>
-                      {renderCheckOrValue(pricingPlans[0].cvTools.rewriter)}
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any).generator
+                      )}
+                    </div>
+                    <div>
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any).translator
+                      )}
+                    </div>
+                    <div>
+                      {renderCheckOrValue(
+                        (translatedPricingPlans[0].cvTools as any).rewriter
+                      )}
                     </div>
                   </div>
                 </div>
@@ -945,11 +1292,10 @@ function BillingChooseView() {
               >
                 <div className="p-2 text-center h-[62px] border-b-0 mb-8">
                   <div className="text-[14px]">
-                    <span className="font-semibold">Basic</span>
-                    <span className="font-light"> - Job Seekers</span>
+                    {t("settings.billing.planDetails.basicJobSeekers.name")}
                   </div>
                   <div className="text-[20px] font-extrabold border-b-[2px] border-black pb-2">
-                    €9.99/Month
+                    {t("settings.billing.planDetails.basicJobSeekers.price")}
                   </div>
                 </div>
                 <div className="h-[40px] flex items-center justify-center">
@@ -1084,11 +1430,10 @@ function BillingChooseView() {
               >
                 <div className="p-2 text-center h-[62px] border-b-0 mb-8">
                   <div className="font-bold text-[14px]">
-                    <span className="font-semibold">Premium</span>
-                    <span className="font-light"> - Recruiters</span>
+                    {t("settings.billing.planDetails.premiumRecruiters.name")}
                   </div>
                   <div className="text-[20px] font-extrabold  border-b-[2px] border-black  pb-2">
-                    €99/Month
+                    {t("settings.billing.planDetails.premiumRecruiters.price")}
                   </div>
                 </div>
                 <div className="p-4  flex  justify-center items-center h-[40px] text-center">
@@ -1222,9 +1567,11 @@ function BillingChooseView() {
                 className={`${outfit.className} bg-primary border-t-[8px] border-t-[#065844] text-white rounded-[30px] shadow-[0px_4px_24px_0px_rgba(0,0,0,0.25)] backdrop-blur-[30px] pb-8`}
               >
                 <div className="p-2 text-center h-[62px] border-b-0 mb-8">
-                  <div className="font-bold text-[14px]">Enterprise</div>
+                  <div className="font-bold text-[14px]">
+                    {t("settings.billing.planDetails.enterprise.name")}
+                  </div>
                   <div className="text-[20px] font-extrabold border-b-[2px] border-white pb-2">
-                    +€500/Month
+                    {t("settings.billing.planDetails.enterprise.price")}
                   </div>
                 </div>
                 <div className="p-4  flex  justify-center items-center h-[40px] text-center">

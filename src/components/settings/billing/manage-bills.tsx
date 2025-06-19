@@ -15,22 +15,26 @@ import {
 import InvoiceTemplate from "./invoice-template";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);
   const invoiceRef = useRef<HTMLDivElement>(null);
   const { downloadPDF } = useDownloadPDF(invoiceRef, "invoice");
+  const { t } = useTranslation();
 
   return (
     <div className={`${outfit.className}`}>
-      <h1 className="text-2xl font-semibold mb-4">Billing</h1>
-      <section className="flex items-center my-6 gap-6">
+      <h1 className="text-sm font-semibold">{t("settings.billing.title")}</h1>
+      <section className="flex items-center my-6 mt-4 gap-6 text-sm">
         <div className="w-full border border-lightgreen p-4 space-y-8 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
             <div>
-              <span className="block font-medium">Free Plan</span>
+              <span className="block font-medium">
+                {t("settings.billing.freePlan")}
+              </span>
               <p className="text-sm text-textgray mt-2">
-                Free for individual use
+                {t("settings.billing.freeForIndividual")}
               </p>
             </div>
             <span className="font-medium">$0/month</span>
@@ -40,16 +44,18 @@ function BillingManageView() {
             onClick={() => ctx.goTo("choose")}
             className="bg-lightgreen text-white w-fit px-4 py-2 rounded-lg"
           >
-            Upgrade
+            {t("settings.billing.upgrade")}
           </button>
         </div>
 
         <div className="w-full border border-lightgreen p-4 space-y-4 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
             <div>
-              <span className="block font-medium">Payment Plan</span>
+              <span className="block font-medium">
+                {t("settings.billing.paymentPlan")}
+              </span>
               <p className="text-sm text-textgray mt-2">
-                Change how you make payments
+                {t("settings.billing.changePayments")}
               </p>
             </div>
             <button onClick={() => ctx.goTo("add")}>
@@ -74,24 +80,28 @@ function BillingManageView() {
       </section>
 
       <section className="mt-6">
-        <h3 className="font-medium text-xl">Invoices</h3>
-        <span className="text-textgray">Manage invoice and new receipts</span>
+        <h3 className="font-medium text-sm">
+          {t("settings.billing.invoices")}
+        </h3>
+        <span className="text-textgray">
+          {t("settings.billing.manageInvoices")}
+        </span>
 
         <div className="bg-[#F0F0F0] rounded-xl p-4 mt-4">
           <Table className="w-full">
             <TableHeader>
               <TableRow className="bg-[#D6D6D6] h-[39.292px]">
-                <TableHead className="pl-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-left first:rounded-l-xl last:rounded-r-xl">
-                  DATE
+                <TableHead className="pl-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-left first:rounded-l-xl last:rounded-r-xl">
+                  {t("settings.billing.date")}
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
-                  AMOUNT
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
+                  {t("settings.billing.amount")}
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
-                  PLAN
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
+                  {t("settings.billing.plan")}
                 </TableHead>
-                <TableHead className="px-6 py-3 text-xs font-medium text-[#898989] h-[39.292px] text-center">
-                  RECEIPT
+                <TableHead className="px-6 py-3 text-sm font-medium text-[#898989] h-[39.292px] text-center">
+                  {t("settings.billing.receipt")}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -165,7 +175,7 @@ function BillingManageView() {
                         className="text-gray-600 hover:text-[#009379] hover:underline"
                         onClick={downloadPDF}
                       >
-                        Download Receipt
+                        {t("settings.billing.downloadReceipt")}
                       </button>
                     </div>
                   </TableCell>

@@ -21,8 +21,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const TeamsAndCollaborationSettingsPage = () => {
+  const { t } = useTranslation();
   const _ = require("lodash");
   const { userData } = useUserStore();
   const [editingMember, setEditingMember] = useState<any>(null);
@@ -57,10 +59,15 @@ const TeamsAndCollaborationSettingsPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-members"] });
       setMemberToDelete(null);
-      toast.success("Team member deleted successfully");
+      toast.success(
+        t("settings.teams.memberDeleted", "Team member deleted successfully")
+      );
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete team member");
+      toast.error(
+        error.message ||
+          t("settings.teams.deleteMemberError", "Failed to delete team member")
+      );
     },
   });
 
@@ -83,15 +90,30 @@ const TeamsAndCollaborationSettingsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["get-members"] });
       setMemberToSuspend(null);
       if (variables.data.suspended) {
-        toast.success("Team member suspended successfully");
+        toast.success(
+          t(
+            "settings.teams.memberSuspended",
+            "Team member suspended successfully"
+          )
+        );
       } else if (variables.data.suspended === false) {
-        toast.success("Team member unsuspended successfully");
+        toast.success(
+          t(
+            "settings.teams.memberUnsuspended",
+            "Team member unsuspended successfully"
+          )
+        );
       } else {
-        toast.success("Team member updated successfully");
+        toast.success(
+          t("settings.teams.memberUpdated", "Team member updated successfully")
+        );
       }
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update team member");
+      toast.error(
+        error.message ||
+          t("settings.teams.updateMemberError", "Failed to update team member")
+      );
     },
   });
 
@@ -108,19 +130,22 @@ const TeamsAndCollaborationSettingsPage = () => {
       <div className="h-screen flex flex-col space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Teams & Collaboration
+          <h1 className="text-sm font-bold text-gray-800">
+            {t("settings.teams.title", "Teams & Collaboration")}
           </h1>
           <AddTeamMember />
         </div>
 
         {/* Tabs */}
         <div className="flex items-center gap-6">
-          {["Active Users", "Suspended Users"].map((tab) => (
+          {[
+            t("settings.teams.activeUsers", "Active Users"),
+            t("settings.teams.suspendedUsers", "Suspended Users"),
+          ].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`font-medium ${
+              className={`font-medium text-sm ${
                 activeTab === tab ? "text-[#2563EB]" : ""
               }`}
             >
@@ -129,14 +154,22 @@ const TeamsAndCollaborationSettingsPage = () => {
           ))}
         </div>
 
-        <div className="overflow-hidden rounded-xl">
-          <table className="w-full bg-white border-separate border-spacing-0">
+        <div className="overflow-hidden rounded-xl text-sm">
+          <table className="text-sm w-full bg-white border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
-                <th className="py-3 px-6 text-left rounded-tl-xl">User</th>
-                <th className="py-3 px-6 text-left">Status</th>
-                <th className="py-3 px-6 text-left">Email</th>
-                <th className="py-3 px-6 text-left rounded-tr-xl">Actions</th>
+                <th className="py-3 px-6 text-left rounded-tl-xl">
+                  {t("settings.teams.user", "User")}
+                </th>
+                <th className="py-3 px-6 text-left">
+                  {t("settings.teams.status", "Status")}
+                </th>
+                <th className="py-3 px-6 text-left">
+                  {t("settings.teams.email", "Email")}
+                </th>
+                <th className="py-3 px-6 text-left rounded-tr-xl">
+                  {t("settings.teams.actions", "Actions")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -160,7 +193,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                         {item.user.name}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Last Login:{" "}
+                        {t("settings.teams.lastLogin", "Last Login")}:{" "}
                         {formatDistanceToNow(new Date(item.user.last_login), {
                           addSuffix: true,
                         })}
@@ -175,13 +208,19 @@ const TeamsAndCollaborationSettingsPage = () => {
                           : "text-[#FF3737] bg-[#FF3737]/20"
                       }`}
                     >
-                      {item.accepted ? "Accepted" : "Pending"}
+                      {item.accepted
+                        ? t("settings.teams.accepted", "Accepted")
+                        : t("settings.teams.pending", "Pending")}
                     </span>
                   </td>
                   <td className="py-3 px-6 text-left">{item.user.email}</td>
                   <td className="py-3 px-6 space-x-6">
-                    {["Edit", "Suspend", "Delete"].map((action, idx) => {
-                      if (action === "Edit") {
+                    {[
+                      t("settings.teams.edit", "Edit"),
+                      t("settings.teams.suspend", "Suspend"),
+                      t("settings.teams.delete", "Delete"),
+                    ].map((action, idx) => {
+                      if (action === t("settings.teams.edit", "Edit")) {
                         return (
                           <button
                             key={idx}
@@ -192,7 +231,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                           </button>
                         );
                       }
-                      if (action === "Delete") {
+                      if (action === t("settings.teams.delete", "Delete")) {
                         return (
                           <button
                             key={idx}
@@ -203,7 +242,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                           </button>
                         );
                       }
-                      if (action === "Suspend") {
+                      if (action === t("settings.teams.suspend", "Suspend")) {
                         return item.suspended ? (
                           <button
                             key={idx}
@@ -211,7 +250,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                             onClick={() => handleUnsuspend(item)}
                             disabled={updateMutation.isPending}
                           >
-                            Unsuspend
+                            {t("settings.teams.unsuspend", "Unsuspend")}
                           </button>
                         ) : (
                           <button
@@ -220,7 +259,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                             onClick={() => handleSuspend(item)}
                             disabled={updateMutation.isPending}
                           >
-                            Suspend
+                            {t("settings.teams.suspend", "Suspend")}
                           </button>
                         );
                       }
@@ -244,12 +283,17 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToDelete}
         onOpenChange={() => setMemberToDelete(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
-            <DialogTitle>Delete Team Member</DialogTitle>
+            <DialogTitle>
+              {t("settings.teams.deleteConfirmTitle", "Delete Team Member")}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {memberToDelete?.user?.name}? This
-              action cannot be undone.
+              {t(
+                "settings.teams.deleteConfirmMessage",
+                "Are you sure you want to delete {{name}}? This action cannot be undone.",
+                { name: memberToDelete?.user?.name }
+              )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -258,7 +302,7 @@ const TeamsAndCollaborationSettingsPage = () => {
               className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
               onClick={() => setMemberToDelete(null)}
             >
-              Cancel
+              {t("settings.teams.cancel", "Cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -267,7 +311,9 @@ const TeamsAndCollaborationSettingsPage = () => {
               }
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending
+                ? t("settings.teams.deleting", "Deleting...")
+                : t("settings.teams.delete", "Delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -278,12 +324,17 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToSuspend}
         onOpenChange={() => setMemberToSuspend(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
-            <DialogTitle>Suspend Team Member</DialogTitle>
+            <DialogTitle>
+              {t("settings.teams.suspendConfirmTitle", "Suspend Team Member")}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to suspend {memberToSuspend?.user?.name}?
-              This action can be undone later.
+              {t(
+                "settings.teams.suspendConfirmMessage",
+                "Are you sure you want to suspend {{name}}? This action can be undone later.",
+                { name: memberToSuspend?.user?.name }
+              )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -292,7 +343,7 @@ const TeamsAndCollaborationSettingsPage = () => {
               className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
               onClick={() => setMemberToSuspend(null)}
             >
-              Cancel
+              {t("settings.teams.cancel", "Cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -307,7 +358,9 @@ const TeamsAndCollaborationSettingsPage = () => {
               }}
               disabled={updateMutation.isPending}
             >
-              {updateMutation.isPending ? "Suspending..." : "Suspend"}
+              {updateMutation.isPending
+                ? t("settings.teams.suspending", "Suspending...")
+                : t("settings.teams.suspend", "Suspend")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -318,12 +371,20 @@ const TeamsAndCollaborationSettingsPage = () => {
         open={!!memberToUnsuspend}
         onOpenChange={() => setMemberToUnsuspend(null)}
       >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 text-sm">
           <DialogHeader>
-            <DialogTitle>Unsuspend Team Member</DialogTitle>
+            <DialogTitle>
+              {t(
+                "settings.teams.unsuspendConfirmTitle",
+                "Unsuspend Team Member"
+              )}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to unsuspend {memberToUnsuspend?.user?.name}
-              ? They will regain access to the platform.
+              {t(
+                "settings.teams.unsuspendConfirmMessage",
+                "Are you sure you want to unsuspend {{name}}? They will regain access to the platform.",
+                { name: memberToUnsuspend?.user?.name }
+              )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -332,7 +393,7 @@ const TeamsAndCollaborationSettingsPage = () => {
               className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
               onClick={() => setMemberToUnsuspend(null)}
             >
-              Cancel
+              {t("settings.teams.cancel", "Cancel")}
             </Button>
             <Button
               variant="default"
@@ -347,7 +408,9 @@ const TeamsAndCollaborationSettingsPage = () => {
               }}
               disabled={updateMutation.isPending}
             >
-              {updateMutation.isPending ? "Unsuspending..." : "Unsuspend"}
+              {updateMutation.isPending
+                ? t("settings.teams.unsuspending", "Unsuspending...")
+                : t("settings.teams.unsuspend", "Unsuspend")}
             </Button>
           </DialogFooter>
         </DialogContent>

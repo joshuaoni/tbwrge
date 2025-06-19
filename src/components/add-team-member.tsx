@@ -13,8 +13,10 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addTeamMember } from "@/actions/add-team-member";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const AddTeamMember = () => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const { userData } = useUserStore();
@@ -33,31 +35,35 @@ const AddTeamMember = () => {
       return response;
     },
     onSuccess: () => {
-      toast.success("Team member added");
+      toast.success(t("settings.teams.memberAdded", "Team member added"));
       setShowModal(false);
       setName("");
       setEmail("");
       queryClient.invalidateQueries({ queryKey: ["get-members"] });
     },
     onError: () => {
-      toast.error("Failed to add team member");
+      toast.error(
+        t("settings.teams.memberAddError", "Failed to add team member")
+      );
     },
   });
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogTrigger>
-        <div className="flex items-center bg-primary  transition-colors duration-300 px-4 py-2 rounded-lg text-white font-medium shadow-lg">
+        <div className="flex items-center bg-primary  transition-colors duration-300 px-4 py-2 rounded-lg text-white font-medium shadow-lg text-sm">
           <PlusCircle className="mr-2" />
-          Add a Team Member
+          {t("settings.teams.addTeamMember", "Add a Team Member")}
         </div>
       </DialogTrigger>
       <DialogContent className="bg-white max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="border-b pb-6">Add Team Member</DialogTitle>
+          <DialogTitle className="border-b pb-6">
+            {t("settings.teams.addTeamMemberTitle", "Add Team Member")}
+          </DialogTitle>
         </DialogHeader>
-        <label>Name</label>
+        <label className="text-sm">{t("settings.teams.name", "Name")}</label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
-        <label>Email</label>
+        <label className="text-sm">{t("settings.teams.email", "Email")}</label>
         <Input value={email} onChange={(e) => setEmail(e.target.value)} />
         <Button
           onClick={() => {
@@ -65,7 +71,7 @@ const AddTeamMember = () => {
           }}
           className="bg-primary text-white"
         >
-          Add
+          {t("settings.teams.add", "Add")}
         </Button>
       </DialogContent>
     </Dialog>

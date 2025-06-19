@@ -9,6 +9,7 @@ import { Search, User, UserCircle, Smile } from "lucide-react";
 import Image from "next/image";
 import { inter } from "@/constants/app";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTalentChats, ChatResponse } from "@/actions/get-chats";
@@ -187,7 +188,7 @@ const EmojiText = ({
 };
 
 // Add formatMessageTime helper function
-const formatMessageTime = (timestamp: string) => {
+const formatMessageTime = (timestamp: string, t?: any) => {
   const now = new Date();
   const messageDate = new Date(timestamp);
   const diffInMinutes = Math.floor(
@@ -196,7 +197,7 @@ const formatMessageTime = (timestamp: string) => {
   const diffInHours = Math.floor(diffInMinutes / 60);
 
   if (diffInMinutes < 1) {
-    return "Just now";
+    return t ? t("talentPool.chat.justNow") : "Just now";
   } else if (diffInMinutes < 60) {
     return `${diffInMinutes}m`;
   } else if (diffInHours < 24) {
@@ -210,15 +211,15 @@ const formatMessageTime = (timestamp: string) => {
 };
 
 // Add this helper function to format the date for the separator
-const formatDateSeparator = (date: Date) => {
+const formatDateSeparator = (date: Date, t?: any) => {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
 
   if (date.toDateString() === today.toDateString()) {
-    return "Today";
+    return t ? t("talentPool.chat.today") : "Today";
   } else if (date.toDateString() === yesterday.toDateString()) {
-    return "Yesterday";
+    return t ? t("talentPool.chat.yesterday") : "Yesterday";
   } else {
     return date.toLocaleDateString("en-US", {
       weekday: "long",
@@ -247,6 +248,7 @@ const groupMessagesByDate = (messages: ExtendedMessage[]) => {
 export default function ChatPage() {
   const router = useRouter();
   const { userData } = useUserStore();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
@@ -715,8 +717,8 @@ export default function ChatPage() {
               />
               <input
                 type="text"
-                placeholder="Search for any user"
-                className="w-full pl-10 p-2 border rounded-lg bg-white"
+                placeholder={t("talentPool.chat.searchUser")}
+                className="w-full pl-10 p-2 border rounded-lg bg-white text-sm"
               />
             </div>
           </div>
@@ -725,8 +727,8 @@ export default function ChatPage() {
           <div className="flex-1 overflow-y-auto">
             <ul>
               {isLoadingChats ? (
-                <li className="px-6 py-4 text-center text-gray-500">
-                  Loading chats...
+                <li className="px-6 py-4 text-center text-gray-500 text-sm">
+                  {t("talentPool.messages.loadingChats")}
                 </li>
               ) : chats && chats.length > 0 ? (
                 [...chats]
@@ -772,15 +774,16 @@ export default function ChatPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center">
-                              <h3 className="font-medium text-gray-900 truncate">
+                              <h3 className="font-medium text-gray-900 truncate text-sm">
                                 {otherUser.name} {otherUser.last_name || ""}
                               </h3>
                               <span className="text-sm text-gray-500 flex-shrink-0">
                                 {chat.last_message
                                   ? formatMessageTime(
-                                      chat.last_message.updated_at
+                                      chat.last_message.updated_at,
+                                      t
                                     )
-                                  : formatMessageTime(chat.updated_at)}
+                                  : formatMessageTime(chat.updated_at, t)}
                               </span>
                             </div>
                             <div className="flex justify-between items-center mt-1">
@@ -789,10 +792,10 @@ export default function ChatPage() {
                                   chat.last_message.type === "text" ? (
                                     <EmojiText text={chat.last_message.text} />
                                   ) : (
-                                    "Shared media"
+                                    t("talentPool.messages.sharedMedia")
                                   )
                                 ) : (
-                                  "No messages yet"
+                                  t("talentPool.messages.noMessages")
                                 )}
                               </div>
                               {chat.unread > 0 && (
@@ -809,8 +812,8 @@ export default function ChatPage() {
                     );
                   })
               ) : (
-                <li className="px-6 py-4 text-center text-gray-500">
-                  No chats found
+                <li className="px-6 py-4 text-center text-gray-500 text-sm">
+                  {t("talentPool.messages.noChats")}
                 </li>
               )}
             </ul>
@@ -833,7 +836,7 @@ export default function ChatPage() {
                       className="w-9 h-9 rounded-full object-cover border border-gray-200"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-sm font-semibold">
                     {otherUser.name} {otherUser.last_name || ""}
                   </h3>
                 </div>
@@ -873,8 +876,8 @@ export default function ChatPage() {
               {/* Messages Area - Scrollable */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {isLoadingMessages ? (
-                  <div className="text-center py-4 text-gray-500">
-                    Loading messages...
+                  <div className="text-center py-4 text-gray-500 text-sm">
+                    {t("talentPool.messages.loadingMessages")}
                   </div>
                 ) : localMessages.length > 0 ? (
                   <>
@@ -887,7 +890,7 @@ export default function ChatPage() {
                         <div key={date} className="space-y-4">
                           <div className="flex items-center justify-center">
                             <div className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full">
-                              {formatDateSeparator(new Date(date))}
+                              {formatDateSeparator(new Date(date), t)}
                             </div>
                           </div>
                           {messages.map((message: ExtendedMessage) => {
@@ -985,8 +988,8 @@ export default function ChatPage() {
                     <div ref={messagesEndRef} />
                   </>
                 ) : (
-                  <div className="text-center py-4 text-gray-500">
-                    No messages yet
+                  <div className="text-center py-4 text-gray-500 text-sm">
+                    {t("talentPool.chat.noMessagesYet")}
                   </div>
                 )}
               </div>
@@ -1039,7 +1042,7 @@ export default function ChatPage() {
                           emojiStyle={EmojiStyle.APPLE}
                           lazyLoadEmojis={true}
                           skinTonesDisabled
-                          searchPlaceHolder="Search emoji..."
+                          searchPlaceHolder={t("talentPool.chat.searchEmoji")}
                           height={350}
                           width={300}
                         />
@@ -1057,8 +1060,8 @@ export default function ChatPage() {
                           handleSendMessage();
                         }
                       }}
-                      placeholder="Write your message..."
-                      className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px]"
+                      placeholder={t("talentPool.chat.writeMessage")}
+                      className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px] text-sm"
                       disabled={isSending}
                     />
                     <div className="w-full outline-none pointer-events-none min-h-[24px]">
@@ -1068,7 +1071,7 @@ export default function ChatPage() {
                         </div>
                       ) : (
                         <div className="text-gray-400">
-                          Write your message...
+                          {t("talentPool.chat.writeMessage")}
                         </div>
                       )}
                     </div>
@@ -1148,12 +1151,11 @@ export default function ChatPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-700 mb-1">
-                  No chat selected
+                <h3 className="text-sm font-medium text-gray-700 mb-1">
+                  {t("talentPool.chat.noChatSelected")}
                 </h3>
                 <p className="text-sm text-gray-500 max-w-md">
-                  Select a chat from the list or start a new conversation with a
-                  talent.
+                  {t("talentPool.chat.selectChatMessage")}
                 </p>
               </div>
             </div>

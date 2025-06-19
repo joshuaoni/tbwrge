@@ -17,6 +17,7 @@ import { createMessage } from "@/actions/create-message";
 import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
 import { ChatResponse as ImportedChatResponse } from "@/actions/get-chats";
 import AdminDashboardLayout from "@/components/admin/layout";
+import { useTranslation } from "react-i18next";
 
 interface LastMessage {
   type: string;
@@ -194,6 +195,7 @@ const groupMessagesByDate = (messages: ExtendedMessage[]) => {
 };
 
 export default function ChatPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { userData } = useUserStore();
   const queryClient = useQueryClient();
@@ -733,10 +735,10 @@ export default function ChatPage() {
                                   chat.last_message.type === "text" ? (
                                     <EmojiText text={chat.last_message.text} />
                                   ) : (
-                                    "Shared media"
+                                    t("chat.sharedMedia")
                                   )
                                 ) : (
-                                  "No messages yet"
+                                  t("chat.noMessagesYet")
                                 )}
                               </div>
                               {chat.unread > 0 && (
@@ -754,7 +756,7 @@ export default function ChatPage() {
                   })
               ) : (
                 <li className="px-6 py-4 text-center text-gray-500">
-                  No chats found
+                  {t("chat.noChats")}
                 </li>
               )}
             </ul>
@@ -818,7 +820,7 @@ export default function ChatPage() {
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {isLoadingMessages ? (
                   <div className="text-center py-4 text-gray-500">
-                    Loading messages...
+                    {t("chat.loadingMessages")}
                   </div>
                 ) : localMessages.length > 0 ? (
                   <>
@@ -930,7 +932,7 @@ export default function ChatPage() {
                   </>
                 ) : (
                   <div className="text-center py-4 text-gray-500">
-                    No messages yet
+                    {t("chat.noMessagesYet")}
                   </div>
                 )}
               </div>
@@ -983,7 +985,7 @@ export default function ChatPage() {
                           emojiStyle={EmojiStyle.APPLE}
                           lazyLoadEmojis={true}
                           skinTonesDisabled
-                          searchPlaceHolder="Search emoji..."
+                          searchPlaceHolder={t("chat.searchEmoji")}
                           height={350}
                           width={300}
                         />
@@ -1001,7 +1003,7 @@ export default function ChatPage() {
                           handleSendMessage();
                         }
                       }}
-                      placeholder="Write your message..."
+                      placeholder={t("chat.writeMessage")}
                       className="w-full outline-none text-transparent bg-transparent caret-gray-600 placeholder:text-transparent absolute inset-0 min-h-[24px]"
                       disabled={isSending}
                     />
@@ -1012,7 +1014,7 @@ export default function ChatPage() {
                         </div>
                       ) : (
                         <div className="text-gray-400">
-                          Write your message...
+                          {t("chat.writeMessage")}
                         </div>
                       )}
                     </div>
@@ -1093,11 +1095,10 @@ export default function ChatPage() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-700 mb-1">
-                  No chat selected
+                  {t("chat.noChatSelected")}
                 </h3>
                 <p className="text-sm text-gray-500 max-w-md">
-                  Select a chat from the list or start a new conversation with a
-                  talent.
+                  {t("chat.selectChatMessage")}
                 </p>
               </div>
             </div>

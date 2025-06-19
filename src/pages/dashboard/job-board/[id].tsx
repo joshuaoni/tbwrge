@@ -31,7 +31,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <div className="mb-8">
-    s<h2 className="text-sm font-semibold mb-4">{title}</h2>
+    <h2 className="text-sm font-semibold mb-4">{title}</h2>
     {children}
   </div>
 );

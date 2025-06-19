@@ -109,17 +109,14 @@ const DashboardSubmitArticlePage = () => {
     <DashboardWrapper>
       <div className={`${outfit.className} bg-white rounded-lg`}>
         <h2
-          className={classNames(
-            outfit.className,
-            "text-2xl font-semibold mb-4"
-          )}
+          className={classNames(outfit.className, "text-sm font-semibold mb-4")}
         >
           {t("submitArticle.title")}
         </h2>
 
         <div className={`${outfit.className} flex gap-8`}>
           <section className="w-1/2">
-            <h3 className="text-lg font-semibold mb-4">
+            <h3 className="text-sm font-semibold mb-4">
               {t("submitArticle.articleDetails")}
             </h3>
             <div className="space-y-4">
@@ -178,7 +175,7 @@ const DashboardSubmitArticlePage = () => {
           </section>
 
           <section className="w-1/2">
-            <h3 className="text-lg font-semibold mb-4">
+            <h3 className="text-sm font-semibold mb-4">
               {t("submitArticle.authorInformation")}
             </h3>
 
@@ -222,7 +219,7 @@ const DashboardSubmitArticlePage = () => {
                   value={formData.company}
                   onChange={(e) => handleSetFormData("company", e.target.value)}
                   placeholder={t("submitArticle.enterCompany")}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
                 />
               </div>
 
@@ -238,11 +235,11 @@ const DashboardSubmitArticlePage = () => {
                     }
                   }}
                   accept="image/*"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
                 />
               </div>
 
-              <h3 className="text-lg font-semibold mb-4">
+              <h3 className="text-sm font-semibold mb-4">
                 {t("submitArticle.contactInformation")}
               </h3>
 
@@ -257,7 +254,7 @@ const DashboardSubmitArticlePage = () => {
                   onChange={(e) => handleSetFormData("email", e.target.value)}
                   placeholder={t("submitArticle.enterEmail")}
                   required
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
                 />
               </div>
 

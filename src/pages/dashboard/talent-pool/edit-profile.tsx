@@ -23,9 +23,11 @@ import {
 } from "@/actions/talent-profile";
 import { useUserStore } from "@/hooks/use-user-store";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export default function EditTalentPool() {
   const { userData } = useUserStore();
+  const { t } = useTranslation();
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [editedData, setEditedData] = useState<Partial<TalentProfile>>({});
   const [tempData, setTempData] = useState<Partial<TalentProfile>>({});
@@ -112,14 +114,14 @@ export default function EditTalentPool() {
         profile_photo: null,
       });
 
-      toast.success("Profile updated successfully");
+      toast.success(t("talentPool.editProfile.profileUpdateSuccess"));
     },
     onError: (error: any) => {
       console.error("Update error:", error);
 
       const errorMessage =
         error?.response?.data?.message ||
-        "Failed to update profile. Please try again.";
+        t("talentPool.editProfile.profileUpdateError");
       toast.error(errorMessage);
     },
   });
@@ -541,12 +543,14 @@ export default function EditTalentPool() {
     return (
       <DashboardWrapper>
         <div className="flex flex-col items-center justify-center h-screen">
-          <p className="text-red-500 mb-2">Error loading profile data.</p>
+          <p className="text-red-500 mb-2">
+            {t("talentPool.editProfile.errorLoading")}
+          </p>
           <button
             className="px-4 py-2 bg-primary text-white rounded-md"
             onClick={() => window.location.reload()}
           >
-            Retry
+            {t("talentPool.editProfile.retry")}
           </button>
         </div>
       </DashboardWrapper>
@@ -557,22 +561,25 @@ export default function EditTalentPool() {
     <DashboardWrapper>
       <div className="mx-auto bg-white">
         <div className="flex justify-between mb-4 items-center">
-          <div className="flex items-center">
-            <Link href="/dashboard/talent-pool" className="hover:text-primary">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/talent-pool"
+              className="hover:text-primary hover:bg-gray-100 p-1 rounded-full transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 text-gray-600" />
             </Link>
-            <div className="flex items-center gap-6 ml-2">
-              <h2 className="text-2xl font-semibold">
-                {editedData.name || "Profile"}
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold">
+                {editedData.name || t("talentPool.editProfile.profileName")}
               </h2>
               <div className="relative">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100">
                   {editedData.profile_photo ? (
                     <Image
                       src={editedData.profile_photo}
                       alt={editedData.name || "Profile photo"}
-                      width={48}
-                      height={48}
+                      width={36}
+                      height={36}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -596,9 +603,9 @@ export default function EditTalentPool() {
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard/talent-pool/stats"
-              className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+              className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
             >
-              <span>View Talent Pool Stats</span>
+              <span>{t("talentPool.editProfile.viewTalentPoolStats")}</span>
               <svg
                 width="16"
                 height="16"
@@ -619,14 +626,16 @@ export default function EditTalentPool() {
           {/* Profile Overview */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-10">
-              <h2 className="text-lg font-semibold">Profile Overview</h2>
+              <h2 className="text-sm font-semibold">
+                {t("talentPool.editProfile.profileOverview")}
+              </h2>
               {editingSection === "overview" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
-                    Cancel
+                    {t("talentPool.editProfile.cancel")}
                   </button>
                   <button
                     onClick={() => handleSectionSave("overview")}
@@ -647,7 +656,9 @@ export default function EditTalentPool() {
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Email</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.email")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="email"
@@ -659,7 +670,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.email || "Not provided"}
+                      {editedData.email ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -667,7 +679,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Phone</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.phone")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="tel"
@@ -679,7 +693,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.phone || "Not provided"}
+                      {editedData.phone ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -687,7 +702,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">DOB</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.dob")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="date"
@@ -699,7 +716,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.date_of_birth || "Not provided"}
+                      {editedData.date_of_birth ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -707,7 +725,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">LinkedIn</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.linkedin")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="url"
@@ -724,7 +744,9 @@ export default function EditTalentPool() {
                       rel="noopener noreferrer"
                       className="text-sm text-gray-500 hover:underline"
                     >
-                      {editedData.linkedin ? "View Profile" : "Not provided"}
+                      {editedData.linkedin
+                        ? t("talentPool.editProfile.viewProfile")
+                        : t("talentPool.editProfile.notProvided")}
                     </a>
                   )}
                 </div>
@@ -733,7 +755,7 @@ export default function EditTalentPool() {
               <div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-black w-[120px]">
-                    Current Position
+                    {t("talentPool.editProfile.currentPosition")}
                   </p>
                   {editingSection === "overview" ? (
                     <input
@@ -746,7 +768,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.current_position || "Not provided"}
+                      {editedData.current_position ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -754,7 +777,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Company</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.company")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="text"
@@ -766,7 +791,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.current_company || "Not provided"}
+                      {editedData.current_company ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -774,7 +800,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Nationality</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.nationality")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="text"
@@ -786,7 +814,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.nationality || "Not provided"}
+                      {editedData.nationality ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -794,7 +823,9 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Location</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.location")}
+                  </p>
                   {editingSection === "overview" ? (
                     <input
                       type="text"
@@ -809,7 +840,8 @@ export default function EditTalentPool() {
                     />
                   ) : (
                     <p className="text-sm text-gray-500">
-                      {editedData.country_of_residence || "Not provided"}
+                      {editedData.country_of_residence ||
+                        t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -817,13 +849,15 @@ export default function EditTalentPool() {
               </div>
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-black w-[120px]">Salary Range</p>
+                  <p className="text-sm text-black w-[120px]">
+                    {t("talentPool.editProfile.salaryRange")}
+                  </p>
                   {editingSection === "overview" ? (
                     <div className="flex gap-2">
                       <input
                         type="number"
                         className="text-sm text-gray-500 border rounded-lg p-2 w-[95px]"
-                        placeholder="Min"
+                        placeholder={t("talentPool.editProfile.minPlaceholder")}
                         value={salaryRange.min}
                         onChange={(e) =>
                           handleSalaryChange("min", e.target.value)
@@ -832,7 +866,7 @@ export default function EditTalentPool() {
                       <input
                         type="number"
                         className="text-sm text-gray-500 border rounded-lg p-2 w-[95px]"
-                        placeholder="Max"
+                        placeholder={t("talentPool.editProfile.maxPlaceholder")}
                         value={salaryRange.max}
                         onChange={(e) =>
                           handleSalaryChange("max", e.target.value)
@@ -848,7 +882,7 @@ export default function EditTalentPool() {
                           }${editedData.salary_range_min?.toLocaleString()} - ${
                             editedData.salary_currency || "$"
                           }${editedData.salary_range_max?.toLocaleString()}`
-                        : "Not provided"}
+                        : t("talentPool.editProfile.notProvided")}
                     </p>
                   )}
                 </div>
@@ -860,14 +894,16 @@ export default function EditTalentPool() {
           {/* Profile Summary */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">Profile Summary</h2>
+              <h2 className="text-sm font-semibold">
+                {t("talentPool.editProfile.profileSummary")}
+              </h2>
               {editingSection === "summary" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
-                    Cancel
+                    {t("talentPool.editProfile.cancel")}
                   </button>
                   <button
                     onClick={() => handleSectionSave("summary")}
@@ -896,7 +932,7 @@ export default function EditTalentPool() {
             ) : (
               <p className="text-sm text-gray-600 leading-relaxed">
                 {editedData.professional_summary ||
-                  "No professional summary provided."}
+                  t("talentPool.editProfile.noSummaryProvided")}
               </p>
             )}
           </div>
@@ -904,41 +940,54 @@ export default function EditTalentPool() {
           {/* AI-Powered Insights */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">AI-Powered Insights</h2>
+              <h2 className="text-sm font-semibold">
+                {t("talentPool.editProfile.aiInsights")}
+              </h2>
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium mb-2">Key Skills</h3>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.editProfile.keySkills")}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {editedData.skills_summary || "No skills data available."}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium mb-2">Strengths</h3>
-                <p className="text-sm text-gray-600">
-                  {editedData.strength || "No data available."}
+                  {editedData.skills_summary ||
+                    t("talentPool.editProfile.noSkillsData")}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-2">
-                  Areas for Development
+                  {t("talentPool.editProfile.strengths")}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {editedData.areas_for_development || "No data available."}
+                  {editedData.strength ||
+                    t("talentPool.editProfile.noDataAvailable")}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-2">
-                  Culture Fit Indicators
+                  {t("talentPool.editProfile.areasForDevelopment")}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  {editedData.culture_fit || "No data available."}
+                  {editedData.areas_for_development ||
+                    t("talentPool.editProfile.noDataAvailable")}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-2">Languages</h3>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.editProfile.cultureFitIndicators")}
+                </h3>
                 <p className="text-sm text-gray-600">
-                  {editedData.languages || "No data available."}
+                  {editedData.culture_fit ||
+                    t("talentPool.editProfile.noDataAvailable")}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium mb-2">
+                  {t("talentPool.editProfile.languages")}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {editedData.languages ||
+                    t("talentPool.editProfile.noDataAvailable")}
                 </p>
               </div>
             </div>
@@ -949,14 +998,16 @@ export default function EditTalentPool() {
           {/* Supporting Documents */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-4">
-              <h2 className="text-lg font-semibold">Supporting Documents</h2>
+              <h2 className="text-sm font-semibold">
+                {t("talentPool.editProfile.supportingDocuments")}
+              </h2>
               {editingSection === "documents" ? (
                 <div className="flex gap-2">
                   <button
                     onClick={handleCancel}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 text-sm"
                   >
-                    Cancel
+                    {t("talentPool.editProfile.cancel")}
                   </button>
                   <button
                     onClick={() => handleSectionSave("documents")}
@@ -1017,7 +1068,9 @@ export default function EditTalentPool() {
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Upload CV</p>
+                      <p className="text-sm font-medium">
+                        {t("talentPool.editProfile.uploadCV")}
+                      </p>
                       <input
                         type="file"
                         accept=".pdf,.doc,.docx"
@@ -1067,7 +1120,9 @@ export default function EditTalentPool() {
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Upload Cover Letter</p>
+                      <p className="text-sm font-medium">
+                        {t("talentPool.editProfile.uploadCoverLetter")}
+                      </p>
                       <input
                         type="file"
                         accept=".pdf,.doc,.docx"
@@ -1085,14 +1140,16 @@ export default function EditTalentPool() {
                       <Mic className="w-5 h-5 text-[#009379]" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Voice Introduction</p>
+                      <p className="text-sm font-medium">
+                        {t("talentPool.editProfile.uploadVoicenote")}
+                      </p>
 
                       {!tempDocuments.voicenote ? (
                         isRecording ? (
                           <div className="bg-gray-50 rounded-lg p-2 mt-2">
                             <div className="flex items-center w-full">
                               <span className="text-xs text-gray-600 mr-1 whitespace-nowrap shrink-0">
-                                Recording...
+                                {t("talentPool.editProfile.recording")}
                               </span>
                               <div className="flex-1 mx-1 overflow-hidden">
                                 <div className="flex items-center gap-[1px] justify-between">
@@ -1141,7 +1198,7 @@ export default function EditTalentPool() {
                             onClick={startRecording}
                           >
                             <span className="text-sm text-gray-500 flex-1">
-                              Record
+                              {t("talentPool.editProfile.record")}
                             </span>
                             <Mic className="w-4 h-4 text-[#009379]" />
                           </div>
@@ -1291,9 +1348,12 @@ export default function EditTalentPool() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          {editedData.name || "Your"}'s CV
+                          {editedData.name || t("talentPool.editProfile.your")}
+                          {t("talentPool.editProfile.cvSuffix")}
                         </p>
-                        <p className="text-xs text-gray-500">Click to view</p>
+                        <p className="text-xs text-gray-500">
+                          {t("talentPool.editProfile.clickToView")}
+                        </p>
                       </div>
                     </a>
                   )}
@@ -1345,9 +1405,12 @@ export default function EditTalentPool() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          {editedData.name || "Your"}'s Cover Letter
+                          {editedData.name || t("talentPool.editProfile.your")}
+                          {t("talentPool.editProfile.coverLetterSuffix")}
                         </p>
-                        <p className="text-xs text-gray-500">Click to view</p>
+                        <p className="text-xs text-gray-500">
+                          {t("talentPool.editProfile.clickToView")}
+                        </p>
                       </div>
                     </a>
                   )}
@@ -1366,10 +1429,11 @@ export default function EditTalentPool() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          {editedData.name || "Your"}'s Introduction Voicenote
+                          {editedData.name || t("talentPool.editProfile.your")}
+                          {t("talentPool.editProfile.voicenoteSuffix")}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          Click to download
+                          {t("talentPool.editProfile.clickToDownload")}
                         </p>
                       </div>
                     </a>

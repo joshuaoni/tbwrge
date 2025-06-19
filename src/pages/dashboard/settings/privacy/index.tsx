@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 const PrivacyAndSecuritySettingsPage = () => {
+  const { t } = useTranslation();
   const [visibleProfile, setVisibleProfile] = useState(false);
   const [linkedinDataShare, setLinkedinDataShare] = useState(false);
   const [indeedDataShare, setIndeedDataShare] = useState(false);
@@ -46,7 +48,12 @@ const PrivacyAndSecuritySettingsPage = () => {
       return response;
     },
     onSuccess: () => {
-      toast.success("Privacy settings updated successfully");
+      toast.success(
+        t(
+          "settings.privacy.privacyUpdated",
+          "Privacy settings updated successfully"
+        )
+      );
     },
   });
 
@@ -56,11 +63,16 @@ const PrivacyAndSecuritySettingsPage = () => {
       return await deleteAccount(userData.token);
     },
     onSuccess: () => {
-      toast.success("Account deleted successfully");
+      toast.success(
+        t("settings.privacy.accountDeleted", "Account deleted successfully")
+      );
       router.push("/sign-in");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to delete account");
+      toast.error(
+        error.message ||
+          t("settings.privacy.deleteAccountError", "Failed to delete account")
+      );
     },
   });
 
@@ -85,11 +97,15 @@ const PrivacyAndSecuritySettingsPage = () => {
 
   return (
     <DashboardSettingsLayout>
-      <SettingsHeader>Privacy & Security</SettingsHeader>
+      <SettingsHeader>
+        {t("settings.privacy.title", "Privacy & Security")}
+      </SettingsHeader>
 
-      <CheckBoxSectionWrapper title="Account Privacy">
+      <CheckBoxSectionWrapper
+        title={t("settings.privacy.accountPrivacy", "Account Privacy")}
+      >
         <CheckBoxInput
-          label="Profile Visibility"
+          label={t("settings.privacy.profileVisibility", "Profile Visibility")}
           value={visibleProfile}
           onChange={(value) => {
             setVisibleProfile(value);
@@ -98,9 +114,14 @@ const PrivacyAndSecuritySettingsPage = () => {
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="Data Sharing & Preferences">
+      <CheckBoxSectionWrapper
+        title={t(
+          "settings.privacy.dataSharingPreferences",
+          "Data Sharing & Preferences"
+        )}
+      >
         <CheckBoxInput
-          label="Share Data With LinkedIn"
+          label={t("settings.privacy.shareDataLinkedIn")}
           value={linkedinDataShare}
           onChange={(value) => {
             setLinkedinDataShare(value);
@@ -108,7 +129,10 @@ const PrivacyAndSecuritySettingsPage = () => {
           }}
         />
         <CheckBoxInput
-          label="Share Data With Indeed"
+          label={t(
+            "settings.privacy.shareDataIndeed",
+            "Share Data With Indeed"
+          )}
           value={indeedDataShare}
           onChange={(value) => {
             setIndeedDataShare(value);
@@ -117,9 +141,11 @@ const PrivacyAndSecuritySettingsPage = () => {
         />
       </CheckBoxSectionWrapper>
 
-      <CheckBoxSectionWrapper title="Data Exports">
+      <CheckBoxSectionWrapper
+        title={t("settings.privacy.dataExports", "Data Exports")}
+      >
         <CheckBoxInput
-          label="Activity History"
+          label={t("settings.privacy.activityHistory", "Activity History")}
           value={exportActivityHistory}
           onChange={(value) => {
             setExportActivityHistory(value);
@@ -127,7 +153,7 @@ const PrivacyAndSecuritySettingsPage = () => {
           }}
         />
         <CheckBoxInput
-          label="CVs"
+          label={t("settings.privacy.cvs", "CVs")}
           value={exportCV}
           onChange={(value) => {
             setExportCV(value);
@@ -135,7 +161,7 @@ const PrivacyAndSecuritySettingsPage = () => {
           }}
         />
         <CheckBoxInput
-          label="Candidate Reports"
+          label={t("settings.privacy.candidateReports", "Candidate Reports")}
           value={exportCandidateReports}
           onChange={(value) => {
             setExportCandidateReports(value);
@@ -148,7 +174,7 @@ const PrivacyAndSecuritySettingsPage = () => {
         onClick={() => setShowDeleteConfirmation(true)}
         className="mt-4 px-4 py-2 text-white bg-red hover:bg-red/80 rounded-lg transition-colors text-sm font-medium"
       >
-        Delete Account
+        {t("settings.privacy.deleteAccount", "Delete Account")}
       </button>
 
       {/* Delete Account Confirmation Dialog */}
@@ -158,10 +184,14 @@ const PrivacyAndSecuritySettingsPage = () => {
       >
         <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
           <DialogHeader>
-            <DialogTitle>Delete Account</DialogTitle>
+            <DialogTitle>
+              {t("settings.privacy.deleteAccount", "Delete Account")}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete your account? This action cannot
-              be undone and all your data will be permanently deleted.
+              {t(
+                "settings.privacy.deleteAccountMessage",
+                "Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted."
+              )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -170,7 +200,7 @@ const PrivacyAndSecuritySettingsPage = () => {
               className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
               onClick={() => setShowDeleteConfirmation(false)}
             >
-              Cancel
+              {t("settings.privacy.cancel", "Cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -178,8 +208,8 @@ const PrivacyAndSecuritySettingsPage = () => {
               disabled={deleteAccountMutation.isPending}
             >
               {deleteAccountMutation.isPending
-                ? "Deleting..."
-                : "Delete Account"}
+                ? t("settings.privacy.deleting", "Deleting...")
+                : t("settings.privacy.deleteAccount", "Delete Account")}
             </Button>
           </DialogFooter>
         </DialogContent>

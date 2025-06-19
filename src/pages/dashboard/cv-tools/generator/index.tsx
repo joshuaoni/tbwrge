@@ -21,8 +21,10 @@ import { useDownloadPDF } from "@/hooks/download-pdf";
 import { useUserStore } from "@/hooks/use-user-store";
 import { CVGeneratorResponse } from "@/interfaces/cv-generator.interface";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const Generator = () => {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -280,14 +282,14 @@ const Generator = () => {
     }
 
     if (!templateRef || !isSuccess) {
-      toast.error("Cannot generate PDF - template not available");
+      toast.error(t("cvTools.common.templateNotAvailable"));
       return;
     }
 
     try {
       setIsGeneratingPDF(true);
       setActiveTemplate(template);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(t("cvTools.common.generatingPDF"));
 
       // Create a container for the content with exact dimensions of a US Letter page
       const container = document.createElement("div");
@@ -415,10 +417,10 @@ const Generator = () => {
       )}_${new Date().toISOString().slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("cvTools.common.pdfSuccess"), { id: toastId });
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("cvTools.common.pdfError"));
     } finally {
       setIsGeneratingPDF(false);
       setActiveTemplate(null);
@@ -427,17 +429,17 @@ const Generator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
-        CV Generator
+      <span className={`${outfit.className} font-bold text-sm`}>
+        {t("cvTools.generator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">
-                Describe your profile{" "}
-                <span className="text-xs font-normal">
-                  (education, experience, skills, etc.)
+              <span className="font-bold text-sm">
+                {t("cvTools.generator.profileDescription")}{" "}
+                <span className="text-sm font-normal">
+                  {t("cvTools.generator.profileDescriptionSubtext")}
                 </span>
               </span>
               <Plus
@@ -454,8 +456,10 @@ const Generator = () => {
               <textarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Detailed description of your profile"
-                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+                placeholder={t(
+                  "cvTools.generator.profileDescriptionPlaceholder"
+                )}
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm text-sm"
               />
             </div>
 
@@ -484,7 +488,9 @@ const Generator = () => {
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="mb-4">
-              <span className="font-medium text-base">Record Voicenote</span>
+              <span className="font-medium text-sm">
+                {t("cvTools.generator.recordVoicenote")}
+              </span>
             </div>
 
             {!audioBlob ? (
@@ -492,7 +498,7 @@ const Generator = () => {
                 <div className="bg-gray-50 rounded-lg p-2 mt-2">
                   <div className="flex items-center w-full">
                     <span className="text-xs text-gray-600 mr-1 whitespace-nowrap shrink-0">
-                      Recording...
+                      {t("cvTools.generator.recording")}
                     </span>
                     <div className="flex-1 mx-1 overflow-hidden">
                       <div className="flex items-center gap-0 justify-between">
@@ -535,7 +541,9 @@ const Generator = () => {
                   className="h-[38px] bg-[#F8F9FF] w-full rounded-lg flex items-center px-3 cursor-pointer hover:bg-[#F0F2FF] transition-colors"
                   onClick={handleStartRecording}
                 >
-                  <span className="text-sm text-gray-500 flex-1">Record</span>
+                  <span className="text-sm text-gray-500 flex-1">
+                    {t("cvTools.generator.record")}
+                  </span>
                   <Mic className="w-4 h-4 text-[#009379]" />
                 </div>
               )
@@ -610,7 +618,7 @@ const Generator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("cvTools.common.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -630,7 +638,7 @@ const Generator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Generate CV"
+                  t("cvTools.generator.generateCV")
                 )}
               </Button>
             </div>
@@ -640,7 +648,9 @@ const Generator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit min-w-full w-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold text-lg">CV Generator</span>
+              <span className="font-bold text-sm">
+                {t("cvTools.generator.resultTitle")}
+              </span>
             </div>
             <div className="h-full">
               {isPending && <Loader2 className="animate-spin" />}
@@ -683,7 +693,9 @@ const Generator = () => {
                             )}
                           </button>
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-black/90 text-white text-xs rounded py-1.5 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 download-tooltip">
-                            Download Template {index + 1} as PDF
+                            {t("cvTools.common.downloadTemplate", {
+                              number: index + 1,
+                            })}
                             <div className="absolute h-2 w-2 top-full left-1/2 transform -translate-x-1/2 -mt-1 rotate-45 bg-black/90"></div>
                           </div>
                         </div>

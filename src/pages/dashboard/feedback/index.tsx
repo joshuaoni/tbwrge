@@ -38,12 +38,12 @@ const FeedbackPage = () => {
 
   return (
     <DashboardFeedbackSupportLayout>
-      <p className={`${outfit.className} text-textgray`}>
+      <p className={`${outfit.className} text-textgray text-sm`}>
         {t("feedback.description")}
       </p>
 
       <form
-        className={`${outfit.className} my-6 space-y-7 max-w-md`}
+        className={`${outfit.className} my-6 mt-4 space-y-4 max-w-md text-sm`}
         onSubmit={form.handleSubmit}
       >
         <FeedbackSupportInputGroup label={t("feedback.name")} />

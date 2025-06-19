@@ -17,8 +17,10 @@ import { outfit } from "@/constants/app";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const Translator = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
   const { userData } = useUserStore();
@@ -88,14 +90,14 @@ const Translator = () => {
     }
 
     if (!templateRef || !isSuccess) {
-      toast.error("Cannot generate PDF - template not available");
+      toast.error(t("cvTools.common.templateNotAvailable"));
       return;
     }
 
     try {
       setIsGeneratingPDF(true);
       setActiveTemplate(template);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(t("cvTools.common.generatingPDF"));
 
       // Create a container for the content with exact dimensions of a US Letter page
       const container = document.createElement("div");
@@ -223,10 +225,10 @@ const Translator = () => {
       )}_${new Date().toISOString().slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(t("cvTools.common.pdfSuccess"), { id: toastId });
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(t("cvTools.common.pdfError"));
     } finally {
       setIsGeneratingPDF(false);
       setActiveTemplate(null);
@@ -235,17 +237,19 @@ const Translator = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
-        CV Translator
+      <span className={`${outfit.className} font-bold text-sm`}>
+        {t("cvTools.translator.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV Upload</span>
-            <span className="font-light text-xs">
-              Add your CVs here, and you can upload up to 5 files max
+            <span className="font-bold text-sm">
+              {t("cvTools.common.cvUpload")}
+            </span>
+            <span className="font-light text-sm">
+              {t("cvTools.common.cvUploadDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -254,7 +258,7 @@ const Translator = () => {
                 type="file"
                 multiple
                 accept=".pdf, .doc, .docx, .txt"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 text-sm"
               />
               <div
                 className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
@@ -274,14 +278,17 @@ const Translator = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("cvTools.common.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("cvTools.common.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("cvTools.common.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("cvTools.common.supportedFormats")}
               </span>
             </div>
 
@@ -325,8 +332,7 @@ const Translator = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                {" "}
-                Select Output language
+                {t("cvTools.common.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -346,7 +352,7 @@ const Translator = () => {
                 {isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Translate CV"
+                  t("cvTools.translator.translateCV")
                 )}
               </Button>
             </div>
@@ -357,7 +363,9 @@ const Translator = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] min-h-[200px] mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Translator</span>
+              <span className="font-bold text-sm">
+                {t("cvTools.translator.resultTitle")}
+              </span>
             </div>
             <div className="h-full">
               {isPending && (
@@ -463,7 +471,7 @@ const Translator = () => {
 
               {!isPending && !isSuccess && (
                 <div className="h-[500px] flex items-center justify-center text-gray-400">
-                  Upload a CV and click "Translate CV" to see results
+                  {t("cvTools.translator.uploadAndTranslate")}
                 </div>
               )}
             </div>

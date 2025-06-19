@@ -26,6 +26,7 @@ import { User } from "@/interfaces/job";
 import { MessageUser } from "@/actions/get-messages";
 import { outfit } from "@/constants/app";
 import { transcribeAudio } from "@/actions/transcribe-audio";
+import { useTranslation } from "react-i18next";
 
 const styles = `
   @keyframes recording-pulse {
@@ -62,6 +63,7 @@ const styles = `
 
 export default function TalentPool() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [page, setPage] = useState(0);
   const [searchVal, setSearchVal] = useState("");
@@ -402,15 +404,17 @@ export default function TalentPool() {
     <DashboardWrapper>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className={`${outfit.className} flex items-center justify-between`}>
-        <h1 className="text-2xl font-semibold">Talent Pool</h1>
+        <h1 className="text-sm font-semibold">
+          {t("talentPool.navigation.title")}
+        </h1>
         {isJobSeeker ? (
           <>
             {!userData?.user?.joined_talent_pool ? (
               <Link
                 href="/dashboard/talent-pool/join-talent-pool"
-                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
               >
-                <span>Join our Talent Pool</span>
+                <span>{t("talentPool.navigation.joinTalentPool")}</span>
                 <svg
                   width="16"
                   height="16"
@@ -427,9 +431,9 @@ export default function TalentPool() {
             ) : (
               <Link
                 href="/dashboard/talent-pool/edit-profile"
-                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[16px]"
+                className="flex items-center gap-2 text-primary hover:text-primary/90 font-medium text-[14px]"
               >
-                <span>Edit Talent Pool Profile</span>
+                <span>{t("talentPool.navigation.editProfile")}</span>
                 <svg
                   width="16"
                   height="16"
@@ -450,9 +454,9 @@ export default function TalentPool() {
           isAISearchActive && (
             <button
               onClick={clearAISearch}
-              className="text-primary hover:text-primary/90 font-medium text-[16px] flex items-center gap-2"
+              className="text-primary hover:text-primary/90 font-medium text-[14px] flex items-center gap-2"
             >
-              <span>Clear AI Search</span>
+              <span>{t("talentPool.navigation.clearAISearch")}</span>
               <svg
                 width="16"
                 height="16"
@@ -474,7 +478,7 @@ export default function TalentPool() {
           isJobSeeker ? "pointer-events-none opacity-60" : ""
         }`}
       >
-        <div className="py-4 min-h-screen">
+        <div className="py-1 min-h-screen">
           <div className=" mx-auto bg-white rounded-lg ">
             {/* Filters */}
             <div className="flex items-center gap-3">
@@ -482,7 +486,7 @@ export default function TalentPool() {
                 <Search color="#898989" />
                 <input
                   type="text"
-                  placeholder="Search for Keywords"
+                  placeholder={t("talentPool.search.searchKeywords")}
                   className="bg-[#F0F0F0] border-none placeholder:text-[#898989] w-full py-[10px] px-2 rounded-lg outline-none focus:outline-none text-sm"
                   value={type === "text" ? searchVal : ""}
                   onChange={(e) => {
@@ -499,8 +503,8 @@ export default function TalentPool() {
                 <div className="relative w-[200px]">
                   <input
                     type="text"
-                    placeholder="Location"
-                    className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333]"
+                    placeholder={t("talentPool.search.location")}
+                    className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                     value={type === "location" ? searchVal : ""}
                     onChange={(e) => {
                       // Clear AI search when using regular filter
@@ -542,14 +546,16 @@ export default function TalentPool() {
                         </span>
                       ))
                     ) : (
-                      <span className="text-[#333]">Skills</span>
+                      <span className="text-[#333]">
+                        {t("talentPool.search.skills")}
+                      </span>
                     )}
                     <input
-                      className="flex-1 bg-transparent focus:outline-none min-w-[100px]"
+                      className="flex-1 bg-transparent focus:outline-none min-w-[100px] text-sm"
                       placeholder={
                         type === "skills" && searchVal
                           ? ""
-                          : "Press enter to add"
+                          : t("talentPool.search.pressEnterToAdd")
                       }
                       value={skillInput}
                       onChange={(e) => {
@@ -586,10 +592,10 @@ export default function TalentPool() {
                 <div className="relative w-[200px]" ref={dropdownRef}>
                   <button
                     onClick={() => setIsAIDropdownOpen(!isAIDropdownOpen)}
-                    className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5"
+                    className="w-full py-3 px-4 rounded-lg border border-[#009379] flex items-center justify-between hover:bg-[#009379]/5 text-sm"
                   >
-                    <div className="flex items-center gap-2">
-                      <span>Search with AI</span>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span>{t("talentPool.search.searchWithAI")}</span>
                       <Image
                         src="/ai-technology.png"
                         alt="AI"
@@ -620,22 +626,22 @@ export default function TalentPool() {
                   {isAIDropdownOpen && (
                     <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                       <button
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 text-sm"
                         onClick={() => {
                           setIsRecordingModalOpen(true);
                           setIsAIDropdownOpen(false);
                         }}
                       >
-                        Audio Search
+                        {t("talentPool.search.audioSearch")}
                       </button>
                       <button
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t"
+                        className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-2 border-t text-sm"
                         onClick={() => {
                           setIsTextSearchModalOpen(true);
                           setIsAIDropdownOpen(false);
                         }}
                       >
-                        Text Search
+                        {t("talentPool.search.textSearch")}
                       </button>
                     </div>
                   )}
@@ -675,20 +681,20 @@ export default function TalentPool() {
                     <TableHead className="w-[40px] pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
                       <input type="checkbox" className="rounded-sm" />
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                      CANDIDATE NAME
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                      {t("talentPool.table.candidateName")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                      LOCATION
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                      {t("talentPool.table.location")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                      SKILLS
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                      {t("talentPool.table.skills")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                      MOST RECENT POSITION
+                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                      {t("talentPool.table.mostRecentPosition")}
                     </TableHead>
-                    <TableHead className=" text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
-                      ATTACHMENTS
+                    <TableHead className="text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
+                      {t("talentPool.table.attachments")}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -703,8 +709,8 @@ export default function TalentPool() {
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-4">
                         {isAISearchActive
-                          ? "No candidates match your AI search criteria"
-                          : "No Talent at this moment"}
+                          ? t("talentPool.messages.noMatchesAI")
+                          : t("talentPool.messages.noTalent")}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -822,7 +828,9 @@ export default function TalentPool() {
         >
           <div className="bg-white rounded-lg w-[600px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">Search With AI</h2>
+              <h2 className="text-[16px] font-semibold">
+                {t("talentPool.search.searchWithAI")}
+              </h2>
               <button
                 onClick={() => {
                   setIsTextSearchModalOpen(false);
@@ -855,10 +863,10 @@ Language Requirements."
                 {isSearching ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Searching...
+                    {t("talentPool.search.searching")}
                   </span>
                 ) : (
-                  "Search"
+                  t("talentPool.search.search")
                 )}
               </button>
             </div>
@@ -873,7 +881,9 @@ Language Requirements."
         >
           <div className="bg-white rounded-lg w-[500px] p-6">
             <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
-              <h2 className="text-[16px] font-semibold">Search With AI</h2>
+              <h2 className="text-[16px] font-semibold">
+                {t("talentPool.search.searchWithAI")}
+              </h2>
               <button
                 onClick={() => {
                   setIsRecordingModalOpen(false);
@@ -984,10 +994,10 @@ Language Requirements."
                 {isSearching ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Searching...
+                    {t("talentPool.search.searching")}
                   </span>
                 ) : (
-                  "Search"
+                  t("talentPool.search.search")
                 )}
               </button>
             </div>

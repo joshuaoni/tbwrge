@@ -13,8 +13,10 @@ import RankByFilter from "../../../../components/dashboard/ranking/rank-by-filte
 import { rankFilters } from "../../../../interfaces/ranking.constant";
 import { Candidate } from "../../../../interfaces/ranking.interface";
 import { outfit } from "@/constants/app";
+import { useTranslation } from "react-i18next";
 
 const Ranking = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<any[]>([]);
   const [fileSizes, setFileSizes] = useState<string[]>([]);
   const [value, setValue] = useState("");
@@ -91,15 +93,15 @@ const Ranking = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
-        CV Ranking
+      <span className={`${outfit.className} font-bold text-sm`}>
+        {t("cvTools.ranking.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV Upload</span>
-            <span className="font-light text-xs">
-              Add your CVs here, and you can upload up to 5 files max
+            <span className="font-bold">{t("cvTools.common.cvUpload")}</span>
+            <span className="font-light text-sm">
+              {t("cvTools.common.cvUploadDescription")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -130,14 +132,17 @@ const Ranking = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>{" "}
+                  {t("cvTools.common.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("cvTools.common.browse")}
+                  </span>{" "}
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("cvTools.common.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("cvTools.common.supportedFormats")}
               </span>
             </div>
 
@@ -172,12 +177,14 @@ const Ranking = () => {
 
           {/* Job Description Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("cvTools.common.jobDescriptionTitle")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("cvTools.common.jobDescriptionPlaceholder")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -186,10 +193,10 @@ const Ranking = () => {
           {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold">
-                Want to customize your results?{" "}
+              <span className="font-bold text-sm">
+                {t("cvTools.common.customizeResults")}{" "}
                 <span className="text-sm font-medium">
-                  &#40;Add up to 20 prompts&#41;
+                  {t("cvTools.common.addPrompts")}
                 </span>
               </span>
               <Plus
@@ -203,7 +210,7 @@ const Ranking = () => {
               />
             </div>
             <Input
-              placeholder="Input Prompt"
+              placeholder={t("cvTools.common.inputPrompt")}
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
@@ -231,7 +238,7 @@ const Ranking = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("cvTools.common.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -248,7 +255,11 @@ const Ranking = () => {
                 }}
                 className="self-center bg-primary min-w-[100px]  text-white"
               >
-                {isPending ? <Loader2 className="animate-spin" /> : "Rank CV"}
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("cvTools.ranking.rankCV")
+                )}
               </Button>
             </div>
           </div>
@@ -257,7 +268,9 @@ const Ranking = () => {
         <div className="w-[50%]">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <span className="font-bold">CV Ranking</span>
+              <span className="font-bold text-sm">
+                {t("cvTools.ranking.resultTitle")}
+              </span>
               {isSuccess && (
                 <RankByFilter
                   title="Rank By:"
@@ -283,7 +296,7 @@ const Ranking = () => {
 
               {!isPending && !isSuccess && (
                 <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
-                  Upload CVs to see ranking results
+                  {t("cvTools.ranking.uploadToSeeResults")}
                 </div>
               )}
 
@@ -291,7 +304,7 @@ const Ranking = () => {
                 <div className="py-5 w-full">
                   <div className="bg-gray-200 py-3 rounded-t-lg flex">
                     <div className="w-2/3 pl-4 uppercase text-gray-600 font-semibold text-sm">
-                      candidate name
+                      {t("cvTools.ranking.candidateName")}
                     </div>
                     <div className="w-1/3 text-center text-gray-600 font-semibold text-sm">
                       {ranking}

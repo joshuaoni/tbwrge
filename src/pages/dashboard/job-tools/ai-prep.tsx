@@ -17,6 +17,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
+import { useTranslation } from "react-i18next";
 
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -57,6 +58,7 @@ interface InterviewPrepResponse {
 }
 
 const AiInterviewPrep = () => {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
@@ -105,7 +107,9 @@ const AiInterviewPrep = () => {
       if (!questions) return;
 
       setIsGeneratingPDF(true);
-      const toastId = toast.loading("Generating PDF...");
+      const toastId = toast.loading(
+        t("jobTools.interviewPrep.generatingPDF", "Generating PDF...")
+      );
 
       // Create a new PDF document
       const pdf = new jsPDF("p", "mm", "a4");
@@ -118,15 +122,27 @@ const AiInterviewPrep = () => {
       pdf.setFontSize(18);
       pdf.setTextColor(0, 0, 0);
       pdf.setFont("helvetica", "bold");
-      pdf.text("Possible Interview Questions & Answers", pageWidth / 2, y, {
-        align: "center",
-      });
+      pdf.text(
+        t(
+          "jobTools.interviewPrep.questionsTitle",
+          "Possible Interview Questions & Answers"
+        ),
+        pageWidth / 2,
+        y,
+        {
+          align: "center",
+        }
+      );
       y += 15;
 
       // Add role if available
       if (typeof questions === "object" && questions.role) {
         pdf.setFontSize(14);
-        pdf.text(`Role: ${questions.role}`, margin, y);
+        pdf.text(
+          `${t("jobTools.interviewPrep.role", "Role:")} ${questions.role}`,
+          margin,
+          y
+        );
         y += 10;
       }
 
@@ -138,7 +154,11 @@ const AiInterviewPrep = () => {
       ) {
         pdf.setFontSize(12);
         pdf.setFont("helvetica", "bold");
-        pdf.text("CV Insights:", margin, y);
+        pdf.text(
+          t("jobTools.interviewPrep.cvInsights", "CV Insights:"),
+          margin,
+          y
+        );
         y += 6;
 
         pdf.setFont("helvetica", "normal");
@@ -150,7 +170,14 @@ const AiInterviewPrep = () => {
 
       // Add "Likely Interview Questions & Suggested Answers" heading
       pdf.setFont("helvetica", "bold");
-      pdf.text("Likely Interview Questions & Suggested Answers:", margin, y);
+      pdf.text(
+        t(
+          "jobTools.interviewPrep.likelyQuestions",
+          "Likely Interview Questions & Suggested Answers:"
+        ),
+        margin,
+        y
+      );
       y += 10;
 
       // Add horizontal line
@@ -235,11 +262,19 @@ const AiInterviewPrep = () => {
         .slice(0, 10)}.pdf`;
       pdf.save(fileName);
 
-      toast.success("PDF generated successfully", { id: toastId });
+      toast.success(
+        t("jobTools.interviewPrep.pdfGenerated", "PDF generated successfully"),
+        { id: toastId }
+      );
       setIsGeneratingPDF(false);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(
+        t(
+          "jobTools.interviewPrep.pdfError",
+          "Failed to generate PDF. Please try again."
+        )
+      );
       setIsGeneratingPDF(false);
     }
   };
@@ -286,7 +321,12 @@ const AiInterviewPrep = () => {
     if (selectedFiles) {
       const newFiles = Array.from(selectedFiles);
       if (files.length + newFiles.length > 5) {
-        alert("You can only upload a maximum of 5 files.");
+        alert(
+          t(
+            "jobTools.interviewPrep.maxFilesError",
+            "You can only upload a maximum of 5 files."
+          )
+        );
       } else {
         setFiles((prevFiles) => [...prevFiles, ...newFiles]);
       }
@@ -304,18 +344,19 @@ const AiInterviewPrep = () => {
 
   return (
     <DashboardWrapper>
-      <span className={`${outfit.className} font-bold text-xl`}>
-        AI Interview Prep
+      <span className={`${outfit.className} font-bold text-sm`}>
+        {t("jobTools.interviewPrep.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4`}>
+      <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
           {/* File Upload */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">CV & Cover Letter Upload</span>
+            <span className="font-bold">
+              {t("jobTools.interviewPrep.cvUpload")}
+            </span>
             <span className="font-light text-xs">
-              You need to upload at least your CV, you can upload up to 5 files
-              max
+              {t("jobTools.interviewPrep.uploadRequired")}
             </span>
             <div className="relative w-full flex flex-col items-start rounded-lg">
               <input
@@ -343,14 +384,17 @@ const AiInterviewPrep = () => {
                   alt="Upload Icon"
                 />
                 <span>
-                  Drag your file(s) or <span className="font-bold">browse</span>
+                  {t("jobTools.interviewPrep.dragFiles")}{" "}
+                  <span className="font-bold">
+                    {t("jobTools.interviewPrep.browse")}
+                  </span>
                 </span>
                 <span className="text-textgray text-sm">
-                  Max 10MB files are allowed
+                  {t("jobTools.interviewPrep.maxFileSize")}
                 </span>
               </div>
               <span className="text-textgray mt-3 text-sm">
-                Only supports .pdf, .doc, .docx, and .txt
+                {t("jobTools.interviewPrep.supportedFormats")}
               </span>
             </div>
 
@@ -392,12 +436,14 @@ const AiInterviewPrep = () => {
           </div>
 
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">Paste Your Job Description Here</span>
+            <span className="font-bold">
+              {t("jobTools.interviewPrep.pasteJobDescription")}
+            </span>
             <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Detailed Job Description"
+                placeholder={t("jobTools.interviewPrep.detailedJobDescription")}
                 className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
@@ -407,7 +453,7 @@ const AiInterviewPrep = () => {
           <div className="flex items-center h-fit mt-12 justify-between">
             <div className="flex items-center flex-1">
               <span className="flex-nowrap mr-3 font-semibold">
-                Select Output language
+                {t("jobTools.interviewPrep.selectOutputLanguage")}
               </span>
               <LanguageSelectorDropDown
                 outputLanguage={true}
@@ -421,7 +467,11 @@ const AiInterviewPrep = () => {
                 onClick={() => generateQuestions()}
                 disabled={!files.length || !jobDescription || isPending}
               >
-                {isPending ? <Loader2 className="animate-spin" /> : "Generate"}
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("jobTools.interviewPrep.generate")
+                )}
               </Button>
             </div>
           </div>
@@ -431,8 +481,8 @@ const AiInterviewPrep = () => {
         <div className="w-[50%] mb-12">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">
-                Possible Interview Questions & Answers
+              <h2 className="text-sm font-semibold">
+                {t("jobTools.interviewPrep.questionsTitle")}
               </h2>
               {isSuccess && questions && (
                 <div className="flex gap-2">
@@ -486,7 +536,7 @@ const AiInterviewPrep = () => {
 
             {!isPending && !isSuccess && !isError && (
               <div className="flex items-center justify-center h-[200px] text-gray-400 text-sm text-center px-4">
-                Generated interview preparation will be displayed here
+                {t("jobTools.interviewPrep.questionsPlaceholder")}
               </div>
             )}
 
@@ -499,7 +549,7 @@ const AiInterviewPrep = () => {
                   <div className="space-y-5">
                     <div>
                       <h3 className="font-bold">
-                        Role:{" "}
+                        {t("jobTools.interviewPrep.role")}:{" "}
                         <span className="font-normal">{questions.role}</span>
                       </h3>
 
@@ -507,7 +557,7 @@ const AiInterviewPrep = () => {
                         questions.cv_insight !== "null" && (
                           <div className="mt-2">
                             <h3 className="font-bold">
-                              CV Insights:{" "}
+                              {t("jobTools.interviewPrep.cvInsights")}:{" "}
                               <span className="font-normal">
                                 {questions.cv_insight}
                               </span>
@@ -517,7 +567,7 @@ const AiInterviewPrep = () => {
                     </div>
 
                     <h3 className="font-bold">
-                      Likely Interview Questions & Suggested Answers:
+                      {t("jobTools.interviewPrep.likelyQuestions")}:
                     </h3>
 
                     <div className="space-y-6">
@@ -525,7 +575,8 @@ const AiInterviewPrep = () => {
                         (q: InterviewQuestion, qIndex: number) => (
                           <div key={qIndex} className="space-y-2">
                             <p className="font-medium text-base">
-                              Q{qIndex + 1}. "{q.question}"
+                              {t("jobTools.interviewPrep.q")}
+                              {qIndex + 1}. "{q.question}"
                             </p>
 
                             <div className="ml-2 pl-4 border-l-2 border-green-500">

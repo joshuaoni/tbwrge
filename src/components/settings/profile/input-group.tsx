@@ -22,7 +22,7 @@ function ProfileInputGroup(props: ProfileInputGroupProps) {
         onChange={(e) => props.onChange?.(e.target.value)}
         type={props.type ?? "text"}
         id={convertToSlug(props.label)}
-        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+        className="w-full text-sm px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
         placeholder={`Enter your ${props.label}`}
       />
     </div>
