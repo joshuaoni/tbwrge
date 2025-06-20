@@ -43,7 +43,7 @@ const JobHeader = ({
 
   return (
     <div>
-      <Link
+      {/* <Link
         href="/dashboard/job-board"
         className="inline-flex items-center text-gray-600 mb-6"
       >
@@ -64,7 +64,7 @@ const JobHeader = ({
           />
         </svg>
         {t("jobBoard.backToJobs")}
-      </Link>
+      </Link> */}
 
       <div className="bg-white rounded-lg p-6 mb-6">
         <div className="flex items-start gap-4">
@@ -849,6 +849,11 @@ const JobDetailsPage = () => {
               />
             )}
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+          <p className="text-sm text-gray-500">Powered by Candivet</p>
         </div>
       </div>
     </div>

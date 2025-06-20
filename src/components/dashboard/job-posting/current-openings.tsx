@@ -12,11 +12,19 @@ import {
 import { useUserStore } from "@/hooks/use-user-store";
 import { IJob } from "@/interfaces/job";
 import { useQuery } from "@tanstack/react-query";
-import { BriefcaseBusiness, File, ShoppingBag, User } from "lucide-react";
-import React, { useEffect } from "react";
+import { BriefcaseBusiness, File, ShoppingBag, User, Code } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
 
 const CurrentOpenings = ({
   setCurrentView,
@@ -28,6 +36,8 @@ const CurrentOpenings = ({
   const { userData } = useUserStore();
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
+  const [showEmbedDialog, setShowEmbedDialog] = useState(false);
+  const [jobsToEmbed, setJobsToEmbed] = useState<string[]>([]);
   const { data } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
@@ -86,11 +96,39 @@ const CurrentOpenings = ({
     ]);
   }, [data]);
 
+  const handleJobSelection = (jobId: string, isSelected: boolean) => {
+    if (isSelected) {
+      setJobsToEmbed((prev) => [...prev, jobId]);
+    } else {
+      setJobsToEmbed((prev) => prev.filter((id) => id !== jobId));
+    }
+  };
+
+  const generateEmbedCode = () => {
+    if (jobsToEmbed.length === 0) {
+      toast.error("Please select at least one job to embed");
+      return;
+    }
+
+    const jobIds = jobsToEmbed.join(",");
+    console.log({ jobIds });
+    const embedUrl = `${window.location.origin}/embedded-jobs?jobs=${jobIds}`;
+    const embedCode = `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="${embedUrl}"></iframe>`;
+
+    navigator.clipboard.writeText(embedCode);
+    toast.success("Embed code copied to clipboard!");
+    setShowEmbedDialog(false);
+    setJobsToEmbed([]);
+  };
+
   return (
     <section>
       <div className="flex items-center space-x-8">
         {stats.map((stat, index) => (
-          <div className="shadow-[0px_4px_50px_rgba(0,0,0,0.2)] rounded-2xl   justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80">
+          <div
+            key={index}
+            className="shadow-[0px_4px_50px_rgba(0,0,0,0.2)] rounded-2xl justify-center p-4 bg-white h-28 flex flex-col w-full md:w-80"
+          >
             <div className="flex items-center space-x-2">
               {stat.icon}
               <span className="text-sm font-light ">{stat.title}</span>
@@ -99,12 +137,23 @@ const CurrentOpenings = ({
           </div>
         ))}
       </div>
-      <div className="mt-8">
-        {/* <BulkActionsJobsPopUp
-          jobIds={selectedJobs.map((job) => job.id)}
-          status="open"
-        /> */}
+
+      <div className="mt-4 flex justify-between items-center">
+        <div>
+          {/* <BulkActionsJobsPopUp
+            jobIds={selectedJobs.map((job) => job.id)}
+            status="open"
+          /> */}
+        </div>
+        <Button
+          onClick={() => setShowEmbedDialog(true)}
+          className="bg-primary hover:bg-primary/90 text-white flex items-center gap-2"
+        >
+          <Code size={16} />
+          Embed Jobs
+        </Button>
       </div>
+
       <Table className="mt-2">
         <TableHeader className="h-[39.292px] mb-4">
           <TableRow className="bg-[#D6D6D6]">
@@ -196,6 +245,85 @@ const CurrentOpenings = ({
           ))}
         </TableBody>
       </Table>
+
+      {/* Embed Jobs Dialog */}
+      <Dialog open={showEmbedDialog} onOpenChange={setShowEmbedDialog}>
+        <DialogContent className="bg-white max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Select Jobs to Embed</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <p className="text-gray-600">
+              Select the jobs you want to include in the embedded widget:
+            </p>
+
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {jobs?.map((job: IJob) => (
+                <div
+                  key={job.id}
+                  className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50"
+                >
+                  <input
+                    type="checkbox"
+                    checked={jobsToEmbed.includes(job.id)}
+                    onChange={(e) =>
+                      handleJobSelection(job.id, e.target.checked)
+                    }
+                    className="w-4 h-4"
+                  />
+                  <div className="flex items-center space-x-3 flex-1">
+                    {job.company_logo ? (
+                      <div className="w-8 h-8 rounded-full overflow-hidden">
+                        <Image
+                          src={job.company_logo}
+                          alt={job.job_title || ""}
+                          width={32}
+                          height={32}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-8 h-8 bg-slate-300 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-medium">
+                          {job.company_name?.[0]}
+                        </span>
+                      </div>
+                    )}
+                    <div>
+                      <h4 className="font-medium text-sm">{job.job_title}</h4>
+                      <p className="text-xs text-gray-500">
+                        {job.company_name} • {job.job_location_name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center pt-4 border-t">
+              <p className="text-sm text-gray-600">
+                Selected: {jobsToEmbed.length} job
+                {jobsToEmbed.length !== 1 ? "s" : ""}
+              </p>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowEmbedDialog(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={generateEmbedCode}
+                  className="px-6 py-2 bg-[#009379] hover:bg-[#007a66] text-white rounded-lg transition-colors duration-200 font-medium shadow-sm"
+                >
+                  Generate Embed Code
+                </button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
