@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 interface CandidateDetailsProps {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
@@ -25,6 +26,7 @@ const CandidateDetails = ({
   setCurrentView,
   candidate,
 }: CandidateDetailsProps) => {
+  const { t } = useTranslation();
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNoteText, setNewNoteText] = useState("");
@@ -80,16 +82,16 @@ const CandidateDetails = ({
               variant="ghost"
               className="text-sm text-[#009379] border border-[#009379] hover:bg-[#009379] hover:text-white px-6"
             >
-              Generate Candidate Report
+              {t("jobPostings.candidateDetails.generateReport")}
             </Button>
             <Button
               variant="ghost"
               className="text-sm text-red-500 border border-red-500 hover:bg-red-500 hover:text-white hover:bg-red px-6"
             >
-              Reject Candidate
+              {t("jobPostings.candidateDetails.rejectCandidate")}
             </Button>
             <Button className="bg-[#009379] text-sm text-white hover:bg-[#009379]/90 px-6">
-              Mark as Fit
+              {t("jobPostings.candidateDetails.markAsFit")}
             </Button>
           </div>
         </div>
@@ -101,9 +103,13 @@ const CandidateDetails = ({
             {/* Profile Overview */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="flex items-start justify-between mb-4">
-                <h2 className="text-sm font-semibold">Profile Overview</h2>
+                <h2 className="text-sm font-semibold">
+                  {t("jobPostings.candidateDetails.profileOverview")}
+                </h2>
                 <div className="flex flex-col items-center gap-2">
-                  <h2 className="text-sm font-semibold">Fit Score</h2>
+                  <h2 className="text-sm font-semibold">
+                    {t("jobPostings.candidateDetails.fitScore")}
+                  </h2>
                   <div className="flex items-center justify-center">
                     <div className="relative w-16 h-16">
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -134,30 +140,39 @@ const CandidateDetails = ({
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Email</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.email")}
+                    </p>
                     <p className="text-sm text-gray-500">{applicant.email}</p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Phone</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.phone")}
+                    </p>
                     <p className="text-sm text-gray-500">{applicant.phone}</p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">DOB</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.dob")}
+                    </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.date_of_birth || "Not provided"}
+                      {applicant.date_of_birth ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">LinkedIn</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.linkedin")}
+                    </p>
                     <p className="text-sm text-gray-500 cursor-pointer hover:underline">
                       {applicant.linkedin ? (
                         <a
@@ -165,10 +180,10 @@ const CandidateDetails = ({
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          View Profile
+                          {t("jobPostings.candidateDetails.viewProfile")}
                         </a>
                       ) : (
-                        "Not provided"
+                        t("jobPostings.candidateDetails.notProvided")
                       )}
                     </p>
                   </div>
@@ -177,7 +192,7 @@ const CandidateDetails = ({
                 <div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-black w-[120px]">
-                      Current Position
+                      {t("jobPostings.candidateDetails.currentPosition")}
                     </p>
                     <p className="text-sm text-gray-500">
                       {applicant.current_position}
@@ -187,7 +202,9 @@ const CandidateDetails = ({
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Company</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.company")}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {applicant.current_company}
                     </p>
@@ -196,7 +213,9 @@ const CandidateDetails = ({
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Nationality</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.nationality")}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {applicant.nationality}
                     </p>
@@ -205,7 +224,9 @@ const CandidateDetails = ({
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Location</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.location")}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {applicant.country_of_residence}
                     </p>
@@ -214,8 +235,12 @@ const CandidateDetails = ({
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-black w-[120px]">Salary Range</p>
-                    <p className="text-sm text-gray-500">{"Not provided"}</p>
+                    <p className="text-sm text-black w-[120px]">
+                      {t("jobPostings.candidateDetails.salaryRange")}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {t("jobPostings.candidateDetails.notProvided")}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -224,7 +249,9 @@ const CandidateDetails = ({
 
             {/* Profile Summary */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-              <h2 className="text-sm font-semibold mb-4">Profile Summary</h2>
+              <h2 className="text-sm font-semibold mb-4">
+                {t("jobPostings.candidateDetails.profileSummary")}
+              </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {applicant.professional_summary}
               </p>
@@ -233,22 +260,26 @@ const CandidateDetails = ({
             {/* AI-Powered Insights */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <h2 className="text-sm font-semibold mb-4">
-                AI-Powered Insights
+                {t("jobPostings.candidateDetails.aiInsights")}
               </h2>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xs font-medium mb-2">Key Skills</h3>
+                  <h3 className="text-xs font-medium mb-2">
+                    {t("jobPostings.candidateDetails.keySkills")}
+                  </h3>
                   <p className="text-sm text-gray-600">
                     {candidate.skills_summary}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xs font-medium mb-2">Strengths</h3>
+                  <h3 className="text-xs font-medium mb-2">
+                    {t("jobPostings.candidateDetails.strengths")}
+                  </h3>
                   <p className="text-sm text-gray-600">{candidate.strength}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">
-                    Areas for Development
+                    {t("jobPostings.candidateDetails.areasForDevelopment")}
                   </h3>
                   <p className="text-sm text-gray-600">
                     {candidate.areas_for_development}
@@ -256,14 +287,16 @@ const CandidateDetails = ({
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">
-                    Culture Fit Indicators
+                    {t("jobPostings.candidateDetails.cultureFitIndicators")}
                   </h3>
                   <p className="text-sm text-gray-600">
                     {candidate.culture_fit}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium mb-2">Languages</h3>
+                  <h3 className="text-sm font-medium mb-2">
+                    {t("jobPostings.candidateDetails.languages")}
+                  </h3>
                   <p className="text-sm text-gray-600">{candidate.languages}</p>
                 </div>
               </div>
@@ -277,7 +310,9 @@ const CandidateDetails = ({
                 className="flex items-center gap-4 cursor-pointer"
                 onClick={() => setIsQuestionsOpen(!isQuestionsOpen)}
               >
-                <h2 className="text-sm font-semibold mb-4">Other Questions</h2>
+                <h2 className="text-sm font-semibold mb-4">
+                  {t("jobPostings.candidateDetails.otherQuestions")}
+                </h2>
                 {isQuestionsOpen ? (
                   <ChevronUp className="w-5 h-5 mb-4 text-gray-600 transition-transform duration-300" />
                 ) : (
@@ -298,16 +333,22 @@ const CandidateDetails = ({
                       candidate.application_answers.map((answer, index) => (
                         <div key={index}>
                           <p className="text-sm font-medium mb-2">
-                            {answer.question?.text || "Question not available"}
+                            {answer.question?.text ||
+                              t(
+                                "jobPostings.candidateDetails.questionNotAvailable"
+                              )}
                           </p>
                           <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
-                            {answer.text || "No answer provided"}
+                            {answer.text ||
+                              t(
+                                "jobPostings.candidateDetails.noAnswerProvided"
+                              )}
                           </p>
                         </div>
                       ))
                     ) : (
                       <p className="text-sm text-gray-500">
-                        No questions answered
+                        {t("jobPostings.candidateDetails.noQuestionsAnswered")}
                       </p>
                     )}
                   </div>
@@ -321,7 +362,7 @@ const CandidateDetails = ({
             {/* Supporting Documents */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <h2 className="text-sm font-semibold mb-4">
-                Supporting Documents
+                {t("jobPostings.candidateDetails.supportingDocuments")}
               </h2>
               <div className="space-y-3">
                 {candidate.cv && (
@@ -371,9 +412,12 @@ const CandidateDetails = ({
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        {applicant.name}'s CV
+                        {applicant.name}
+                        {t("jobPostings.candidateDetails.cvSuffix")}
                       </p>
-                      <p className="text-xs text-gray-500">Click to view</p>
+                      <p className="text-xs text-gray-500">
+                        {t("jobPostings.candidateDetails.clickToView")}
+                      </p>
                     </div>
                   </a>
                 )}
@@ -425,9 +469,12 @@ const CandidateDetails = ({
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        {applicant.name}'s Cover Letter
+                        {applicant.name}
+                        {t("jobPostings.candidateDetails.coverLetterSuffix")}
                       </p>
-                      <p className="text-xs text-gray-500">Click to view</p>
+                      <p className="text-xs text-gray-500">
+                        {t("jobPostings.candidateDetails.clickToView")}
+                      </p>
                     </div>
                   </a>
                 )}
@@ -461,9 +508,11 @@ const CandidateDetails = ({
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Candidate Application Voicenote
+                          {t("jobPostings.candidateDetails.candidateVoicenote")}
                         </p>
-                        <p className="text-xs text-gray-500">Click to listen</p>
+                        <p className="text-xs text-gray-500">
+                          {t("jobPostings.candidateDetails.clickToListen")}
+                        </p>
                       </div>
                     </div>
                     <div className="h-8 flex items-center gap-[2px]">
@@ -486,7 +535,9 @@ const CandidateDetails = ({
             {/* Add Notes */}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold">Add Notes</h2>
+                <h2 className="text-sm font-semibold">
+                  {t("jobPostings.candidateDetails.addNotes")}
+                </h2>
                 <button
                   onClick={() => {
                     if (isAddingNote) {
@@ -508,7 +559,9 @@ const CandidateDetails = ({
               {isAddingNote && (
                 <div className="mb-4">
                   <Textarea
-                    placeholder="Enter your note here..."
+                    placeholder={t(
+                      "jobPostings.candidateDetails.enterNoteHere"
+                    )}
                     value={newNoteText}
                     onChange={(e) => setNewNoteText(e.target.value)}
                     className="min-h-[100px] w-full bg-gray-100"
@@ -519,20 +572,20 @@ const CandidateDetails = ({
               <div className="overflow-hidden">
                 <div className="grid rounded-xl grid-cols-[120px_1fr] bg-gray-200">
                   <div className="p-3 text-sm font-medium text-gray-600">
-                    Date
+                    {t("jobPostings.candidateDetails.date")}
                   </div>
                   <div className="p-3 text-sm font-medium text-gray-600">
-                    Notes
+                    {t("jobPostings.candidateDetails.notes")}
                   </div>
                 </div>
                 <div className="divide-y divide-gray-200">
                   {isLoadingNotes ? (
                     <div className="p-3 text-center text-sm text-gray-500">
-                      Loading notes...
+                      {t("jobPostings.candidateDetails.loadingNotes")}
                     </div>
                   ) : !notes?.length ? (
                     <div className="p-3 text-center text-sm text-gray-500">
-                      No notes available
+                      {t("jobPostings.candidateDetails.noNotesAvailable")}
                     </div>
                   ) : (
                     notes.map((note) => (
@@ -555,7 +608,7 @@ const CandidateDetails = ({
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <div className="bg-white rounded-lg p-4 mb-4 border border-gray-100">
                 <h2 className="text-sm font-semibold mb-4">
-                  Screening Fit Score
+                  {t("jobPostings.candidateDetails.screeningFitScore")}
                 </h2>
                 <div className="flex items-center justify-center">
                   <div className="relative w-24 h-24">
@@ -589,16 +642,22 @@ const CandidateDetails = ({
                   candidate.application_answers.map((answer, index) => (
                     <div key={index}>
                       <p className="text-sm font-medium mb-2">
-                        {answer.question?.text || "Question not available"}
+                        {answer.question?.text ||
+                          t(
+                            "jobPostings.candidateDetails.questionNotAvailable"
+                          )}
                       </p>
                       <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                        {answer.text || "No answer provided"}
+                        {answer.text ||
+                          t("jobPostings.candidateDetails.noAnswerProvided")}
                       </p>
                     </div>
                   ))
                 ) : (
                   <p className="text-sm text-gray-500">
-                    No screening questions answered
+                    {t(
+                      "jobPostings.candidateDetails.noScreeningQuestionsAnswered"
+                    )}
                   </p>
                 )}
               </div>
@@ -607,11 +666,11 @@ const CandidateDetails = ({
             {/*Screening: AI-Powered Insights*/}
             <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
               <h2 className="text-sm font-semibold mb-4">
-                Screening: AI-Powered Insights
+                {t("jobPostings.candidateDetails.screeningAiInsights")}
               </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {candidate.screening_ai_insights ||
-                  "No AI insights available for screening"}
+                  t("jobPostings.candidateDetails.noAiInsightsAvailable")}
               </p>
             </div>
           </div>

@@ -459,6 +459,204 @@ declare module "react-i18next" {
           stillHaveQuestions: string;
           contactUs: string;
         };
+        jobPostings: {
+          title: string;
+          currentOpenings: string;
+          closedJobs: string;
+          stats: {
+            totalJobPosts: string;
+            qualifiedApplicants: string;
+            totalApplicants: string;
+          };
+          table: {
+            jobTitle: string;
+            jobId: string;
+            totalApplicants: string;
+            recruiter: string;
+            company: string;
+            endDate: string;
+            candidateName: string;
+            id: string;
+            fitScore: string;
+            yoe: string;
+            keySkills: string;
+            applicationDate: string;
+            attachments: string;
+            attachment: string;
+          };
+          embed: {
+            embedJobs: string;
+            selectJobsToEmbed: string;
+            selectJobsDescription: string;
+            selected: string;
+            job: string;
+            jobs: string;
+            cancel: string;
+            generateEmbedCode: string;
+            pleaseSelectJob: string;
+            embedCodeCopied: string;
+          };
+          candidateDetails: {
+            generateReport: string;
+            rejectCandidate: string;
+            markAsFit: string;
+            profileOverview: string;
+            fitScore: string;
+            email: string;
+            phone: string;
+            dob: string;
+            linkedin: string;
+            viewProfile: string;
+            notProvided: string;
+            currentPosition: string;
+            company: string;
+            nationality: string;
+            location: string;
+            salaryRange: string;
+            profileSummary: string;
+            aiInsights: string;
+            keySkills: string;
+            strengths: string;
+            areasForDevelopment: string;
+            cultureFitIndicators: string;
+            languages: string;
+            otherQuestions: string;
+            questionNotAvailable: string;
+            noAnswerProvided: string;
+            noQuestionsAnswered: string;
+            supportingDocuments: string;
+            cvSuffix: string;
+            clickToView: string;
+            coverLetterSuffix: string;
+            candidateVoicenote: string;
+            clickToListen: string;
+            addNotes: string;
+            enterNoteHere: string;
+            date: string;
+            notes: string;
+            loadingNotes: string;
+            noNotesAvailable: string;
+            screeningQuestions: string;
+            screeningFitScore: string;
+            noScreeningQuestionsAnswered: string;
+            screeningAiInsights: string;
+            noAiInsightsAvailable: string;
+          };
+          actions: {
+            editJob: string;
+            copyJobLink: string;
+            copyEmbedCode: string;
+            copyScreeningLink: string;
+            closeJob: string;
+            jobLinkCopied: string;
+            embedCodeCopied: string;
+            screeningLinkCopied: string;
+            closingJob: string;
+            jobClosedSuccess: string;
+            jobClosedSuccessAlt: string;
+            jobCloseError: string;
+            jobCloseErrorAlt: string;
+          };
+          jobDetails: {
+            tools: string;
+            summarize: string;
+            allCandidates: string;
+            shortlistedCandidates: string;
+            rejectedCandidates: string;
+            screenedCandidates: string;
+            noCandidatesFound: string;
+            noCandidatesDescription: {
+              all: string;
+              shortlisted: string;
+              rejected: string;
+              screened: string;
+            };
+          };
+          edit: {
+            title: string;
+            loadingEditor: string;
+            editorPlaceholder: string;
+            jobTitle: string;
+            jobLocation: string;
+            jobDetails: {
+              jobType: string;
+              experience: string;
+              experiencePlaceholder: string;
+              salaryRange: string;
+              salaryMin: string;
+              salaryMax: string;
+              location: string;
+            };
+            jobTypeOptions: {
+              fullTime: string;
+              partTime: string;
+              contract: string;
+              internship: string;
+              freelance: string;
+            };
+            sections: {
+              aboutCompany: string;
+              jobDescription: string;
+              jobDescriptionPlaceholder: string;
+              requiredSkills: string;
+              requiredSkillsPlaceholder: string;
+              educationalRequirements: string;
+              educationalRequirementsPlaceholder: string;
+              languages: string;
+              languagesPlaceholder: string;
+              additionalBenefits: string;
+              additionalBenefitsPlaceholder: string;
+              tags: string;
+              tagsPlaceholder: string;
+              jobDuration: string;
+              startDate: string;
+              endDate: string;
+              jobRequirements: string;
+              jobVisibility: string;
+              applicationQuestions: string;
+              recruiterCalendar: string;
+              minimumFitScore: string;
+              additionalSettings: string;
+            };
+            requirements: {
+              requireCv: string;
+              requireCoverLetter: string;
+              requireVoicenote: string;
+            };
+            visibility: {
+              makeJobPublic: string;
+              hideSalaryRange: string;
+            };
+            questions: {
+              jobApplicationQuestions: string;
+              screeningQuestions: string;
+              enterQuestion: string;
+              enterScreeningQuestion: string;
+              remove: string;
+              addApplicationQuestion: string;
+              addScreeningQuestion: string;
+            };
+            calendar: {
+              placeholder: string;
+            };
+            settings: {
+              autoSendInterviewEmails: string;
+              hideCandidatesPersonalDetails: string;
+            };
+            tags: {
+              helpText: string;
+            };
+            actions: {
+              cancel: string;
+              updateJob: string;
+              updating: string;
+            };
+            messages: {
+              updateSuccess: string;
+              updateError: string;
+            };
+          };
+        };
       };
     };
   }

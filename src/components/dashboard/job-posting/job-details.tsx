@@ -31,6 +31,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { bulkAction } from "@/actions/bulk-action";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const JobDetails = ({
   setCurrentView,
@@ -41,6 +42,7 @@ const JobDetails = ({
   selectedJob: any;
   setApplicationId: (val: string) => void;
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { userData } = useUserStore();
   const [applicants, setApplicants] = React.useState<any[]>([]);
@@ -77,12 +79,12 @@ const JobDetails = ({
       });
     },
     onSuccess: () => {
-      toast.success("Job closed successfully!");
+      toast.success(t("jobPostings.actions.jobClosedSuccessAlt"));
       refetchApplications();
       setOpen(false);
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to close job");
+      toast.error(error.message || t("jobPostings.actions.jobCloseErrorAlt"));
     },
   });
 
@@ -209,49 +211,51 @@ const JobDetails = ({
               <div className="flex flex-col bg-white rounded-[10px]">
                 <button
                   onClick={() =>
-                    router.push(`/dashboard/job-board/edit/${selectedJob.id}`)
+                    router.push(
+                      `/dashboard/job-postings/edit/${selectedJob.id}`
+                    )
                   }
                   className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 rounded-t-[10px] flex items-center gap-2"
                 >
                   <Pencil className="w-3 h-3" />
-                  Edit Job
+                  {t("jobPostings.actions.editJob")}
                 </button>
                 <button
                   onClick={() => {
                     const jobDetailsLink = `${window.location.origin}/dashboard/job-board/${selectedJob.id}`;
                     navigator.clipboard.writeText(jobDetailsLink);
-                    toast.success("Job link copied to clipboard!");
+                    toast.success(t("jobPostings.actions.jobLinkCopied"));
                     setOpen(false);
                   }}
                   className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
                 >
                   <Copy className="w-3 h-3" />
-                  Copy Job link
+                  {t("jobPostings.actions.copyJobLink")}
                 </button>
                 <button
                   onClick={() => {
                     const jobEmbedLink = `${window.location.origin}/embedded-job-post/${selectedJob.id}`;
                     const embedCode = `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="${jobEmbedLink}"></iframe>`;
                     navigator.clipboard.writeText(embedCode);
-                    toast.success("Embed code copied to clipboard!");
+                    toast.success(t("jobPostings.actions.embedCodeCopied"));
                     setOpen(false);
                   }}
                   className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
                 >
                   <Copy className="w-3 h-3" />
-                  Copy embed code
+                  {t("jobPostings.actions.copyEmbedCode")}
                 </button>
                 <button
                   onClick={() => {
                     const screeningLink = `${window.location.origin}/dashboard/screening?job_id=${selectedJob.id}`;
                     navigator.clipboard.writeText(screeningLink);
-                    toast.success("Screening link copied to clipboard!");
+                    toast.success(t("jobPostings.actions.screeningLinkCopied"));
                     setOpen(false);
                   }}
                   className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2"
                 >
                   <Copy className="w-3 h-3" />
-                  Copy screening link
+                  {t("jobPostings.actions.copyScreeningLink")}
                 </button>
                 <button
                   onClick={() => {
@@ -260,7 +264,7 @@ const JobDetails = ({
                   className="pl-4 py-2 text-[12px] text-left border-b border-gray-200 hover:bg-[#009379] hover:text-white text-gray-700 flex items-center gap-2 rounded-b-[10px]"
                 >
                   <Lock className="w-3 h-3" />
-                  Close Job
+                  {t("jobPostings.actions.closeJob")}
                 </button>
               </div>
             </PopoverContent>
@@ -269,48 +273,42 @@ const JobDetails = ({
 
         <div className="flex flex-col gap-2 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)] p-2 rounded-[10px] bg-white">
           <div className="flex items-center gap-[50px] justify-between">
-            <span className="text-[14px] font-extrabold">Tools</span>
-            {/* <Button
-              variant="ghost"
-              className="bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[120px] text-[10px] rounded-full hover:bg-gray-200"
-            >
-              Top 5 Candidates <CaretDownIcon className="ml-1 h-4 w-4" />
-            </Button> */}
+            <span className="text-[14px] font-extrabold">
+              {t("jobPostings.jobDetails.tools")}
+            </span>
           </div>
           <Button className="bg-[#009379] w-fit text-white font-semibold hover:bg-[#009379] hover:text-white/90 h-[40px] px-[18px] text-sm rounded-[16px] mt-4 mr-auto">
-            Summarize <CaretDownIcon className="ml-1 h-4 w-4" />
+            {t("jobPostings.jobDetails.summarize")}{" "}
+            <CaretDownIcon className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </div>
 
       <div className="flex items-center gap-[40px] mb-4">
-        <TabButton tab="all" label="All Candidates" color="black" />
+        <TabButton
+          tab="all"
+          label={t("jobPostings.jobDetails.allCandidates")}
+          color="black"
+        />
         <TabButton
           tab="shortlisted"
-          label="Shortlisted Candidates"
+          label={t("jobPostings.jobDetails.shortlistedCandidates")}
           color="[#009379]"
         />
-        <TabButton tab="rejected" label="Rejected Candidates" color="red" />
+        <TabButton
+          tab="rejected"
+          label={t("jobPostings.jobDetails.rejectedCandidates")}
+          color="red"
+        />
         <TabButton
           tab="screened"
-          label="Screened Candidates"
+          label={t("jobPostings.jobDetails.screenedCandidates")}
           color="[#2B95D7]"
         />
         <div className="flex-1" />
-        {/* <Button
-          variant="ghost"
-          className="bg-[#F0F0F0] text-gray-500 h-[35px] px-4 w-[150px] text-[10px] rounded-full hover:bg-gray-200"
-        >
-          Rank By: Years of Exp <CaretDownIcon className="ml-1 h-4 w-4" />
-        </Button> */}
       </div>
 
-      <div className="mb-2">
-        {/* <BulkActionsJobsPopUp
-          jobIds={selectedJobs.map((job) => job.id)}
-          status="open"
-        /> */}
-      </div>
+      <div className="mb-2"></div>
 
       <div className="bg-[#F0F0F0] rounded-lg p-4">
         {filteredApplicants.length > 0 ? (
@@ -321,25 +319,25 @@ const JobDetails = ({
                   <input type="checkbox" className="rounded-sm" />
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  CANDIDATE NAME
+                  {t("jobPostings.table.candidateName")}
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  ID
+                  {t("jobPostings.table.id")}
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  FIT SCORE
+                  {t("jobPostings.table.fitScore")}
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  YOE
+                  {t("jobPostings.table.yoe")}
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  KEY SKILLS
+                  {t("jobPostings.table.keySkills")}
                 </TableHead>
                 <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  APPLICATION DATE
+                  {t("jobPostings.table.applicationDate")}
                 </TableHead>
                 <TableHead className=" text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
-                  ATTACHMENTS
+                  {t("jobPostings.table.attachments")}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -361,7 +359,6 @@ const JobDetails = ({
                         "Error fetching application details:",
                         error
                       );
-                      // You could add a toast notification here
                     }
                   }}
                 >
@@ -507,7 +504,7 @@ const JobDetails = ({
                           className="text-gray-600 hover:text-[#009379] hover:underline"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          Attachment
+                          {t("jobPostings.table.attachment")}
                         </a>
                       )}
                     </div>
@@ -543,22 +540,19 @@ const JobDetails = ({
               </svg>
             </div>
             <h3 className="text-sm font-medium text-gray-700 mb-1">
-              No candidates found
+              {t("jobPostings.jobDetails.noCandidatesFound")}
             </h3>
             <p className="text-sm text-gray-500 max-w-md">
               {selectedTab === "all"
-                ? "There are no candidates for this job posting yet. Share your job link to start receiving applications."
+                ? t("jobPostings.jobDetails.noCandidatesDescription.all")
                 : selectedTab === "shortlisted"
-                ? "No candidates have been shortlisted yet. Review applications to shortlist candidates."
+                ? t(
+                    "jobPostings.jobDetails.noCandidatesDescription.shortlisted"
+                  )
                 : selectedTab === "rejected"
-                ? "No candidates have been rejected yet."
-                : "No candidates have been screened yet."}
+                ? t("jobPostings.jobDetails.noCandidatesDescription.rejected")
+                : t("jobPostings.jobDetails.noCandidatesDescription.screened")}
             </p>
-            {/* {selectedTab === "all" && (
-              <button className="mt-4 px-4 py-2 bg-[#009379] text-white rounded-md hover:bg-[#009379]/90 transition-colors">
-                Share Job Link
-              </button>
-            )} */}
           </div>
         )}
       </div>

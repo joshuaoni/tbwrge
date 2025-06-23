@@ -8,8 +8,10 @@ import { useOutsideClick } from "@/hooks/outside-click";
 import { useUserStore } from "@/hooks/use-user-store";
 import { copyToClipboard } from "@/lib/common";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 function JobDetailsOptions(props: { id: string }) {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,27 +60,27 @@ function JobDetailsOptions(props: { id: string }) {
             className="absolute z-10 w-40 mt-2 rounded-lg border-none flex flex-col divide-y text-xs bg-white overflow-hidden"
           >
             {[
-              { label: "Edit job", action: () => {} },
+              { label: t("jobPostings.actions.editJob"), action: () => {} },
               {
-                label: "Copy Job Link",
+                label: t("jobPostings.actions.copyJobLink"),
                 action: () =>
-                  handleCopy(jobUrl, "Job Link Copied to clipboard"),
+                  handleCopy(jobUrl, t("jobPostings.actions.jobLinkCopied")),
               },
               {
-                label: "Copy Embed Code",
+                label: t("jobPostings.actions.copyEmbedCode"),
                 action: () =>
                   handleCopy(
                     `<iframe src="${jobUrl}" width="100%" height="100%"></iframe>`,
-                    "Embed Code Copied to clipboard"
+                    t("jobPostings.actions.embedCodeCopied")
                   ),
               },
               {
-                label: "Close Job",
+                label: t("jobPostings.actions.closeJob"),
                 action: () =>
                   toast.promise(closeJobMutation.mutateAsync(), {
-                    loading: "Closing job...",
-                    success: "Job closed successfully",
-                    error: "An error occured while closing the job",
+                    loading: t("jobPostings.actions.closingJob"),
+                    success: t("jobPostings.actions.jobClosedSuccess"),
+                    error: t("jobPostings.actions.jobCloseError"),
                   }),
               },
             ].map((option, i) => (
