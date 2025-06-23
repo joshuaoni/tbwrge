@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const CurrentOpenings = ({
   setCurrentView,
@@ -33,6 +34,7 @@ const CurrentOpenings = ({
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   setSelectedJob: React.Dispatch<React.SetStateAction<any>>;
 }) => {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
@@ -61,17 +63,17 @@ const CurrentOpenings = ({
 
   const [stats, setStats] = React.useState([
     {
-      title: "Total Job Posts",
+      title: t("jobPostings.stats.totalJobPosts"),
       value: 0,
       icon: <BriefcaseBusiness size={20} className="text-primary" />,
     },
     {
-      title: "Qualified Applicants",
+      title: t("jobPostings.stats.qualifiedApplicants"),
       value: 0,
       icon: <User />,
     },
     {
-      title: "Total Applicants",
+      title: t("jobPostings.stats.totalApplicants"),
       value: 0,
       icon: <File />,
     },
@@ -79,22 +81,22 @@ const CurrentOpenings = ({
   useEffect(() => {
     setStats(() => [
       {
-        title: "Total Job Posts",
+        title: t("jobPostings.stats.totalJobPosts"),
         value: data?.total_job_posts,
         icon: <BriefcaseBusiness size={20} className="text-primary" />,
       },
       {
-        title: "Qualified Applicants",
+        title: t("jobPostings.stats.qualifiedApplicants"),
         value: data?.qualified_candidates,
         icon: <User />,
       },
       {
-        title: "Total Applicants",
+        title: t("jobPostings.stats.totalApplicants"),
         value: data?.total_applications,
         icon: <File />,
       },
     ]);
-  }, [data]);
+  }, [data, t]);
 
   const handleJobSelection = (jobId: string, isSelected: boolean) => {
     if (isSelected) {
@@ -106,7 +108,7 @@ const CurrentOpenings = ({
 
   const generateEmbedCode = () => {
     if (jobsToEmbed.length === 0) {
-      toast.error("Please select at least one job to embed");
+      toast.error(t("jobPostings.embed.pleaseSelectJob"));
       return;
     }
 
@@ -116,7 +118,7 @@ const CurrentOpenings = ({
     const embedCode = `<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="600" src="${embedUrl}"></iframe>`;
 
     navigator.clipboard.writeText(embedCode);
-    toast.success("Embed code copied to clipboard!");
+    toast.success(t("jobPostings.embed.embedCodeCopied"));
     setShowEmbedDialog(false);
     setJobsToEmbed([]);
   };
@@ -150,7 +152,7 @@ const CurrentOpenings = ({
           className="bg-primary hover:bg-primary/90 text-white flex items-center gap-2"
         >
           <Code size={16} />
-          Embed Jobs
+          {t("jobPostings.embed.embedJobs")}
         </Button>
       </div>
 
@@ -159,22 +161,22 @@ const CurrentOpenings = ({
           <TableRow className="bg-[#D6D6D6]">
             <TableHead className="w-[50px] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]" />
             <TableHead className="w-[25%] text-[#898989] h-[39.292px]">
-              Job Title
+              {t("jobPostings.table.jobTitle")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Job ID
+              {t("jobPostings.table.jobId")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Total Applicants
+              {t("jobPostings.table.totalApplicants")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Recruiter
+              {t("jobPostings.table.recruiter")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Company
+              {t("jobPostings.table.company")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
-              End Date
+              {t("jobPostings.table.endDate")}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -250,12 +252,14 @@ const CurrentOpenings = ({
       <Dialog open={showEmbedDialog} onOpenChange={setShowEmbedDialog}>
         <DialogContent className="bg-white max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Select Jobs to Embed</DialogTitle>
+            <DialogTitle>
+              {t("jobPostings.embed.selectJobsToEmbed")}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
             <p className="text-gray-600">
-              Select the jobs you want to include in the embedded widget:
+              {t("jobPostings.embed.selectJobsDescription")}
             </p>
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -303,21 +307,23 @@ const CurrentOpenings = ({
 
             <div className="flex justify-between items-center pt-4 border-t">
               <p className="text-sm text-gray-600">
-                Selected: {jobsToEmbed.length} job
-                {jobsToEmbed.length !== 1 ? "s" : ""}
+                {t("jobPostings.embed.selected")}: {jobsToEmbed.length}{" "}
+                {jobsToEmbed.length !== 1
+                  ? t("jobPostings.embed.jobs")
+                  : t("jobPostings.embed.job")}
               </p>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowEmbedDialog(false)}
                   className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 font-medium"
                 >
-                  Cancel
+                  {t("jobPostings.embed.cancel")}
                 </button>
                 <button
                   onClick={generateEmbedCode}
                   className="px-6 py-2 bg-[#009379] hover:bg-[#007a66] text-white rounded-lg transition-colors duration-200 font-medium shadow-sm"
                 >
-                  Generate Embed Code
+                  {t("jobPostings.embed.generateEmbedCode")}
                 </button>
               </div>
             </div>

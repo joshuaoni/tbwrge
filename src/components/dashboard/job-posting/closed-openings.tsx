@@ -16,8 +16,10 @@ import { formatDistanceToNow } from "date-fns";
 import { BriefcaseBusiness, File, ShoppingBag, User } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const ClosedOpenings = () => {
+  const { t } = useTranslation();
   const { userData } = useUserStore();
   const [selectedJobs, setSelectedJobs] = React.useState<IJob[]>([]);
   const { data: jobs, error } = useQuery({
@@ -42,17 +44,17 @@ const ClosedOpenings = () => {
   });
   const [stats, setStats] = React.useState([
     {
-      title: "Total Job Posts",
+      title: t("jobPostings.stats.totalJobPosts"),
       value: 0,
       icon: <BriefcaseBusiness size={20} className="text-primary" />,
     },
     {
-      title: "Qualified Applicants",
+      title: t("jobPostings.stats.qualifiedApplicants"),
       value: 0,
       icon: <User />,
     },
     {
-      title: "Total Applicants",
+      title: t("jobPostings.stats.totalApplicants"),
       value: 0,
       icon: <File />,
     },
@@ -60,22 +62,22 @@ const ClosedOpenings = () => {
   useEffect(() => {
     setStats(() => [
       {
-        title: "Total Job Posts",
+        title: t("jobPostings.stats.totalJobPosts"),
         value: data?.total_job_posts,
         icon: <BriefcaseBusiness size={20} className="text-primary" />,
       },
       {
-        title: "Qualified Applicants",
+        title: t("jobPostings.stats.qualifiedApplicants"),
         value: data?.qualified_candidates,
         icon: <User />,
       },
       {
-        title: "Total Applicants",
+        title: t("jobPostings.stats.totalApplicants"),
         value: data?.total_applications,
         icon: <File />,
       },
     ]);
-  }, [data]);
+  }, [data, t]);
   return (
     <section className="">
       <div className="flex items-center space-x-8">
@@ -100,22 +102,22 @@ const ClosedOpenings = () => {
           <TableRow className="bg-[#D6D6D6]">
             <TableHead className="w-[50px] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]" />
             <TableHead className="w-[25%] text-[#898989] h-[39.292px]">
-              Job Title
+              {t("jobPostings.table.jobTitle")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Job ID
+              {t("jobPostings.table.jobId")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Total Applicants
+              {t("jobPostings.table.totalApplicants")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Recruiter
+              {t("jobPostings.table.recruiter")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              Company
+              {t("jobPostings.table.company")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
-              End Date
+              {t("jobPostings.table.endDate")}
             </TableHead>
           </TableRow>
         </TableHeader>

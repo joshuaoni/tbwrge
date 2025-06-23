@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import { getJobDetail } from "@/actions/get-job-detail";
 import { updateJob } from "@/actions/create-job";
@@ -102,14 +103,6 @@ const Section = ({
   </div>
 );
 
-const JobTypeOptions = [
-  { value: "full_time", label: "Full Time" },
-  { value: "part_time", label: "Part Time" },
-  { value: "contract", label: "Contract" },
-  { value: "internship", label: "Internship" },
-  { value: "freelance", label: "Freelance" },
-];
-
 interface Question {
   id: string;
   text: string;
@@ -132,6 +125,7 @@ const TagInput = ({
   placeholder,
   className = "",
 }: TagInputProps) => {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState("");
   const tags = value.split(",").filter((tag) => tag.trim());
 
@@ -180,7 +174,7 @@ const TagInput = ({
         />
       </div>
       <p className="text-xs text-gray-500">
-        Press Enter to add a tag, Backspace to remove the last tag
+        {t("jobPostings.edit.tags.helpText")}
       </p>
     </div>
   );
@@ -190,6 +184,7 @@ export default function EditJobPage() {
   const router = useRouter();
   const { jobId } = router.query;
   const { userData } = useUserStore();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     company_website: "",
@@ -308,11 +303,11 @@ export default function EditJobPage() {
       return await updateJob(userData?.token ?? "", jobId as string, formData);
     },
     onSuccess: () => {
-      toast.success("Job updated successfully!");
+      toast.success(t("jobPostings.edit.messages.updateSuccess"));
       router.push(`/dashboard/job-postings?jobId=${jobId}&view=details`);
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update job");
+      toast.error(error.message || t("jobPostings.edit.messages.updateError"));
     },
   });
 
@@ -356,7 +351,7 @@ export default function EditJobPage() {
             >
               <ArrowLeft />
             </button>
-            <span>Edit Job Post</span>
+            <span>{t("jobPostings.edit.title")}</span>
           </h3>
         </div>
 
@@ -389,7 +384,7 @@ export default function EditJobPage() {
                     handleInputChange("job_title", e.target.value)
                   }
                   className="text-2xl font-semibold mb-2 w-full border-none outline-none bg-transparent"
-                  placeholder="Job Title"
+                  placeholder={t("jobPostings.edit.jobTitle")}
                 />
                 <div className="text-[15px] text-gray-600 mb-1">
                   {formData.company_name}
@@ -401,7 +396,7 @@ export default function EditJobPage() {
                     handleInputChange("job_location_name", e.target.value)
                   }
                   className="text-[14px] text-gray-600 w-full border-none outline-none bg-transparent"
-                  placeholder="Job Location"
+                  placeholder={t("jobPostings.edit.jobLocation")}
                 />
               </div>
             </div>
@@ -410,21 +405,35 @@ export default function EditJobPage() {
           {/* Job Details Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("jobPostings.edit.jobDetails.jobType")}
+              </div>
               <select
                 value={formData.job_type}
                 onChange={(e) => handleInputChange("job_type", e.target.value)}
                 className="font-medium bg-transparent border-none outline-none w-full"
               >
-                {JobTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                <option value="full_time">
+                  {t("jobPostings.edit.jobTypeOptions.fullTime")}
+                </option>
+                <option value="part_time">
+                  {t("jobPostings.edit.jobTypeOptions.partTime")}
+                </option>
+                <option value="contract">
+                  {t("jobPostings.edit.jobTypeOptions.contract")}
+                </option>
+                <option value="internship">
+                  {t("jobPostings.edit.jobTypeOptions.internship")}
+                </option>
+                <option value="freelance">
+                  {t("jobPostings.edit.jobTypeOptions.freelance")}
+                </option>
               </select>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("jobPostings.edit.jobDetails.experience")}
+              </div>
               <input
                 type="text"
                 value={formData.years_of_experience_required}
@@ -435,12 +444,14 @@ export default function EditJobPage() {
                   )
                 }
                 className="font-medium bg-transparent border-none outline-none w-full"
-                placeholder="e.g. 2-5 years"
+                placeholder={t(
+                  "jobPostings.edit.jobDetails.experiencePlaceholder"
+                )}
               />
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">
-                Salary Range (USD)
+                {t("jobPostings.edit.jobDetails.salaryRange")}
               </div>
               <div className="flex gap-2">
                 <input
@@ -453,7 +464,7 @@ export default function EditJobPage() {
                     )
                   }
                   className="font-medium bg-transparent border-none outline-none w-full"
-                  placeholder="Min"
+                  placeholder={t("jobPostings.edit.jobDetails.salaryMin")}
                 />
                 <span className="font-medium">-</span>
                 <input
@@ -466,12 +477,14 @@ export default function EditJobPage() {
                     )
                   }
                   className="font-medium bg-transparent border-none outline-none w-full"
-                  placeholder="Max"
+                  placeholder={t("jobPostings.edit.jobDetails.salaryMax")}
                 />
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("jobPostings.edit.jobDetails.location")}
+              </div>
               <input
                 type="text"
                 value={formData.job_location_name}
@@ -479,20 +492,20 @@ export default function EditJobPage() {
                   handleInputChange("job_location_name", e.target.value)
                 }
                 className="font-medium bg-transparent border-none outline-none w-full"
-                placeholder="Job Location"
+                placeholder={t("jobPostings.edit.jobLocation")}
               />
             </div>
           </div>
 
           {/* Company Description */}
-          <Section title="About the Company">
+          <Section title={t("jobPostings.edit.sections.aboutCompany")}>
             <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
               {formData.company_description}
             </div>
           </Section>
 
           {/* Job Description with ReactQuill */}
-          <Section title="Job Description">
+          <Section title={t("jobPostings.edit.sections.jobDescription")}>
             <div className="border border-gray-200 rounded-lg overflow-hidden min-h-[300px]">
               <div className="h-[calc(300px-42px)]">
                 <ReactQuill
@@ -505,71 +518,81 @@ export default function EditJobPage() {
                   formats={formats}
                   className="bg-gray-50 h-full"
                   style={{ height: "100%" }}
-                  placeholder="Write a detailed job description including requirements, and what makes this role unique..."
+                  placeholder={t(
+                    "jobPostings.edit.sections.jobDescriptionPlaceholder"
+                  )}
                 />
               </div>
             </div>
           </Section>
 
           {/* Required Skills */}
-          <Section title="Required Skills">
+          <Section title={t("jobPostings.edit.sections.requiredSkills")}>
             <TagInput
               value={formData.required_skills}
               onChange={(value) => handleInputChange("required_skills", value)}
-              placeholder="Add skills (e.g., JavaScript, React, Node.js)"
+              placeholder={t(
+                "jobPostings.edit.sections.requiredSkillsPlaceholder"
+              )}
             />
           </Section>
 
           {/* Educational Requirements */}
-          <Section title="Educational Requirements">
+          <Section
+            title={t("jobPostings.edit.sections.educationalRequirements")}
+          >
             <textarea
               value={formData.educational_requirements}
               onChange={(e) =>
                 handleInputChange("educational_requirements", e.target.value)
               }
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Describe educational requirements..."
+              placeholder={t(
+                "jobPostings.edit.sections.educationalRequirementsPlaceholder"
+              )}
               rows={3}
             />
           </Section>
 
           {/* Languages */}
-          <Section title="Languages">
+          <Section title={t("jobPostings.edit.sections.languages")}>
             <TagInput
               value={formData.languages}
               onChange={(value) => handleInputChange("languages", value)}
-              placeholder="Add languages (e.g., English, Spanish, French)"
+              placeholder={t("jobPostings.edit.sections.languagesPlaceholder")}
             />
           </Section>
 
           {/* Additional Benefits */}
-          <Section title="Additional Benefits">
+          <Section title={t("jobPostings.edit.sections.additionalBenefits")}>
             <textarea
               value={formData.additional_benefits}
               onChange={(e) =>
                 handleInputChange("additional_benefits", e.target.value)
               }
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Describe additional benefits..."
+              placeholder={t(
+                "jobPostings.edit.sections.additionalBenefitsPlaceholder"
+              )}
               rows={3}
             />
           </Section>
 
           {/* Tags */}
-          <Section title="Tags">
+          <Section title={t("jobPostings.edit.sections.tags")}>
             <TagInput
               value={formData.tags}
               onChange={(value) => handleInputChange("tags", value)}
-              placeholder="Add tags (e.g., remote, full-time, senior)"
+              placeholder={t("jobPostings.edit.sections.tagsPlaceholder")}
             />
           </Section>
 
           {/* Job Dates */}
-          <Section title="Job Duration">
+          <Section title={t("jobPostings.edit.sections.jobDuration")}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">
-                  Start Date
+                  {t("jobPostings.edit.sections.startDate")}
                 </label>
                 <input
                   type="date"
@@ -582,7 +605,7 @@ export default function EditJobPage() {
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">
-                  End Date
+                  {t("jobPostings.edit.sections.endDate")}
                 </label>
                 <input
                   type="date"
@@ -597,7 +620,7 @@ export default function EditJobPage() {
           </Section>
 
           {/* Job Requirements */}
-          <Section title="Job Requirements">
+          <Section title={t("jobPostings.edit.sections.jobRequirements")}>
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <input
@@ -610,7 +633,7 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="require_cv" className="text-sm">
-                  Require CV
+                  {t("jobPostings.edit.requirements.requireCv")}
                 </label>
               </div>
               <div className="flex items-center gap-2">
@@ -624,7 +647,7 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="require_cover_letter" className="text-sm">
-                  Require Cover Letter
+                  {t("jobPostings.edit.requirements.requireCoverLetter")}
                 </label>
               </div>
               <div className="flex items-center gap-2">
@@ -638,14 +661,14 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="require_voicenote" className="text-sm">
-                  Require Voicenote
+                  {t("jobPostings.edit.requirements.requireVoicenote")}
                 </label>
               </div>
             </div>
           </Section>
 
           {/* Job Visibility */}
-          <Section title="Job Visibility">
+          <Section title={t("jobPostings.edit.sections.jobVisibility")}>
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <input
@@ -658,7 +681,7 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="job_visibility" className="text-sm">
-                  Make job public
+                  {t("jobPostings.edit.visibility.makeJobPublic")}
                 </label>
               </div>
               <div className="flex items-center gap-2">
@@ -675,19 +698,19 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="filter_out_salary_range" className="text-sm">
-                  Hide salary range from candidates
+                  {t("jobPostings.edit.visibility.hideSalaryRange")}
                 </label>
               </div>
             </div>
           </Section>
 
           {/* Questions Section */}
-          <Section title="Application Questions">
+          <Section title={t("jobPostings.edit.sections.applicationQuestions")}>
             <div className="space-y-6">
               {/* Job Application Questions */}
               <div>
                 <h3 className="text-sm font-medium mb-4">
-                  Job Application Questions
+                  {t("jobPostings.edit.questions.jobApplicationQuestions")}
                 </h3>
                 <div className="space-y-4">
                   {formData.questions
@@ -711,7 +734,9 @@ export default function EditJobPage() {
                             }
                           }}
                           className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter question..."
+                          placeholder={t(
+                            "jobPostings.edit.questions.enterQuestion"
+                          )}
                         />
                         <button
                           type="button"
@@ -723,7 +748,7 @@ export default function EditJobPage() {
                           }}
                           className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
-                          Remove
+                          {t("jobPostings.edit.questions.remove")}
                         </button>
                       </div>
                     ))}
@@ -745,7 +770,7 @@ export default function EditJobPage() {
                     }}
                     className="px-4 py-2 text-[#009379] hover:bg-[#009379]/10 rounded-lg transition-colors"
                   >
-                    Add Application Question
+                    {t("jobPostings.edit.questions.addApplicationQuestion")}
                   </button>
                 </div>
               </div>
@@ -753,7 +778,7 @@ export default function EditJobPage() {
               {/* Screening Questions */}
               <div>
                 <h3 className="text-sm font-medium mb-4">
-                  Screening Questions
+                  {t("jobPostings.edit.questions.screeningQuestions")}
                 </h3>
                 <div className="space-y-4">
                   {formData.questions
@@ -777,7 +802,9 @@ export default function EditJobPage() {
                             }
                           }}
                           className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Enter screening question..."
+                          placeholder={t(
+                            "jobPostings.edit.questions.enterScreeningQuestion"
+                          )}
                         />
                         <button
                           type="button"
@@ -789,7 +816,7 @@ export default function EditJobPage() {
                           }}
                           className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
-                          Remove
+                          {t("jobPostings.edit.questions.remove")}
                         </button>
                       </div>
                     ))}
@@ -811,7 +838,7 @@ export default function EditJobPage() {
                     }}
                     className="px-4 py-2 text-[#009379] hover:bg-[#009379]/10 rounded-lg transition-colors"
                   >
-                    Add Screening Question
+                    {t("jobPostings.edit.questions.addScreeningQuestion")}
                   </button>
                 </div>
               </div>
@@ -819,7 +846,7 @@ export default function EditJobPage() {
           </Section>
 
           {/* Recruiter Calendar Link */}
-          <Section title="Recruiter Calendar Link">
+          <Section title={t("jobPostings.edit.sections.recruiterCalendar")}>
             <input
               type="url"
               value={formData.recruiter_calendar_booking_link}
@@ -830,12 +857,12 @@ export default function EditJobPage() {
                 )
               }
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="https://calendly.com/your-link"
+              placeholder={t("jobPostings.edit.calendar.placeholder")}
             />
           </Section>
 
           {/* Minimum Fit Score */}
-          <Section title="Minimum Fit Score">
+          <Section title={t("jobPostings.edit.sections.minimumFitScore")}>
             <div className="flex items-center gap-4">
               <input
                 type="number"
@@ -855,7 +882,7 @@ export default function EditJobPage() {
           </Section>
 
           {/* Additional Settings */}
-          <Section title="Additional Settings">
+          <Section title={t("jobPostings.edit.sections.additionalSettings")}>
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <input
@@ -871,7 +898,7 @@ export default function EditJobPage() {
                   className="rounded border-gray-300"
                 />
                 <label htmlFor="auto_send_interview_email" className="text-sm">
-                  Automatically send interview emails
+                  {t("jobPostings.edit.settings.autoSendInterviewEmails")}
                 </label>
               </div>
               <div className="flex items-center gap-2">
@@ -891,7 +918,7 @@ export default function EditJobPage() {
                   htmlFor="hide_candidates_personal_details"
                   className="text-sm"
                 >
-                  Hide candidates' personal details during screening
+                  {t("jobPostings.edit.settings.hideCandidatesPersonalDetails")}
                 </label>
               </div>
             </div>
@@ -904,7 +931,7 @@ export default function EditJobPage() {
               onClick={() => router.back()}
               className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t("jobPostings.edit.actions.cancel")}
             </button>
             <button
               type="submit"
@@ -914,10 +941,10 @@ export default function EditJobPage() {
               {updateJobMutation.isPending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Updating...
+                  {t("jobPostings.edit.actions.updating")}
                 </>
               ) : (
-                <>Update Job</>
+                <>{t("jobPostings.edit.actions.updateJob")}</>
               )}
             </button>
           </div>

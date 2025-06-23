@@ -19,8 +19,10 @@ import { useEffect, useState } from "react";
 import { getJobOpenings } from "@/actions/get-current-jobs";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const JobPostings = () => {
+  const { t } = useTranslation();
   const [selectedOpening, setSelectedOpening] = useState(null);
   const [filterOpenings, setFilterOpenings] = useState("latest");
   const [currentView, setCurrentView] = useState("openings");
@@ -72,8 +74,8 @@ const JobPostings = () => {
               <div className="flex flex-row items-center gap-4 sm:gap-6 flex-wrap">
                 <h1 className="text-sm font-bold">
                   {currentView === "openings"
-                    ? "Current Openings"
-                    : "Closed Jobs"}
+                    ? t("jobPostings.currentOpenings")
+                    : t("jobPostings.closedJobs")}
                 </h1>
                 <Button
                   onClick={() => {
@@ -84,8 +86,8 @@ const JobPostings = () => {
                   className="border-[1.5px] border-[#009379] text-black bg-white whitespace-nowrap"
                 >
                   {currentView === "openings"
-                    ? "Closed Jobs"
-                    : "Current Openings"}
+                    ? t("jobPostings.closedJobs")
+                    : t("jobPostings.currentOpenings")}
                 </Button>
               </div>
 
