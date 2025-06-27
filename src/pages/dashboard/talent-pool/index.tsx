@@ -112,6 +112,7 @@ export default function TalentPool() {
         text: searchValDebounce,
         search_type: type,
       });
+      console.log("response", response);
       return response;
     },
     enabled: !!userData?.token, // Always enabled if we have a token
@@ -675,7 +676,7 @@ export default function TalentPool() {
             )} */}
 
             <div className={`${outfit.className}`}>
-              <Table className="mt-2">
+              <Table className="">
                 <TableHeader className="h-[39.292px] mb-4">
                   <TableRow className="bg-[#D6D6D6]">
                     <TableHead className="w-[25%] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]">
@@ -724,11 +725,23 @@ export default function TalentPool() {
                         <TableCell>
                           <div className="flex gap-[10px] items-center justify-start bg-[#F9F9F9] py-[5px] rounded-[6px]">
                             <div className="flex items-center justify-center w-[35px] ml-[6px]">
-                              <div className="w-[35px] h-[35px] bg-slate-300 rounded-full flex items-center justify-center">
-                                <p className="text-white font-medium">
-                                  {candidate.name?.[0]}
-                                </p>
-                              </div>
+                              {candidate.profile_photo ? (
+                                <div className="w-[35px] h-[35px] rounded-full overflow-hidden">
+                                  <Image
+                                    src={candidate.profile_photo}
+                                    alt={candidate.name}
+                                    width={38}
+                                    height={38}
+                                    className="object-cover w-full h-full"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-[35px] h-[35px] bg-slate-300 rounded-full flex items-center justify-center">
+                                  <p className="text-white font-medium">
+                                    {candidate.name?.[0]}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                             <div className="flex flex-col w-[217px] gap-[4px]">
                               <h3 className="font-medium tracking-[0%] truncate text-[14px] leading-[15px] text-black">

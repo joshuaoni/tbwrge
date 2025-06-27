@@ -25,7 +25,7 @@ const ChannelsDropDown = ({
         className={`overflow-hidden mt-4 rounded-md border duration-300 ease-in-out transform ${
           showDropDown
             ? "max-h-96 opacity-100 scale-100"
-            : "max-h-0 opacity-0 scale-95"
+            : "hidden opacity-0 scale-95"
         }`}
       >
         <div

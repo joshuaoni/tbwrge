@@ -7,7 +7,6 @@ import { Paperclip } from "lucide-react";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { Search, User, UserCircle, Smile } from "lucide-react";
 import Image from "next/image";
-import { inter } from "@/constants/app";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/hooks/use-user-store";
@@ -65,90 +64,6 @@ interface ExtendedMessage extends Omit<APIMessage, "type" | "media" | "text"> {
   text: string | null;
   media: MediaItem[];
 }
-
-interface Message {
-  id: string;
-  reference: string | null;
-  created_at: string;
-  updated_at: string;
-  user: {
-    id: string;
-    reference: string | null;
-    created_at: string;
-    updated_at: string;
-    name: string;
-    email: string;
-    role: string;
-    is_verified: boolean;
-    channel: string;
-    last_name: string | null;
-    country_code: string | null;
-    phone: string | null;
-    profile_picture: string | null;
-    calendly_link: string | null;
-    google_calender_link: string | null;
-    username: string | null;
-    location: string | null;
-    last_login: string;
-  };
-  text: string | null;
-  type: "text" | "media";
-  media: MediaItem[];
-}
-
-// Mock data for demonstration
-const users: User[] = [
-  {
-    id: "1",
-    name: "Andreana Viola",
-    lastMessage: "Hi, How are you today?",
-    time: "1m ago",
-    avatar: "/Mask.png",
-    isOnline: true,
-    unreadCount: 2,
-  },
-  {
-    id: "2",
-    name: "Francesco Long",
-    lastMessage: "Hi @Angel, I hope you are doing well",
-    time: "2h ago",
-    avatar: "/Mask.png",
-    isOnline: true,
-    unreadCount: 1,
-  },
-  {
-    id: "3",
-    name: "Alexandra Michu",
-    lastMessage: "Hi, How are you today?",
-    time: "09:00",
-    avatar: "/Mask.png",
-    isOnline: true,
-  },
-  {
-    id: "4",
-    name: "Hwang Lee",
-    lastMessage: "I hope it will be finished soon",
-    time: "Today",
-    avatar: "/Mask.png",
-    isOnline: false,
-  },
-  {
-    id: "5",
-    name: "Maximillian",
-    lastMessage: "You are absolutely right!",
-    time: "23/11",
-    avatar: "/Mask.png",
-    isOnline: false,
-  },
-  {
-    id: "6",
-    name: "Xiao Ming",
-    lastMessage: "Hi, How are you today?",
-    time: "23/11",
-    avatar: "/Mask.png",
-    isOnline: false,
-  },
-];
 
 // Modify the EmojiText component
 const EmojiText = ({
@@ -349,6 +264,7 @@ export default function ChatPage() {
       ? selectedChat.user_2
       : selectedChat.user_1
     : null;
+  console.log("otherUser", otherUser);
 
   // Selected chat WebSocket connection
   useEffect(() => {
@@ -826,20 +742,44 @@ export default function ChatPage() {
             <>
               {/* Chat Header - Fixed */}
               <div className="px-6 py-4 border-b flex justify-between items-center bg-white flex-shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <Image
-                      src={otherUser.profile_picture || "/Mask.png"}
-                      alt={otherUser.name}
-                      width={36}
-                      height={36}
-                      className="w-9 h-9 rounded-full object-cover border border-gray-200"
-                    />
+                {otherUser.role === "job_seeker" ? (
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `/dashboard/talent-pool/${otherUser.id}/details`
+                      )
+                    }
+                    className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                  >
+                    <div className="relative">
+                      <Image
+                        src={otherUser.profile_picture || "/Mask.png"}
+                        alt={otherUser.name}
+                        width={36}
+                        height={36}
+                        className="w-9 h-9 rounded-full object-cover border border-gray-200"
+                      />
+                    </div>
+                    <h3 className="text-sm font-semibold">
+                      {otherUser.name} {otherUser.last_name || ""}
+                    </h3>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <Image
+                        src={otherUser.profile_picture || "/Mask.png"}
+                        alt={otherUser.name}
+                        width={36}
+                        height={36}
+                        className="w-9 h-9 rounded-full object-cover border border-gray-200"
+                      />
+                    </div>
+                    <h3 className="text-sm font-semibold">
+                      {otherUser.name} {otherUser.last_name || ""}
+                    </h3>
                   </div>
-                  <h3 className="text-sm font-semibold">
-                    {otherUser.name} {otherUser.last_name || ""}
-                  </h3>
-                </div>
+                )}
                 <button className="p-2 hover:bg-gray-100 rounded-full">
                   <svg
                     width="24"

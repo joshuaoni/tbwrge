@@ -118,7 +118,9 @@ const JobDetails = ({
             </div>
           ) : (
             <div className="w-[38px] h-[38px] bg-slate-300 rounded-full flex items-center justify-center">
-              <p className="text-white font-medium">{company[0]}</p>
+              <p className="text-white font-medium">
+                {company ? company[0] : "N/A"}
+              </p>
             </div>
           )}
         </div>

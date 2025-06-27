@@ -160,20 +160,17 @@ const CurrentOpenings = ({
         <TableHeader className="h-[39.292px] mb-4">
           <TableRow className="bg-[#D6D6D6]">
             <TableHead className="w-[50px] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]" />
-            <TableHead className="w-[25%] text-[#898989] h-[39.292px]">
+            <TableHead className="w-[30%] text-[#898989] h-[39.292px]">
               {t("jobPostings.table.jobTitle")}
             </TableHead>
-            <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+            <TableHead className="w-[20%] text-[#898989] h-[39.292px]">
               {t("jobPostings.table.jobId")}
             </TableHead>
-            <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+            <TableHead className="w-[20%] text-[#898989] h-[39.292px]">
               {t("jobPostings.table.totalApplicants")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
               {t("jobPostings.table.recruiter")}
-            </TableHead>
-            <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-              {t("jobPostings.table.company")}
             </TableHead>
             <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
               {t("jobPostings.table.endDate")}
@@ -241,7 +238,6 @@ const CurrentOpenings = ({
               <TableCell>
                 {job.user.role == "recruiter" && job.user.name}
               </TableCell>
-              <TableCell>{job.company_name}</TableCell>
               <TableCell className="">{job.end_date as any}</TableCell>
             </TableRow>
           ))}
