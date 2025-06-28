@@ -158,7 +158,7 @@ const TeamsAndCollaborationSettingsPage = () => {
           <table className="text-sm w-full bg-white border-separate border-spacing-0">
             <thead>
               <tr className="bg-[#D6D6D6] text-[#898989] text-sm font-bold">
-                <th className="py-3 px-6 text-left rounded-tl-xl">
+                <th className="py-3 px-6 text-left rounded-tl-xl rounded-bl-xl">
                   {t("settings.teams.user", "User")}
                 </th>
                 <th className="py-3 px-6 text-left">
@@ -167,7 +167,7 @@ const TeamsAndCollaborationSettingsPage = () => {
                 <th className="py-3 px-6 text-left">
                   {t("settings.teams.email", "Email")}
                 </th>
-                <th className="py-3 px-6 text-left rounded-tr-xl">
+                <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl">
                   {t("settings.teams.actions", "Actions")}
                 </th>
               </tr>

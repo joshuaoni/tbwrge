@@ -112,6 +112,7 @@ export default function TalentPool() {
         text: searchValDebounce,
         search_type: type,
       });
+      console.log("response", response);
       return response;
     },
     enabled: !!userData?.token, // Always enabled if we have a token
@@ -674,26 +675,23 @@ export default function TalentPool() {
               </div>
             )} */}
 
-            <div className={`${outfit.className} bg-[#F0F0F0] rounded-lg p-4`}>
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-[#D6D6D6] h-[39.292px] rounded-lg">
-                    <TableHead className="w-[40px] pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                      <input type="checkbox" className="rounded-sm" />
-                    </TableHead>
-                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+            <div className={`${outfit.className}`}>
+              <Table className="">
+                <TableHeader className="h-[39.292px] mb-4">
+                  <TableRow className="bg-[#D6D6D6]">
+                    <TableHead className="w-[25%] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]">
                       {t("talentPool.table.candidateName")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
                       {t("talentPool.table.location")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
                       {t("talentPool.table.skills")}
                     </TableHead>
-                    <TableHead className="px-0 pl-4 text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
+                    <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
                       {t("talentPool.table.mostRecentPosition")}
                     </TableHead>
-                    <TableHead className="text-sm font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
+                    <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
                       {t("talentPool.table.attachments")}
                     </TableHead>
                   </TableRow>
@@ -701,13 +699,13 @@ export default function TalentPool() {
                 <TableBody>
                   {isSearching || query.isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-4">
+                      <TableCell colSpan={5} className="text-center py-4">
                         <Loader2 className="animate-spin mx-auto" />
                       </TableCell>
                     </TableRow>
                   ) : query.data?.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-4">
+                      <TableCell colSpan={5} className="text-center py-4">
                         {isAISearchActive
                           ? t("talentPool.messages.noMatchesAI")
                           : t("talentPool.messages.noTalent")}
@@ -717,52 +715,53 @@ export default function TalentPool() {
                     query.data?.map((candidate, index) => (
                       <TableRow
                         key={index}
-                        className="bg-[#F0F0F0] border-b border-white hover:bg-[#F0F0F0]/80 cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
+                        className="cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
                         onClick={() =>
                           router.push(
                             `/dashboard/talent-pool/${candidate.id}/details`
                           )
                         }
                       >
-                        <TableCell className="py-4 pl-4 align-middle">
-                          <input
-                            type="checkbox"
-                            className={`rounded-sm `}
-                            checked={selectedApplications.includes(
-                              candidate.id
-                            )}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedApplications([
-                                  ...selectedApplications,
-                                  candidate.id,
-                                ]);
-                              } else {
-                                setSelectedApplications(
-                                  selectedApplications.filter(
-                                    (id) => id !== candidate.id
-                                  )
-                                );
-                              }
-                              e.stopPropagation();
-                            }}
-                          />
+                        <TableCell>
+                          <div className="flex gap-[10px] items-center justify-start bg-[#F9F9F9] py-[5px] rounded-[6px]">
+                            <div className="flex items-center justify-center w-[35px] ml-[6px]">
+                              {candidate.profile_photo ? (
+                                <div className="w-[35px] h-[35px] rounded-full overflow-hidden">
+                                  <Image
+                                    src={candidate.profile_photo}
+                                    alt={candidate.name}
+                                    width={38}
+                                    height={38}
+                                    className="object-cover w-full h-full"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="w-[35px] h-[35px] bg-slate-300 rounded-full flex items-center justify-center">
+                                  <p className="text-white font-medium">
+                                    {candidate.name?.[0]}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col w-[217px] gap-[4px]">
+                              <h3 className="font-medium tracking-[0%] truncate text-[14px] leading-[15px] text-black">
+                                {candidate.name}
+                              </h3>
+                              <div className="text-[12px] tracking-[0%] truncate leading-[15px] text-gray-500">
+                                {candidate.nationality} -{" "}
+                                {candidate.current_position}
+                              </div>
+                            </div>
+                          </div>
                         </TableCell>
-                        <TableCell className="py-4 align-middle">
-                          <span className={`font-medium text-sm`}>
-                            {candidate.name}
-                          </span>
+                        <TableCell>{candidate.country_of_residence}</TableCell>
+                        <TableCell>
+                          <div className="line-clamp-2 text-sm">
+                            {candidate.skills_summary}
+                          </div>
                         </TableCell>
-                        <TableCell className="py-4 text-sm align-middle">
-                          <span>{candidate.nationality}</span>
-                        </TableCell>
-                        <TableCell className="py-4 text-sm max-w-[200px] truncate align-middle">
-                          <span>{candidate.skills_summary}</span>
-                        </TableCell>
-                        <TableCell className="py-4 text-sm align-middle">
-                          <span>{candidate.current_position}</span>
-                        </TableCell>
-                        <TableCell className="py-4 text-sm align-middle">
+                        <TableCell>{candidate.current_position}</TableCell>
+                        <TableCell className="">
                           <div className={`flex items-center gap-1`}>
                             <svg
                               width="20"

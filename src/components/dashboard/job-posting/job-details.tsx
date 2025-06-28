@@ -123,10 +123,10 @@ const JobDetails = ({
   }) => (
     <button
       onClick={() => setSelectedTab(tab)}
-      className={`font-medium transition-all duration-200 ${
+      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2 ${
         selectedTab === tab
-          ? `text-${color} text-[20px] font-semibold`
-          : `text-${color} text-[12px] font-semibold opacity-60`
+          ? `bg-${color} text-white border-${color}`
+          : `text-${color} bg-transparent border-${color} hover:bg-${color}/10`
       }`}
     >
       {label}
@@ -310,252 +310,202 @@ const JobDetails = ({
 
       <div className="mb-2"></div>
 
-      <div className="bg-[#F0F0F0] rounded-lg p-4">
-        {filteredApplicants.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-[#D6D6D6] h-[39.292px] rounded-lg">
-                <TableHead className="w-[40px] pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  <input type="checkbox" className="rounded-sm" />
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.candidateName")}
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.id")}
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.fitScore")}
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.yoe")}
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.keySkills")}
-                </TableHead>
-                <TableHead className="px-0 pl-4 text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg">
-                  {t("jobPostings.table.applicationDate")}
-                </TableHead>
-                <TableHead className=" text-xs font-medium text-[#898989] h-[39.292px] first:rounded-l-lg last:rounded-r-lg ">
-                  {t("jobPostings.table.attachments")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredApplicants.map((candidate, index) => (
-                <TableRow
-                  key={index}
-                  className="bg-[#F0F0F0] border-b border-white hover:bg-[#F0F0F0]/80 cursor-pointer  hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
-                  onClick={async () => {
-                    try {
-                      const applicationData = await getApplicationItem(
-                        userData?.token ?? "",
-                        candidate.id
-                      );
-                      setSelectedCandidate(applicationData);
-                      setView("candidate");
-                    } catch (error) {
-                      console.error(
-                        "Error fetching application details:",
-                        error
-                      );
-                    }
-                  }}
-                >
-                  <TableCell className="py-4 pl-4 align-middle">
-                    <input
-                      type="checkbox"
-                      className={`rounded-sm ${
-                        selectedTab === "rejected" ? "opacity-40" : ""
-                      }`}
-                      checked={selectedApplications.includes(candidate.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedApplications([
-                            ...selectedApplications,
-                            candidate.id,
-                          ]);
-                        } else {
-                          setSelectedApplications(
-                            selectedApplications.filter(
-                              (id) => id !== candidate.id
-                            )
-                          );
-                        }
-                        e.stopPropagation();
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell className="py-4 align-middle">
-                    <div className="flex items-center gap-3">
-                      <div className="relative group">
-                        {candidate.status !== "all" &&
-                          candidate.status !== "pending" && (
-                            <div
-                              className={`w-[10px] h-[10px] rounded-full border ${
-                                candidate.status === "shortlisted"
-                                  ? "bg-[#009379] border-[#009379]/20"
-                                  : candidate.status === "rejected"
-                                  ? "bg-red border-red/20"
-                                  : candidate.status === "screened"
-                                  ? "bg-[#2B95D7] border-[#2B95D7]/20"
-                                  : "bg-gray-400 border-gray-400/20"
-                              }`}
-                            />
-                          )}
-                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                          {candidate.status.charAt(0).toUpperCase() +
-                            candidate.status.slice(1)}
-                        </div>
-                      </div>
-                      <span
-                        className={`font-medium text-sm ${
-                          selectedTab === "rejected" ? "opacity-40" : ""
-                        }`}
-                      >
-                        {candidate.applicant.name}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm align-middle">
-                    <span
-                      className={selectedTab === "rejected" ? "opacity-40" : ""}
-                    >
-                      {candidate.id}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm align-middle">
-                    <span
-                      className={selectedTab === "rejected" ? "opacity-40" : ""}
-                    >
-                      {candidate.fit_score}%
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm align-middle">
-                    <span
-                      className={selectedTab === "rejected" ? "opacity-40" : ""}
-                    >
-                      {candidate.years_of_experience}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm max-w-[200px] truncate align-middle">
-                    <span
-                      className={selectedTab === "rejected" ? "opacity-40" : ""}
-                    >
-                      {candidate.key_skills}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm align-middle">
-                    <span
-                      className={selectedTab === "rejected" ? "opacity-40" : ""}
-                    >
-                      {formatDistanceToNow(new Date(candidate.created_at), {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-sm align-middle">
-                    <div
-                      className={`flex items-center gap-1  ${
-                        selectedTab === "rejected" ? "opacity-40" : ""
-                      }`}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                          stroke="#1F2937"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M13.75 2.5V5H16.25"
-                          stroke="#1F2937"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M7.5 10H12.5"
-                          stroke="#1F2937"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M7.5 12.5H12.5"
-                          stroke="#1F2937"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      {candidate.cv && (
-                        <a
-                          href={candidate.cv}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-600 hover:text-[#009379] hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {t("jobPostings.table.attachment")}
-                        </a>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-16 h-16 mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+      {filteredApplicants.length > 0 ? (
+        <Table className="mt-2">
+          <TableHeader className="h-[39.292px] mb-4">
+            <TableRow className="bg-[#D6D6D6]">
+              <TableHead className="w-[50px] text-[#898989] h-[39.292px] first:rounded-l-[7.76px]" />
+              <TableHead className="w-[25%] text-[#898989] h-[39.292px]">
+                {t("jobPostings.table.candidateName")}
+              </TableHead>
+              <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+                {t("jobPostings.table.id")}
+              </TableHead>
+              <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+                {t("jobPostings.table.fitScore")}
+              </TableHead>
+              <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+                {t("jobPostings.table.yoe")}
+              </TableHead>
+              <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
+                {t("jobPostings.table.keySkills")}
+              </TableHead>
+              <TableHead className="w-[15%] text-[#898989] h-[39.292px] last:rounded-r-[7.76px]">
+                {t("jobPostings.table.applicationDate")}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredApplicants.map((candidate, index) => (
+              <TableRow
+                key={index}
+                className="cursor-pointer hover:bg-gray-50 hover:scale-[1.01] transition-all duration-200"
+                onClick={async () => {
+                  try {
+                    const applicationData = await getApplicationItem(
+                      userData?.token ?? "",
+                      candidate.id
+                    );
+                    setSelectedCandidate(applicationData);
+                    setView("candidate");
+                  } catch (error) {
+                    console.error("Error fetching application details:", error);
+                  }
+                }}
               >
-                <path
-                  d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                  stroke="#6B7280"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                  stroke="#6B7280"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <h3 className="text-sm font-medium text-gray-700 mb-1">
-              {t("jobPostings.jobDetails.noCandidatesFound")}
-            </h3>
-            <p className="text-sm text-gray-500 max-w-md">
-              {selectedTab === "all"
-                ? t("jobPostings.jobDetails.noCandidatesDescription.all")
-                : selectedTab === "shortlisted"
-                ? t(
-                    "jobPostings.jobDetails.noCandidatesDescription.shortlisted"
-                  )
-                : selectedTab === "rejected"
-                ? t("jobPostings.jobDetails.noCandidatesDescription.rejected")
-                : t("jobPostings.jobDetails.noCandidatesDescription.screened")}
-            </p>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    className={`rounded-sm ${
+                      selectedTab === "rejected" ? "opacity-40" : ""
+                    }`}
+                    checked={selectedApplications.includes(candidate.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedApplications([
+                          ...selectedApplications,
+                          candidate.id,
+                        ]);
+                      } else {
+                        setSelectedApplications(
+                          selectedApplications.filter(
+                            (id) => id !== candidate.id
+                          )
+                        );
+                      }
+                      e.stopPropagation();
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-[10px] items-center justify-start bg-[#F9F9F9] py-[5px] rounded-[6px] relative">
+                    <div className="flex items-center justify-center w-[35px] ml-[6px] relative">
+                      {candidate.applicant.profile_photo ? (
+                        <div className="w-[35px] h-[35px] rounded-full overflow-hidden">
+                          <Image
+                            src={candidate.applicant.profile_photo}
+                            alt={candidate.applicant.name || ""}
+                            width={35}
+                            height={35}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-[35px] h-[35px] bg-slate-300 rounded-full flex items-center justify-center">
+                          <p className="text-white font-medium">
+                            {candidate.applicant.name?.[0]}
+                          </p>
+                        </div>
+                      )}
+                      {candidate.status !== "all" &&
+                        candidate.status !== "pending" && (
+                          <div
+                            className={`absolute -top-1 -right-1 w-[10px] h-[10px] rounded-full border-2 border-white ${
+                              candidate.status === "shortlisted"
+                                ? "bg-[#009379]"
+                                : candidate.status === "rejected"
+                                ? "bg-red"
+                                : candidate.status === "screened"
+                                ? "bg-[#2B95D7]"
+                                : "bg-gray-400"
+                            }`}
+                          />
+                        )}
+                    </div>
+                    <div className="flex flex-col w-[217px] gap-[4px]">
+                      <h3 className="font-medium tracking-[0%] truncate text-[14px] leading-[15px] text-black">
+                        {candidate.applicant.name}
+                      </h3>
+                      <div className="text-[12px] tracking-[0%] truncate leading-[15px] text-gray-500">
+                        {candidate.applicant.email} -{" "}
+                        {formatDistanceToNow(new Date(candidate.created_at), {
+                          addSuffix: true,
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={selectedTab === "rejected" ? "opacity-40" : ""}
+                  >
+                    {candidate.id}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={selectedTab === "rejected" ? "opacity-40" : ""}
+                  >
+                    {candidate.fit_score}%
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={selectedTab === "rejected" ? "opacity-40" : ""}
+                  >
+                    {candidate.years_of_experience}
+                  </span>
+                </TableCell>
+                <TableCell className="max-w-[200px] truncate">
+                  <span
+                    className={selectedTab === "rejected" ? "opacity-40" : ""}
+                  >
+                    {candidate.key_skills}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={selectedTab === "rejected" ? "opacity-40" : ""}
+                  >
+                    {formatDistanceToNow(new Date(candidate.created_at), {
+                      addSuffix: true,
+                    })}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="w-16 h-16 mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                stroke="#6B7280"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                stroke="#6B7280"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
-        )}
-      </div>
+          <h3 className="text-sm font-medium text-gray-700 mb-1">
+            {t("jobPostings.jobDetails.noCandidatesFound")}
+          </h3>
+          <p className="text-sm text-gray-500 max-w-md">
+            {selectedTab === "all"
+              ? t("jobPostings.jobDetails.noCandidatesDescription.all")
+              : selectedTab === "shortlisted"
+              ? t("jobPostings.jobDetails.noCandidatesDescription.shortlisted")
+              : selectedTab === "rejected"
+              ? t("jobPostings.jobDetails.noCandidatesDescription.rejected")
+              : t("jobPostings.jobDetails.noCandidatesDescription.screened")}
+          </p>
+        </div>
+      )}
     </section>
   );
 };
