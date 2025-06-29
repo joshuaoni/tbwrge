@@ -13,6 +13,7 @@ export interface UpdateProfilePayload {
   active_team_id?: string;
   calendly_link?: string;
   google_calender_link?: string;
+  role?: string;
   location?: string;
   username?: string;
   email?: string;
@@ -31,6 +32,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     active_team_id,
     calendly_link,
     google_calender_link,
+    role,
     location,
     username,
     email,
@@ -55,7 +57,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
   if (username) form.append("username", username);
   if (email) form.append("email", email);
   if (phone) form.append("phone", phone);
-
+  if (role) form.append("role", role);
   console.log(
     "calendar: ",
     form.get("google_calender_link"),
@@ -88,6 +90,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     console.log("Username:", form.get("username"));
     console.log("Email:", form.get("email"));
     console.log("Phone:", form.get("phone"));
+    console.log("Role:", form.get("role"));
     console.log("=================");
 
     const response = await axios(options);

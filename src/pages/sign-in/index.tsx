@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import { outfit, poppins } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowLeft } from "lucide-react";
+import { updateProfile } from "@/actions/update-profile";
+import RoleSelectionDropDown from "@/components/role-selection-dropdown";
 
 const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
   if (position === "top") {
@@ -41,6 +43,10 @@ const DecorativeCircles = ({ position }: { position: "top" | "bottom" }) => {
 const Index = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [showRoleModal, setShowRoleModal] = React.useState(false);
+  const [selectedGoogleRole, setSelectedGoogleRole] =
+    React.useState("Select Role");
+  const [googleUserData, setGoogleUserData] = React.useState<any>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isMobile = useIsMobile();
@@ -82,23 +88,32 @@ const Index = () => {
     mutationFn: async (token: string) =>
       await loginUserWithGoogle({
         token,
+        role: "job_seeker", // Default role for initial call
       }),
     onSuccess: (res) => {
       if (res.user != null) {
-        toast.success("Login successful");
-        addUser({
-          authenticatedUser: res.user,
-          token: res.access_token,
-        });
-        // Redirect to the saved URL or default based on role
-        if (res.user.role === "job_seeker") {
-          router.push(redirectUrl || "/dashboard/job-board");
-        } else if (res.user.role === "recruiter") {
-          router.push(redirectUrl || "/dashboard");
-        } else if (res.user.role === "root") {
-          router.push(redirectUrl || "/admin");
+        // Check if this is a new signup
+        if (res.is_signup) {
+          // Store user data and show role selection modal
+          setGoogleUserData({ user: res.user, token: res.access_token });
+          setShowRoleModal(true);
         } else {
-          router.push(redirectUrl || "/dashboard");
+          // Existing user - login directly
+          toast.success("Login successful");
+          addUser({
+            authenticatedUser: res.user,
+            token: res.access_token,
+          });
+          // Redirect based on user's existing role
+          if (res.user.role === "job_seeker") {
+            router.push(redirectUrl || "/dashboard/job-board");
+          } else if (res.user.role === "recruiter") {
+            router.push(redirectUrl || "/dashboard");
+          } else if (res.user.role === "root") {
+            router.push(redirectUrl || "/admin");
+          } else {
+            router.push(redirectUrl || "/dashboard");
+          }
         }
       }
     },
@@ -106,6 +121,57 @@ const Index = () => {
       toast.error(err.message || "Login failed");
     },
   });
+
+  const updateRoleMutation = useMutation({
+    mutationFn: async (roleToUpdate: string) => {
+      if (!googleUserData?.token) throw new Error("No token available");
+      return await updateProfile({
+        role: roleToUpdate.toLowerCase(),
+        token: googleUserData.token,
+        phone: undefined,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Sign up successful");
+      // Close modal and clean up state
+      setShowRoleModal(false);
+
+      // Update the user data with the new role
+      const updatedUser = {
+        ...googleUserData.user,
+        role: selectedGoogleRole.toLowerCase(),
+      };
+      addUser({
+        authenticatedUser: updatedUser,
+        token: googleUserData.token,
+      });
+
+      // Clean up state
+      setGoogleUserData(null);
+      setSelectedGoogleRole("Select Role");
+
+      // Redirect based on selected role
+      if (selectedGoogleRole.toLowerCase() === "job_seeker") {
+        router.push(redirectUrl || "/dashboard/job-board");
+      } else if (selectedGoogleRole.toLowerCase() === "recruiter") {
+        router.push(redirectUrl || "/dashboard");
+      } else if (selectedGoogleRole.toLowerCase() === "root") {
+        router.push(redirectUrl || "/admin");
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to update role");
+    },
+  });
+
+  const handleRoleSelect = () => {
+    if (selectedGoogleRole === "Select Role") {
+      toast.error("Please select a role");
+      return;
+    }
+    // Update the role using the updateProfile action
+    updateRoleMutation.mutate(selectedGoogleRole.toLowerCase());
+  };
 
   const responseMessage = async (response: any) => {
     console.log("response", response);
@@ -122,6 +188,50 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full bg-darkgreen overflow-y-auto relative">
+      {/* Role Selection Modal */}
+      {showRoleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className={`${poppins.className} text-xl font-semibold mb-4`}>
+              Select Your Role
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Please select your role to complete your sign-up
+            </p>
+            <RoleSelectionDropDown
+              role={selectedGoogleRole}
+              setRole={setSelectedGoogleRole}
+            />
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowRoleModal(false);
+                  setGoogleUserData(null);
+                  setSelectedGoogleRole("Select Role");
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                disabled={updateRoleMutation.isPending}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRoleSelect}
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2"
+                disabled={
+                  updateRoleMutation.isPending ||
+                  selectedGoogleRole === "Select Role"
+                }
+              >
+                {updateRoleMutation.isPending && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!isMobile && (
         <>
           <DecorativeCircles position="top" />

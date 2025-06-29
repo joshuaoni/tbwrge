@@ -130,7 +130,7 @@ function CreateJobCompanyDetails() {
     <section
       className={`${outfit.className} max-w-screen-sm mx-auto space-y-6`}
     >
-      <h2 className="text-center text-3xl font-semibold">Create a Job Post</h2>
+      <h2 className="text-center text-sm font-semibold">Create a Job Post</h2>
 
       <form className="space-y-6">
         <DashboardInputGroup
@@ -196,7 +196,9 @@ function CreateJobCompanyDetails() {
                           <span>{selectedCompany.name}</span>
                         </div>
                       ) : (
-                        <span className="text-gray-400">Select a company</span>
+                        <span className="text-gray-400 text-sm">
+                          Select a company
+                        </span>
                       )}
                       <svg
                         className="w-5 h-5 text-gray-400"
@@ -281,7 +283,7 @@ function CreateJobCompanyDetails() {
             type="button"
             onClick={() => ctx.goTo("job")}
             disabled={!isFormValid()}
-            className="px-4 py-3 bg-primary text-white font-medium rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+            className="px-4 py-3 bg-primary text-white font-medium rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors text-sm"
           >
             Write your own job post
           </button>
@@ -292,7 +294,7 @@ function CreateJobCompanyDetails() {
             onClick={() => createJobAiMutation.mutate()}
             className="p-3 border-2 border-[#006F5C] text-black rounded-[10px] flex items-center justify-center gap-2 hover:bg-[#006F5C] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>Generate with AI</span>
+            <span className="text-sm">Generate with AI</span>
             {createJobAiMutation.isPending ? (
               <Loader2Icon className="w-5 h-5 animate-spin" />
             ) : (

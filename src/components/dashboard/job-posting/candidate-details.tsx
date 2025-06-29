@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getNotes } from "@/actions/get-notes";
 import { format } from "date-fns";
 import { createNote } from "@/actions/create-note";
+import { updateApplication } from "@/actions/update-application";
 import {
   Dialog,
   DialogContent,
@@ -16,23 +17,30 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-hot-toast";
 
 interface CandidateDetailsProps {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   candidate: ApplicationItem;
+  jobId?: string;
 }
 
 const CandidateDetails = ({
   setCurrentView,
   candidate,
+  jobId,
 }: CandidateDetailsProps) => {
   const { t } = useTranslation();
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNoteText, setNewNoteText] = useState("");
+  const [showMarkAsFitModal, setShowMarkAsFitModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const { userData } = useUserStore();
   const queryClient = useQueryClient();
   const applicant = candidate.applicant;
+
+  console.log("candidate", candidate);
 
   const { data: notes, isLoading: isLoadingNotes } = useQuery({
     queryKey: ["candidate-notes", candidate.id],
@@ -54,6 +62,46 @@ const CandidateDetails = ({
       });
       setIsAddingNote(false);
       setNewNoteText("");
+    },
+  });
+
+  const markAsFitMutation = useMutation({
+    mutationFn: async () => {
+      if (!userData?.token || !jobId)
+        throw new Error("Missing token or job ID");
+      return await updateApplication(userData.token, jobId, {
+        application_ids: [candidate.id],
+        status: "shortlisted",
+      });
+    },
+    onSuccess: () => {
+      toast.success("Candidate marked as fit successfully");
+      setShowMarkAsFitModal(false);
+      queryClient.invalidateQueries({ queryKey: ["chat-messages"] });
+      queryClient.invalidateQueries({ queryKey: ["job-applications"] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to mark candidate as fit");
+    },
+  });
+
+  const rejectCandidateMutation = useMutation({
+    mutationFn: async () => {
+      if (!userData?.token || !jobId)
+        throw new Error("Missing token or job ID");
+      return await updateApplication(userData.token, jobId, {
+        application_ids: [candidate.id],
+        status: "rejected",
+      });
+    },
+    onSuccess: () => {
+      toast.success("Candidate rejected successfully");
+      setShowRejectModal(false);
+      queryClient.invalidateQueries({ queryKey: ["chat-messages"] });
+      queryClient.invalidateQueries({ queryKey: ["job-applications"] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to reject candidate");
     },
   });
 
@@ -87,10 +135,14 @@ const CandidateDetails = ({
             <Button
               variant="ghost"
               className="text-sm text-red-500 border border-red-500 hover:bg-red-500 hover:text-white hover:bg-red px-6"
+              onClick={() => setShowRejectModal(true)}
             >
               {t("jobPostings.candidateDetails.rejectCandidate")}
             </Button>
-            <Button className="bg-[#009379] text-sm text-white hover:bg-[#009379]/90 px-6">
+            <Button
+              className="bg-[#009379] text-sm text-white hover:bg-[#009379]/90 px-6"
+              onClick={() => setShowMarkAsFitModal(true)}
+            >
               {t("jobPostings.candidateDetails.markAsFit")}
             </Button>
           </div>
@@ -676,6 +728,78 @@ const CandidateDetails = ({
           </div>
         </div>
       </div>
+
+      {/* Mark as Fit Confirmation Modal */}
+      <Dialog open={showMarkAsFitModal} onOpenChange={setShowMarkAsFitModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold">
+              {t("jobPostings.candidateDetails.confirmMarkAsFit")}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-gray-600 mb-6">
+              {t("jobPostings.candidateDetails.markAsFitConfirmMessage", {
+                candidateName: applicant.name,
+              })}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => setShowMarkAsFitModal(false)}
+                disabled={markAsFitMutation.isPending}
+              >
+                {t("common.cancel")}
+              </Button>
+              <Button
+                onClick={() => markAsFitMutation.mutate()}
+                disabled={markAsFitMutation.isPending}
+                className="bg-[#009379] hover:bg-[#009379]/90"
+              >
+                {markAsFitMutation.isPending
+                  ? t("common.processing")
+                  : t("jobPostings.candidateDetails.markAsFit")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reject Candidate Confirmation Modal */}
+      <Dialog open={showRejectModal} onOpenChange={setShowRejectModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold">
+              {t("jobPostings.candidateDetails.confirmRejectCandidate")}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-gray-600 mb-6">
+              {t("jobPostings.candidateDetails.rejectCandidateConfirmMessage", {
+                candidateName: applicant.name,
+              })}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => setShowRejectModal(false)}
+                disabled={rejectCandidateMutation.isPending}
+              >
+                {t("common.cancel")}
+              </Button>
+              <Button
+                onClick={() => rejectCandidateMutation.mutate()}
+                disabled={rejectCandidateMutation.isPending}
+                variant="destructive"
+              >
+                {rejectCandidateMutation.isPending
+                  ? t("common.processing")
+                  : t("jobPostings.candidateDetails.rejectCandidate")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

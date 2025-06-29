@@ -53,6 +53,8 @@ export const API_CONFIG = {
   GET_DASHBOARD_STATS: `${MAIN_URL}/job/dashboard-stats/`,
   UPDATE_JOB: (job_id: string) => `${MAIN_URL}/job/update-job/${job_id}/`,
   BULK_ACTION: `${MAIN_URL}/job/bulk-update-jobs/`,
+  UPDATE_APPLICATION: (job_id: string) =>
+    `${MAIN_URL}/job/bulk-update-applications/${job_id}/`,
   JOB_APPLICATIONS: `${MAIN_URL}/job/get-applications/`,
   JOB_DETAIL: `${MAIN_URL}/job/get-job-item/`,
   SUBMIT_JOB_APPLICATION: (job_id: string) =>
@@ -111,6 +113,9 @@ export const API_CONFIG = {
     `${CHAT_URL}/chat/get-messages/${channel_id}/`,
   CREATE_MESSAGE: (channel_id: string) =>
     `${CHAT_URL}/chat/create-message/${channel_id}/`,
+
+  GET_PUBLIC_COMPANIES: (recruiter_id: string) =>
+    `${MAIN_URL}/job/get-companies-public/${recruiter_id}/`,
 
   TRANSCRIBE_AUDIO: `${MAIN_URL}/talent/transcribe-audio/`,
   JOIN_TALENT_POOL: `${MAIN_URL}/talent/join-talent-pool/`,

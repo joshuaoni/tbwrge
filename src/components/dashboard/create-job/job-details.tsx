@@ -296,9 +296,9 @@ function CreateJobJobDetails() {
   return (
     <div className={`${outfit.className}`}>
       <style>{quillStyles}</style>
-      <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.prevScreen()} className="mr-4">
-          <ArrowLeft />
+      <h3 className="text-sm font-semibold py-4 flex items-center">
+        <button onClick={() => ctx.prevScreen()} className="mr-1">
+          <ArrowLeft width={16} height={16} />
         </button>
         {ctx.formData.job_title ?? "Job Title is missing"}
       </h3>
@@ -396,7 +396,7 @@ function CreateJobJobDetails() {
               onChange={(e) =>
                 ctx.setFormData("educational_requirements", e.target.value)
               }
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
@@ -411,7 +411,7 @@ function CreateJobJobDetails() {
               onChange={(e) =>
                 ctx.setFormData("years_of_experience_required", e.target.value)
               }
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
@@ -422,7 +422,7 @@ function CreateJobJobDetails() {
             <select
               value={ctx.formData.job_type}
               onChange={(e) => ctx.setFormData("job_type", e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
             >
               <option value="">Select Job Type</option>
               <option value="full_time">Full Time</option>
@@ -441,7 +441,7 @@ function CreateJobJobDetails() {
               type="text"
               value={ctx.formData.job_location}
               onChange={(e) => ctx.setFormData("job_location", e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
@@ -453,7 +453,7 @@ function CreateJobJobDetails() {
               type="text"
               value={ctx.formData.languages}
               onChange={(e) => ctx.setFormData("languages", e.target.value)}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
@@ -467,13 +467,13 @@ function CreateJobJobDetails() {
               onChange={(e) =>
                 ctx.setFormData("additional_benefits", e.target.value)
               }
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
         </section>
 
         <section className="w-full space-y-4 px-6">
-          <h4 className="font-bold">Job Settings</h4>
+          <h4 className="font-bold text-sm">Job Settings</h4>
           <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Job Tags <span className="text-red-500">*</span>
@@ -627,7 +627,7 @@ function CreateJobJobDetails() {
                   e.target.value
                 )
               }
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+              className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
             />
           </div>
 
@@ -641,7 +641,7 @@ function CreateJobJobDetails() {
                 value={ctx.formData.start_date}
                 onChange={(e) => ctx.setFormData("start_date", e.target.value)}
                 data-empty={!ctx.formData.start_date}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
               />
             </div>
             <div className="flex-1">
@@ -653,7 +653,7 @@ function CreateJobJobDetails() {
                 value={ctx.formData.end_date}
                 onChange={(e) => ctx.setFormData("end_date", e.target.value)}
                 data-empty={!ctx.formData.end_date}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light] [&[data-empty=true]]:text-gray-400 text-gray-900"
               />
             </div>
           </div>
@@ -675,7 +675,7 @@ function CreateJobJobDetails() {
                     value ? Number(value) : 0
                   );
                 }}
-                className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                   ctx.formData.salary_range_min <= 0 ? "border-red-500" : ""
                 }`}
                 placeholder="Enter minimum salary"
@@ -702,7 +702,7 @@ function CreateJobJobDetails() {
                     value ? Number(value) : 0
                   );
                 }}
-                className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                   ctx.formData.salary_range_max <= ctx.formData.salary_range_min
                     ? "border-red-500"
                     : ""

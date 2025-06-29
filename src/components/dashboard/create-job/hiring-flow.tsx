@@ -283,9 +283,9 @@ function CreateJobHiringFlow() {
 
   return (
     <div className={`${outfit.className}`}>
-      <h3 className="text-3xl font-semibold pb-10 flex items-center gap-5">
+      <h3 className="text-sm font-semibold flex items-center gap-1">
         <button onClick={() => ctx.prevScreen()}>
-          <ArrowLeft />
+          <ArrowLeft width={16} height={16} />
         </button>
         <span>Hiring Flow</span>
         <button
@@ -320,7 +320,7 @@ function CreateJobHiringFlow() {
                 }
                 onChange={(e) => updateFitScore(Number(e.target.value))}
                 pattern="[0-9]+"
-                className="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
           </div>
@@ -390,14 +390,14 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className={`px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                  className={`text-sm px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                     !interviewValue || Number(interviewValue) <= 0
                       ? "border-red-500"
                       : ""
                   }`}
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-sm text-red-500">
                     Please enter a valid number greater than 0
                   </p>
                 )}
@@ -470,14 +470,14 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                  className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                     !interviewValue || Number(interviewValue) <= 0
                       ? "border-red-500"
                       : ""
                   }`}
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-sm text-red-500">
                     Please enter a valid number greater than 0
                   </p>
                 )}
@@ -550,14 +550,14 @@ function CreateJobHiringFlow() {
 
                     ctx.setFormData("hiring_flows", existingFlows);
                   }}
-                  className={`w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
+                  className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                     !interviewValue || Number(interviewValue) <= 0
                       ? "border-red-500"
                       : ""
                   }`}
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-sm text-red-500">
                     Please enter a valid number greater than 0
                   </p>
                 )}

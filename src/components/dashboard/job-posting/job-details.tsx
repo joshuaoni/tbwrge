@@ -108,6 +108,7 @@ const JobDetails = ({
       <CandidateDetails
         setCurrentView={() => setView("list")}
         candidate={selectedCandidate}
+        jobId={selectedJob?.id}
       />
     );
   }

@@ -16,7 +16,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <div className="mb-8">
-    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <h2 className="text-sm font-semibold mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -121,9 +121,9 @@ function CreateJobScreening() {
 
   return (
     <div className={`${outfit.className}`}>
-      <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.goTo("hiring")} className="mr-4">
-          <ArrowLeft />
+      <h3 className="text-sm font-semibold flex items-center gap-1">
+        <button onClick={() => ctx.goTo("hiring")} className="mr-1">
+          <ArrowLeft width={16} height={16} />
         </button>
         <span>Job Screening</span>
       </h3>
@@ -149,11 +149,11 @@ function CreateJobScreening() {
                 )}
               </div>
               <div>
-                <h1 className="text-2xl font-semibold mb-2">
+                <h1 className="text-sm font-semibold mb-2">
                   {ctx.formData.job_title}
                 </h1>
                 <div className="flex flex-col gap-1">
-                  <div className="text-[15px] text-gray-600">
+                  <div className="text-[14px] text-gray-600">
                     {ctx.formData.company_name}
                   </div>
                   <div className="flex items-center gap-2 text-[14px] text-gray-600">
@@ -167,19 +167,19 @@ function CreateJobScreening() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Job Type</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.job_type.replace("_", " ")}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Experience</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.years_of_experience_required}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Salary Range</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.salary_range_min && ctx.formData.salary_range_max
                   ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
                   : "Not specified"}
@@ -187,13 +187,15 @@ function CreateJobScreening() {
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Location</div>
-              <div className="font-medium">{ctx.formData.job_location}</div>
+              <div className="font-medium text-sm">
+                {ctx.formData.job_location}
+              </div>
             </div>
           </div>
 
           {ctx.formData.company_description && (
             <Section title="About the Company">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.company_description}
               </p>
             </Section>
@@ -201,7 +203,7 @@ function CreateJobScreening() {
 
           <Section title="Job Description">
             <div
-              className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
               dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
             />
           </Section>
@@ -221,7 +223,7 @@ function CreateJobScreening() {
 
           {ctx.formData.educational_requirements && (
             <Section title="Educational Requirements">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.educational_requirements}
               </p>
             </Section>
@@ -233,7 +235,7 @@ function CreateJobScreening() {
                 {ctx.formData.languages.split(",").map((language: string) => (
                   <span
                     key={language}
-                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm"
+                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-sm"
                   >
                     {language.trim()}
                   </span>
@@ -244,7 +246,7 @@ function CreateJobScreening() {
 
           {ctx.formData.additional_benefits && (
             <Section title="Additional Benefits">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.additional_benefits}
               </p>
             </Section>
@@ -318,7 +320,7 @@ function CreateJobScreening() {
                 )}
                 <textarea
                   rows={5}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                  className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   placeholder="Type your answer here"
                   value={question.answer}
                   onChange={(e) => handleTextareaChange(e, i)}
@@ -344,13 +346,15 @@ function CreateJobScreening() {
             className="w-full flex items-center justify-center gap-2 mt-6 px-4"
           >
             <PlusCircleIcon />
-            <span className="capitalize font-bold">Add custom question</span>
+            <span className="capitalize font-bold text-sm">
+              Add custom question
+            </span>
           </button>
 
           <div className="flex justify-center">
             <button
               onClick={handleSaveScreeningQuestions}
-              className=" bg-primary text-white p-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors"
+              className=" bg-primary text-white p-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors text-sm"
             >
               Save Screening Questions
             </button>
