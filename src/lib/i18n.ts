@@ -1415,6 +1415,12 @@ const resources = {
           noScreeningQuestionsAnswered: "No screening questions answered",
           screeningAiInsights: "Screening: AI-Powered Insights",
           noAiInsightsAvailable: "No AI insights available for screening",
+          markAsFitConfirmMessage:
+            "Are you sure you want to mark {candidateName} as fit?",
+          confirmMarkAsFit: "Confirm Mark as Fit",
+          rejectCandidateConfirmMessage:
+            "Are you sure you want to reject {candidateName}?",
+          confirmRejectCandidate: "Confirm Reject Candidate",
         },
         actions: {
           editJob: "Edit Job",
@@ -2980,6 +2986,12 @@ const resources = {
           screeningAiInsights: "Présélection : insights IA",
           noAiInsightsAvailable:
             "Aucun insight IA disponible pour la présélection",
+          confirmMarkAsFit: "Confirmer la marque comme adapté",
+          confirmRejectCandidate: "Confirmer le rejet du candidat",
+          markAsFitConfirmMessage:
+            "Êtes-vous sûr de vouloir marquer {candidateName} comme adapté ?",
+          rejectCandidateConfirmMessage:
+            "Êtes-vous sûr de vouloir refuser {candidateName} ?",
         },
         actions: {
           editJob: "Modifier l’offre",
@@ -4506,6 +4518,12 @@ const resources = {
           screeningAiInsights: "Preselección: insights con IA",
           noAiInsightsAvailable:
             "No hay insights de IA disponibles para la preselección",
+          confirmMarkAsFit: "Confirmar marcado como apto",
+          confirmRejectCandidate: "Confirmar rechazo de candidato",
+          markAsFitConfirmMessage:
+            "¿Estás seguro de querer marcar {candidateName} como apto?",
+          rejectCandidateConfirmMessage:
+            "¿Estás seguro de querer rechazar {candidateName}?",
         },
         actions: {
           editJob: "Editar oferta",
@@ -6034,6 +6052,12 @@ const resources = {
           screeningAiInsights: "Screening: KI‑Insights",
           noAiInsightsAvailable:
             "Keine KI‑Insights für das Screening verfügbar",
+          confirmMarkAsFit: "Als passend markieren",
+          confirmRejectCandidate: "Kandidat ablehnen",
+          markAsFitConfirmMessage:
+            "Sind Sie sicher, dass Sie {candidateName} als passend markieren möchten?",
+          rejectCandidateConfirmMessage:
+            "Sind Sie sicher, dass Sie {candidateName} ablehnen möchten?",
         },
         actions: {
           editJob: "Stelle bearbeiten",
@@ -7525,6 +7549,11 @@ const resources = {
           noScreeningQuestionsAnswered: "لم يتم الرد على أي أسئلة تصفية",
           screeningAiInsights: "تصفية: رؤى بالذكاء الاصطناعي",
           noAiInsightsAvailable: "لا توجد رؤى AI متاحة للتصفية",
+          confirmMarkAsFit: "تأكيد التصفية كمتوافق",
+          confirmRejectCandidate: "تأكيد رفض المرشح",
+          markAsFitConfirmMessage:
+            "هل أنت متأكد من رصد {candidateName} كمتوافق؟",
+          rejectCandidateConfirmMessage: "هل أنت متأكد من رفض {candidateName}؟",
         },
         actions: {
           editJob: "تعديل الوظيفة",
@@ -9044,6 +9073,12 @@ const resources = {
             "Nenhuma pergunta de triagem respondida",
           screeningAiInsights: "Triagem: insights com IA",
           noAiInsightsAvailable: "Nenhum insight de IA disponível na triagem",
+          confirmMarkAsFit: "Confirmar como compatível",
+          confirmRejectCandidate: "Confirmar rejeição",
+          markAsFitConfirmMessage:
+            "Tem certeza que deseja marcar {candidateName} como compatível?",
+          rejectCandidateConfirmMessage:
+            "Tem certeza que deseja rejeitar {candidateName}?",
         },
         actions: {
           editJob: "Editar vaga",
@@ -10533,6 +10568,10 @@ const resources = {
           noScreeningQuestionsAnswered: "暂无筛选问题回答",
           screeningAiInsights: "筛选：AI 智能洞察",
           noAiInsightsAvailable: "暂无用于筛选的 AI 洞察",
+          confirmMarkAsFit: "确认标记为匹配",
+          confirmRejectCandidate: "确认拒绝候选人",
+          markAsFitConfirmMessage: "您确定要将 {candidateName} 标记为匹配吗？",
+          rejectCandidateConfirmMessage: "您确定要拒绝 {candidateName} 吗？",
         },
         actions: {
           editJob: "编辑职位",

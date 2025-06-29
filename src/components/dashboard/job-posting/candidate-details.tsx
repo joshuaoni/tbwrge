@@ -731,7 +731,7 @@ const CandidateDetails = ({
 
       {/* Mark as Fit Confirmation Modal */}
       <Dialog open={showMarkAsFitModal} onOpenChange={setShowMarkAsFitModal}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">
               {t("jobPostings.candidateDetails.confirmMarkAsFit")}
@@ -745,7 +745,7 @@ const CandidateDetails = ({
             </p>
             <div className="flex gap-3 justify-end">
               <Button
-                variant="outline"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 onClick={() => setShowMarkAsFitModal(false)}
                 disabled={markAsFitMutation.isPending}
               >
@@ -754,7 +754,7 @@ const CandidateDetails = ({
               <Button
                 onClick={() => markAsFitMutation.mutate()}
                 disabled={markAsFitMutation.isPending}
-                className="bg-[#009379] hover:bg-[#009379]/90"
+                className="bg-[#009379] text-white hover:bg-[#009379]/90 text-sm"
               >
                 {markAsFitMutation.isPending
                   ? t("common.processing")
@@ -767,7 +767,7 @@ const CandidateDetails = ({
 
       {/* Reject Candidate Confirmation Modal */}
       <Dialog open={showRejectModal} onOpenChange={setShowRejectModal}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">
               {t("jobPostings.candidateDetails.confirmRejectCandidate")}
@@ -781,7 +781,7 @@ const CandidateDetails = ({
             </p>
             <div className="flex gap-3 justify-end">
               <Button
-                variant="outline"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 onClick={() => setShowRejectModal(false)}
                 disabled={rejectCandidateMutation.isPending}
               >
@@ -791,6 +791,7 @@ const CandidateDetails = ({
                 onClick={() => rejectCandidateMutation.mutate()}
                 disabled={rejectCandidateMutation.isPending}
                 variant="destructive"
+                className="bg-red text-white hover:bg-red/90 text-sm"
               >
                 {rejectCandidateMutation.isPending
                   ? t("common.processing")
