@@ -52,13 +52,15 @@ export default function CandidateProfile() {
         <div className="flex justify-between mb-4 items-center">
           <div className="flex items-center">
             <ChevronLeft
-              className="cursor-pointer mr-6"
+              width={16}
+              height={16}
+              className="cursor-pointer mr-1"
               onClick={() => {
                 router.back();
               }}
             />
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-semibold">
+              <h2 className="text-sm font-semibold">
                 {data?.name ?? t("talentPool.messages.loading")}
               </h2>
               <div className="relative">
@@ -100,7 +102,7 @@ export default function CandidateProfile() {
           {/* Profile Overview */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
             <div className="flex items-start justify-between mb-10">
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-sm font-semibold">
                 {t("talentPool.details.profileOverview")}
               </h2>
             </div>
@@ -222,7 +224,7 @@ export default function CandidateProfile() {
 
           {/* Profile Summary */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">
+            <h2 className="text-sm font-semibold mb-4">
               {t("talentPool.details.profileSummary")}
             </h2>
             <p className="text-sm text-gray-600 leading-relaxed">
@@ -233,7 +235,7 @@ export default function CandidateProfile() {
 
           {/* AI-Powered Insights */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">
+            <h2 className="text-sm font-semibold mb-4">
               {t("talentPool.details.aiInsights")}
             </h2>
             <div className="space-y-6">
@@ -286,7 +288,7 @@ export default function CandidateProfile() {
         <div className="grid md:grid-cols-3 gap-4 mt-8">
           {/* Supporting Documents */}
           <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)]">
-            <h2 className="text-lg font-semibold mb-4">
+            <h2 className="text-sm font-semibold mb-4">
               {t("talentPool.details.supportingDocuments")}
             </h2>
             <div className="space-y-3">

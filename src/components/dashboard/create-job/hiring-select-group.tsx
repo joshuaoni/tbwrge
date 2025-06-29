@@ -59,7 +59,7 @@ export function CreateJobHiringSelectGroup({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="w-full py-3 px-4 flex justify-between items-center  text-[#898989] rounded bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-sm w-full py-3 px-4 flex justify-between items-center  text-[#898989] rounded bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {options.find((o) => o.value === value)?.label ?? defaultValue}
           <CaretDownIcon />

@@ -27,7 +27,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <div className="mb-8">
-    <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <h2 className="text-sm font-semibold mb-4">{title}</h2>
     {children}
   </div>
 );
@@ -160,9 +160,9 @@ function CreateJobOverview() {
 
   return (
     <div className={`${outfit.className}`}>
-      <h3 className="text-3xl font-semibold py-4">
-        <button onClick={() => ctx.goTo("hiring")} className="mr-4">
-          <ArrowLeft />
+      <h3 className="text-sm font-semibold flex items-center gap-1">
+        <button onClick={() => ctx.goTo("hiring")} className="mr-1">
+          <ArrowLeft width={16} height={16} />
         </button>
         <span>Create Job Post</span>
       </h3>
@@ -188,11 +188,11 @@ function CreateJobOverview() {
                 )}
               </div>
               <div>
-                <h1 className="text-2xl font-semibold mb-2">
+                <h1 className="text-sm font-semibold mb-2">
                   {ctx.formData.job_title}
                 </h1>
                 <div className="flex flex-col gap-1">
-                  <div className="text-[15px] text-gray-600">
+                  <div className="text-[14px] text-gray-600">
                     {ctx.formData.company_name}
                   </div>
                   <div className="flex items-center gap-2 text-[14px] text-gray-600">
@@ -206,19 +206,19 @@ function CreateJobOverview() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Job Type</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.job_type.replace("_", " ")}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Experience</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.years_of_experience_required}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Salary Range</div>
-              <div className="font-medium">
+              <div className="font-medium text-sm">
                 {ctx.formData.salary_range_min && ctx.formData.salary_range_max
                   ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
                   : "Not specified"}
@@ -226,13 +226,15 @@ function CreateJobOverview() {
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="text-sm text-gray-600 mb-1">Location</div>
-              <div className="font-medium">{ctx.formData.job_location}</div>
+              <div className="font-medium text-sm">
+                {ctx.formData.job_location}
+              </div>
             </div>
           </div>
 
           {ctx.formData.company_description && (
             <Section title="About the Company">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.company_description}
               </p>
             </Section>
@@ -240,7 +242,7 @@ function CreateJobOverview() {
 
           <Section title="Job Description">
             <div
-              className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
               dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
             />
           </Section>
@@ -260,7 +262,7 @@ function CreateJobOverview() {
 
           {ctx.formData.educational_requirements && (
             <Section title="Educational Requirements">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.educational_requirements}
               </p>
             </Section>
@@ -272,7 +274,7 @@ function CreateJobOverview() {
                 {ctx.formData.languages.split(",").map((language: string) => (
                   <span
                     key={language}
-                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-xs md:text-sm"
+                    className="px-2 md:px-3 py-1 bg-gray-100 rounded-full text-sm"
                   >
                     {language.trim()}
                   </span>
@@ -283,7 +285,7 @@ function CreateJobOverview() {
 
           {ctx.formData.additional_benefits && (
             <Section title="Additional Benefits">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.additional_benefits}
               </p>
             </Section>
@@ -295,7 +297,7 @@ function CreateJobOverview() {
                 {ctx.formData.job_tags.split(",").map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm"
+                    className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-xs"
                   >
                     {tag.trim()}
                   </span>
@@ -306,7 +308,7 @@ function CreateJobOverview() {
         </section>
 
         <section className="w-full h-fit p-6 pb-8">
-          <h2 className="text-xl font-semibold mb-6">Job Application</h2>
+          <h2 className="text-sm font-semibold mb-6">Job Application</h2>
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -315,7 +317,7 @@ function CreateJobOverview() {
               <input
                 type="text"
                 placeholder="Enter your name"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -326,7 +328,7 @@ function CreateJobOverview() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -337,7 +339,7 @@ function CreateJobOverview() {
               <input
                 type="tel"
                 placeholder="Enter your phone number"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -348,7 +350,7 @@ function CreateJobOverview() {
               <input
                 type="date"
                 placeholder="mm/dd/yyyy"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
               />
             </div>
 
@@ -359,7 +361,7 @@ function CreateJobOverview() {
               <input
                 type="url"
                 placeholder="Enter link"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -370,7 +372,7 @@ function CreateJobOverview() {
               <input
                 type="text"
                 placeholder="Enter N/A if none"
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -381,7 +383,7 @@ function CreateJobOverview() {
               <input
                 type="text"
                 placeholder="Manager, etc..."
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -389,7 +391,7 @@ function CreateJobOverview() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Nationality
               </label>
-              <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
+              <select className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
                 <option value="" className="text-[#6B7280]">
                   Select Nationality
                 </option>
@@ -401,7 +403,7 @@ function CreateJobOverview() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Country of Residence
               </label>
-              <select className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
+              <select className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
                 <option value="" className="text-[#6B7280]">
                   Select Country
                 </option>
@@ -416,7 +418,7 @@ function CreateJobOverview() {
               <textarea
                 placeholder="Describe your past roles"
                 rows={4}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
@@ -427,7 +429,7 @@ function CreateJobOverview() {
               <textarea
                 placeholder="Highlight your key skills"
                 rows={4}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
               />
             </div>
 
@@ -463,7 +465,7 @@ function CreateJobOverview() {
                     <input
                       value={newQuestion}
                       onChange={(e) => setNewQuestion(e.target.value)}
-                      className="w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                      className="text-sm w-full mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                     />
                   ) : (
                     <label
@@ -477,7 +479,7 @@ function CreateJobOverview() {
                     placeholder="Type your answer here"
                     value={question.answer}
                     onChange={(e) => handleInputChange(e, i)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                    className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
                   />
                 </div>
               </div>
@@ -497,7 +499,9 @@ function CreateJobOverview() {
               className="flex items-center gap-2 mt-6 mb-6 justify-center px-4 cursor-pointer"
             >
               <PlusCircleIcon />
-              <span className="capitalize font-bold">Add custom question</span>
+              <span className="capitalize font-bold text-sm">
+                Add custom question
+              </span>
             </div>
 
             {ctx.formData.require_cv && (
@@ -509,7 +513,7 @@ function CreateJobOverview() {
                   type="file"
                   accept=".pdf,.doc,.docx"
                   required={ctx.formData.require_cv}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                  className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
                 />
               </div>
             )}
@@ -523,7 +527,7 @@ function CreateJobOverview() {
                   type="file"
                   accept=".pdf,.doc,.docx"
                   required={ctx.formData.require_cover_letter}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                  className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
                 />
               </div>
             )}
@@ -537,7 +541,7 @@ function CreateJobOverview() {
                   type="file"
                   accept="video/*"
                   required={ctx.formData.voicenote_recording}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+                  className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
                 />
               </div>
             )}

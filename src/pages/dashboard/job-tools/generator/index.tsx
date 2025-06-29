@@ -479,7 +479,7 @@ const Generator = () => {
             <div className="flex items-center justify-between">
               <span className="font-bold">
                 {t("jobTools.generator.describeJob")}{" "}
-                <span className="font-normal text-xs">
+                <span className="font-normal text-sm">
                   {t("jobTools.generator.addPrompts")}
                 </span>
               </span>

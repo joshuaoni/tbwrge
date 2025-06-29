@@ -14,6 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTalentChats, ChatResponse } from "@/actions/get-chats";
 import { getMessages, Message as APIMessage } from "@/actions/get-messages";
 import { createMessage } from "@/actions/create-message";
+import { getPublicCompanies, Company } from "@/actions/companies";
 import EmojiPicker, { Theme, EmojiStyle, Emoji } from "emoji-picker-react";
 
 interface LastMessage {
@@ -234,6 +235,57 @@ export default function ChatPage() {
     enabled: !!userData?.token && !!selectedChatId,
   });
 
+  // Find the selected chat
+  const selectedChat = chats?.find((chat) => chat.id === selectedChatId);
+
+  // Get the other user in the chat (not the current user)
+  const otherUser = selectedChat
+    ? selectedChat.user_1.id === userData?.user?.id
+      ? selectedChat.user_2
+      : selectedChat.user_1
+    : null;
+  console.log("otherUser", otherUser);
+
+  // Fetch companies for recruiters
+  const { data: companies } = useQuery<Company[]>({
+    queryKey: ["recruiter-companies", selectedChatId, chats],
+    queryFn: async () => {
+      if (!selectedChatId || !chats) return [];
+
+      const selectedChat = chats.find((chat) => chat.id === selectedChatId);
+      if (!selectedChat) return [];
+
+      const otherUser =
+        selectedChat.user_1.id === userData?.user?.id
+          ? selectedChat.user_2
+          : selectedChat.user_1;
+
+      if (!otherUser?.id || otherUser.role !== "recruiter" || !userData?.token)
+        return [];
+      return await getPublicCompanies(userData.token, otherUser.id);
+    },
+    enabled: !!selectedChatId && !!chats && !!userData?.token,
+  });
+  console.log("companies", companies);
+
+  // Helper function to format company names
+  const formatCompanyNames = (companies: Company[]) => {
+    if (!companies || companies.length === 0) return "";
+
+    if (companies.length === 1) {
+      return `Recruiter at ${companies[0].name}`;
+    } else if (companies.length === 2) {
+      return `Recruiter at ${companies[0].name} and ${companies[1].name}`;
+    } else {
+      const firstTwo = companies
+        .slice(0, 2)
+        .map((c) => c.name)
+        .join(", ");
+      const remaining = companies.length - 2;
+      return `Recruiter at ${firstTwo}, and ${remaining} more`;
+    }
+  };
+
   // Update local messages when query data changes
   useEffect(() => {
     if (messages) {
@@ -254,17 +306,6 @@ export default function ChatPage() {
       setSelectedChatId(router.query.chatId as string);
     }
   }, [router.query.chatId]);
-
-  // Find the selected chat
-  const selectedChat = chats?.find((chat) => chat.id === selectedChatId);
-
-  // Get the other user in the chat (not the current user)
-  const otherUser = selectedChat
-    ? selectedChat.user_1.id === userData?.user?.id
-      ? selectedChat.user_2
-      : selectedChat.user_1
-    : null;
-  console.log("otherUser", otherUser);
 
   // Selected chat WebSocket connection
   useEffect(() => {
@@ -760,9 +801,16 @@ export default function ChatPage() {
                         className="w-9 h-9 rounded-full object-cover border border-gray-200"
                       />
                     </div>
-                    <h3 className="text-sm font-semibold">
-                      {otherUser.name} {otherUser.last_name || ""}
-                    </h3>
+                    <div className="flex flex-col">
+                      <h3 className="text-sm font-semibold">
+                        {otherUser.name} {otherUser.last_name || ""}
+                      </h3>
+                      {companies && companies.length > 0 && (
+                        <p className="text-xs text-gray-500">
+                          {formatCompanyNames(companies)}
+                        </p>
+                      )}
+                    </div>
                   </button>
                 ) : (
                   <div className="flex items-center gap-3">
@@ -775,9 +823,16 @@ export default function ChatPage() {
                         className="w-9 h-9 rounded-full object-cover border border-gray-200"
                       />
                     </div>
-                    <h3 className="text-sm font-semibold">
-                      {otherUser.name} {otherUser.last_name || ""}
-                    </h3>
+                    <div className="flex flex-col">
+                      <h3 className="text-sm font-semibold">
+                        {otherUser.name} {otherUser.last_name || ""}
+                      </h3>
+                      {companies && companies.length > 0 && (
+                        <p className="text-xs text-gray-500">
+                          {formatCompanyNames(companies)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
                 <button className="p-2 hover:bg-gray-100 rounded-full">
