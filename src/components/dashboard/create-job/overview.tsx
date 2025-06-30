@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, CheckIcon } from "lucide-react";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import { createJob, CreateJobResponse, updateJob } from "@/actions/create-job";
@@ -33,6 +34,7 @@ const Section = ({
 );
 
 function CreateJobOverview() {
+  const { t } = useTranslation();
   const [questions, setQuestions] = useState<
     { title: string; answer: string }[]
   >([
@@ -164,7 +166,7 @@ function CreateJobOverview() {
         <button onClick={() => ctx.goTo("hiring")} className="mr-1">
           <ArrowLeft width={16} height={16} />
         </button>
-        <span>Create Job Post</span>
+        <span>{t("createJob.overview.title")}</span>
       </h3>
       <div className="flex gap-8">
         <section className="w-full">
@@ -205,19 +207,25 @@ function CreateJobOverview() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.jobType")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.job_type.replace("_", " ")}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.experience")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.years_of_experience_required}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.salaryRange")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.salary_range_min && ctx.formData.salary_range_max
                   ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
@@ -225,7 +233,9 @@ function CreateJobOverview() {
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.location")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.job_location}
               </div>
@@ -233,21 +243,21 @@ function CreateJobOverview() {
           </div>
 
           {ctx.formData.company_description && (
-            <Section title="About the Company">
+            <Section title={t("createJob.overview.sections.aboutCompany")}>
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.company_description}
               </p>
             </Section>
           )}
 
-          <Section title="Job Description">
+          <Section title={t("createJob.overview.sections.jobDescription")}>
             <div
               className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
               dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
             />
           </Section>
 
-          <Section title="Required Skills">
+          <Section title={t("createJob.overview.sections.requiredSkills")}>
             <div className="flex flex-wrap gap-2">
               {ctx.formData.required_skills.split(",").map((skill: string) => (
                 <span
@@ -261,7 +271,9 @@ function CreateJobOverview() {
           </Section>
 
           {ctx.formData.educational_requirements && (
-            <Section title="Educational Requirements">
+            <Section
+              title={t("createJob.overview.sections.educationalRequirements")}
+            >
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.educational_requirements}
               </p>
@@ -269,7 +281,7 @@ function CreateJobOverview() {
           )}
 
           {ctx.formData.languages && (
-            <Section title="Languages">
+            <Section title={t("createJob.overview.sections.languages")}>
               <div className="flex flex-wrap gap-2">
                 {ctx.formData.languages.split(",").map((language: string) => (
                   <span
@@ -284,7 +296,9 @@ function CreateJobOverview() {
           )}
 
           {ctx.formData.additional_benefits && (
-            <Section title="Additional Benefits">
+            <Section
+              title={t("createJob.overview.sections.additionalBenefits")}
+            >
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.additional_benefits}
               </p>
@@ -292,7 +306,7 @@ function CreateJobOverview() {
           )}
 
           {ctx.formData.job_tags && (
-            <Section title="Tags">
+            <Section title={t("createJob.overview.sections.tags")}>
               <div className="flex flex-wrap gap-2">
                 {ctx.formData.job_tags.split(",").map((tag: string) => (
                   <span
@@ -308,92 +322,110 @@ function CreateJobOverview() {
         </section>
 
         <section className="w-full h-fit p-6 pb-8">
-          <h2 className="text-sm font-semibold mb-6">Job Application</h2>
+          <h2 className="text-sm font-semibold mb-6">
+            {t("createJob.overview.jobApplication")}
+          </h2>
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
+                {t("createJob.overview.applicationForm.fullName")}
               </label>
               <input
                 type="text"
-                placeholder="Enter your name"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterName"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                {t("createJob.overview.applicationForm.email")}
               </label>
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterEmail"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
+                {t("createJob.overview.applicationForm.phoneNumber")}
               </label>
               <input
                 type="tel"
-                placeholder="Enter your phone number"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterPhone"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date of Birth
+                {t("createJob.overview.applicationForm.dateOfBirth")}
               </label>
               <input
                 type="date"
-                placeholder="mm/dd/yyyy"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterDate"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-[#6B7280] [color-scheme:light]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                LinkedIn Profile Link
+                {t("createJob.overview.applicationForm.linkedinProfile")}
               </label>
               <input
                 type="url"
-                placeholder="Enter link"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterLink"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Company
+                {t("createJob.overview.applicationForm.currentCompany")}
               </label>
               <input
                 type="text"
-                placeholder="Enter N/A if none"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.enterNA"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Current Position
+                {t("createJob.overview.applicationForm.currentPosition")}
               </label>
               <input
                 type="text"
-                placeholder="Manager, etc..."
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.managerEtc"
+                )}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nationality
+                {t("createJob.overview.applicationForm.nationality")}
               </label>
               <select className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
                 <option value="" className="text-[#6B7280]">
-                  Select Nationality
+                  {t(
+                    "createJob.overview.applicationForm.placeholders.selectNationality"
+                  )}
                 </option>
                 <option value="nig">Nigeria</option>
               </select>
@@ -401,11 +433,13 @@ function CreateJobOverview() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Country of Residence
+                {t("createJob.overview.applicationForm.countryOfResidence")}
               </label>
               <select className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]">
                 <option value="" className="text-[#6B7280]">
-                  Select Country
+                  {t(
+                    "createJob.overview.applicationForm.placeholders.selectCountry"
+                  )}
                 </option>
                 <option value="nig">Nigeria</option>
               </select>
@@ -413,10 +447,12 @@ function CreateJobOverview() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Relevant Experience (Max 300 words)
+                {t("createJob.overview.applicationForm.relevantExperience")}
               </label>
               <textarea
-                placeholder="Describe your past roles"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.describePastRoles"
+                )}
                 rows={4}
                 className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
               />
@@ -424,10 +460,12 @@ function CreateJobOverview() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Skills Summary (Max 300 words)
+                {t("createJob.overview.applicationForm.skillsSummary")}
               </label>
               <textarea
-                placeholder="Highlight your key skills"
+                placeholder={t(
+                  "createJob.overview.applicationForm.placeholders.highlightSkills"
+                )}
                 rows={4}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
               />
@@ -476,7 +514,9 @@ function CreateJobOverview() {
                     </label>
                   )}
                   <input
-                    placeholder="Type your answer here"
+                    placeholder={t(
+                      "createJob.overview.applicationForm.placeholders.typeAnswerHere"
+                    )}
                     value={question.answer}
                     onChange={(e) => handleInputChange(e, i)}
                     className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
@@ -490,7 +530,9 @@ function CreateJobOverview() {
                 setQuestions([
                   ...questions,
                   {
-                    title: "Enter your question here",
+                    title: t(
+                      "createJob.overview.applicationForm.placeholders.enterQuestion"
+                    ),
                     answer: "",
                   },
                 ]);
@@ -500,14 +542,14 @@ function CreateJobOverview() {
             >
               <PlusCircleIcon />
               <span className="capitalize font-bold text-sm">
-                Add custom question
+                {t("createJob.overview.addCustomQuestion")}
               </span>
             </div>
 
             {ctx.formData.require_cv && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload CV
+                  {t("createJob.overview.applicationForm.uploadCV")}
                 </label>
                 <input
                   type="file"
@@ -521,7 +563,7 @@ function CreateJobOverview() {
             {ctx.formData.require_cover_letter && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Cover Letter
+                  {t("createJob.overview.applicationForm.uploadCoverLetter")}
                 </label>
                 <input
                   type="file"
@@ -535,7 +577,7 @@ function CreateJobOverview() {
             {ctx.formData.voicenote_recording && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Application Video/demo
+                  {t("createJob.overview.applicationForm.uploadVideo")}
                 </label>
                 <input
                   type="file"
@@ -553,7 +595,7 @@ function CreateJobOverview() {
           onClick={() => createJobMutation.mutate()}
           className="bg-[#009379] text-white px-8 py-2 rounded-lg"
         >
-          Publish & View Job Post
+          {t("createJob.overview.publishViewJobPost")}
         </button>
       </div>
 

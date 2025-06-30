@@ -8,6 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useContext, useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -38,54 +39,6 @@ const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading Editor...</p>,
 });
-
-// Add custom styles for ReactQuill
-const quillStyles = `
-  .ql-toolbar.ql-snow {
-    border: none;
-    border-bottom: 1px solid #e5e7eb;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-container.ql-snow {
-    border: none;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor {
-    background-color: #F9FAFB;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  .ql-editor.ql-blank::before {
-    font-style: normal;
-    font-family: 'Outfit', sans-serif;
-    color: #9CA3AF;
-    font-size: 14px;
-    position: absolute;
-    content: 'Write job description and requirements here...';
-    pointer-events: none;
-  }
-
-  .ql-toolbar button {
-    font-family: 'Outfit', sans-serif;
-  }
-
-  /* Apply Outfit font to all text in the editor */
-  .ql-editor p,
-  .ql-editor ol,
-  .ql-editor ul,
-  .ql-editor pre,
-  .ql-editor blockquote,
-  .ql-editor h1,
-  .ql-editor h2,
-  .ql-editor h3,
-  .ql-editor h4,
-  .ql-editor h5,
-  .ql-editor h6 {
-    font-family: 'Outfit', sans-serif;
-  }
-`;
 
 const modules = {
   toolbar: [
@@ -127,6 +80,7 @@ interface TeamMember {
 }
 
 function CreateJobJobDetails() {
+  const { t } = useTranslation();
   const ctx = useContext(CreateJobContext);
   const { userData } = useUserStore();
   const [isTeamMemberDialogOpen, setIsTeamMemberDialogOpen] = useState(false);
@@ -293,6 +247,54 @@ function CreateJobJobDetails() {
     }
   };
 
+  // Add custom styles for ReactQuill
+  const quillStyles = `
+.ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ql-container.ql-snow {
+  border: none;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ql-editor {
+  background-color: #F9FAFB;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ql-editor.ql-blank::before {
+  font-style: normal;
+  font-family: 'Outfit', sans-serif;
+  color: #9CA3AF;
+  font-size: 14px;
+  position: absolute;
+  content: '${t("jobPostings.edit.editorPlaceholder")}';
+  pointer-events: none;
+}
+
+.ql-toolbar button {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Apply Outfit font to all text in the editor */
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  font-family: 'Outfit', sans-serif;
+}
+`;
+
   return (
     <div className={`${outfit.className}`}>
       <style>{quillStyles}</style>
@@ -307,8 +309,10 @@ function CreateJobJobDetails() {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Job Description & Requirements{" "}
-                <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.jobDescriptionRequirements")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </label>
               <span className="text-sm text-gray-500">
                 {ctx.formData.job_description.length}/1000
@@ -336,7 +340,10 @@ function CreateJobJobDetails() {
 
           <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Required Skills <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.requiredSkills")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.required_skills
@@ -364,7 +371,7 @@ function CreateJobJobDetails() {
               <input
                 type="text"
                 className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
-                placeholder="Type a skill and press Enter. e.g, python, sales"
+                placeholder={t("createJob.jobDetails.placeholders.skillsInput")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -388,7 +395,10 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Educational Requirements <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.educationalRequirements")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -402,8 +412,10 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Required Years of Experience{" "}
-              <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.requiredYearsExperience")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -417,25 +429,43 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Job Type <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.jobType")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <select
               value={ctx.formData.job_type}
               onChange={(e) => ctx.setFormData("job_type", e.target.value)}
               className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280]"
             >
-              <option value="">Select Job Type</option>
-              <option value="full_time">Full Time</option>
-              <option value="part_time">Part Time</option>
-              <option value="contract">Contract</option>
-              <option value="internship">Internship</option>
-              <option value="remote">Remote</option>
+              <option value="">
+                {t("createJob.jobDetails.selectJobType")}
+              </option>
+              <option value="full_time">
+                {t("createJob.jobDetails.jobTypeOptions.fullTime")}
+              </option>
+              <option value="part_time">
+                {t("createJob.jobDetails.jobTypeOptions.partTime")}
+              </option>
+              <option value="contract">
+                {t("createJob.jobDetails.jobTypeOptions.contract")}
+              </option>
+              <option value="internship">
+                {t("createJob.jobDetails.jobTypeOptions.internship")}
+              </option>
+              <option value="remote">
+                {t("createJob.jobDetails.jobTypeOptions.remote")}
+              </option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Job Location <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.jobLocation")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -447,7 +477,10 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Languages <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.languages")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -459,7 +492,10 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Additional Benefits <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.additionalBenefits")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -473,10 +509,15 @@ function CreateJobJobDetails() {
         </section>
 
         <section className="w-full space-y-4 px-6">
-          <h4 className="font-bold text-sm">Job Settings</h4>
+          <h4 className="font-bold text-sm">
+            {t("createJob.jobDetails.jobSettings")}
+          </h4>
           <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Job Tags <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.jobTags")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.job_tags
@@ -504,7 +545,7 @@ function CreateJobJobDetails() {
               <input
                 type="text"
                 className="flex-1 bg-transparent outline-none text-sm px-3 py-2"
-                placeholder="Type a tag and press Enter. e.g, Fintech, AI"
+                placeholder={t("createJob.jobDetails.placeholders.tagsInput")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -529,14 +570,17 @@ function CreateJobJobDetails() {
           <div className="space-y-4">
             <div className="flex justify-between items-end">
               <span className="text-sm font-medium text-gray-700">
-                Assign recruiter <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.assignRecruiter")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </span>
               <button
                 type="button"
                 onClick={() => setIsTeamMemberDialogOpen(true)}
                 className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
               >
-                Add a Team Member
+                {t("createJob.jobDetails.addTeamMember")}
                 <PlusCircle className="w-6 h-6" />
               </button>
             </div>
@@ -568,7 +612,7 @@ function CreateJobJobDetails() {
                           (m) => m.user.id === ctx.formData.recruiter_id
                         )?.user.email
                       })`
-                    : "Assign recruiter"}
+                    : t("createJob.jobDetails.assignRecruiter")}
                 </span>
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               </button>
@@ -615,8 +659,10 @@ function CreateJobJobDetails() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Recruiter's Calendar Booking Link{" "}
-              <span className="text-red-500">*</span>
+              {t("createJob.jobDetails.recruiterCalendarLink")}{" "}
+              <span className="text-red-500">
+                {t("createJob.common.required")}
+              </span>
             </label>
             <input
               type="text"
@@ -634,7 +680,10 @@ function CreateJobJobDetails() {
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.startDate")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </label>
               <input
                 type="date"
@@ -646,7 +695,10 @@ function CreateJobJobDetails() {
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Date <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.endDate")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </label>
               <input
                 type="date"
@@ -661,7 +713,10 @@ function CreateJobJobDetails() {
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Salary Range Min <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.salaryRangeMin")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </label>
               <input
                 type="text"
@@ -678,17 +733,20 @@ function CreateJobJobDetails() {
                 className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                   ctx.formData.salary_range_min <= 0 ? "border-red-500" : ""
                 }`}
-                placeholder="Enter minimum salary"
+                placeholder={t("createJob.jobDetails.enterMinimumSalary")}
               />
               {ctx.formData.salary_range_min <= 0 && (
                 <p className="mt-1 text-xs text-red-500">
-                  Minimum salary must be greater than 0
+                  {t("createJob.jobDetails.minimumSalaryError")}
                 </p>
               )}
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Salary Range Max <span className="text-red-500">*</span>
+                {t("createJob.jobDetails.salaryRangeMax")}{" "}
+                <span className="text-red-500">
+                  {t("createJob.common.required")}
+                </span>
               </label>
               <input
                 type="text"
@@ -707,12 +765,12 @@ function CreateJobJobDetails() {
                     ? "border-red-500"
                     : ""
                 }`}
-                placeholder="Enter maximum salary"
+                placeholder={t("createJob.jobDetails.enterMaximumSalary")}
               />
               {ctx.formData.salary_range_max <= ctx.formData.salary_range_min &&
                 ctx.formData.salary_range_max > 0 && (
                   <p className="mt-1 text-xs text-red-500">
-                    Maximum salary must be greater than minimum salary
+                    {t("createJob.jobDetails.maximumSalaryError")}
                   </p>
                 )}
             </div>
@@ -729,7 +787,7 @@ function CreateJobJobDetails() {
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <label className="text-sm text-gray-700">
-                Filter out Candidates exceeding salary range
+                {t("createJob.jobDetails.filterSalaryRange")}
               </label>
             </div>
 
@@ -743,14 +801,13 @@ function CreateJobJobDetails() {
                 className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <label className="text-sm text-gray-700 flex-1">
-                Automatically Send Interview Email (When the job closes, we will
-                rank them by fit score)
+                {t("createJob.jobDetails.autoSendInterviewEmail")}
               </label>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Application Requirements
+                {t("createJob.jobDetails.applicationRequirements")}
               </label>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">
@@ -762,7 +819,9 @@ function CreateJobJobDetails() {
                     }
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label className="text-sm text-gray-700">CV</label>
+                  <label className="text-sm text-gray-700">
+                    {t("createJob.jobDetails.requirementOptions.cv")}
+                  </label>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
@@ -773,7 +832,9 @@ function CreateJobJobDetails() {
                     }
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label className="text-sm text-gray-700">Cover Letter</label>
+                  <label className="text-sm text-gray-700">
+                    {t("createJob.jobDetails.requirementOptions.coverLetter")}
+                  </label>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
@@ -785,7 +846,9 @@ function CreateJobJobDetails() {
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label className="text-sm text-gray-700">
-                    Voicenote Recording
+                    {t(
+                      "createJob.jobDetails.requirementOptions.voicenoteRecording"
+                    )}
                   </label>
                 </div>
               </div>
@@ -793,7 +856,7 @@ function CreateJobJobDetails() {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Job Visibility
+                {t("createJob.jobDetails.jobVisibility")}
               </label>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -804,7 +867,7 @@ function CreateJobJobDetails() {
                     className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
                   <label className="text-sm text-gray-700">
-                    Public (Visible on Job Board)
+                    {t("createJob.jobDetails.visibilityOptions.public")}
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
@@ -815,7 +878,7 @@ function CreateJobJobDetails() {
                     className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
                   <label className="text-sm text-gray-700">
-                    Private (Only accessible via generated link or embed code)
+                    {t("createJob.jobDetails.visibilityOptions.private")}
                   </label>
                 </div>
               </div>
@@ -823,7 +886,7 @@ function CreateJobJobDetails() {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Diversity & Inclusion Settings
+                {t("createJob.jobDetails.diversitySettings")}
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -838,8 +901,7 @@ function CreateJobJobDetails() {
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label className="text-sm text-gray-700">
-                  Hide Candidates Names or personal details during initial
-                  screening
+                  {t("createJob.jobDetails.hideCandidatesPersonalDetails")}
                 </label>
               </div>
             </div>
@@ -856,10 +918,10 @@ function CreateJobJobDetails() {
           {isGeneratingQuestions ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              Please wait...
+              {t("createJob.jobDetails.pleaseWait")}
             </>
           ) : (
-            "Next"
+            t("createJob.jobDetails.next")
           )}
         </button>
         {/* {!isFormValid() && (
@@ -877,7 +939,7 @@ function CreateJobJobDetails() {
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl font-semibold">
-                Add a Team Member
+                {t("createJob.jobDetails.teamMember.title")}
               </DialogTitle>
               <button
                 onClick={() => setIsTeamMemberDialogOpen(false)}
@@ -889,24 +951,30 @@ function CreateJobJobDetails() {
           </DialogHeader>
           <div className="mt-6 space-y-6">
             <div>
-              <label className="text-gray-600 text-base mb-2 block">Name</label>
+              <label className="text-gray-600 text-base mb-2 block">
+                {t("createJob.jobDetails.teamMember.name")}
+              </label>
               <input
                 type="text"
                 value={teamMemberName}
                 onChange={(e) => setTeamMemberName(e.target.value)}
-                placeholder="John James"
+                placeholder={t(
+                  "createJob.jobDetails.teamMember.namePlaceholder"
+                )}
                 className="w-full px-4 py-3 rounded-lg bg-[#F8F9FF] border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
               <label className="text-gray-600 text-base mb-2 block">
-                Email
+                {t("createJob.jobDetails.teamMember.email")}
               </label>
               <input
                 type="email"
                 value={teamMemberEmail}
                 onChange={(e) => setTeamMemberEmail(e.target.value)}
-                placeholder="John@gmail.com"
+                placeholder={t(
+                  "createJob.jobDetails.teamMember.emailPlaceholder"
+                )}
                 className="w-full px-4 py-3 rounded-lg bg-[#F8F9FF] border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -920,7 +988,9 @@ function CreateJobJobDetails() {
                 }
                 className="w-full py-3 bg-[#065844] text-white rounded-lg text-sm font-medium hover:bg-[#054e3a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {addTeamMemberMutation.isPending ? "Adding..." : "Save"}
+                {addTeamMemberMutation.isPending
+                  ? t("createJob.jobDetails.teamMember.adding")
+                  : t("createJob.jobDetails.teamMember.save")}
               </button>
             </div>
           </div>

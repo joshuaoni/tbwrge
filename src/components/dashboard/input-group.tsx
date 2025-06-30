@@ -2,6 +2,7 @@ import { CaretDownIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 import { convertToSlug } from "@/components/settings/profile/input-group";
@@ -30,6 +31,8 @@ export interface CheckBoxInputProps {
 }
 
 export function DashboardInputGroup(props: InputGroupProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={twMerge("w-full space-y-2", props.className)}>
       <label
@@ -44,7 +47,12 @@ export function DashboardInputGroup(props: InputGroupProps) {
         id={convertToSlug(props.label)}
         name={props.name ?? convertToSlug(props.label)}
         className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-        placeholder={props.placeholder ?? `Enter your ${props.label}`}
+        placeholder={
+          props.placeholder ??
+          t("createJob.inputGroup.placeholders.enterYour", {
+            field: props.label,
+          })
+        }
         onChange={(e) => props.onChange?.(e.target.value)}
       />
     </div>
@@ -52,6 +60,7 @@ export function DashboardInputGroup(props: InputGroupProps) {
 }
 
 export function DashboardTextareaGroup(props: InputGroupProps) {
+  const { t } = useTranslation();
   const [wordCount, setWordCount] = useState(0);
   const limit = 500;
 
@@ -76,12 +85,17 @@ export function DashboardTextareaGroup(props: InputGroupProps) {
         name={props.name ?? convertToSlug(props.label)}
         rows={5}
         className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder={props.placeholder ?? `Enter your ${props.label}`}
+        placeholder={
+          props.placeholder ??
+          t("createJob.inputGroup.placeholders.enterYour", {
+            field: props.label,
+          })
+        }
         value={props.value}
         onChange={handleTextareaChange}
       />
       <span className="absolute top-8 right-6 text-xs font-medium text-[#87909E]">
-        {wordCount} / {limit}
+        {t("createJob.inputGroup.wordCount", { count: wordCount, limit })}
       </span>
     </div>
   );
@@ -152,15 +166,20 @@ export function DashboardSelectGroup(props: DashboardSelectGroupProps) {
 }
 
 export function DashboardFileGroup(props: DashboardFileGroupProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full space-y-2">
       <label htmlFor={convertToSlug(props.label)} className="block">
         <span className="block text-[#4A5568] text-sm mb-2">{props.label}</span>
         <div className="w-full bg-[#EDF2F7] text-[#87909E] text-xs py-4 px-6 space-x-4 rounded">
           <span className="capitalize border border-gray-500 py-0.5 px-2 rounded-sm cursor-pointer">
-            choose file
+            {t("createJob.inputGroup.fileUpload.chooseFile")}
           </span>{" "}
-          <span>{props.file?.name ?? "No file chosen"}</span>
+          <span>
+            {props.file?.name ??
+              t("createJob.inputGroup.fileUpload.noFileChosen")}
+          </span>
         </div>
       </label>
       <input

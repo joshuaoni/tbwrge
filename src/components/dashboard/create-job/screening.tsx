@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import EditIcon from "@/components/icons/edit";
 import PlusCircleIcon from "@/components/icons/plus-circle";
@@ -22,6 +23,7 @@ const Section = ({
 );
 
 function CreateJobScreening() {
+  const { t } = useTranslation();
   const ctx = useContext(CreateJobContext);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -125,7 +127,7 @@ function CreateJobScreening() {
         <button onClick={() => ctx.goTo("hiring")} className="mr-1">
           <ArrowLeft width={16} height={16} />
         </button>
-        <span>Job Screening</span>
+        <span>{t("createJob.screening.title")}</span>
       </h3>
       <div className="flex gap-8">
         <section className="w-full">
@@ -166,27 +168,35 @@ function CreateJobScreening() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Job Type</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.jobType")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.job_type.replace("_", " ")}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Experience</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.experience")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.years_of_experience_required}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Salary Range</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.salaryRange")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.salary_range_min && ctx.formData.salary_range_max
                   ? `USD ${ctx.formData.salary_range_min.toLocaleString()} - ${ctx.formData.salary_range_max.toLocaleString()}`
-                  : "Not specified"}
+                  : t("createJob.screening.jobInfo.notSpecified")}
               </div>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
-              <div className="text-sm text-gray-600 mb-1">Location</div>
+              <div className="text-sm text-gray-600 mb-1">
+                {t("createJob.screening.jobInfo.location")}
+              </div>
               <div className="font-medium text-sm">
                 {ctx.formData.job_location}
               </div>
@@ -194,21 +204,21 @@ function CreateJobScreening() {
           </div>
 
           {ctx.formData.company_description && (
-            <Section title="About the Company">
+            <Section title={t("createJob.screening.sections.aboutCompany")}>
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.company_description}
               </p>
             </Section>
           )}
 
-          <Section title="Job Description">
+          <Section title={t("createJob.screening.sections.jobDescription")}>
             <div
               className="text-gray-700 leading-relaxed prose prose-sm max-w-none text-sm"
               dangerouslySetInnerHTML={{ __html: ctx.formData.job_description }}
             />
           </Section>
 
-          <Section title="Required Skills">
+          <Section title={t("createJob.screening.sections.requiredSkills")}>
             <div className="flex flex-wrap gap-2">
               {ctx.formData.required_skills.split(",").map((skill: string) => (
                 <span
@@ -222,7 +232,9 @@ function CreateJobScreening() {
           </Section>
 
           {ctx.formData.educational_requirements && (
-            <Section title="Educational Requirements">
+            <Section
+              title={t("createJob.screening.sections.educationalRequirements")}
+            >
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.educational_requirements}
               </p>
@@ -230,7 +242,7 @@ function CreateJobScreening() {
           )}
 
           {ctx.formData.languages && (
-            <Section title="Languages">
+            <Section title={t("createJob.screening.sections.languages")}>
               <div className="flex flex-wrap gap-2">
                 {ctx.formData.languages.split(",").map((language: string) => (
                   <span
@@ -245,7 +257,9 @@ function CreateJobScreening() {
           )}
 
           {ctx.formData.additional_benefits && (
-            <Section title="Additional Benefits">
+            <Section
+              title={t("createJob.screening.sections.additionalBenefits")}
+            >
               <p className="text-gray-700 leading-relaxed text-sm">
                 {ctx.formData.additional_benefits}
               </p>
@@ -253,7 +267,7 @@ function CreateJobScreening() {
           )}
 
           {ctx.formData.job_tags && (
-            <Section title="Tags">
+            <Section title={t("createJob.screening.sections.tags")}>
               <div className="flex flex-wrap gap-2">
                 {ctx.formData.job_tags.split(",").map((tag: string) => (
                   <span
@@ -270,13 +284,10 @@ function CreateJobScreening() {
 
         <section className="w-full h-fit p-6 pb-8">
           <p className="text-sm text-[#898989]">
-            Thank you for taking the time to apply for the&nbsp;
-            {ctx.formData.job_title} position at&nbsp;
-            {ctx.formData.company_name} and for sharing your qualifications and
-            experiences with us.
-            <br />
-            As the next step in our hiring process, we'd love to invite you to
-            screening process to get to know you better.
+            {t("createJob.screening.thankYouMessage", {
+              jobTitle: ctx.formData.job_title,
+              companyName: ctx.formData.company_name,
+            })}
           </p>
 
           {questions.map((question, i) => (
@@ -321,7 +332,7 @@ function CreateJobScreening() {
                 <textarea
                   rows={5}
                   className="text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
-                  placeholder="Type your answer here"
+                  placeholder={t("createJob.screening.typeAnswerHere")}
                   value={question.answer}
                   onChange={(e) => handleTextareaChange(e, i)}
                 />
@@ -347,7 +358,7 @@ function CreateJobScreening() {
           >
             <PlusCircleIcon />
             <span className="capitalize font-bold text-sm">
-              Add custom question
+              {t("createJob.screening.addCustomQuestion")}
             </span>
           </button>
 
@@ -356,7 +367,7 @@ function CreateJobScreening() {
               onClick={handleSaveScreeningQuestions}
               className=" bg-primary text-white p-3 rounded-lg mt-8 font-medium hover:bg-primary/90 transition-colors text-sm"
             >
-              Save Screening Questions
+              {t("createJob.screening.saveScreeningQuestions")}
             </button>
           </div>
         </section>
