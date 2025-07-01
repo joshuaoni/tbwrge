@@ -117,7 +117,7 @@ const SignUpPage = () => {
     mutationFn: async (roleToUpdate: string) => {
       if (!googleUserData?.token) throw new Error("No token available");
       return await updateProfile({
-        role: roleToUpdate.toLowerCase(),
+        role: roleToUpdate,
         token: googleUserData.token,
         phone: undefined,
       });
@@ -127,10 +127,19 @@ const SignUpPage = () => {
       // Close modal and clean up state
       setShowRoleModal(false);
 
+      // Map the display value to the backend value for the user object
+      const roleMap: Record<string, string> = {
+        "Job Seeker": "job_seeker",
+        Recruiter: "recruiter",
+        Root: "root",
+      };
+      const backendRole =
+        roleMap[selectedGoogleRole] || selectedGoogleRole.toLowerCase();
+
       // Update the user data with the new role
       const updatedUser = {
         ...googleUserData.user,
-        role: selectedGoogleRole.toLowerCase(),
+        role: backendRole,
       };
       addUser({
         authenticatedUser: updatedUser,
@@ -142,11 +151,11 @@ const SignUpPage = () => {
       setSelectedGoogleRole("Select Role");
 
       // Redirect based on selected role
-      if (selectedGoogleRole.toLowerCase() === "job_seeker") {
+      if (backendRole === "job_seeker") {
         router.push(redirectUrl || "/dashboard/job-board");
-      } else if (selectedGoogleRole.toLowerCase() === "recruiter") {
+      } else if (backendRole === "recruiter") {
         router.push(redirectUrl || "/dashboard");
-      } else if (selectedGoogleRole.toLowerCase() === "root") {
+      } else if (backendRole === "root") {
         router.push(redirectUrl || "/admin");
       }
     },
@@ -173,8 +182,16 @@ const SignUpPage = () => {
       toast.error("Please select a role");
       return;
     }
+    // Map the display value to the backend value
+    const roleMap: Record<string, string> = {
+      "Job Seeker": "job_seeker",
+      Recruiter: "recruiter",
+      Root: "root",
+    };
+    const backendRole =
+      roleMap[selectedGoogleRole] || selectedGoogleRole.toLowerCase();
     // Update the role using the updateProfile action
-    updateRoleMutation.mutate(selectedGoogleRole.toLowerCase());
+    updateRoleMutation.mutate(backendRole);
   };
 
   const handleGoogleSignUp = (response: any) => {

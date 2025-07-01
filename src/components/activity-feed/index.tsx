@@ -76,7 +76,7 @@ const ActivityFeed = () => {
             </div>
           </div>
           <span className="mr-2 px-2 py-1 text-sm font-medium text-[#2563EB] bg-[rgba(55,125,255,0.2)] rounded-[6px] capitalize">
-            {activity.type}
+            {activity.type.replace("_", " ")}
           </span>
         </div>
       ))}

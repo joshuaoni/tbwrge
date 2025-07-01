@@ -28,7 +28,7 @@ const CommunityDashHeader = () => {
         {/* Left: Logo and Brand */}
         <div className="flex items-center gap-2">
           <div
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/dashboard")}
             className="flex items-center cursor-pointer"
           >
             <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
