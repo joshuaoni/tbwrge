@@ -165,7 +165,7 @@ const Index = () => {
       } else if (backendRole === "recruiter") {
         router.push(redirectUrl || "/dashboard");
       } else if (backendRole === "root") {
-        router.push(redirectUrl || "/admin");
+        router.push(redirectUrl || "/dashboard");
       }
     },
     onError: (err: any) => {
