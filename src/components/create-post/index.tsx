@@ -8,6 +8,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 import { Post } from "@/actions/get-posts";
 import { useQueryClient } from "@tanstack/react-query";
+import { UserCircleIcon } from "lucide-react";
 
 interface CreatePostProps {
   onClose: () => void;
@@ -95,15 +96,18 @@ const CreatePost = ({ onClose, post }: CreatePostProps) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+          {userData?.user?.profile_picture ? (
             <Image
-              src="/Mask.png"
-              alt={userData?.user?.name || "User"}
+              src={userData?.user?.profile_picture}
+              alt={`${userData?.user?.name} `}
               width={30}
               height={30}
-              className="rounded-full"
+              className="rounded-full md:w-[30px] md:h-[30px]"
             />
-          </div>
+          ) : (
+            <UserCircleIcon className="w-8 h-8 text-gray-500" />
+          )}
+
           <span className="text-base font-medium">
             {userData?.user?.name || "User"}
           </span>

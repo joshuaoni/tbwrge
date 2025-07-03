@@ -8,12 +8,16 @@ import { fileSizeToMb } from "@/lib/common";
 import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, Loader2, Plus, Trash, X } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import { getJobDetail } from "@/actions/get-job-detail";
+import { getApplicationItem } from "@/actions/get-application-item";
+import { toast } from "react-hot-toast";
 
 export type JobReportGeneratorResponse = JobReportGenerator[];
 
@@ -39,12 +43,14 @@ export interface JobReportGenerator {
 
 const Generator = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
   const [jobAd, setJobAd] = useState("");
   const [prompts, setPrompts] = useState<string[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [value, setValue] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const { userData } = useUserStore();
   const {
     mutate: generateReportMutation,
@@ -79,6 +85,78 @@ const Generator = () => {
       return response;
     },
   });
+
+  // Check for query parameters and pre-populate form
+  useEffect(() => {
+    const { candidateId, jobId, cvUrl, coverLetterUrl, applicantName } =
+      router.query;
+
+    if (candidateId && jobId && userData?.token) {
+      setIsLoadingData(true);
+      populateFormWithCandidateData(
+        candidateId as string,
+        jobId as string,
+        cvUrl as string,
+        coverLetterUrl as string
+      );
+    }
+  }, [router.query, userData?.token]);
+
+  const populateFormWithCandidateData = async (
+    candidateId: string,
+    jobId: string,
+    cvUrl: string,
+    coverLetterUrl: string
+  ) => {
+    try {
+      let hasData = false;
+
+      // Fetch job details to get job description
+      if (jobId && userData?.token) {
+        const jobDetails = await getJobDetail({
+          job_id: jobId,
+          token: userData.token,
+        });
+        if (jobDetails.job_description) {
+          setJobDescription(jobDetails.job_description);
+          hasData = true;
+        }
+      }
+
+      // Convert CV URL to File object if available
+      if (cvUrl) {
+        await fetchFileFromUrl(cvUrl, "cv.pdf");
+        hasData = true;
+      }
+
+      // Convert Cover Letter URL to File object if available
+      if (coverLetterUrl) {
+        await fetchFileFromUrl(coverLetterUrl, "cover_letter.pdf");
+        hasData = true;
+      }
+
+      if (hasData) {
+        toast.success(t("jobTools.reportGenerator.toastLoadSuccess"));
+      }
+    } catch (error) {
+      console.error("Error populating form with candidate data:", error);
+      toast.error(t("jobTools.reportGenerator.toastLoadError"));
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
+
+  const fetchFileFromUrl = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], filename, { type: blob.type });
+      setFiles((prev) => [...prev, file]);
+    } catch (error) {
+      console.error(`Error fetching file from ${url}:`, error);
+    }
+  };
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const newFiles = Array.from(event.target.files).slice(
@@ -98,6 +176,14 @@ const Generator = () => {
       <span className={`${outfit.className} font-bold text-sm`}>
         {t("jobTools.reportGenerator.title")}
       </span>
+
+      {isLoadingData && (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="animate-spin mr-2" />
+          <span>{t("jobTools.reportGenerator.loadingCandidateData")}</span>
+        </div>
+      )}
+
       <section className={`${outfit.className} flex space-x-4 text-sm`}>
         {/* Left Side */}
         <div className="w-[50%] flex flex-col">
@@ -566,201 +652,6 @@ const Generator = () => {
                           </span>
                         </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="col-span-2 border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] border rounded-xl p-4">
-                    <div className="flex justify-between">
-                      <h6 className="font-bold text-[12px]">
-                        Supporting Documents
-                      </h6>
-                      <a
-                        href="#"
-                        className="font-medium text-[12px] flex items-center gap-1"
-                      >
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        Portfolio Link
-                      </a>
-                    </div>
-                    <div className="flex gap-4 mt-4">
-                      {/* Candiate Application voice note */}
-                      <div className="flex flex-col border border-gray-200 rounded-xl p-3">
-                        <div className="flex items-center gap-1 mb-2">
-                          <div className="w-5 h-8 flex items-center justify-center rounded-lg">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10 13.75C11.7259 13.75 13.125 12.3509 13.125 10.625V5.625C13.125 3.89911 11.7259 2.5 10 2.5C8.27411 2.5 6.875 3.89911 6.875 5.625V10.625C6.875 12.3509 8.27411 13.75 10 13.75Z"
-                                stroke="#009379"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M4.375 8.75V10.625C4.375 13.7316 6.89339 16.25 10 16.25C13.1066 16.25 15.625 13.7316 15.625 10.625V8.75"
-                                stroke="#009379"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[10px] font-medium">
-                              Candidate Application Voicenote
-                            </p>
-                            <p className="text-[10px] text-gray-500">
-                              Click to listen
-                            </p>
-                          </div>
-                        </div>
-                        {/* <div className="h-8 flex items-center gap-[2px]">
-                        {Array.from({ length: 40 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className="flex-1 bg-gray-300 rounded-sm"
-                            style={{
-                              height: `${Math.random() * 100}%`,
-                              minWidth: "2px",
-                            }}
-                          ></div>
-                        ))}
-                      </div> */}
-                      </div>
-
-                      {/* Names CV */}
-                      <a
-                        href="/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M13.75 2.5V5H16.25"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M7.5 10H12.5"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M7.5 12.5H12.5"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-[10px] font-medium">Names CV</p>
-                          <p className="text-[10px] text-gray-500">
-                            Click to view
-                          </p>
-                        </div>
-                      </a>
-
-                      {/* Cover Letter */}
-                      <a
-                        href="/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 border border-gray-200 rounded-xl p-1 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="w-5 h-8 flex items-center justify-center bg-red-100 rounded-lg">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M13.75 2.5H5C4.0335 2.5 3.75 2.7835 3.75 3.75V16.25C3.75 17.2165 4.0335 17.5 5 17.5H15C15.9665 17.5 16.25 17.2165 16.25 16.25V5L13.75 2.5Z"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M13.75 2.5V5H16.25"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M7.5 10H12.5"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M7.5 12.5H12.5"
-                              stroke="#FF0000"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-[10px] font-medium">
-                            Cover Letter
-                          </p>
-                          <p className="text-[10px] text-gray-500">
-                            Click to view
-                          </p>
-                        </div>
-                      </a>
                     </div>
                   </div>
                 </div>

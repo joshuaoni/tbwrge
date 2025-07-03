@@ -313,15 +313,17 @@ const CommunityPage = () => {
                     onClick={() => setIsCreatingPost(true)}
                   >
                     <div className="flex items-center gap-2 md:gap-3">
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-[6px] bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+                      {userData?.user?.profile_picture ? (
                         <Image
-                          src="/Mask.png"
-                          alt="User Avatar"
-                          width={24}
-                          height={24}
-                          className="rounded-full md:w-[30px] md:h-[32px]"
+                          src={userData?.user?.profile_picture}
+                          alt={`${userData?.user?.name} `}
+                          width={30}
+                          height={30}
+                          className="rounded-full md:w-[30px] md:h-[30px]"
                         />
-                      </div>
+                      ) : (
+                        <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                      )}
                       <div className="flex-1 text-gray-500 text-xs md:text-sm">
                         Let's share what's going on your mind...
                       </div>

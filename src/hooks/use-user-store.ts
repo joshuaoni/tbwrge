@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 interface IUserStore {
   isLoading: boolean;
+  isHydrated: boolean;
   userData: {
     user: UserResponse | null;
     token: string | null;
@@ -22,6 +23,7 @@ export const useUserStore = create<IUserStore>()(
           token: null,
         },
         isLoading: true,
+        isHydrated: false,
         addUser: ({
           authenticatedUser,
           token,
@@ -42,6 +44,7 @@ export const useUserStore = create<IUserStore>()(
               token,
             },
             isLoading: false,
+            isHydrated: true,
           }));
         },
         removeUser: () => {
@@ -51,14 +54,16 @@ export const useUserStore = create<IUserStore>()(
           return set((state) => ({
             userData: null,
             isLoading: false,
+            isHydrated: true,
           }));
         },
       }),
       {
         name: "candivet-user-store",
         onRehydrateStorage: () => (state) => {
-          if (state?.userData) {
+          if (state) {
             state.isLoading = false;
+            state.isHydrated = true;
           }
         },
       }

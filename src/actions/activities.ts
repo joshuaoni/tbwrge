@@ -31,6 +31,7 @@ export const getActivities = async (token: string): Promise<ActivityItem[]> => {
       url: API_CONFIG.GET_ACTIVITIES,
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log("response", response.data);
     return response.data;
   } catch (error: any) {
     // Handle errors and return meaningful information

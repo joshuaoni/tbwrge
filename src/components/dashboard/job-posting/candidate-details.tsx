@@ -18,19 +18,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 interface CandidateDetailsProps {
   setCurrentView: React.Dispatch<React.SetStateAction<string>>;
   candidate: ApplicationItem;
   jobId?: string;
+  refreshApplications: () => void;
 }
 
 const CandidateDetails = ({
   setCurrentView,
   candidate,
   jobId,
+  refreshApplications,
 }: CandidateDetailsProps) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNoteText, setNewNoteText] = useState("");
@@ -79,6 +83,7 @@ const CandidateDetails = ({
       setShowMarkAsFitModal(false);
       queryClient.invalidateQueries({ queryKey: ["chat-messages"] });
       queryClient.invalidateQueries({ queryKey: ["job-applications"] });
+      refreshApplications();
     },
     onError: (error: any) => {
       toast.error(error?.message || "Failed to mark candidate as fit");
@@ -99,6 +104,7 @@ const CandidateDetails = ({
       setShowRejectModal(false);
       queryClient.invalidateQueries({ queryKey: ["chat-messages"] });
       queryClient.invalidateQueries({ queryKey: ["job-applications"] });
+      refreshApplications();
     },
     onError: (error: any) => {
       toast.error(error?.message || "Failed to reject candidate");
@@ -109,6 +115,22 @@ const CandidateDetails = ({
     if (newNoteText.trim()) {
       createNoteMutation.mutate(newNoteText.trim());
     }
+  };
+
+  const handleGenerateReport = () => {
+    // Navigate to report generator with candidate and job data
+    const queryParams = {
+      candidateId: candidate.id,
+      jobId: jobId || "",
+      cvUrl: candidate.cv || "",
+      coverLetterUrl: candidate.cover_letter || "",
+      applicantName: applicant.name || "",
+    };
+
+    router.push({
+      pathname: "/dashboard/job-tools/report-generator",
+      query: queryParams,
+    });
   };
 
   return (
@@ -129,6 +151,7 @@ const CandidateDetails = ({
             <Button
               variant="ghost"
               className="text-sm text-[#009379] border border-[#009379] hover:bg-[#009379] hover:text-white px-6"
+              onClick={handleGenerateReport}
             >
               {t("jobPostings.candidateDetails.generateReport")}
             </Button>

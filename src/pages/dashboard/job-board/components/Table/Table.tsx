@@ -127,7 +127,7 @@ const JobDetails = ({
         <div className="w-[217px] h-[37px] gap-[4px] flex flex-col">
           <div className="w-[217px] h-[18px] flex items-center">
             <div className="flex items-center gap-2 w-full">
-              <span className="font-inter font-medium text-[14px] leading-[15px] tracking-[0%] truncate text-[#333333]">
+              <span className="font-medium text-[14px] leading-[15px] tracking-[0%] truncate text-[#333333]">
                 {title}
               </span>
               {applied && (

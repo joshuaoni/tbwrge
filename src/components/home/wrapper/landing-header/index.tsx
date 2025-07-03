@@ -31,7 +31,7 @@ const LandingHeader = ({
   const [mobileToolsRole, setMobileToolsRole] = useState<
     null | "recruiter" | "job_seeker"
   >(null);
-  const { userData } = useUserStore();
+  const { userData, isHydrated } = useUserStore();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -116,6 +116,10 @@ const LandingHeader = ({
     },
   ];
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <div className="w-full bg-transparent">
@@ -159,22 +163,37 @@ const LandingHeader = ({
             </div>
             {!isMobile ? (
               <div className="flex items-center gap-4">
-                <Button
-                  onClick={() => router.push("/sign-in")}
-                  className={`border-none outline-none ${textColor}`}
-                >
-                  Log In
-                </Button>
-                <Button
-                  onClick={() => router.push("/sign-up")}
-                  className={`bg-transparent hover:bg-white/20 ${
-                    isBlogOrTools || isScrolled
-                      ? "text-black border-black/40 hover:bg-black/10"
-                      : "text-white border-white"
-                  } border rounded-full`}
-                >
-                  Sign Up
-                </Button>
+                {userData?.token ? (
+                  <Button
+                    onClick={() => router.push("/dashboard")}
+                    className={`bg-transparent hover:bg-white/20 ${
+                      isBlogOrTools || isScrolled
+                        ? "text-black border-black/40 hover:bg-black/10"
+                        : "text-white border-white"
+                    } border rounded-full`}
+                  >
+                    Go to Dashboard
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => router.push("/sign-in")}
+                      className={`border-none outline-none ${textColor}`}
+                    >
+                      Log In
+                    </Button>
+                    <Button
+                      onClick={() => router.push("/sign-up")}
+                      className={`bg-transparent hover:bg-white/20 ${
+                        isBlogOrTools || isScrolled
+                          ? "text-black border-black/40 hover:bg-black/10"
+                          : "text-white border-white"
+                      } border rounded-full`}
+                    >
+                      Sign Up
+                    </Button>
+                  </>
+                )}
               </div>
             ) : (
               <button
@@ -375,7 +394,7 @@ const NavigationHeader = ({
   CommunitySectionRef: RefObject<HTMLDivElement>;
   textColor: string;
 }) => {
-  const { userData } = useUserStore();
+  const { userData, isHydrated } = useUserStore();
   const router = useRouter();
   const userRole = userData?.user?.role;
   const isLoggedIn = !!userData?.token;

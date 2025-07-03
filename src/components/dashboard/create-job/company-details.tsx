@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2Icon, PlusCircle } from "lucide-react";
 import Image from "next/image";
 import { useContext, useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { CreateJobResponse, createJobAi } from "@/actions/create-job";
 import { Company, getCompanies } from "@/actions/get-companies";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { outfit } from "@/constants/app";
 
 function CreateJobCompanyDetails() {
+  const { t } = useTranslation();
   const ctx = useContext(CreateJobContext);
   const { userData } = useUserStore();
   const [showNewCompanyForm, setShowNewCompanyForm] = useState(false);
@@ -130,11 +132,13 @@ function CreateJobCompanyDetails() {
     <section
       className={`${outfit.className} max-w-screen-sm mx-auto space-y-6`}
     >
-      <h2 className="text-center text-sm font-semibold">Create a Job Post</h2>
+      <h2 className="text-center text-sm font-semibold">
+        {t("createJob.companyDetails.title")}
+      </h2>
 
       <form className="space-y-6">
         <DashboardInputGroup
-          label="Job Title"
+          label={t("createJob.companyDetails.jobTitle")}
           value={ctx.formData.job_title}
           onChange={(val) => ctx.setFormData("job_title", val)}
         />
@@ -148,7 +152,9 @@ function CreateJobCompanyDetails() {
               <div className="flex items-center justify-between">
                 <div className="relative flex-1">
                   <div className="p-2 pr-0 flex justify-between items-end">
-                    <span className="text-[#4A5568] text-sm">Company name</span>
+                    <span className="text-[#4A5568] text-sm">
+                      {t("createJob.companyDetails.companyName")}
+                    </span>
                     <button
                       type="button"
                       onClick={() => {
@@ -162,7 +168,7 @@ function CreateJobCompanyDetails() {
                       }}
                       className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
                     >
-                      Add a New Company
+                      {t("createJob.companyDetails.addNewCompany")}
                       <PlusCircle className="w-6 h-6" />
                     </button>
                   </div>
@@ -197,7 +203,7 @@ function CreateJobCompanyDetails() {
                         </div>
                       ) : (
                         <span className="text-gray-400 text-sm">
-                          Select a company
+                          {t("createJob.companyDetails.selectCompany")}
                         </span>
                       )}
                       <svg
@@ -257,22 +263,22 @@ function CreateJobCompanyDetails() {
         {showNewCompanyForm ? (
           <>
             <DashboardInputGroup
-              label="Company Website"
+              label={t("createJob.companyDetails.companyWebsite")}
               value={ctx.formData.company_website}
               onChange={(val) => ctx.setFormData("company_website", val)}
             />
             <DashboardInputGroup
-              label="Company Name"
+              label={t("createJob.companyDetails.companyName")}
               value={ctx.formData.company_name}
               onChange={(val) => ctx.setFormData("company_name", val)}
             />
             <DashboardTextareaGroup
-              label="Company Description"
+              label={t("createJob.companyDetails.companyDescription")}
               value={ctx.formData.company_description}
               onChange={(val) => ctx.setFormData("company_description", val)}
             />
             <CreateJobFileGroup
-              label="Company Logo"
+              label={t("createJob.companyDetails.companyLogo")}
               onChange={(file) => ctx.setFormData("company_logo", file)}
             />
           </>
@@ -285,7 +291,7 @@ function CreateJobCompanyDetails() {
             disabled={!isFormValid()}
             className="px-4 py-3 bg-primary text-white font-medium rounded-[10px] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors text-sm"
           >
-            Write your own job post
+            {t("createJob.companyDetails.writeOwnJobPost")}
           </button>
 
           <button
@@ -294,7 +300,9 @@ function CreateJobCompanyDetails() {
             onClick={() => createJobAiMutation.mutate()}
             className="p-3 border-2 border-[#006F5C] text-black rounded-[10px] flex items-center justify-center gap-2 hover:bg-[#006F5C] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span className="text-sm">Generate with AI</span>
+            <span className="text-sm">
+              {t("createJob.companyDetails.generateWithAI")}
+            </span>
             {createJobAiMutation.isPending ? (
               <Loader2Icon className="w-5 h-5 animate-spin" />
             ) : (

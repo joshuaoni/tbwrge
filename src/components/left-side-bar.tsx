@@ -16,6 +16,7 @@ import {
   FileText,
   Shield,
   Crown,
+  Sparkles,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -50,6 +51,12 @@ const LeftSideBar = () => {
         title: t("nav.talentPool"),
         icon: <Users2 size={20} />,
         link: "/dashboard/talent-pool",
+        active: false,
+      },
+      {
+        title: t("nav.aiSearch"),
+        icon: <Sparkles size={20} />,
+        link: "/dashboard/ai-search",
         active: false,
       },
     ];
@@ -94,6 +101,12 @@ const LeftSideBar = () => {
           title: t("nav.talentPool"),
           icon: <Users2 size={20} />,
           link: "/dashboard/talent-pool",
+          active: false,
+        },
+        {
+          title: t("nav.aiSearch"),
+          icon: <Sparkles size={20} />,
+          link: "/dashboard/ai-search",
           active: false,
         },
       ];
@@ -306,6 +319,8 @@ const LeftSideBarItem = ({ item, setLeftSideItems }: any) => {
       ? pathName?.includes("/dashboard/job-board") || false
       : item.link === "/dashboard/talent-pool"
       ? pathName?.includes("/dashboard/talent-pool") || false
+      : item.link === "/dashboard/ai-search"
+      ? pathName?.includes("/dashboard/ai-search") || false
       : item.link === "/dashboard/settings/profile"
       ? pathName?.includes("/dashboard/settings/") || false
       : item.link === "/dashboard/applications"

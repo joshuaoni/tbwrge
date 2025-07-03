@@ -59,6 +59,11 @@ function AdminDashboardSidebar() {
             title: "Post a Blog",
             path: "/admin/post",
           },
+          {
+            icon: DashboardIcon,
+            title: "User Dashboard",
+            path: "/dashboard",
+          },
         ].map((item, i) => (
           <li key={i}>
             <Link

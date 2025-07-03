@@ -1,6 +1,7 @@
 import { useContext, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { useTranslation } from "react-i18next";
 
 import { INITIAL_HIRING_FLOW_STATE } from "@/constants/create-job.constant";
 import { CreateJobContext } from "@/providers/job-posting.context";
@@ -96,6 +97,7 @@ Best regards,
 [Company Name]`;
 
 function CreateJobHiringFlow() {
+  const { t } = useTranslation();
   const ctx = useContext(CreateJobContext);
 
   const { secondStep, thirdStep, fourthStep } = ctx.hiringFlow;
@@ -190,23 +192,23 @@ function CreateJobHiringFlow() {
   const stepActions = {
     topFitScore: [
       {
-        label: "View & edit screening email",
+        label: t("createJob.hiringFlow.actions.viewEditScreeningEmail"),
         onClick: () => setScreeningEmailModal(true),
       },
       {
-        label: "View & edit screening page",
+        label: t("createJob.hiringFlow.actions.viewEditScreeningPage"),
         onClick: () => ctx.goTo("screening"),
       },
     ],
     topSelected: [
       {
-        label: "View & edit interview email",
+        label: t("createJob.hiringFlow.actions.viewEditInterviewEmail"),
         onClick: () => setInterviewModal(true),
       },
     ],
     topFiltered: [
       {
-        label: "View & edit rejection email",
+        label: t("createJob.hiringFlow.actions.viewEditRejectionEmail"),
         onClick: () => setRejectionEmailModal(true),
       },
     ],
@@ -223,21 +225,23 @@ function CreateJobHiringFlow() {
   const options = useMemo(
     () => [
       {
-        label: `Send Screening Email Top ${
-          isNaN(ctx.formData.minimum_fit_score)
+        label: t("createJob.hiringFlow.screeningEmailTop", {
+          percent: isNaN(ctx.formData.minimum_fit_score)
             ? 0
-            : 100 - ctx.formData.minimum_fit_score
-        }% Candidates`,
+            : 100 - ctx.formData.minimum_fit_score,
+        }),
         value: "topFitScore",
         disabled: isDisabled("topFitScore"),
       },
       {
-        label: `Send Interview Email Top ${interviewValue || 0} Candidates`,
+        label: t("createJob.hiringFlow.interviewEmailTop", {
+          count: Number(interviewValue) || 0,
+        }),
         value: "topSelected",
         disabled: isDisabled("topSelected"),
       },
       {
-        label: "Send Rejection Email to Filtered Candidates",
+        label: t("createJob.hiringFlow.rejectionEmail"),
         value: "topFiltered",
         disabled: isDisabled("topFiltered"),
       },
@@ -287,7 +291,7 @@ function CreateJobHiringFlow() {
         <button onClick={() => ctx.prevScreen()}>
           <ArrowLeft width={16} height={16} />
         </button>
-        <span>Hiring Flow</span>
+        <span>{t("createJob.hiringFlow.title")}</span>
         <button
           onClick={() => {
             ctx.setHiringFlow(INITIAL_HIRING_FLOW_STATE);
@@ -308,7 +312,7 @@ function CreateJobHiringFlow() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Step 1: Minimum Candidate Fit Score (%)
+                {t("createJob.hiringFlow.step1")}
               </label>
               <input
                 type="text"
@@ -343,9 +347,9 @@ function CreateJobHiringFlow() {
               )}
             </div>
             <CreateJobHiringSelectGroup
-              title="Step 2"
+              title={t("createJob.hiringFlow.step2")}
               options={options}
-              defaultValue="Choose the next step of your hiring process"
+              defaultValue={t("createJob.hiringFlow.chooseNextStep")}
               value={secondStep}
               onChange={(val) => {
                 ctx.setHiringFlow((prevSteps) => ({
@@ -358,7 +362,7 @@ function CreateJobHiringFlow() {
             {secondStep === "topSelected" && (
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Please input the quantity of top candidates
+                  {t("createJob.hiringFlow.inputCandidateQuantity")}
                 </label>
                 <input
                   type="text"
@@ -398,7 +402,7 @@ function CreateJobHiringFlow() {
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
                   <p className="mt-1 text-sm text-red-500">
-                    Please enter a valid number greater than 0
+                    {t("createJob.hiringFlow.validNumberError")}
                   </p>
                 )}
               </div>
@@ -423,9 +427,9 @@ function CreateJobHiringFlow() {
               )}
             </div>
             <CreateJobHiringSelectGroup
-              title="Step 3"
+              title={t("createJob.hiringFlow.step3")}
               options={options}
-              defaultValue="Choose the next step of your hiring process"
+              defaultValue={t("createJob.hiringFlow.chooseNextStep")}
               value={thirdStep}
               onChange={(val) => {
                 ctx.setHiringFlow((prevSteps) => ({
@@ -438,7 +442,7 @@ function CreateJobHiringFlow() {
             {thirdStep === "topSelected" && (
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Please input the quantity of top candidates
+                  {t("createJob.hiringFlow.inputCandidateQuantity")}
                 </label>
                 <input
                   type="text"
@@ -478,7 +482,7 @@ function CreateJobHiringFlow() {
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
                   <p className="mt-1 text-sm text-red-500">
-                    Please enter a valid number greater than 0
+                    {t("createJob.hiringFlow.validNumberError")}
                   </p>
                 )}
               </div>
@@ -503,9 +507,9 @@ function CreateJobHiringFlow() {
               )}
             </div>
             <CreateJobHiringSelectGroup
-              title="Step 4"
+              title={t("createJob.hiringFlow.step4")}
               options={options}
-              defaultValue="Choose the next step of your hiring process"
+              defaultValue={t("createJob.hiringFlow.chooseNextStep")}
               value={fourthStep}
               onChange={(val) => {
                 ctx.setHiringFlow((prevSteps) => ({
@@ -518,7 +522,7 @@ function CreateJobHiringFlow() {
             {fourthStep === "topSelected" && (
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Please input the quantity of top candidates
+                  {t("createJob.hiringFlow.inputCandidateQuantity")}
                 </label>
                 <input
                   type="text"
@@ -558,7 +562,7 @@ function CreateJobHiringFlow() {
                 />
                 {(!interviewValue || Number(interviewValue) <= 0) && (
                   <p className="mt-1 text-sm text-red-500">
-                    Please enter a valid number greater than 0
+                    {t("createJob.hiringFlow.validNumberError")}
                   </p>
                 )}
               </div>
@@ -573,7 +577,7 @@ function CreateJobHiringFlow() {
           disabled={!isFormValid()}
           className="bg-[#009379] text-white px-8 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#009379]/90 transition-colors"
         >
-          Publish & View Job Post
+          {t("createJob.hiringFlow.publishViewJobPost")}
         </button>
       </div>
 
@@ -583,7 +587,7 @@ function CreateJobHiringFlow() {
           setModal: setScreeningEmailModal,
           email: screeningEmail,
           setEmail: setScreeningEmail,
-          title: "Edit Screening Email",
+          title: t("createJob.hiringFlow.modals.editScreeningEmail"),
           step: 2,
         },
         {
@@ -591,7 +595,7 @@ function CreateJobHiringFlow() {
           setModal: setInterviewModal,
           email: interviewEmail,
           setEmail: setInterviewEmail,
-          title: "Edit Interview Email",
+          title: t("createJob.hiringFlow.modals.editInterviewEmail"),
           step: 3,
         },
         {
@@ -599,7 +603,7 @@ function CreateJobHiringFlow() {
           setModal: setRejectionEmailModal,
           email: rejectionEmail,
           setEmail: setRejectionEmail,
-          title: "Edit Rejection Email",
+          title: t("createJob.hiringFlow.modals.editRejectionEmail"),
           step: 4,
         },
       ].map(({ modal, setModal, email, setEmail, title, step }, index) => (
@@ -616,7 +620,7 @@ function CreateJobHiringFlow() {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Edit Content
+                      {t("createJob.hiringFlow.modals.editContent")}
                     </label>
                     <div className="min-h-[20rem] border border-gray-200 rounded-lg overflow-hidden">
                       <ReactQuill
@@ -660,7 +664,7 @@ function CreateJobHiringFlow() {
                   }
                 }}
               >
-                Save
+                {t("createJob.hiringFlow.modals.save")}
               </button>
               <button
                 className="bg-[#009379] text-white text-[12px] px-6 py-3 rounded-[4px] w-full hover:bg-gray-200 transition-colors"
@@ -670,7 +674,9 @@ function CreateJobHiringFlow() {
                     : setEmail({ ...email, isEditing: true })
                 }
               >
-                {email.isEditing ? "Cancel" : "Edit"}
+                {email.isEditing
+                  ? t("createJob.hiringFlow.modals.cancel")
+                  : t("createJob.hiringFlow.modals.edit")}
               </button>
             </div>
           </div>

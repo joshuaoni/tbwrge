@@ -109,6 +109,7 @@ const JobDetails = ({
         setCurrentView={() => setView("list")}
         candidate={selectedCandidate}
         jobId={selectedJob?.id}
+        refreshApplications={refetchApplications}
       />
     );
   }
