@@ -100,9 +100,9 @@ const BlogPostDetail = () => {
               </div>
             ) : (
               <div className="w-12 h-12 rounded-full bg-black  flex items-center justify-center">
-                {blog.user?.profile_photo ? (
+                {blog.user?.profile_picture ? (
                   <Image
-                    src={blog.user.profile_photo}
+                    src={blog.user.profile_picture}
                     alt="Author"
                     width={48}
                     height={48}
