@@ -71,9 +71,9 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
             })}
           </p>
         </div>
-        {blog.user?.profile_photo ? (
+        {blog.user?.profile_picture ? (
           <Image
-            src={blog.user.profile_photo}
+            src={blog.user.profile_picture}
             alt={blog.user.name || "User"}
             width={48}
             height={48}
