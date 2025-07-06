@@ -14,7 +14,7 @@ import { motion, useInView } from "framer-motion";
 
 // BlogCardSkeleton for loading state
 const BlogCardSkeleton = () => (
-  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden animate-pulse">
+  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[420px] overflow-hidden animate-pulse">
     <div className="mb-6 w-full h-40 bg-gray-200" />
     <div className="px-6 w-full flex-1 flex flex-col justify-between">
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 mt-2" />
@@ -194,6 +194,7 @@ export const BlogPostsWithPagination = () => {
 
   // Check if there are more items to load
   const hasMore = blogs ? blogs.length === postsPerPage : false;
+  console.log({ blogs });
 
   return (
     <motion.div
@@ -296,7 +297,7 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
+      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col shadow-md h-[420px]"
     >
       <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
         <Image
@@ -307,12 +308,19 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3 h-[84px]">
-        {blog.title}
+      <div className="flex-1 flex flex-col px-6 min-h-0">
+        <div className="text-primary font-semibold text-xl leading-normal mb-2 line-clamp-2">
+          {blog.title}
+        </div>
+        <div
+          className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 h-[70px] overflow-hidden"
+          dangerouslySetInnerHTML={{
+            __html: blog.content || "No content available",
+          }}
+        />
       </div>
-      <div className="flex-grow"></div>
       {/* Author Section */}
-      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 border-t border-gray-100 bg-white">
+      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 pb-4 border-t border-gray-100 bg-white">
         <div>
           <p className="toppy font-semibold text-gray-900 text-[15px] leading-none m-0">
             {blog.user?.name || "Anonymous"}
@@ -332,9 +340,9 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
             })}
           </p>
         </div>
-        {blog.user?.profile_photo ? (
+        {blog.user?.profile_picture ? (
           <Image
-            src={blog.user.profile_photo}
+            src={blog.user.profile_picture}
             alt={blog.user.name || "User"}
             width={48}
             height={48}

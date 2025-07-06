@@ -15,7 +15,7 @@ export type BlogItem = {
   updated_at: string;
   user: {
     name: string;
-    profile_photo: string | null;
+    profile_picture: string | null;
     role: string | null;
     job_title: string | null;
     company_name: string | null;

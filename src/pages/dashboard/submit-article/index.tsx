@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import classNames from "classnames";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 
@@ -59,10 +59,13 @@ const DashboardSubmitArticlePage = () => {
   );
   const { userData } = useUserStore();
   const [tc, setTc] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
 
   function handleSetFormData(
     key: keyof SubmitAnArticleRequestData,
-    value: string | File | Blob
+    value: string | File | Blob | null
   ) {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
@@ -102,6 +105,18 @@ const DashboardSubmitArticlePage = () => {
       toast.success("Article submitted successfully");
       setFormData(INITIAL_SUBMIT_ARTICLE_REQUEST_DATA);
       setTc(false);
+      // Clear file inputs
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
+      }
+      if (profileImageInputRef.current) {
+        profileImageInputRef.current.value = "";
+      }
+      // Clear image preview
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+        setImagePreview(null);
+      }
     },
   });
 
@@ -167,6 +182,59 @@ const DashboardSubmitArticlePage = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("submitArticle.uploadArticleImage")}
+                </label>
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      const file = e.target.files[0];
+                      handleSetFormData("image", file);
+
+                      // Create preview URL
+                      if (imagePreview) {
+                        URL.revokeObjectURL(imagePreview);
+                      }
+                      const previewUrl = URL.createObjectURL(file);
+                      setImagePreview(previewUrl);
+                    }
+                  }}
+                  accept="image/*"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
+                />
+                {imagePreview && (
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 mb-2">Image Preview:</p>
+                    <div className="relative inline-block">
+                      <img
+                        src={imagePreview}
+                        alt="Article image preview"
+                        className="max-w-full max-h-48 rounded-lg border border-gray-200 object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (imagePreview) {
+                            URL.revokeObjectURL(imagePreview);
+                            setImagePreview(null);
+                          }
+                          handleSetFormData("image", null);
+                          if (imageInputRef.current) {
+                            imageInputRef.current.value = "";
+                          }
+                        }}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <ArticleFileGroup
                 label={t("submitArticle.uploadArticle")}
                 onChange={(file) => handleSetFormData("article_upload", file)}
@@ -228,6 +296,7 @@ const DashboardSubmitArticlePage = () => {
                   {t("submitArticle.uploadProfileImage")}
                 </label>
                 <input
+                  ref={profileImageInputRef}
                   type="file"
                   onChange={(e) => {
                     if (e.target.files?.[0]) {

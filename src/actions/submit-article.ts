@@ -9,6 +9,7 @@ export interface SubmitAnArticleRequestData {
   job_title?: string;
   company?: string;
   profile_image: File | null;
+  image: File | null;
   title: string;
   content: string;
   article_upload?: File | null;
@@ -19,6 +20,7 @@ export const INITIAL_SUBMIT_ARTICLE_REQUEST_DATA: SubmitAnArticleRequestData = {
   name: "",
   email: "",
   profile_image: null,
+  image: null,
   title: "",
   content: "",
 };
@@ -34,6 +36,7 @@ export const submitArticle = async (
   formData.append("title", data.title);
   formData.append("content", data.content);
   if (data.profile_image) formData.append("profile_image", data.profile_image);
+  if (data.image) formData.append("image", data.image);
 
   if (data.job_title) formData.append("job_title", data.job_title);
 
