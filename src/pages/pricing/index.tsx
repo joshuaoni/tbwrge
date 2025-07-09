@@ -70,7 +70,7 @@ const PricingPage = () => {
     },
     {
       plan: "Basic",
-      price: "9.99",
+      price: "119.99",
       title: "- For Job Seekers",
       description: "Individuals testing the platform",
       features: [
@@ -81,18 +81,18 @@ const PricingPage = () => {
     },
     {
       plan: "Pro",
-      price: "99",
+      price: "1199",
       title: "- For Recruiters",
       description: "Small & growing businesses",
       features: [
-        "1,000 Candidates / month €0.10 per extra candidate ",
+        "12,000 Candidates / year €0.10 per extra candidate ",
         "AI-Powered Automation",
         "Advanced Job Board",
       ],
     },
     {
       plan: "Enterprise",
-      price: "500+",
+      price: "5000+",
       title: "",
       description: "High-volume hiring companies",
       features: [
@@ -146,7 +146,7 @@ const PricingPage = () => {
     },
     {
       name: "Basic - Job Seekers",
-      price: "€9.99/Month",
+      price: "€119.99/Year",
       access: "Limited Access",
       userType: "Free User",
       jobPosting: false,
@@ -158,27 +158,27 @@ const PricingPage = () => {
         generator: false,
         translator: false,
         vetting: false,
-        interviewPrep: "5 uses/month",
-        aiScreeningAssistant: "5 uses/month",
+        interviewPrep: "60 uses/year",
+        aiScreeningAssistant: "60 uses/year",
         screeningQGenerator: false,
       },
       cvTools: {
-        summarizer: "5 uses/month",
-        vetting: "5 uses/month",
-        matchingRanking: "5 uses/month",
+        summarizer: "60 uses/year",
+        vetting: "60 uses/year",
+        matchingRanking: "60 uses/year",
         headToHead: false,
-        generator: "5 uses/month",
-        translator: "5 uses/month",
-        rewriter: "5 uses/month",
+        generator: "60 uses/year",
+        translator: "60 uses/year",
+        rewriter: "60 uses/year",
       },
       coverLetterTools: {
-        summarizer: "5 uses/month",
-        vetting: "5 uses/month",
-        matchingRanking: "5 uses/month",
+        summarizer: "60 uses/year",
+        vetting: "60 uses/year",
+        matchingRanking: "60 uses/year",
         headToHead: false,
-        generator: "5 uses/month",
-        translator: "5 uses/month",
-        rewriter: "5 uses/month",
+        generator: "60 uses/year",
+        translator: "60 uses/year",
+        rewriter: "60 uses/year",
       },
       communityAccess: "Full Access",
       submitArticle: false,
@@ -186,47 +186,47 @@ const PricingPage = () => {
     },
     {
       name: "Premium - Recruiters",
-      price: "€99/Month",
+      price: "€1199/Year",
       access: "Full Access",
       userType: "Teams/Multiple Users",
       jobPosting: "Unlimited Job Postings",
-      applicantsLimit: "1,000 candidates/month",
+      applicantsLimit: "12,000 candidates/year",
       applicationTracking: "Yes",
       jobBoardAccess: "Premium Access with Filters",
-      candidateReportGenerator: "100 uses/month",
+      candidateReportGenerator: "1200 uses/year",
       jobTools: {
-        generator: "100 uses/month",
-        translator: "100 uses/month",
-        vetting: "100 uses/month",
-        interviewPrep: "100 uses/month",
-        aiScreeningAssistant: "100 uses/month",
-        screeningQGenerator: "100 uses/month",
+        generator: "1200 uses/year",
+        translator: "1200 uses/year",
+        vetting: "1200 uses/year",
+        interviewPrep: "1200 uses/year",
+        aiScreeningAssistant: "1200 uses/year",
+        screeningQGenerator: "1200 uses/year",
       },
       cvTools: {
-        summarizer: "100 uses/month",
-        vetting: "100 uses/month",
-        matchingRanking: "100 uses/month",
-        headToHead: "100 uses/month",
-        generator: "100 uses/month",
-        translator: "100 uses/month",
-        rewriter: "100 uses/month",
+        summarizer: "1200 uses/year",
+        vetting: "1200 uses/year",
+        matchingRanking: "1200 uses/year",
+        headToHead: "1200 uses/year",
+        generator: "1200 uses/year",
+        translator: "1200 uses/year",
+        rewriter: "1200 uses/year",
       },
       coverLetterTools: {
-        summarizer: "100 uses/month",
-        vetting: "100 uses/month",
-        matchingRanking: "100 uses/month",
-        headToHead: "100 uses/month",
-        generator: "100 uses/month",
-        translator: "100 uses/month",
-        rewriter: "100 uses/month",
+        summarizer: "1200 uses/year",
+        vetting: "1200 uses/year",
+        matchingRanking: "1200 uses/year",
+        headToHead: "1200 uses/year",
+        generator: "1200 uses/year",
+        translator: "1200 uses/year",
+        rewriter: "1200 uses/year",
       },
       communityAccess: "Full Access with priority Features",
-      submitArticle: "1 per month",
+      submitArticle: "12 per year",
       feedbackSupport: "Premium Support",
     },
     {
       name: "Enterprise",
-      price: "+€500/Month",
+      price: "+€5000/Year",
       access: "Custom Setups and Insights",
       userType: "Custom team structure",
       jobPosting: "Custom Posting Workflow",
@@ -364,7 +364,7 @@ const PricingPage = () => {
                               €{plan.price}
                               {plan.plan === "Enterprise" ? null : (
                                 <span className="text-sm font-semibold">
-                                  /month
+                                  /year
                                 </span>
                               )}
                             </span>
@@ -438,7 +438,7 @@ const PricingPage = () => {
                       <span className="text-[40px] font-extrabold">
                         €{plan.price}
                         {plan.plan === "Enterprise" ? null : (
-                          <span className="text-sm font-semibold">/month</span>
+                          <span className="text-sm font-semibold">/year</span>
                         )}
                       </span>
                     </div>
@@ -514,7 +514,7 @@ const PricingPage = () => {
                                 {plan.price.split("€")[1].split("/")[0]}
                               </span>
                               <span className="text-[16px] text-gray-500 ml-1">
-                                /month
+                                /year
                               </span>
                             </>
                           ) : (
@@ -1018,7 +1018,7 @@ const PricingPage = () => {
                       <span className="font-light"> - Job Seekers</span>
                     </div>
                     <div className="text-[20px] font-extrabold border-b-[2px] border-black pb-2">
-                      €9.99/Month
+                      €119.99/Year
                     </div>
                   </div>
                   <div className="h-[40px] flex items-center justify-center">
@@ -1162,7 +1162,7 @@ const PricingPage = () => {
                       <span className="font-light"> - Recruiters</span>
                     </div>
                     <div className="text-[20px] font-extrabold  border-b-[2px] border-black  pb-2">
-                      €99/Month
+                      €1199/Year
                     </div>
                   </div>
                   <div className="p-4  flex  justify-center items-center h-[40px] text-center">
@@ -1303,7 +1303,7 @@ const PricingPage = () => {
                   <div className="p-2 text-center h-[62px] border-b-0 mb-8">
                     <div className="font-bold text-[14px]">Enterprise</div>
                     <div className="text-[20px] font-extrabold border-b-[2px] border-white pb-2">
-                      +€500/Month
+                      +€5000/Year
                     </div>
                   </div>
                   <div className="p-4  flex  justify-center items-center h-[40px] text-center">

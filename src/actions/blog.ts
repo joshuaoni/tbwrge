@@ -79,10 +79,27 @@ export const createBlog = async (token: string, formData: FormData) => {
 export const updateBlog = async (
   token: string,
   blog_id: string,
-  data: { approve_guest_post: boolean }
+  data: {
+    approve_guest_post?: boolean;
+    title?: string;
+    content?: string;
+    image?: File;
+  }
 ) => {
   const formData = new FormData();
-  formData.append("approve_guest_post", "true");
+
+  if (data.approve_guest_post !== undefined) {
+    formData.append("approve_guest_post", data.approve_guest_post.toString());
+  }
+  if (data.title) {
+    formData.append("title", data.title);
+  }
+  if (data.content) {
+    formData.append("content", data.content);
+  }
+  if (data.image) {
+    formData.append("image", data.image);
+  }
 
   const response = await axios({
     method: "PUT",

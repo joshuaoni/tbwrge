@@ -311,7 +311,7 @@ function BillingChooseView() {
     },
     {
       plan: t("settings.billing.plans.basic.name"),
-      price: "9.99",
+      price: "119.99",
       title: t("settings.billing.plans.basic.title"),
       description: t("settings.billing.plans.basic.description"),
       features: t("settings.billing.plans.basic.features", {
@@ -320,7 +320,7 @@ function BillingChooseView() {
     },
     {
       plan: t("settings.billing.plans.pro.name"),
-      price: "99",
+      price: "1199",
       title: t("settings.billing.plans.pro.title"),
       description: t("settings.billing.plans.pro.description"),
       features: t("settings.billing.plans.pro.features", {
@@ -329,7 +329,7 @@ function BillingChooseView() {
     },
     {
       plan: t("settings.billing.plans.enterprise.name"),
-      price: "500+",
+      price: "5000+",
       title: t("settings.billing.plans.enterprise.title"),
       description: t("settings.billing.plans.enterprise.description"),
       features: t("settings.billing.plans.enterprise.features", {
@@ -660,6 +660,7 @@ function BillingChooseView() {
                             <span className="text-[20px] mr-1">€</span>
                             <span>
                               {plan.price.split("€")[1].split("/")[0]}
+                              {"?"}
                             </span>
                             <span className="text-[16px] text-gray-500 ml-1">
                               {t("settings.billing.planDetails.month")}
