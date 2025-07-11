@@ -95,9 +95,23 @@ const PostABlogPage = () => {
   const [editContent, setEditContent] = useState("");
   const [editImage, setEditImage] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState("Pending Approval");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
 
   const approvedFilter =
-    activeTab === "Approved" ? { approved: true } : { approved: false };
+    activeTab === "Approved"
+      ? {
+          approved: true,
+          page: currentPage,
+          limit: 10,
+          ...(searchTerm && { text: searchTerm }),
+        }
+      : {
+          approved: false,
+          page: currentPage,
+          limit: 10,
+          ...(searchTerm && { text: searchTerm }),
+        };
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs", approvedFilter],
@@ -189,6 +203,16 @@ const PostABlogPage = () => {
 
   const blogsSafe = blogs ?? [];
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(0); // Reset to first page when changing tabs
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(0); // Reset to first page when searching
+  };
+
   return (
     <AdminDashboardLayout>
       <h2 className={`${outfit.className} font-bold text-xl mb-6`}>
@@ -252,11 +276,46 @@ const PostABlogPage = () => {
       </form>
 
       <div className={`${outfit.className} mt-10 space-y-4`}>
+        {/* Search Bar */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="relative flex-1 max-w-md">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Search blogs by title or content..."
+              className="w-full px-4 py-2 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+            <svg
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          {searchTerm && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Tabs */}
         <div className="flex items-center gap-6">
           {["Pending Approval", "Approved"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={classNames("font-medium", {
                 "text-primary": activeTab === tab,
               })}
@@ -353,6 +412,29 @@ const PostABlogPage = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+              disabled={currentPage === 0}
+              className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="px-3 py-1 text-sm text-gray-600">
+              Page {currentPage + 1}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={blogsSafe.length < 10}
+              className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 

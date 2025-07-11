@@ -44,7 +44,8 @@ export const API_CONFIG = {
   INTERVIEW_QUESTION_GEN: `${MAIN_URL}/job/interview-questions-gen/`,
   SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
-  GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  GET_JOB_OPENINGS: (status: string) =>
+    `${MAIN_URL}/job/get-jobs/?status=${status}`,
   INTERVIEW_PREP: `${MAIN_URL}/job/interview-prep/`,
   GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
   GET_APPLICATION_ITEM: (application_id: string) =>

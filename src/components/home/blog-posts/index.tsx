@@ -99,19 +99,23 @@ const BlogPosts = () => {
       </div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs
-              ?.slice(0, 4)
-              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+      <div className="hidden sm:flex w-full justify-center mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs
+                ?.slice(0, 4)
+                .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+        </div>
       </div>
-      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs
-              ?.slice(4, 8)
-              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+      <div className="hidden sm:flex w-full justify-center mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs
+                ?.slice(4, 8)
+                .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+        </div>
       </div>
 
       <Button className="text-[12px] self-center mt-8 bg-[#009379] py-4 text-white">
@@ -260,19 +264,21 @@ export const BlogPostsWithPagination = () => {
       <motion.div
         variants={itemVariants}
         custom={2}
-        className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8"
+        className="hidden sm:flex w-full justify-center mt-8"
       >
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs?.map((blog, idx) => (
-              <motion.div
-                key={blog.id}
-                custom={getAnimationOrder(idx, blogs.length)}
-                variants={itemVariants}
-              >
-                <BlogCard blog={blog} />
-              </motion.div>
-            ))}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs?.map((blog, idx) => (
+                <motion.div
+                  key={blog.id}
+                  custom={getAnimationOrder(idx, blogs.length)}
+                  variants={itemVariants}
+                >
+                  <BlogCard blog={blog} />
+                </motion.div>
+              ))}
+        </div>
       </motion.div>
 
       {/* Pagination */}

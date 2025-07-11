@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef, RefObject, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getBlogItem } from "@/actions/blog";
+import { getBlogItem, getBlogItemPublic } from "@/actions/blog";
 import { useUserStore } from "@/hooks/use-user-store";
 import { BlogItem } from "@/actions/blog";
 
@@ -33,10 +33,10 @@ const BlogPostDetail = () => {
   const { data: blog, isLoading } = useQuery<BlogItem>({
     queryKey: ["blog", id],
     queryFn: async () => {
-      if (!userData?.token || !id) throw new Error("No token or ID available");
-      return await getBlogItem(userData.token, id as string);
+      if (!id) throw new Error("No blog ID available");
+      return await getBlogItemPublic(id as string);
     },
-    enabled: !!userData?.token && !!id,
+    enabled: !!id,
   });
 
   const nextSlide = () => {
@@ -75,7 +75,7 @@ const BlogPostDetail = () => {
       />
       {/* Header Section */}
       <div className="w-full bg-black text-white">
-        <div className="md:px-16 mx-auto px-4 py-16 pt-[160px]">
+        <div className="w-full max-w-[1920px] mx-auto md:px-16 px-4 py-16 pt-[160px]">
           <h1
             className={`${outfit.className} text-[30px] md:text-[56px] leading-tight mb-[12px] md:mb-6`}
           >
@@ -106,7 +106,7 @@ const BlogPostDetail = () => {
                     alt="Author"
                     width={48}
                     height={48}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 ) : (
                   <UserCircle2 className="w-10 h-10 text-white" />
@@ -171,7 +171,7 @@ const BlogPostDetail = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full mx-auto px-4 md:px-16 py-12">
+      <div className="w-full max-w-[1920px] mx-auto px-4 md:px-16 py-12">
         <div className="relative flex gap-8">
           {/* Side Social Panel */}
           <div className="text-[12px] hidden lg:flex flex-col items-center gap-8 pt-[20px] h-fit">

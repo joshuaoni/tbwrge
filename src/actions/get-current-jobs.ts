@@ -12,15 +12,12 @@ export const getJobOpenings = async ({
   try {
     const options = {
       method: "GET",
-      url: API_CONFIG.GET_JOB_OPENINGS, // Replace with your API endpoint
+      url: API_CONFIG.GET_JOB_OPENINGS(status), // Replace with your API endpoint
       headers: {
         "Content-Type": "application/json",
 
         Authorization: `Bearer ${token}`,
       },
-      data: JSON.stringify({
-        status,
-      }),
     };
     const response = await axios(options);
     return response.data; // Return only the response data for convenience

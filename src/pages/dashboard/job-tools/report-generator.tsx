@@ -86,6 +86,24 @@ const Generator = () => {
     },
   });
 
+  // Function to strip HTML tags from text
+  const stripHtmlTags = (html: string): string => {
+    // Create a temporary div element to parse HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Get the text content without HTML tags
+    let textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+    // Clean up extra whitespace and line breaks
+    textContent = textContent
+      .replace(/\s+/g, " ") // Replace multiple spaces with single space
+      .replace(/\n\s*\n/g, "\n") // Replace multiple line breaks with single line break
+      .trim(); // Remove leading/trailing whitespace
+
+    return textContent;
+  };
+
   // Check for query parameters and pre-populate form
   useEffect(() => {
     const { candidateId, jobId, cvUrl, coverLetterUrl, applicantName } =
@@ -118,7 +136,9 @@ const Generator = () => {
           token: userData.token,
         });
         if (jobDetails.job_description) {
-          setJobDescription(jobDetails.job_description);
+          // Strip HTML tags from job description before setting it
+          const cleanJobDescription = stripHtmlTags(jobDetails.job_description);
+          setJobDescription(cleanJobDescription);
           hasData = true;
         }
       }

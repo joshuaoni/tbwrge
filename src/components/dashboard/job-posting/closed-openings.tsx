@@ -26,7 +26,7 @@ const ClosedOpenings = () => {
     queryKey: ["job-closed"],
     queryFn: async () => {
       const response = await getJobOpenings({
-        status: "close",
+        status: "closed",
         token: userData?.token,
       });
       console.log("the closed openings is", response);

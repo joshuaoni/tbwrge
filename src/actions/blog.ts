@@ -31,7 +31,7 @@ export type BlogItem = {
 
 export const getBlogsAdmin = async (
   token: string,
-  filter?: { approved?: boolean }
+  filter?: { approved?: boolean; text?: string; page?: number; limit?: number }
 ) => {
   const response = await axios({
     method: "POST",
@@ -59,6 +59,14 @@ export const getBlogItem = async (token: string, blog_id: string) => {
     method: "GET",
     url: API_CONFIG.GET_ONE_BLOG(blog_id),
     headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getBlogItemPublic = async (blog_id: string) => {
+  const response = await axios({
+    method: "GET",
+    url: API_CONFIG.GET_ONE_BLOG(blog_id),
   });
   return response.data;
 };
