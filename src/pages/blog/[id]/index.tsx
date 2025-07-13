@@ -76,8 +76,8 @@ const BlogPostDetail = () => {
         CommunitySectionRef={communityRef}
       />
       {/* Header Section */}
-      <div className="w-full bg-black text-white">
-        <div className="w-full max-w-[1920px] mx-auto md:px-16 px-4 py-16 pt-[160px]">
+      <div className="w-full bg-black mx-auto max-w-[1920px] text-white">
+        <div className="w-full  md:px-16 px-4 py-16 pt-[160px]">
           <h1
             className={`${outfit.className} text-[30px] md:text-[56px] leading-tight mb-[12px] md:mb-6`}
           >

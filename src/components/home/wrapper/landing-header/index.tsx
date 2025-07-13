@@ -129,7 +129,7 @@ const LandingHeader = ({
           } ${outfit.className}`}
         >
           <div
-            className={`w-full max-w-[1600px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
+            className={`w-full max-w-[1920px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
           >
             <div className="flex items-center gap-8">
               <div
