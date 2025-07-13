@@ -27,6 +27,7 @@ export type BlogItem = {
   views: number;
   shares: number;
   approved: boolean;
+  minutes: number;
 };
 
 export const getBlogsAdmin = async (

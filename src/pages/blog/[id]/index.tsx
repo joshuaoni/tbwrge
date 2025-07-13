@@ -39,6 +39,8 @@ const BlogPostDetail = () => {
     enabled: !!id,
   });
 
+  console.log(blog);
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % 8);
   };
@@ -128,7 +130,7 @@ const BlogPostDetail = () => {
                     width={14}
                     height={14}
                   />
-                  <span>_ minute read</span>
+                  <span>{blog.minutes} minute read</span>
                 </div>
                 <span className="text-gray-400">—</span>
                 <div className="flex items-center gap-1">
