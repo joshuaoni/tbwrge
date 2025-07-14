@@ -549,7 +549,14 @@ function BillingChooseView() {
                   </div>
 
                   <div className="mt-2">
-                    <Button className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold">
+                    <Button
+                      onClick={() => {
+                        if (plan.plan === "Enterprise") {
+                          ctx.goTo("enterprise");
+                        }
+                      }}
+                      className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold"
+                    >
                       {t("settings.billing.getStarted")}
                     </Button>
                   </div>
@@ -621,7 +628,16 @@ function BillingChooseView() {
             </div>
 
             <div className="mt-2">
-              <Button className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold">
+              <Button
+                onClick={() => {
+                  if (
+                    plan.plan === t("settings.billing.plans.enterprise.name")
+                  ) {
+                    ctx.goTo("enterprise");
+                  }
+                }}
+                className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold"
+              >
                 {t("settings.billing.getStarted")}
               </Button>
             </div>

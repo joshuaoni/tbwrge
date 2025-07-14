@@ -708,6 +708,10 @@ const resources = {
         agreeTerms: "Agree to terms and conditions",
         submitting: "Submitting...",
         submitArticle: "Submit Article",
+        previewSubmitArticle: "Preview & Submit Article",
+        articlePreview: "Article Preview",
+        publishArticle: "Publish Article",
+        cancel: "Cancel",
         enterArticleTitle: "Enter article title",
         writeArticleContent: "Write your article content here...",
         enterYourName: "Enter your name",
@@ -1786,6 +1790,41 @@ const resources = {
         pagination: {
           previous: "Previous",
           next: "Next",
+        },
+      },
+      enterprisePlan: {
+        title: "Contact Sales for Enterprise Plan",
+        description:
+          "Let's talk about how Candivet can support your high-volume hiring needs.",
+        backToPlans: "Back to Plans",
+        form: {
+          fullName: {
+            label: "Full Name",
+            placeholder: "Enter your full name",
+          },
+          companyName: {
+            label: "Company Name",
+            placeholder: "Enter your company name",
+          },
+          workEmail: {
+            label: "Work Email",
+            placeholder: "Enter your work email",
+          },
+          phoneNumber: {
+            label: "Phone Number",
+            placeholder: "Enter your phone number",
+          },
+          hiringNeeds: {
+            label: "Tell us about your hiring needs",
+            placeholder: "Briefly describe what you're looking for...",
+          },
+          required: "*",
+          submitting: "Submitting...",
+          submitButton: "Submit Request",
+        },
+        messages: {
+          success: "Thank you for your interest! We will contact you soon.",
+          error: "Failed to submit request. Please try again.",
         },
       },
     },
@@ -3614,6 +3653,41 @@ const resources = {
           next: "Suivant",
         },
       },
+      enterprisePlan: {
+        title: "Contactez les ventes pour le plan Entreprise",
+        description:
+          "Discutons de la façon dont Candivet peut répondre à vos besoins en recrutement à grande échelle.",
+        backToPlans: "Retour aux plans",
+        form: {
+          fullName: {
+            label: "Nom complet",
+            placeholder: "Entrez votre nom complet",
+          },
+          companyName: {
+            label: "Nom de l'entreprise",
+            placeholder: "Entrez le nom de votre entreprise",
+          },
+          workEmail: {
+            label: "Email professionnel",
+            placeholder: "Entrez votre email professionnel",
+          },
+          phoneNumber: {
+            label: "Numéro de téléphone",
+            placeholder: "Entrez votre numéro de téléphone",
+          },
+          hiringNeeds: {
+            label: "Parlez-nous de vos besoins en recrutement",
+            placeholder: "Décrivez brièvement ce que vous recherchez...",
+          },
+          required: "*",
+          submitting: "Envoi en cours...",
+          submitButton: "Envoyer la demande",
+        },
+        messages: {
+          success: "Merci pour votre intérêt ! Nous vous contacterons bientôt.",
+          error: "Échec de l'envoi de la demande. Veuillez réessayer.",
+        },
+      },
     },
   },
   es: {
@@ -5395,6 +5469,42 @@ const resources = {
         pagination: {
           previous: "Anterior",
           next: "Siguiente",
+        },
+      },
+      enterprisePlan: {
+        title: "Contacta al equipo de ventas para el Plan Empresarial",
+        description:
+          "Hablemos sobre cómo Candivet puede apoyar tus necesidades de contratación a gran escala.",
+        backToPlans: "Volver a los planes",
+        form: {
+          fullName: {
+            label: "Nombre completo",
+            placeholder: "Ingresa tu nombre completo",
+          },
+          companyName: {
+            label: "Nombre de la empresa",
+            placeholder: "Ingresa el nombre de tu empresa",
+          },
+          workEmail: {
+            label: "Correo electrónico laboral",
+            placeholder: "Ingresa tu correo electrónico laboral",
+          },
+          phoneNumber: {
+            label: "Número de teléfono",
+            placeholder: "Ingresa tu número de teléfono",
+          },
+          hiringNeeds: {
+            label: "Cuéntanos sobre tus necesidades de contratación",
+            placeholder: "Describe brevemente lo que estás buscando...",
+          },
+          required: "*",
+          submitting: "Enviando...",
+          submitButton: "Enviar solicitud",
+        },
+        messages: {
+          success:
+            "¡Gracias por tu interés! Nos pondremos en contacto contigo pronto.",
+          error: "Error al enviar la solicitud. Por favor, intenta nuevamente.",
         },
       },
     },
@@ -7179,6 +7289,43 @@ const resources = {
           next: "Weiter",
         },
       },
+      enterprisePlan: {
+        title: "Vertrieb kontaktieren für Enterprise-Plan",
+        description:
+          "Lassen Sie uns besprechen, wie Candivet Ihre Anforderungen an Masseneinstellungen unterstützen kann.",
+        backToPlans: "Zurück zu den Plänen",
+        form: {
+          fullName: {
+            label: "Vollständiger Name",
+            placeholder: "Geben Sie Ihren vollständigen Namen ein",
+          },
+          companyName: {
+            label: "Firmenname",
+            placeholder: "Geben Sie den Namen Ihres Unternehmens ein",
+          },
+          workEmail: {
+            label: "Geschäftliche E-Mail",
+            placeholder: "Geben Sie Ihre geschäftliche E-Mail-Adresse ein",
+          },
+          phoneNumber: {
+            label: "Telefonnummer",
+            placeholder: "Geben Sie Ihre Telefonnummer ein",
+          },
+          hiringNeeds: {
+            label: "Erzählen Sie uns von Ihren Einstellungsbedürfnissen",
+            placeholder: "Beschreiben Sie kurz, wonach Sie suchen...",
+          },
+          required: "*",
+          submitting: "Wird gesendet...",
+          submitButton: "Anfrage absenden",
+        },
+        messages: {
+          success:
+            "Vielen Dank für Ihr Interesse! Wir werden Sie in Kürze kontaktieren.",
+          error:
+            "Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+        },
+      },
     },
   },
   ar: {
@@ -8913,6 +9060,41 @@ const resources = {
         pagination: {
           previous: "السابق",
           next: "التالي",
+        },
+      },
+      enterprisePlan: {
+        title: "تواصل مع فريق المبيعات لخطة المؤسسات",
+        description:
+          "دعنا نتحدث عن كيفية دعم Candivet لاحتياجاتك في التوظيف على نطاق واسع.",
+        backToPlans: "العودة إلى الخطط",
+        form: {
+          fullName: {
+            label: "الاسم الكامل",
+            placeholder: "أدخل اسمك الكامل",
+          },
+          companyName: {
+            label: "اسم الشركة",
+            placeholder: "أدخل اسم شركتك",
+          },
+          workEmail: {
+            label: "البريد الإلكتروني للعمل",
+            placeholder: "أدخل بريدك الإلكتروني للعمل",
+          },
+          phoneNumber: {
+            label: "رقم الهاتف",
+            placeholder: "أدخل رقم هاتفك",
+          },
+          hiringNeeds: {
+            label: "أخبرنا عن احتياجاتك في التوظيف",
+            placeholder: "صف بإيجاز ما تبحث عنه...",
+          },
+          required: "*",
+          submitting: "جاري الإرسال...",
+          submitButton: "إرسال الطلب",
+        },
+        messages: {
+          success: "شكرًا لاهتمامك! سنتواصل معك قريبًا.",
+          error: "فشل إرسال الطلب. الرجاء المحاولة مرة أخرى.",
         },
       },
     },
@@ -10695,6 +10877,42 @@ const resources = {
           next: "Próximo",
         },
       },
+      enterprisePlan: {
+        title: "Entre em contato com Vendas para o Plano Empresarial",
+        description:
+          "Vamos conversar sobre como o Candivet pode apoiar suas necessidades de contratação em grande escala.",
+        backToPlans: "Voltar para os Planos",
+        form: {
+          fullName: {
+            label: "Nome Completo",
+            placeholder: "Digite seu nome completo",
+          },
+          companyName: {
+            label: "Nome da Empresa",
+            placeholder: "Digite o nome da sua empresa",
+          },
+          workEmail: {
+            label: "Email Corporativo",
+            placeholder: "Digite seu email corporativo",
+          },
+          phoneNumber: {
+            label: "Número de Telefone",
+            placeholder: "Digite seu número de telefone",
+          },
+          hiringNeeds: {
+            label: "Fale-nos sobre suas necessidades de contratação",
+            placeholder: "Descreva brevemente o que você está procurando...",
+          },
+          required: "*",
+          submitting: "Enviando...",
+          submitButton: "Enviar Solicitação",
+        },
+        messages: {
+          success:
+            "Obrigado pelo seu interesse! Entraremos em contato em breve.",
+          error: "Falha ao enviar a solicitação. Por favor, tente novamente.",
+        },
+      },
     },
   },
   zh: {
@@ -12417,6 +12635,40 @@ const resources = {
         pagination: {
           previous: "上一页",
           next: "下一页",
+        },
+      },
+      enterprisePlan: {
+        title: "联系销售获取企业计划",
+        description: "让我们谈谈 Candivet 如何支持您的大规模招聘需求。",
+        backToPlans: "返回计划",
+        form: {
+          fullName: {
+            label: "全名",
+            placeholder: "请输入您的全名",
+          },
+          companyName: {
+            label: "公司名称",
+            placeholder: "请输入您的公司名称",
+          },
+          workEmail: {
+            label: "工作邮箱",
+            placeholder: "请输入您的工作邮箱",
+          },
+          phoneNumber: {
+            label: "电话号码",
+            placeholder: "请输入您的电话号码",
+          },
+          hiringNeeds: {
+            label: "请告诉我们您的招聘需求",
+            placeholder: "请简要描述您的需求...",
+          },
+          required: "*",
+          submitting: "正在提交...",
+          submitButton: "提交请求",
+        },
+        messages: {
+          success: "感谢您的关注！我们将尽快与您联系。",
+          error: "请求提交失败。请再试一次。",
         },
       },
     },

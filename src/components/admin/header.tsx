@@ -16,6 +16,7 @@ function AdmindashboardHeader() {
   else if (pathname === "/admin/support") title = "Support - Admin";
   else if (pathname === "/admin/feedback") title = "Feedback - Admin";
   else if (pathname === "/admin/chat") title = "Chat - Admin";
+  else if (pathname === "/admin/enterprise") title = "Enterprise - Admin";
 
   return (
     <header

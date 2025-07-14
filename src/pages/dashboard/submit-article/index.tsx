@@ -22,6 +22,7 @@ import { outfit, urbanist } from "@/constants/app";
 import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 import ArticleFileGroup from "@/components/dashboard/submit-article/article-file-group";
+import ArticlePreviewModal from "@/components/dashboard/submit-article/article-preview-modal";
 import { useTranslation } from "react-i18next";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -60,6 +61,7 @@ const DashboardSubmitArticlePage = () => {
   const { userData } = useUserStore();
   const [tc, setTc] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const profileImageInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,6 +107,7 @@ const DashboardSubmitArticlePage = () => {
       toast.success("Article submitted successfully");
       setFormData(INITIAL_SUBMIT_ARTICLE_REQUEST_DATA);
       setTc(false);
+      setShowPreviewModal(false);
       // Clear file inputs
       if (imageInputRef.current) {
         imageInputRef.current.value = "";
@@ -337,43 +340,26 @@ const DashboardSubmitArticlePage = () => {
 
               <div className="flex justify-center">
                 <button
-                  disabled={!isFormValid() || submitArticleMutation.isPending}
+                  disabled={!isFormValid()}
                   className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => submitArticleMutation.mutate(formData)}
+                  onClick={() => setShowPreviewModal(true)}
                 >
-                  {submitArticleMutation.isPending ? (
-                    <span className="flex items-center justify-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {t("submitArticle.submitting")}
-                    </span>
-                  ) : (
-                    t("submitArticle.submitArticle")
-                  )}
+                  {t("submitArticle.previewSubmitArticle")}
                 </button>
               </div>
             </div>
           </section>
         </div>
       </div>
+
+      {/* Article Preview Modal */}
+      <ArticlePreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        onPublish={() => submitArticleMutation.mutate(formData)}
+        formData={formData}
+        isSubmitting={submitArticleMutation.isPending}
+      />
     </DashboardWrapper>
   );
 };

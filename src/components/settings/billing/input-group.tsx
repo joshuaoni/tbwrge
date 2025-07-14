@@ -9,6 +9,8 @@ function BillingInputGroup(props: BillingInputGroupProps) {
         id={convertToSlug(props.label)}
         className="block px-4 py-2 w-full text-base text-gray-900 bg-transparent rounded-lg border-2 border-[#CBD0DC] appearance-none transition-[border] duration-300 focus:outline-none focus:border-4 focus:border-lightgreen peer"
         placeholder={props.placeholder}
+        value={props.value}
+        onChange={(e) => props.onChange?.(e.target.value)}
       />
       <label
         htmlFor={convertToSlug(props.label)}
