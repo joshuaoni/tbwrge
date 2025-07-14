@@ -121,13 +121,12 @@ const InvoiceTemplate = forwardRef<HTMLDivElement>((props, ref) => (
                   marginLeft: "auto",
                 }}
               >
-                <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative">
+                <div className="flex items-center justify-center rounded-[6.96px] bg-[#065844] w-[32px] h-[29.2px] md:w-10 md:h-[34px] relative overflow-hidden">
                   <Image
-                    src="/header-final.png"
+                    src="/seo-logo.png"
                     alt=""
-                    width={32}
-                    height={29.2}
-                    className="w-[32px] h-[29.2px] md:w-[32px] md:h-[29.2px]"
+                    fill
+                    className="object-contain"
                   />
                 </div>
               </div>

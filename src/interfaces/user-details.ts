@@ -8,4 +8,6 @@ export interface UserResponse {
   name: string;
   role: string;
   joined_talent_pool: boolean;
+  plan: string;
+  plan_expires: string;
 }
