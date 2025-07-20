@@ -132,13 +132,13 @@ function BillingManageView() {
             {[
               {
                 date: "2023-01-01",
-                amount: "$10.00",
+                amount: "€10.00",
                 plan: "Basic",
                 receipt: "12345",
               },
               {
                 date: "2023-02-01",
-                amount: "$20.00",
+                amount: "€20.00",
                 plan: "Pro",
                 receipt: "67890",
               },

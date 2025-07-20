@@ -1,4 +1,4 @@
-import { PlusCircle, Search, UserCircle } from "lucide-react";
+import { PlusCircle, Search, UserCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import LanguageSelectorDropDown from "./language-selector-dropdown";
 import { Input } from "./ui/input";
@@ -21,6 +21,31 @@ const DashboardHeader = ({
   const router = useRouter();
   const { userData } = useUserStore();
 
+  // Trial badge logic
+  let trialBadge = null;
+  if (userData?.user?.on_freetrial && userData?.user?.plan_expires) {
+    const today = new Date();
+    const expires = new Date(userData.user.plan_expires);
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const daysLeft = Math.max(
+      0,
+      Math.ceil((expires.getTime() - today.getTime()) / msPerDay)
+    );
+    let badgeColor = "bg-green-500 text-white";
+    if (daysLeft <= 7 && daysLeft > 3)
+      badgeColor = "bg-yellow-400 text-gray-900";
+    if (daysLeft <= 3) badgeColor = "bg-red-500 text-white animate-pulse";
+    trialBadge = (
+      <span
+        className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold mr-4 ${badgeColor}`}
+        title="Free Trial"
+      >
+        <Clock className="w-4 h-4 mr-1" />
+        Trial: {daysLeft} day{daysLeft !== 1 ? "s" : ""} left
+      </span>
+    );
+  }
+
   return (
     <div
       className={`${outfit.className} w-full border-b h-20 z-20 bg-white flex items-center px-4`}
@@ -37,6 +62,8 @@ const DashboardHeader = ({
           />
         </div>
         <div className="flex items-center">
+          {/* Trial Badge */}
+          {trialBadge}
           {/* Actions */}
           <div className="flex items-center gap-4">
             <button

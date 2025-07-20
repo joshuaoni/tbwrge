@@ -66,7 +66,11 @@ const Index = () => {
         toast.success("Login successful");
         console.log(res.user);
         addUser({
-          authenticatedUser: res.user,
+          authenticatedUser: {
+            ...res.user,
+            seen_freetrial_popup: false,
+            on_freetrial: true,
+          },
           token: res.access_token,
         });
         // Redirect to the saved URL or default based on role

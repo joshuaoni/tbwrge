@@ -18,7 +18,8 @@ export interface UpdateProfilePayload {
   username?: string;
   email?: string;
   token: string | null | undefined; // Required to authenticate the API request
-  phone: string | undefined;
+  phone?: string | undefined;
+  seen_freetrial_popup?: boolean;
 }
 
 export const updateProfile = async (payload: UpdateProfilePayload) => {
@@ -37,6 +38,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     username,
     email,
     phone,
+    seen_freetrial_popup,
     token,
   } = payload;
 
@@ -58,6 +60,8 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
   if (email) form.append("email", email);
   if (phone) form.append("phone", phone);
   if (role) form.append("role", role);
+  if (seen_freetrial_popup !== undefined)
+    form.append("seen_freetrial_popup", seen_freetrial_popup.toString());
   console.log(
     "calendar: ",
     form.get("google_calender_link"),
@@ -91,6 +95,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
     console.log("Email:", form.get("email"));
     console.log("Phone:", form.get("phone"));
     console.log("Role:", form.get("role"));
+    console.log("Seen Free Trial Popup:", form.get("seen_freetrial_popup"));
     console.log("=================");
 
     const response = await axios(options);

@@ -12,6 +12,7 @@ interface IUserStore {
   } | null;
   addUser: ({}: any) => void;
   removeUser: () => void;
+  updateUser: (updates: Partial<UserResponse>) => void;
 }
 
 export const useUserStore = create<IUserStore>()(
@@ -55,6 +56,21 @@ export const useUserStore = create<IUserStore>()(
             userData: null,
             isLoading: false,
             isHydrated: true,
+          }));
+        },
+        updateUser: (updates: Partial<UserResponse>) => {
+          return set((state) => ({
+            userData: state.userData
+              ? {
+                  ...state.userData,
+                  user: state.userData.user
+                    ? {
+                        ...state.userData.user,
+                        ...updates,
+                      }
+                    : null,
+                }
+              : null,
           }));
         },
       }),

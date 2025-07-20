@@ -2,11 +2,13 @@
 import { useUserStore } from "@/hooks/use-user-store";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import candivetlogo from "../../../public/images/candivet-logo.png";
 import DashboardHeader from "../dashboard-header";
 import CreateJobFlow from "../job";
 import LeftSideBar from "../left-side-bar";
+import WelcomeModal from "../welcome-modal";
+import { updateProfile } from "@/actions/update-profile";
 import {
   Sidebar,
   SidebarContent,
@@ -24,8 +26,9 @@ interface DashboardProps {
 
 const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
   const router = useRouter();
-  const { userData, isLoading } = useUserStore();
+  const { userData, isLoading, updateUser } = useUserStore();
   const [startCreateJobFlow, setStartCreateJobFlow] = React.useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   useEffect(() => {
     if (!isLoading) {
       if (userData === null) {
@@ -33,6 +36,16 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
       }
     }
   }, [userData, isLoading, router]);
+
+  // Check if welcome modal should be shown
+  useEffect(() => {
+    if (!isLoading && userData?.user) {
+      const user = userData.user;
+      if (user.on_freetrial && !user.seen_freetrial_popup) {
+        setShowWelcomeModal(true);
+      }
+    }
+  }, [userData, isLoading]);
 
   return (
     <div className="flex w-full max-w-[1800px] mx-auto">
@@ -80,6 +93,58 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
           )}
         </div>
       </SidebarProvider>
+
+      {/* Welcome Modal */}
+      <WelcomeModal
+        isOpen={showWelcomeModal}
+        onClose={async () => {
+          setShowWelcomeModal(false);
+          if (userData?.token) {
+            try {
+              await updateProfile({
+                token: userData.token,
+                seen_freetrial_popup: true,
+              });
+              // Update user state to reflect the change
+              updateUser({ seen_freetrial_popup: true });
+            } catch (error) {
+              console.error("Failed to mark popup as seen:", error);
+            }
+          }
+        }}
+        onStartExploring={async () => {
+          setShowWelcomeModal(false);
+          if (userData?.token) {
+            try {
+              await updateProfile({
+                token: userData.token,
+                seen_freetrial_popup: true,
+              });
+              // Update user state to reflect the change
+              updateUser({ seen_freetrial_popup: true });
+            } catch (error) {
+              console.error("Failed to mark popup as seen:", error);
+            }
+          }
+          // You can add navigation logic here if needed
+        }}
+        onLearnMore={async () => {
+          setShowWelcomeModal(false);
+          if (userData?.token) {
+            try {
+              await updateProfile({
+                token: userData.token,
+                seen_freetrial_popup: true,
+              });
+              // Update user state to reflect the change
+              updateUser({ seen_freetrial_popup: true });
+            } catch (error) {
+              console.error("Failed to mark popup as seen:", error);
+            }
+          }
+          router.push("/pricing");
+        }}
+      />
     </div>
   );
 };

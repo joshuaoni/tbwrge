@@ -10,4 +10,6 @@ export interface UserResponse {
   joined_talent_pool: boolean;
   plan: string;
   plan_expires: string;
+  on_freetrial: boolean;
+  seen_freetrial_popup: boolean;
 }

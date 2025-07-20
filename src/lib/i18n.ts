@@ -43,6 +43,14 @@ const resources = {
         subscribePremium: "Subscribe for premium",
         activity: "Activity",
         user: "User",
+        welcomeModal: {
+          title: "Welcome to Candivet",
+          subtitle: "You're now on a 14-day free trial.",
+          description: "Explore premium features — no credit card required!",
+          startExploring: "Start Exploring",
+          learnMore: "Learn More",
+          freeTrial: "14-Day Free Trial",
+        },
       },
       jobs: {
         title: "Job Postings",
@@ -1870,6 +1878,15 @@ const resources = {
         subscribePremium: "S'abonner au premium",
         activity: "Activité",
         user: "Utilisateur",
+        welcomeModal: {
+          title: "Bienvenue sur Candivet",
+          subtitle: "Vous êtes maintenant en essai gratuit de 14 jours.",
+          description:
+            "Explorez les fonctionnalités premium — sans carte de crédit !",
+          startExploring: "Commencer à explorer",
+          learnMore: "En savoir plus",
+          freeTrial: "Essai gratuit de 14 jours",
+        },
       },
       jobs: {
         title: "Offres d'emploi",
@@ -3736,6 +3753,15 @@ const resources = {
         subscribePremium: "Suscribirse a premium",
         activity: "Actividad",
         user: "Usuario",
+        welcomeModal: {
+          title: "Bienvenido a Candivet",
+          subtitle: "Ahora estás en un trial gratuito de 14 días.",
+          description:
+            "Explora las funciones premium — sin tarjeta de crédito!",
+          startExploring: "Comenzar a explorar",
+          learnMore: "En savoir plus",
+          freeTrial: "Trial gratuito de 14 días",
+        },
       },
       jobs: {
         title: "Ofertas de trabajo",
@@ -5560,6 +5586,15 @@ const resources = {
         subscribePremium: "Premium abonnieren",
         activity: "Aktivität",
         user: "Benutzer",
+        welcomeModal: {
+          title: "Willkommen bei Candivet",
+          subtitle: "Sie sind jetzt auf einer 14-Tage-Testphase.",
+          description:
+            "Entdecken Sie Premium-Funktionen — keine Kreditkarte erforderlich!",
+          startExploring: "Los geht's",
+          learnMore: "Mehr erfahren",
+          freeTrial: "14-Tage-Testphase",
+        },
       },
       jobs: {
         title: "Stellenausschreibungen",
@@ -7384,6 +7419,14 @@ const resources = {
         subscribePremium: "اشترك في الباقة المميزة",
         activity: "النشاط",
         user: "المستخدم",
+        welcomeModal: {
+          title: "مرحبا بك في Candivet",
+          subtitle: "أنت الآن على فترة تجربة مجانية لمدة 14 يوم.",
+          description: "استكشف الميزات المميزة — لا حاجة لبطاقة إئتمان!",
+          startExploring: "ابدأ التصفح",
+          learnMore: "اعرف المزيد",
+          freeTrial: "فترة تجربة مجانية لمدة 14 يوم",
+        },
       },
       jobs: {
         title: "عروض العمل",
@@ -9160,6 +9203,15 @@ const resources = {
         subscribePremium: "Assinar premium",
         activity: "Atividade",
         user: "Usuário",
+        welcomeModal: {
+          title: "Bem-vindo ao Candivet",
+          subtitle: "Você está agora em um trial gratuito de 14 dias.",
+          description:
+            "Explore as funcionalidades premium — sem cartão de crédito!",
+          startExploring: "Comece a explorar",
+          learnMore: "Saiba mais",
+          freeTrial: "Trial gratuito de 14 dias",
+        },
       },
       jobs: {
         title: "Vagas de emprego",
@@ -10981,6 +11033,14 @@ const resources = {
         subscribePremium: "订阅高级版",
         activity: "活动",
         user: "用户",
+        welcomeModal: {
+          title: "欢迎来到Candivet",
+          subtitle: "您现在处于14天免费试用期。",
+          description: "探索高级功能 — 无需信用卡！",
+          startExploring: "开始探索",
+          learnMore: "了解更多",
+          freeTrial: "14天免费试用",
+        },
       },
       jobs: {
         title: "职位发布",
