@@ -294,7 +294,7 @@ const HeadToHead = () => {
                   <div
                     key={i}
                     className={classNames(
-                      "flex items-center gap-6 px-5 py-4 min-w-96 bg-[#065844] text-white rounded-xl",
+                      "flex items-center gap-6 px-6 py-6 min-w-96 bg-[#065844] text-white rounded-xl min-h-[140px]",
                       outfit.className,
                       item === "overall_score" ? "bg-[#009379]" : "bg-[#065844]"
                     )}
@@ -309,17 +309,17 @@ const HeadToHead = () => {
                       </span>
                     </div>
 
-                    <div className="flex flex-col gap-2 flex-1">
-                      <span className={`${inter.className} text-xl capitalize`}>
+                    <div className="flex flex-col gap-4 flex-1">
+                      <span className={`${inter.className} text-sm capitalize`}>
                         {item.replaceAll("_", " ")}
                       </span>
-                      <div className="flex gap-6">
+                      <div className="flex gap-8">
                         {H2H.candidates_info.map((cand, i) => (
-                          <div key={i} className="">
-                            <p className="text-[#747474]">
+                          <div key={i} className="flex flex-col gap-2">
+                            <p className="text-[#747474] text-sm">
                               {cand.candidate_name}
                             </p>
-                            <p className="font-bold text-[50px]">
+                            <p className="font-bold text-3xl leading-none">
                               {cand[item as keyof CandidateInfo]}%
                             </p>
                           </div>

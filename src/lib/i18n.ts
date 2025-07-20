@@ -277,6 +277,7 @@ const resources = {
           translatedCoverLetter: "Cover Letter Translator",
           translationPlaceholder:
             'Upload a cover letter and click "Translate" to see results',
+          inputCV: "Input Cover Letter",
         },
         vetting: {
           title: "Cover Letter Vetting",

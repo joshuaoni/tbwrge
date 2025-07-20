@@ -261,7 +261,7 @@ const PostABlogPage = () => {
             <input
               type="file"
               onChange={(e) => setImage(e.target.files?.[0] || null)}
-              accept=".pdf,.doc,.docx"
+              accept="image/*"
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
             />
           </div>
@@ -658,7 +658,7 @@ const PostABlogPage = () => {
               <input
                 type="file"
                 onChange={(e) => setEditImage(e.target.files?.[0] || null)}
-                accept=".pdf,.doc,.docx"
+                accept="image/*"
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
               />
 

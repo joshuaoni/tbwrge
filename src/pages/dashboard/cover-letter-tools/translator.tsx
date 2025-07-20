@@ -339,19 +339,15 @@ const Translator = () => {
           {/* Job Description Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
             <span className="font-bold text-sm">
-              {t("coverLetterTools.translator.customize.title")}
-            </span>
-            <span className="text-sm font-medium">
-              {" "}
-              {t("coverLetterTools.translator.customize.subTitle")}
+              {t("coverLetterTools.translator.inputCV")}
             </span>
             <div className="mt-4 border border-gray-100 rounded-lg">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 rows={4}
-                className="w-full p-3 border-none outline-none rounded-lg resize-none"
-                placeholder={t("coverLetterTools.translator.promptPlaceholder")}
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
+                placeholder={t("coverLetterTools.translator.inputCV")}
               />
             </div>
           </div>
