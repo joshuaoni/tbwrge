@@ -575,8 +575,7 @@ const AiInterviewPrep = () => {
                         (q: InterviewQuestion, qIndex: number) => (
                           <div key={qIndex} className="space-y-2">
                             <p className="font-medium text-base">
-                              {t("jobTools.interviewPrep.q")}
-                              {qIndex + 1}. "{q.question}"
+                              Q{qIndex + 1}. "{q.question}"
                             </p>
 
                             <div className="ml-2 pl-4 border-l-2 border-green-500">
