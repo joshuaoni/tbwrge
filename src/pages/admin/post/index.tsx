@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { outfit } from "@/constants/app";
 import classNames from "classnames";
+import AdminArticlePreviewModal from "@/components/admin/article-preview-modal";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -97,6 +98,7 @@ const PostABlogPage = () => {
   const [activeTab, setActiveTab] = useState("Pending Approval");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const approvedFilter =
     activeTab === "Approved"
@@ -132,6 +134,7 @@ const PostABlogPage = () => {
       setTitle("");
       setContent("");
       setImage(null);
+      setShowPreviewModal(false);
       toast.success("Blog post created successfully");
     },
   });
@@ -192,6 +195,10 @@ const PostABlogPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPreviewModal(true);
+  };
+
+  const handlePublish = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -267,10 +274,10 @@ const PostABlogPage = () => {
           </div>
           <button
             type="submit"
-            disabled={createBlogMutation.isPending || !title || !content}
+            disabled={!title || !content}
             className="bg-[#145959] text-white py-3 px-8 font-bold rounded-lg w-fit flex items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
           >
-            {createBlogMutation.isPending ? "Posting..." : "Post Article"}
+            Preview Article
           </button>
         </div>
       </form>
@@ -702,6 +709,17 @@ const PostABlogPage = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Article Preview Modal */}
+      <AdminArticlePreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        onPublish={handlePublish}
+        title={title}
+        content={content}
+        image={image}
+        isSubmitting={createBlogMutation.isPending}
+      />
     </AdminDashboardLayout>
   );
 };

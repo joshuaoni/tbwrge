@@ -9,9 +9,8 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import {
   getEnterpriseRequests,
-  type EnterpriseRequest,
-  updateEnterpriseRequestStatus,
-  deleteEnterpriseRequest,
+  type EnterpriseRequestResponse as EnterpriseRequest,
+  updateEnterpriseRequest,
 } from "@/actions/enterprise";
 import toast from "react-hot-toast";
 import {
@@ -26,15 +25,14 @@ import { Button } from "@/components/ui/button";
 import { outfit } from "@/constants/app";
 
 const AdminEnterprisePage = () => {
-  const [tab, setTab] = useState("Pending Requests");
+  const [tab, setTab] = useState("All Requests");
   const [searchTerm, setSearchTerm] = useState("");
   const { userData } = useUserStore();
   const [requestToContact, setRequestToContact] =
     useState<EnterpriseRequest | null>(null);
   const [requestToClose, setRequestToClose] =
     useState<EnterpriseRequest | null>(null);
-  const [requestToDelete, setRequestToDelete] =
-    useState<EnterpriseRequest | null>(null);
+
   const [requestToView, setRequestToView] = useState<EnterpriseRequest | null>(
     null
   );
@@ -43,12 +41,16 @@ const AdminEnterprisePage = () => {
 
   const { data: requests, isLoading } = useQuery({
     queryKey: ["enterpriseRequests", searchTerm],
-    queryFn: () => getEnterpriseRequests(userData?.token || "", searchTerm),
+    queryFn: () =>
+      getEnterpriseRequests(userData?.token || "", { text: searchTerm }),
     enabled: !!userData?.token,
   });
 
+  console.log("Enterprise requests data:", requests); // Debug log
+
   const filteredRequests =
     requests?.filter((request) => {
+      if (tab === "All Requests") return true;
       if (tab === "Pending Requests") return request.status === "pending";
       if (tab === "Contacted") return request.status === "contacted";
       if (tab === "Closed") return request.status === "closed";
@@ -58,11 +60,9 @@ const AdminEnterprisePage = () => {
   const contactMutation = useMutation({
     mutationFn: (requestId: string) => {
       if (!userData?.token) throw new Error("No token available");
-      return updateEnterpriseRequestStatus(
-        userData.token,
-        requestId,
-        "contacted"
-      );
+      return updateEnterpriseRequest(userData.token, requestId, {
+        status: "contacted",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enterpriseRequests"] });
@@ -77,7 +77,9 @@ const AdminEnterprisePage = () => {
   const closeMutation = useMutation({
     mutationFn: (requestId: string) => {
       if (!userData?.token) throw new Error("No token available");
-      return updateEnterpriseRequestStatus(userData.token, requestId, "closed");
+      return updateEnterpriseRequest(userData.token, requestId, {
+        status: "closed",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enterpriseRequests"] });
@@ -86,21 +88,6 @@ const AdminEnterprisePage = () => {
     },
     onError: () => {
       toast.error("Failed to close request");
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (requestId: string) => {
-      if (!userData?.token) throw new Error("No token available");
-      return deleteEnterpriseRequest(userData.token, requestId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enterpriseRequests"] });
-      setRequestToDelete(null);
-      toast.success("Request deleted successfully");
-    },
-    onError: () => {
-      toast.error("Failed to delete request");
     },
   });
 
@@ -128,6 +115,10 @@ const AdminEnterprisePage = () => {
         />
         <div className="flex items-center gap-10">
           {[
+            {
+              title: "All Requests",
+              value: requests?.length ?? 0,
+            },
             {
               title: "Pending Requests",
               value:
@@ -164,17 +155,19 @@ const AdminEnterprisePage = () => {
 
       <section className={`${outfit.className} mt-10 space-y-4`}>
         <div className="flex items-center gap-6">
-          {["Pending Requests", "Contacted", "Closed"].map((item, i) => (
-            <button
-              key={i}
-              onClick={() => setTab(item)}
-              className={classNames("font-medium", {
-                "text-[#2563EB]": tab === item,
-              })}
-            >
-              {item}
-            </button>
-          ))}
+          {["All Requests", "Pending Requests", "Contacted", "Closed"].map(
+            (item, i) => (
+              <button
+                key={i}
+                onClick={() => setTab(item)}
+                className={classNames("font-medium", {
+                  "text-[#2563EB]": tab === item,
+                })}
+              >
+                {item}
+              </button>
+            )
+          )}
         </div>
 
         <div className="overflow-hidden rounded-xl">
@@ -226,11 +219,9 @@ const AdminEnterprisePage = () => {
                     >
                       <div>
                         <p className="font-medium text-sm text-[#333]">
-                          {request.companyName}
+                          {request.company}
                         </p>
-                        <p className="text-xs text-gray-500">
-                          {request.fullName}
-                        </p>
+                        <p className="text-xs text-gray-500">{request.name}</p>
                       </div>
                     </td>
                     <td
@@ -251,11 +242,9 @@ const AdminEnterprisePage = () => {
                     >
                       <div>
                         <p className="font-medium text-sm text-[#333]">
-                          {request.workEmail}
+                          {request.email}
                         </p>
-                        <p className="text-xs text-gray-500">
-                          {request.phoneNumber}
-                        </p>
+                        <p className="text-xs text-gray-500">{request.phone}</p>
                       </div>
                     </td>
                     <td
@@ -298,12 +287,15 @@ const AdminEnterprisePage = () => {
                             Close
                           </button>
                         )}
-                        <button
-                          className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium min-w-[55px]"
-                          onClick={() => setRequestToDelete(request)}
-                        >
-                          Delete
-                        </button>
+                        {request.status !== "contacted" &&
+                          request.status !== "closed" && (
+                            <button
+                              className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium min-w-[55px]"
+                              onClick={() => setRequestToContact(request)}
+                            >
+                              Mark as Contacted
+                            </button>
+                          )}
                       </div>
                     </td>
                   </tr>
@@ -380,40 +372,6 @@ const AdminEnterprisePage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Request Confirmation Dialog */}
-      <Dialog
-        open={!!requestToDelete}
-        onOpenChange={() => setRequestToDelete(null)}
-      >
-        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200">
-          <DialogHeader>
-            <DialogTitle>Delete Request</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this enterprise request? This
-              action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
-              onClick={() => setRequestToDelete(null)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() =>
-                requestToDelete && deleteMutation.mutate(requestToDelete.id)
-              }
-              disabled={deleteMutation.isPending}
-            >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       {/* View Request Dialog */}
       <Dialog
         open={!!requestToView}
@@ -444,33 +402,27 @@ const AdminEnterprisePage = () => {
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   Contact Person
                 </div>
-                <div className="font-bold text-base">
-                  {requestToView.fullName}
-                </div>
+                <div className="font-bold text-base">{requestToView.name}</div>
               </div>
               <div>
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   Company
                 </div>
                 <div className="font-bold text-base">
-                  {requestToView.companyName}
+                  {requestToView.company}
                 </div>
               </div>
               <div>
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   Work Email
                 </div>
-                <div className="font-bold text-base">
-                  {requestToView.workEmail}
-                </div>
+                <div className="font-bold text-base">{requestToView.email}</div>
               </div>
               <div>
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
                   Phone Number
                 </div>
-                <div className="font-bold text-base">
-                  {requestToView.phoneNumber}
-                </div>
+                <div className="font-bold text-base">{requestToView.phone}</div>
               </div>
               <div>
                 <div className="text-xs text-[#64748B] font-semibold mb-1">
@@ -503,7 +455,7 @@ const AdminEnterprisePage = () => {
                   Hiring Needs
                 </div>
                 <div className="text-sm text-[#222] whitespace-pre-line">
-                  {requestToView.hiringNeeds}
+                  {requestToView.details}
                 </div>
               </div>
             </div>

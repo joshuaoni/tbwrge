@@ -4,12 +4,18 @@ import { outfit } from "@/constants/app";
 import { ArrowLeft } from "lucide-react";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { submitEnterpriseRequest } from "@/actions/enterprise";
+import { useMutation } from "@tanstack/react-query";
+import {
+  submitEnterpriseRequest,
+  EnterpriseRequestPayload,
+} from "@/actions/enterprise";
+import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 
 function BillingEnterpriseForm() {
   const ctx = useContext(BillingContext);
   const { t } = useTranslation();
+  const { userData } = useUserStore();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -18,7 +24,6 @@ function BillingEnterpriseForm() {
     phoneNumber: "",
     hiringNeeds: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,12 +35,12 @@ function BillingEnterpriseForm() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      await submitEnterpriseRequest(formData);
+  const submitEnterpriseMutation = useMutation({
+    mutationFn: async (payload: EnterpriseRequestPayload) => {
+      if (!userData?.token) throw new Error("No token available");
+      return await submitEnterpriseRequest(userData.token, payload);
+    },
+    onSuccess: () => {
       toast.success(t("enterprisePlan.messages.success"));
       // Reset form
       setFormData({
@@ -47,12 +52,25 @@ function BillingEnterpriseForm() {
       });
       // Go back to billing plans
       ctx.goTo("choose");
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Error submitting enterprise request:", error);
       toast.error(t("enterprisePlan.messages.error"));
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const payload: EnterpriseRequestPayload = {
+      name: formData.fullName,
+      company: formData.companyName,
+      email: formData.workEmail,
+      phone: formData.phoneNumber,
+      details: formData.hiringNeeds,
+    };
+
+    submitEnterpriseMutation.mutate(payload);
   };
 
   return (
@@ -169,10 +187,10 @@ function BillingEnterpriseForm() {
           <div className="flex justify-center">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={submitEnterpriseMutation.isPending}
               className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? (
+              {submitEnterpriseMutation.isPending ? (
                 <span className="flex items-center justify-center">
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

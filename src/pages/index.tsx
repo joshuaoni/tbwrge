@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Head from "next/head";
 import { motion } from "framer-motion";
+import SEO from "@/components/seo";
 import AboutUs from "@/components/home/about-us";
 import LandingWrapper from "@/components/home/wrapper/landing-wrapper";
 import LandingHeroSection from "@/components/home/landing-hero";
@@ -24,13 +24,11 @@ const fadeInUp = {
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Welcome to Candivet - Your AI-Powered Hiring Platform</title>
-        <meta
-          name="description"
-          content="Welcome to Candivet - The #1 global AI-powered platform for recruiters and job seekers. Start your journey to smarter hiring and job seeking today."
-        />
-      </Head>
+      <SEO
+        title="Welcome to Candivet - Your AI-Powered Hiring Platform"
+        description="Welcome to Candivet - The #1 global AI-powered platform for recruiters and job seekers. Start your journey to smarter hiring and job seeking today."
+        canonical="https://candivet.com/"
+      />
       <LandingWrapper>
         <LandingHeroSection />
         {/* <Partners /> */}

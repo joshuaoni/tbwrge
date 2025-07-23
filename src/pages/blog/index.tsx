@@ -5,15 +5,24 @@ import Image from "next/image";
 import BlogsHeaderImage from "../../../../public/images/blogs_header_image.jpeg";
 import { BlogPostsWithPagination } from "@/components/home/blog-posts";
 import Expertise from "@/components/home/expertise";
+import SEO from "@/components/seo";
 
 const index = () => {
   return (
-    <LandingWrapper>
-      <section>
-        <BlogPostsWithPagination />
-      </section>
-      <Expertise />
-    </LandingWrapper>
+    <>
+      <SEO
+        title="Blog - Candivet"
+        description="Discover insights, tips, and industry trends in our blog. Stay updated with the latest in hiring, recruitment, and career development."
+        canonical="https://candivet.com/blog"
+        ogType="website"
+      />
+      <LandingWrapper>
+        <section>
+          <BlogPostsWithPagination />
+        </section>
+        <Expertise />
+      </LandingWrapper>
+    </>
   );
 };
 

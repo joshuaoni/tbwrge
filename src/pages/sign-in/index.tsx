@@ -79,7 +79,7 @@ const Index = () => {
         } else if (res.user.role === "recruiter") {
           router.push(redirectUrl || "/dashboard");
         } else if (res.user.role === "root") {
-          router.push(redirectUrl || "/admin");
+          router.push(redirectUrl || "/dashboard");
         }
       }
     },
@@ -114,7 +114,7 @@ const Index = () => {
           } else if (res.user.role === "recruiter") {
             router.push(redirectUrl || "/dashboard");
           } else if (res.user.role === "root") {
-            router.push(redirectUrl || "/admin");
+            router.push(redirectUrl || "/dashboard");
           } else {
             router.push(redirectUrl || "/dashboard");
           }

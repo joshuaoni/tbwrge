@@ -1,37 +1,37 @@
 import { inter, outfit } from "@/constants/app";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronLeft, ChevronRight, UserCircle2, X } from "lucide-react";
+import { UserCircle2, X } from "lucide-react";
 import Image from "next/image";
-import { useRef } from "react";
-import { SubmitAnArticleRequestData } from "@/actions/submit-article";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/hooks/use-user-store";
 
-interface ArticlePreviewModalProps {
+interface AdminArticlePreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   onPublish: () => void;
-  formData: SubmitAnArticleRequestData;
+  title: string;
+  content: string;
+  image: File | null;
   isSubmitting: boolean;
 }
 
-const ArticlePreviewModal = ({
+const AdminArticlePreviewModal = ({
   isOpen,
   onClose,
   onPublish,
-  formData,
+  title,
+  content,
+  image,
   isSubmitting,
-}: ArticlePreviewModalProps) => {
+}: AdminArticlePreviewModalProps) => {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
-  const userData = useUserStore();
+  const { userData } = useUserStore();
 
   if (!isOpen) return null;
 
   // Create preview URL for uploaded image
-  const imagePreviewUrl = formData.image
-    ? URL.createObjectURL(formData.image)
-    : null;
+  const imagePreviewUrl = image ? URL.createObjectURL(image) : null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -39,7 +39,7 @@ const ArticlePreviewModal = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className={`${outfit.className} text-lg font-semibold`}>
-            {t("submitArticle.articlePreview")}
+            Article Preview
           </h2>
           <button
             onClick={onClose}
@@ -57,14 +57,14 @@ const ArticlePreviewModal = ({
               <h1
                 className={`${outfit.className} text-[24px] md:text-[42px] leading-tight mb-[12px] md:mb-6`}
               >
-                {formData.title || "Article Title"}
+                {title || "Article Title"}
               </h1>
 
               {/* Author Info */}
               <div className="flex items-center gap-3">
                 {isMobile ? (
                   <div className="flex items-center gap-2">
-                    <span>by {formData.name || "Anonymous"}</span>
+                    <span>by Admin</span>
                     <span className="text-gray-400">—</span>
                     <div className="flex items-center gap-2">
                       <Image
@@ -78,9 +78,9 @@ const ArticlePreviewModal = ({
                   </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
-                    {userData?.userData?.user?.profile_picture ? (
+                    {userData?.user?.profile_picture ? (
                       <Image
-                        src={userData.userData.user.profile_picture}
+                        src={userData.user.profile_picture}
                         alt="Author"
                         width={48}
                         height={48}
@@ -93,11 +93,7 @@ const ArticlePreviewModal = ({
                 )}
                 {!isMobile && (
                   <div className="flex items-center gap-2">
-                    <span className="text-base">
-                      {formData.name || "Anonymous"}
-                      {formData.job_title && ` - ${formData.job_title}`}
-                      {formData.company && ` at ${formData.company}`}
-                    </span>
+                    <span className="text-base">Admin</span>
                     <span className="text-gray-400">—</span>
                     <div className="flex items-center gap-2">
                       <Image
@@ -201,43 +197,17 @@ const ArticlePreviewModal = ({
                   <div className="w-full h-[400px] relative mb-8">
                     <Image
                       src={imagePreviewUrl}
-                      alt={formData.title || "Article Image"}
+                      alt={title || "Article Image"}
                       fill
                       className="object-cover rounded-lg"
                     />
                   </div>
                 )}
-                {formData.article_upload ? (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                    <div className="flex items-center justify-center mb-2">
-                      <svg
-                        className="w-8 h-8 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-gray-600 text-sm">
-                      Article uploaded: {formData.article_upload.name}
-                    </p>
-                    <p className="text-gray-500 text-xs mt-1">
-                      File content will be processed after publishing
-                    </p>
-                  </div>
-                ) : (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: formData.content || "<p>No content provided</p>",
-                    }}
-                  />
-                )}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: content || "<p>No content provided</p>",
+                  }}
+                />
               </div>
             </div>
 
@@ -299,12 +269,12 @@ const ArticlePreviewModal = ({
             disabled={isSubmitting}
             className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {t("submitArticle.cancel")}
+            Cancel
           </button>
           <button
             onClick={onPublish}
             disabled={isSubmitting}
-            className="bg-primary text-white py-2 px-6 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#145959] text-white py-2 px-6 rounded-lg hover:bg-[#145959]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <span className="flex items-center justify-center">
@@ -328,10 +298,10 @@ const ArticlePreviewModal = ({
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                {t("submitArticle.submitting")}
+                Posting...
               </span>
             ) : (
-              t("submitArticle.submitArticle")
+              "Publish Article"
             )}
           </button>
         </div>
@@ -340,4 +310,4 @@ const ArticlePreviewModal = ({
   );
 };
 
-export default ArticlePreviewModal;
+export default AdminArticlePreviewModal;

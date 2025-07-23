@@ -142,7 +142,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
               console.error("Failed to mark popup as seen:", error);
             }
           }
-          router.push("/pricing");
+          router.push("/dashboard/billing?screen=choose");
         }}
       />
     </div>

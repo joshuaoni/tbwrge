@@ -14,6 +14,7 @@ export const API_CONFIG = {
     `${MAIN_URL}/admin/close-ticket/${ticket_id}/`,
   DELETE_TICKET: (ticket_id: string) =>
     `${MAIN_URL}/admin/delete-ticket/${ticket_id}/`,
+  GET_ENTERPRISE_REQUESTS: `${MAIN_URL}/admin/get-enterprise-requests/`,
 
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
   VERIFY_EMAIL: `${MAIN_URL}/auth/verify-account/`,
@@ -80,6 +81,7 @@ export const API_CONFIG = {
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
   DELETE_ACCOUNT: `${MAIN_URL}/profile/delete-account/`,
   GET_ACTIVITIES: `${MAIN_URL}/profile/get-activities/`,
+  REQUEST_ENTERPRISE: `${MAIN_URL}/profile/request-enterprise/`,
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,
