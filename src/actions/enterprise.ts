@@ -19,6 +19,18 @@ export interface EnterpriseRequestResponse {
   created_at: string;
   updated_at: string;
   status: string;
+  is_open: boolean;
+  contacted: boolean;
+}
+
+export interface UpdateEnterpriseRequestPayload {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  details: string;
+  is_open: boolean;
+  contacted: boolean;
 }
 
 export const submitEnterpriseRequest = async (
@@ -40,7 +52,14 @@ export const submitEnterpriseRequest = async (
 
 export const getEnterpriseRequests = async (
   token: string,
-  query?: { page?: number; limit?: number; status?: string; text?: string }
+  query?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    text?: string;
+    is_open?: boolean;
+    contacted?: boolean;
+  }
 ) => {
   const queryParams = query ? new URLSearchParams() : null;
 
@@ -51,6 +70,10 @@ export const getEnterpriseRequests = async (
       queryParams!.append("limit", query.limit.toString());
     if (query.status) queryParams!.append("status", query.status);
     if (query.text) queryParams!.append("text", query.text);
+    if (query.is_open !== undefined)
+      queryParams!.append("is_open", query.is_open.toString());
+    if (query.contacted !== undefined)
+      queryParams!.append("contacted", query.contacted.toString());
   }
 
   const url = queryParams
@@ -70,11 +93,11 @@ export const getEnterpriseRequests = async (
 export const updateEnterpriseRequest = async (
   token: string,
   requestId: string,
-  payload: Partial<EnterpriseRequestPayload & { status: string }>
+  payload: UpdateEnterpriseRequestPayload
 ): Promise<EnterpriseRequestResponse> => {
   const response = await axios({
     method: "PUT",
-    url: `${API_CONFIG.REQUEST_ENTERPRISE}${requestId}/`,
+    url: API_CONFIG.UPDATE_ENTERPRISE_REQUEST(requestId),
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",

@@ -15,6 +15,8 @@ export const API_CONFIG = {
   DELETE_TICKET: (ticket_id: string) =>
     `${MAIN_URL}/admin/delete-ticket/${ticket_id}/`,
   GET_ENTERPRISE_REQUESTS: `${MAIN_URL}/admin/get-enterprise-requests/`,
+  UPDATE_ENTERPRISE_REQUEST: (request_id: string) =>
+    `${MAIN_URL}/admin/update-enterprise-requests/${request_id}/`,
 
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
   VERIFY_EMAIL: `${MAIN_URL}/auth/verify-account/`,

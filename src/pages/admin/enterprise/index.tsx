@@ -11,6 +11,7 @@ import {
   getEnterpriseRequests,
   type EnterpriseRequestResponse as EnterpriseRequest,
   updateEnterpriseRequest,
+  type UpdateEnterpriseRequestPayload,
 } from "@/actions/enterprise";
 import toast from "react-hot-toast";
 import {
@@ -39,30 +40,50 @@ const AdminEnterprisePage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  // Build query parameters based on current tab
+  const getQueryParams = () => {
+    const baseQuery: any = { text: searchTerm };
+
+    switch (tab) {
+      case "All Requests":
+        return baseQuery;
+      case "Open Requests":
+        return { ...baseQuery, is_open: true };
+      case "Closed Requests":
+        return { ...baseQuery, is_open: false };
+      case "Contacted":
+        return { ...baseQuery, contacted: true };
+      case "Not Contacted":
+        return { ...baseQuery, contacted: false };
+      default:
+        return baseQuery;
+    }
+  };
+
   const { data: requests, isLoading } = useQuery({
-    queryKey: ["enterpriseRequests", searchTerm],
+    queryKey: ["enterpriseRequests", tab, searchTerm],
     queryFn: () =>
-      getEnterpriseRequests(userData?.token || "", { text: searchTerm }),
+      getEnterpriseRequests(userData?.token || "", getQueryParams()),
     enabled: !!userData?.token,
   });
 
   console.log("Enterprise requests data:", requests); // Debug log
 
-  const filteredRequests =
-    requests?.filter((request) => {
-      if (tab === "All Requests") return true;
-      if (tab === "Pending Requests") return request.status === "pending";
-      if (tab === "Contacted") return request.status === "contacted";
-      if (tab === "Closed") return request.status === "closed";
-      return true;
-    }) || [];
-
   const contactMutation = useMutation({
-    mutationFn: (requestId: string) => {
+    mutationFn: (request: EnterpriseRequest) => {
       if (!userData?.token) throw new Error("No token available");
-      return updateEnterpriseRequest(userData.token, requestId, {
-        status: "contacted",
-      });
+
+      const payload: UpdateEnterpriseRequestPayload = {
+        name: request.name,
+        company: request.company,
+        email: request.email,
+        phone: request.phone,
+        details: request.details,
+        is_open: true,
+        contacted: true,
+      };
+
+      return updateEnterpriseRequest(userData.token, request.id, payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enterpriseRequests"] });
@@ -75,11 +96,20 @@ const AdminEnterprisePage = () => {
   });
 
   const closeMutation = useMutation({
-    mutationFn: (requestId: string) => {
+    mutationFn: (request: EnterpriseRequest) => {
       if (!userData?.token) throw new Error("No token available");
-      return updateEnterpriseRequest(userData.token, requestId, {
-        status: "closed",
-      });
+
+      const payload: UpdateEnterpriseRequestPayload = {
+        name: request.name,
+        company: request.company,
+        email: request.email,
+        phone: request.phone,
+        details: request.details,
+        is_open: false,
+        contacted: true,
+      };
+
+      return updateEnterpriseRequest(userData.token, request.id, payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enterpriseRequests"] });
@@ -91,17 +121,14 @@ const AdminEnterprisePage = () => {
     },
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "text-[#FF9500] bg-[#FF9500]/20";
-      case "contacted":
-        return "text-[#377DFF] bg-[#377DFF]/20";
-      case "closed":
-        return "text-[#22C55E] bg-[#22C55E]/20";
-      default:
-        return "text-gray-500 bg-gray-100";
-    }
+  const getStatusColor = (isOpen: boolean) => {
+    return isOpen
+      ? "text-[#22C55E] bg-[#22C55E]/20"
+      : "text-[#EF4444] bg-[#EF4444]/20";
+  };
+
+  const getStatusText = (isOpen: boolean) => {
+    return isOpen ? "Open" : "Closed";
   };
 
   return (
@@ -109,29 +136,23 @@ const AdminEnterprisePage = () => {
       <section
         className={`${outfit.className} w-full flex items-start justify-between`}
       >
-        <AdminDashboardSearchBox
-          placeholder="Search enterprise requests"
-          onSearch={setSearchTerm}
-        />
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-8">
           {[
             {
               title: "All Requests",
               value: requests?.length ?? 0,
             },
             {
-              title: "Pending Requests",
-              value:
-                requests?.filter((r) => r.status === "pending").length ?? 0,
+              title: "Open Requests",
+              value: requests?.filter((r) => r.is_open).length ?? 0,
+            },
+            {
+              title: "Closed Requests",
+              value: requests?.filter((r) => !r.is_open).length ?? 0,
             },
             {
               title: "Contacted",
-              value:
-                requests?.filter((r) => r.status === "contacted").length ?? 0,
-            },
-            {
-              title: "Closed",
-              value: requests?.filter((r) => r.status === "closed").length ?? 0,
+              value: requests?.filter((r) => r.contacted).length ?? 0,
             },
           ].map((item, i) => (
             <div
@@ -155,19 +176,23 @@ const AdminEnterprisePage = () => {
 
       <section className={`${outfit.className} mt-10 space-y-4`}>
         <div className="flex items-center gap-6">
-          {["All Requests", "Pending Requests", "Contacted", "Closed"].map(
-            (item, i) => (
-              <button
-                key={i}
-                onClick={() => setTab(item)}
-                className={classNames("font-medium", {
-                  "text-[#2563EB]": tab === item,
-                })}
-              >
-                {item}
-              </button>
-            )
-          )}
+          {[
+            "All Requests",
+            "Open Requests",
+            "Closed Requests",
+            "Contacted",
+            "Not Contacted",
+          ].map((item, i) => (
+            <button
+              key={i}
+              onClick={() => setTab(item)}
+              className={classNames("font-medium", {
+                "text-[#2563EB]": tab === item,
+              })}
+            >
+              {item}
+            </button>
+          ))}
         </div>
 
         <div className="overflow-hidden rounded-xl">
@@ -204,14 +229,14 @@ const AdminEnterprisePage = () => {
                     Loading requests...
                   </td>
                 </tr>
-              ) : filteredRequests.length === 0 ? (
+              ) : requests?.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-4 text-center">
                     No requests found.
                   </td>
                 </tr>
               ) : (
-                filteredRequests.map((request) => (
+                requests?.map((request) => (
                   <tr key={request.id} className="hover:bg-gray-100 w-full">
                     <td
                       className="py-3 px-6 text-left"
@@ -230,10 +255,10 @@ const AdminEnterprisePage = () => {
                     >
                       <span
                         className={`p-1.5 text-xs rounded-md capitalize ${getStatusColor(
-                          request.status
+                          request.is_open
                         )}`}
                       >
-                        {request.status}
+                        {getStatusText(request.is_open)}
                       </span>
                     </td>
                     <td
@@ -271,15 +296,8 @@ const AdminEnterprisePage = () => {
                         >
                           View
                         </button>
-                        {request.status === "pending" && (
-                          <button
-                            className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium"
-                            onClick={() => setRequestToContact(request)}
-                          >
-                            Contact
-                          </button>
-                        )}
-                        {request.status !== "closed" && (
+
+                        {request.is_open && (
                           <button
                             className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium min-w-[50px]"
                             onClick={() => setRequestToClose(request)}
@@ -287,15 +305,14 @@ const AdminEnterprisePage = () => {
                             Close
                           </button>
                         )}
-                        {request.status !== "contacted" &&
-                          request.status !== "closed" && (
-                            <button
-                              className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium min-w-[55px]"
-                              onClick={() => setRequestToContact(request)}
-                            >
-                              Mark as Contacted
-                            </button>
-                          )}
+                        {!request.contacted && (
+                          <button
+                            className="bg-[#2563EB] text-white px-3 py-1.5 rounded-lg text-xs font-medium min-w-[55px]"
+                            onClick={() => setRequestToContact(request)}
+                          >
+                            Mark as Contacted
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -329,7 +346,7 @@ const AdminEnterprisePage = () => {
             <Button
               className="bg-[#FF9500] hover:bg-[#FF9500]/90 text-white"
               onClick={() =>
-                requestToContact && contactMutation.mutate(requestToContact.id)
+                requestToContact && contactMutation.mutate(requestToContact)
               }
               disabled={contactMutation.isPending}
             >
@@ -362,7 +379,7 @@ const AdminEnterprisePage = () => {
             <Button
               className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-white"
               onClick={() =>
-                requestToClose && closeMutation.mutate(requestToClose.id)
+                requestToClose && closeMutation.mutate(requestToClose)
               }
               disabled={closeMutation.isPending}
             >
@@ -430,10 +447,18 @@ const AdminEnterprisePage = () => {
                 </div>
                 <div
                   className={`inline-block px-2 py-1 text-sm rounded-md capitalize ${getStatusColor(
-                    requestToView.status
+                    requestToView.is_open
                   )}`}
                 >
-                  {requestToView.status}
+                  {getStatusText(requestToView.is_open)}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-[#64748B] font-semibold mb-1">
+                  Contacted
+                </div>
+                <div className="font-bold text-base">
+                  {requestToView.contacted ? "Yes" : "No"}
                 </div>
               </div>
               <div>
