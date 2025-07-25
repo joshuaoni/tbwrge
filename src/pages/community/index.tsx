@@ -19,6 +19,7 @@ import {
 import { getTags } from "@/actions/get-tags";
 import { Tag } from "@/actions/get-tags";
 import { useRouter } from "next/router";
+import SEO from "@/components/seo";
 
 const CommunityPage = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -231,179 +232,189 @@ const CommunityPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommunityDashHeader />
+    <>
+      <SEO
+        title="Community - Candivet"
+        description="Join the Candivet community to connect with professionals, share insights, and stay updated with the latest trends in hiring and recruitment."
+        canonical="https://candivet.com/community"
+        ogType="website"
+      />
+      <div className="min-h-screen bg-gray-50">
+        <CommunityDashHeader />
 
-      <div className="mx-auto pt-16 md:pt-[90px] px-4 md:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-          {/* Left Sidebar - Popular Tags */}
-          <div className="hidden md:block md:col-span-3">
-            <div className="bg-white rounded-xl p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)]">
-              <h2 className="text-lg font-semibold pl-2 mb-4">Popular Tags</h2>
-              <div className="space-y-2">
-                {formattedTags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
-                  >
+        <div className="mx-auto pt-16 md:pt-[90px] px-4 md:px-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            {/* Left Sidebar - Popular Tags */}
+            <div className="hidden md:block md:col-span-3">
+              <div className="bg-white rounded-xl p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)]">
+                <h2 className="text-lg font-semibold pl-2 mb-4">
+                  Popular Tags
+                </h2>
+                <div className="space-y-2">
+                  {formattedTags.map((tag) => (
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center`}
-                      style={{ backgroundColor: tag.bg }}
+                      key={tag.id}
+                      className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
                     >
-                      {tag.icon}
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center`}
+                        style={{ backgroundColor: tag.bg }}
+                      >
+                        {tag.icon}
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="text-[14px] font-semibold leading-tight">
+                          {tag.name}
+                        </h3>
+                        <span className="text-[12px] text-gray-700 mt-0.5">
+                          {tag.posts} Posted • {tag.status}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <h3 className="text-[14px] font-semibold leading-tight">
-                        {tag.name}
-                      </h3>
-                      <span className="text-[12px] text-gray-700 mt-0.5">
-                        {tag.posts} Posted • {tag.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content - Posts Feed */}
-          <div className={`${outfit.className} col-span-1 md:col-span-6`}>
-            {/* Mobile Popular Tags Grid */}
-            <div className="md:hidden pt-[20px] mb-4">
-              <h2 className="text-base font-semibold mb-3">Popular Tags</h2>
-              <div className="grid grid-cols-2 gap-2">
-                {formattedTags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className="flex items-center gap-2 bg-white p-2.5 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer"
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0`}
-                      style={{ backgroundColor: tag.bg }}
-                    >
-                      {tag.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-[13px] font-semibold truncate">
-                        {tag.name}
-                      </h3>
-                      <p className="text-[11px] text-gray-600 truncate">
-                        {tag.posts} • {tag.status}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
-            {isCreatingPost ? (
-              <CreatePost
-                onClose={() => {
-                  setIsCreatingPost(false);
-                  setEditingPost(null);
-                }}
-                post={editingPost || undefined}
-              />
-            ) : (
-              <>
-                {/* Create Post Card */}
-                {!selectedPost && (
-                  <div
-                    className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all"
-                    onClick={() => setIsCreatingPost(true)}
-                  >
-                    <div className="flex items-center gap-2 md:gap-3">
-                      {userData?.user?.profile_picture ? (
-                        <Image
-                          src={userData?.user?.profile_picture}
-                          alt={`${userData?.user?.name} `}
-                          width={30}
-                          height={30}
-                          className="rounded-full md:w-[30px] md:h-[30px]"
-                        />
-                      ) : (
-                        <UserCircleIcon className="w-8 h-8 text-gray-500" />
-                      )}
-                      <div className="flex-1 text-gray-500 text-xs md:text-sm">
-                        Let's share what's going on your mind...
+            {/* Main Content - Posts Feed */}
+            <div className={`${outfit.className} col-span-1 md:col-span-6`}>
+              {/* Mobile Popular Tags Grid */}
+              <div className="md:hidden pt-[20px] mb-4">
+                <h2 className="text-base font-semibold mb-3">Popular Tags</h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {formattedTags.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className="flex items-center gap-2 bg-white p-2.5 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer"
+                    >
+                      <div
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0`}
+                        style={{ backgroundColor: tag.bg }}
+                      >
+                        {tag.icon}
                       </div>
-                      <div className="px-3 md:px-4 py-2 md:py-2.5 bg-[#065844] text-white rounded-lg text-xs md:text-sm font-medium hover:bg-[#054e3a] transition-colors whitespace-nowrap">
-                        Create Post
+                      <div className="min-w-0">
+                        <h3 className="text-[13px] font-semibold truncate">
+                          {tag.name}
+                        </h3>
+                        <p className="text-[11px] text-gray-600 truncate">
+                          {tag.posts} • {tag.status}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                )}
+                  ))}
+                </div>
+              </div>
 
-                {/* Post Cards or Post Details */}
-                {selectedPost ? (
-                  <PostDetails
-                    post={selectedPost}
-                    onClose={() => setSelectedPost(null)}
-                  />
-                ) : isLoading ? (
-                  <div className="text-center py-4">Loading posts...</div>
-                ) : error ? (
-                  <div className="text-center text-red-500 py-4">
-                    Error loading posts. Please try again.
-                  </div>
-                ) : (
-                  posts.map((post) => (
-                    <PostCard
-                      key={post.id}
-                      post={post}
-                      userData={userData}
-                      setSelectedPost={setSelectedPost}
-                      setEditingPost={setEditingPost}
-                      setIsCreatingPost={setIsCreatingPost}
-                      deletePostMutation={deletePostMutation}
-                      upvoteMutation={upvoteMutation}
+              {isCreatingPost ? (
+                <CreatePost
+                  onClose={() => {
+                    setIsCreatingPost(false);
+                    setEditingPost(null);
+                  }}
+                  post={editingPost || undefined}
+                />
+              ) : (
+                <>
+                  {/* Create Post Card */}
+                  {!selectedPost && (
+                    <div
+                      className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all"
+                      onClick={() => setIsCreatingPost(true)}
+                    >
+                      <div className="flex items-center gap-2 md:gap-3">
+                        {userData?.user?.profile_picture ? (
+                          <Image
+                            src={userData?.user?.profile_picture}
+                            alt={`${userData?.user?.name} `}
+                            width={30}
+                            height={30}
+                            className="rounded-full md:w-[30px] md:h-[30px]"
+                          />
+                        ) : (
+                          <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                        )}
+                        <div className="flex-1 text-gray-500 text-xs md:text-sm">
+                          Let's share what's going on your mind...
+                        </div>
+                        <div className="px-3 md:px-4 py-2 md:py-2.5 bg-[#065844] text-white rounded-lg text-xs md:text-sm font-medium hover:bg-[#054e3a] transition-colors whitespace-nowrap">
+                          Create Post
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Post Cards or Post Details */}
+                  {selectedPost ? (
+                    <PostDetails
+                      post={selectedPost}
+                      onClose={() => setSelectedPost(null)}
                     />
-                  ))
-                )}
-              </>
-            )}
+                  ) : isLoading ? (
+                    <div className="text-center py-4">Loading posts...</div>
+                  ) : error ? (
+                    <div className="text-center text-red-500 py-4">
+                      Error loading posts. Please try again.
+                    </div>
+                  ) : (
+                    posts.map((post) => (
+                      <PostCard
+                        key={post.id}
+                        post={post}
+                        userData={userData}
+                        setSelectedPost={setSelectedPost}
+                        setEditingPost={setEditingPost}
+                        setIsCreatingPost={setIsCreatingPost}
+                        deletePostMutation={deletePostMutation}
+                        upvoteMutation={upvoteMutation}
+                      />
+                    ))
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Right Sidebar - Advertisement */}
+            <div className="hidden md:block md:col-span-3 space-y-[14px]">
+              {[1, 2].map((post) => (
+                <div
+                  key={post}
+                  className="h-[300px] bg-[#1E2937] rounded-xl p-4 text-white"
+                >
+                  <h2 className="text-lg font-semibold mb-4"></h2>
+                </div>
+              ))}
+              <h1 className="text-lg text-center font-semibold mb-4">
+                Advertisement
+              </h1>
+            </div>
           </div>
 
-          {/* Right Sidebar - Advertisement */}
-          <div className="hidden md:block md:col-span-3 space-y-[14px]">
-            {[1, 2].map((post) => (
-              <div
-                key={post}
-                className="h-[300px] bg-[#1E2937] rounded-xl p-4 text-white"
+          {/* Add pagination controls at the bottom of the posts list */}
+          {!selectedPost && !isCreatingPost && (
+            <div className="flex justify-center items-center gap-4 mt-6 mb-8">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+                disabled={currentPage === 0 || isLoading}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <h2 className="text-lg font-semibold mb-4"></h2>
-              </div>
-            ))}
-            <h1 className="text-lg text-center font-semibold mb-4">
-              Advertisement
-            </h1>
-          </div>
+                Previous
+              </button>
+              <span className="text-sm text-gray-600">
+                Page {currentPage + 1}
+              </span>
+              <button
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                disabled={posts.length === 0 || isLoading}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
-
-        {/* Add pagination controls at the bottom of the posts list */}
-        {!selectedPost && !isCreatingPost && (
-          <div className="flex justify-center items-center gap-4 mt-6 mb-8">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-              disabled={currentPage === 0 || isLoading}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <span className="text-sm text-gray-600">
-              Page {currentPage + 1}
-            </span>
-            <button
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              disabled={posts.length === 0 || isLoading}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,48 @@
-# *
+# Allow all crawlers
 User-agent: *
 Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: Sogou
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+# Block admin and private areas
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow important pages
+Allow: /about
+Allow: /blog
+Allow: /community
+Allow: /pricing
+Allow: /tools
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /cookie-policy
 
 # Host
 Host: https://www.candivet.com
