@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useUserStore } from "@/hooks/use-user-store";
 import { useTranslation } from "react-i18next";
 import { outfit } from "@/constants/app";
+import { useQuery } from "@tanstack/react-query";
+import { getUnreadMessagesCount } from "@/actions/messages";
 
 interface DashboardHeaderProps {
   searchTerm: string;
@@ -21,6 +23,14 @@ const DashboardHeader = ({
   const router = useRouter();
   const { userData } = useUserStore();
 
+  // Fetch unread messages count
+  const { data: unreadMessages } = useQuery({
+    queryKey: ["unreadMessages"],
+    queryFn: () => getUnreadMessagesCount(userData?.token || ""),
+    enabled: !!userData?.token,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+  console.log("unreadMessages: ", unreadMessages);
   // Trial badge logic
   let trialBadge = null;
   if (userData?.user?.on_freetrial && userData?.user?.plan_expires) {
@@ -68,7 +78,7 @@ const DashboardHeader = ({
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push("/dashboard/talent-pool/chat")}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
               title={t("common.chat")}
             >
               <Image
@@ -78,6 +88,13 @@ const DashboardHeader = ({
                 height={24}
                 className="w-6 h-6"
               />
+              {/* Unread messages badge */}
+              {unreadMessages?.count !== undefined &&
+                unreadMessages.count > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold border-2 border-white shadow-sm z-10">
+                    {unreadMessages.count > 99 ? "99+" : unreadMessages.count}
+                  </span>
+                )}
             </button>
             <LanguageSelectorDropDown fullPageTranslation={true} />
             {userData?.user?.role !== "job_seeker" && (

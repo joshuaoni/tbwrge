@@ -110,6 +110,7 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+  GET_UNREAD_MESSAGES: `${MAIN_URL}/talent/get-unread-chats-count/ `,
 
   MANAGE_CHAT: (feedback_id: string) =>
     `${CHAT_URL}/chat/manage-chat/${feedback_id}/`,
