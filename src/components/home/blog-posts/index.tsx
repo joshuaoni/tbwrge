@@ -297,13 +297,13 @@ export const BlogPostsWithPagination = () => {
   );
 };
 
-const BlogCard = ({ blog }: { blog: BlogItem }) => {
+export const BlogCard = ({ blog }: { blog: BlogItem }) => {
   const router = useRouter();
 
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col shadow-md h-[420px]"
+      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col shadow-md h-[444px]"
     >
       <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
         <Image
@@ -315,6 +315,12 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
         />
       </div>
       <div className="flex-1 flex flex-col px-6 min-h-0">
+        {/* Article Pill */}
+        <div className="mb-2">
+          <span className="inline-block bg-purple-100 text-purple-700 text-xs font-medium px-3 py-1 rounded-full">
+            Article
+          </span>
+        </div>
         <div className="text-primary font-semibold text-xl leading-normal mb-2 line-clamp-2">
           {blog.title}
         </div>
@@ -326,7 +332,18 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
         />
       </div>
       {/* Author Section */}
-      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 pb-4 border-t border-gray-100 bg-white">
+      <div className="flex items-center justify-start w-full gap-2 px-6 pt-3 pb-4 border-t border-gray-100">
+        {blog.user?.profile_picture ? (
+          <Image
+            src={blog.user.profile_picture}
+            alt={blog.user.name || "User"}
+            width={48}
+            height={48}
+            className="rounded-full object-cover w-12 h-12"
+          />
+        ) : (
+          <FaUserCircle className="w-12 h-12 text-gray-400" />
+        )}
         <div>
           <p className="toppy font-semibold text-gray-900 text-[15px] leading-none m-0">
             {blog.user?.name || "Anonymous"}
@@ -346,17 +363,6 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
             })}
           </p>
         </div>
-        {blog.user?.profile_picture ? (
-          <Image
-            src={blog.user.profile_picture}
-            alt={blog.user.name || "User"}
-            width={48}
-            height={48}
-            className="rounded-full object-cover w-12 h-12"
-          />
-        ) : (
-          <FaUserCircle className="w-12 h-12 text-gray-400" />
-        )}
       </div>
     </div>
   );
