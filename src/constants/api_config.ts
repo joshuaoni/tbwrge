@@ -84,6 +84,8 @@ export const API_CONFIG = {
   DELETE_ACCOUNT: `${MAIN_URL}/profile/delete-account/`,
   GET_ACTIVITIES: `${MAIN_URL}/profile/get-activities/`,
   REQUEST_ENTERPRISE: `${MAIN_URL}/profile/request-enterprise/`,
+  GET_PREMIUM: (freetrial: boolean) =>
+    `${MAIN_URL}/profile/get-premium/?freetrial=${freetrial}`,
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,

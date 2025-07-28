@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { montserrat, mullish, outfit, poppins } from "@/constants/app";
 import { BillingPlanCardProps } from "@/interfaces/billing.interface";
 import { BillingContext } from "@/providers/billing.context";
+import { getPremium } from "@/actions/premium";
+import { useUserStore } from "@/hooks/use-user-store";
 import classNames from "classnames";
 import { ArrowLeft, Check, ChevronRight, ChevronLeft, X } from "lucide-react";
 import { useContext, useState } from "react";
@@ -269,8 +271,9 @@ const renderFeatureLabel = (label: string, subLabel?: string) => {
 };
 
 function BillingChooseView() {
-  const ctx = useContext(BillingContext);
   const { t } = useTranslation();
+  const ctx = useContext(BillingContext);
+  const { userData } = useUserStore();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentFeatureSlide, setCurrentFeatureSlide] = useState(0);
 
@@ -296,6 +299,29 @@ function BillingChooseView() {
         (prev - 1 + translatedPricingPlans.length) %
         translatedPricingPlans.length
     );
+  };
+
+  const handleGetStarted = async (planName: string) => {
+    if (planName === "Enterprise") {
+      ctx.goTo("enterprise");
+      return;
+    }
+
+    // For Basic and Pro plans, call premium action with freetrial=false
+    if (planName === "Basic" || planName === "Pro") {
+      try {
+        const response = await getPremium(userData?.token || "", false);
+
+        // If response is a URL string, redirect to it
+        if (typeof response === "string" && response.startsWith("http")) {
+          window.location.href = response;
+        } else {
+          console.error("Unexpected response format:", response);
+        }
+      } catch (error) {
+        console.error("Failed to get premium URL:", error);
+      }
+    }
   };
 
   // Get translated plans data
@@ -550,11 +576,7 @@ function BillingChooseView() {
 
                   <div className="mt-2">
                     <Button
-                      onClick={() => {
-                        if (plan.plan === "Enterprise") {
-                          ctx.goTo("enterprise");
-                        }
-                      }}
+                      onClick={() => handleGetStarted(plan.plan)}
                       className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold"
                     >
                       {t("settings.billing.getStarted")}
@@ -629,13 +651,7 @@ function BillingChooseView() {
 
             <div className="mt-2">
               <Button
-                onClick={() => {
-                  if (
-                    plan.plan === t("settings.billing.plans.enterprise.name")
-                  ) {
-                    ctx.goTo("enterprise");
-                  }
-                }}
+                onClick={() => handleGetStarted(plan.plan)}
                 className="bg-[#E5F4F2] text-[12px] py-6 w-full text-[#009379] rounded-2xl font-bold"
               >
                 {t("settings.billing.getStarted")}

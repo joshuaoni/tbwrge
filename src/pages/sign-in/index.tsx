@@ -69,8 +69,6 @@ const Index = () => {
         addUser({
           authenticatedUser: {
             ...res.user,
-            seen_freetrial_popup: false,
-            on_freetrial: true,
           },
           token: res.access_token,
         });
