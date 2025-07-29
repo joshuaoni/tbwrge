@@ -222,7 +222,10 @@ const LandingFooter = () => {
                 </a>
               </p>
               <p>
-                <a href="/community" className="cursor-pointer hover:underline">
+                <a
+                  href="/dashboard/community"
+                  className="cursor-pointer hover:underline"
+                >
                   Community
                 </a>
               </p>

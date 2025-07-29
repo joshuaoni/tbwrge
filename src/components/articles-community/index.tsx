@@ -26,7 +26,7 @@ const PostCard = ({
     if (isBlog) {
       router.push(`/blog/${post.id}`);
     } else {
-      router.push(`/community?postId=${post.id}`);
+      router.push(`/dashboard/community?postId=${post.id}`);
     }
   };
   return (

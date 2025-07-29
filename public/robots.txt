@@ -30,6 +30,8 @@ Disallow: /
 # Block admin and private areas
 Disallow: /admin/
 Disallow: /dashboard/
+# Allow community page specifically
+Allow: /dashboard/community
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
@@ -37,7 +39,6 @@ Disallow: /static/
 # Allow important pages
 Allow: /about
 Allow: /blog
-Allow: /community
 Allow: /pricing
 Allow: /tools
 Allow: /privacy-policy

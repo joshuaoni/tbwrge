@@ -141,7 +141,7 @@ const LeftSideBar = () => {
     {
       title: t("nav.community"),
       icon: <Users2 size={20} />,
-      link: "/community",
+      link: "/dashboard/community",
       active: false,
     },
   ]);
@@ -185,7 +185,7 @@ const LeftSideBar = () => {
       {
         title: t("nav.community"),
         icon: <Users2 size={20} />,
-        link: "/community",
+        link: "/dashboard/community",
         active: false,
       },
     ]);
