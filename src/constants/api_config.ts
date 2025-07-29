@@ -89,6 +89,7 @@ export const API_CONFIG = {
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,
+  AI_SEARCH_JOBS: `${MAIN_URL}/job/source-jobs/`,
 
   CREATE_BLOG: `${MAIN_URL}/blog/create-post/`,
   GET_BLOGS: `${MAIN_URL}/blog/get-posts/`,
