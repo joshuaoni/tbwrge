@@ -37,21 +37,24 @@ const CommunityPage = () => {
   } = useQuery({
     queryKey: ["posts", currentPage],
     queryFn: async () => {
-      if (!userData?.token) {
-        throw new Error("No authentication token found");
-      }
-      return getPosts(userData.token, currentPage);
+      // if (!userData?.token) {
+      //   throw new Error("No authentication token found");
+      // }
+      return getPosts(currentPage);
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const { data: tags = [], isLoading: tagsLoading } = useQuery({
     queryKey: ["tags", currentPage],
     queryFn: () => {
-      if (!userData?.token) throw new Error("No authentication token found");
-      return getTags(userData.token, currentPage);
+      // if (!userData?.token) throw new Error("No authentication token found");
+      return getTags(
+        // userData.token,
+        currentPage
+      );
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const formattedTags = useMemo(() => {
@@ -70,24 +73,59 @@ const CommunityPage = () => {
   const upvoteMutation = useMutation({
     mutationFn: async (postId: string) => {
       if (!userData?.token) {
-        throw new Error("Please sign in to vote on posts");
+        // Redirect to sign-in instead of throwing error
+        router.push(
+          `/sign-in?redirect=${encodeURIComponent("/dashboard/community")}`
+        );
+        return;
       }
       return togglePostVote(postId, userData.token);
     },
-    onSuccess: (_, postId) => {
-      const post = posts.find((p) => p.id.toString() === postId);
-      toast.success(
-        post?.reacted
-          ? "Post downvoted successfully"
-          : "Post upvoted successfully"
-      );
-      // Invalidate and refetch posts with current page
-      queryClient.invalidateQueries({
-        queryKey: ["posts", currentPage],
-        exact: true,
+    onMutate: async (postId) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["posts", currentPage] });
+
+      // Snapshot the previous value
+      const previousPosts = queryClient.getQueryData(["posts", currentPage]);
+
+      // Get the current post state before optimistic update
+      const currentPost = Array.isArray(previousPosts)
+        ? previousPosts.find((p: Post) => p.id.toString() === postId)
+        : null;
+      const wasReacted = currentPost?.reacted || false;
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["posts", currentPage], (old: any) => {
+        if (!old) return old;
+        return old.map((post: Post) => {
+          if (post.id.toString() === postId) {
+            return {
+              ...post,
+              reacted: !post.reacted,
+              upvotes: post.reacted ? post.upvotes - 1 : post.upvotes + 1,
+            };
+          }
+          return post;
+        });
       });
+
+      // Return a context object with the snapshotted value and the previous reacted state
+      return { previousPosts, wasReacted };
     },
-    onError: (error: Error) => {
+    onSuccess: (_, postId, context) => {
+      // Use the context to determine the correct toast message
+      const wasReacted = context?.wasReacted || false;
+      toast.success(
+        wasReacted ? "Post downvoted successfully" : "Post upvoted successfully"
+      );
+      // Don't immediately invalidate to prevent flash - let optimistic update persist
+      // The data will be fresh on next page load or manual refresh
+    },
+    onError: (error: Error, postId, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["posts", currentPage], context.previousPosts);
+      }
       toast.error(error.message || "Failed to vote on post");
     },
   });
@@ -196,12 +234,15 @@ const CommunityPage = () => {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            if (!userData?.token) {
+              return; // Just return without redirecting
+            }
             upvoteMutation.mutate(post.id.toString());
           }}
-          disabled={upvoteMutation.isPending}
+          disabled={upvoteMutation.isPending || !userData?.token}
           className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
             post.reacted ? "bg-green-50 border-green-300" : ""
-          }`}
+          } ${!userData?.token ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           <Image
             src="/like.png"
@@ -216,7 +257,16 @@ const CommunityPage = () => {
             {post.reacted ? "Upvoted" : "Upvote"}
           </span>
         </button>
-        <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
+        <button
+          onClick={(e) => {
+            // Always open the post for both authenticated and non-authenticated users
+            // The comment functionality will be handled in the PostDetails component
+          }}
+          disabled={!userData?.token}
+          className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
+            !userData?.token ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
           <Image
             src="/brush.png"
             alt="Comment"
@@ -253,8 +303,15 @@ const CommunityPage = () => {
                 {/* Create Post Card */}
                 {!selectedPost && (
                   <div
-                    className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all"
-                    onClick={() => setIsCreatingPost(true)}
+                    className={`bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all ${
+                      !userData?.token ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={() => {
+                      if (!userData?.token) {
+                        return; // Just return without redirecting
+                      }
+                      setIsCreatingPost(true);
+                    }}
                   >
                     <div className="flex items-center gap-2 md:gap-3">
                       {userData?.user?.profile_picture ? (

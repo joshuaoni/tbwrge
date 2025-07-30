@@ -130,10 +130,9 @@ const ArticlesCommunity = () => {
   } = useQuery({
     queryKey: ["posts", 0],
     queryFn: async () => {
-      if (!userData?.token) throw new Error("No authentication token found");
-      return getPosts(userData.token, 0);
+      return getPosts(0);
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const {
@@ -145,7 +144,7 @@ const ArticlesCommunity = () => {
     queryFn: async () => {
       return await getBlogs({ approved: true, page: 0 });
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   return (

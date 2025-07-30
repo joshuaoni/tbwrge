@@ -26,6 +26,7 @@ const resources = {
         feedbackSupport: "Feedback & Support",
         adminDashboard: "Admin Dashboard",
         aiSearch: "AI Job Search",
+        signIn: "Sign In",
       },
       dashboard: {
         welcome: "Welcome to your dashboard",
@@ -51,6 +52,15 @@ const resources = {
           seePricing: "See Pricing",
           freeTrial: "14-Day Free Trial",
         },
+      },
+      paymentRequiredModal: {
+        title: "Plan Upgrade Required",
+        description:
+          "Your current plan doesn't include access to the {{featureName}}",
+        upgradeNow: "Upgrade Now",
+        cancel: "Cancel",
+        upgradeNowDescription:
+          "Upgrade now to access all premium features and enhance your experience.",
       },
       jobs: {
         title: "Job Postings",
@@ -418,10 +428,10 @@ const resources = {
         upvotes: "Upvotes",
       },
       logout: {
-        title: "Logout",
-        dialogTitle: "LogOut",
-        confirmMessage: "Are you sure you want to logout from your account?",
-        confirmButton: "Yes, Logout",
+        title: "Log Out",
+        dialogTitle: "Log Out",
+        confirmMessage: "Are you sure you want to log out from your account?",
+        confirmButton: "Yes, Log Out",
       },
       common: {
         save: "Save",
@@ -669,6 +679,9 @@ const resources = {
           loadingCompanies: "Loading companies...",
           noCompaniesFound: "No companies found",
           maxFilesError: "You can only upload a maximum of 5 files.",
+          featureName: "Job Post Generator",
+          featureDescription:
+            "Upgrade your plan to unlock this powerful tool and create professional job posts.",
         },
       },
       screening: {
@@ -1862,6 +1875,7 @@ const resources = {
         feedbackSupport: "Commentaires et support",
         adminDashboard: "Tableau de bord admin",
         aiSearch: "Recherche d'emploi avec IA",
+        signIn: "Se connecter",
       },
       dashboard: {
         welcome: "Bienvenue sur votre tableau de bord",
@@ -1888,6 +1902,14 @@ const resources = {
           seePricing: "Voir les prix",
           freeTrial: "Essai gratuit de 14 jours",
         },
+      },
+      paymentRequiredModal: {
+        title: "Mise à niveau du plan requise",
+        description: "Votre plan actuel n'inclut pas l'accès à {{featureName}}",
+        upgradeNow: "Mettre à niveau maintenant",
+        cancel: "Annuler",
+        upgradeNowDescription:
+          "Mettez à niveau maintenant pour accéder à toutes les fonctionnalités premium et améliorer votre expérience.",
       },
       jobs: {
         title: "Offres d'emploi",
@@ -2518,6 +2540,9 @@ const resources = {
           noCompaniesFound: "Aucune entreprise trouvée",
           maxFilesError:
             "Vous ne pouvez télécharger qu'un maximum de 5 fichiers.",
+          featureName: "Générateur d'offre d'emploi",
+          featureDescription:
+            "Mettez à niveau votre plan pour débloquer cet outil puissant et créer des offres d'emploi professionnelles.",
         },
       },
       screening: {
@@ -3737,6 +3762,7 @@ const resources = {
         feedbackSupport: "Comentarios y soporte",
         adminDashboard: "Panel de administración",
         aiSearch: "Búsqueda de empleo con IA",
+        signIn: "Iniciar sesión",
       },
       dashboard: {
         welcome: "Bienvenido a tu panel de control",
@@ -3763,6 +3789,14 @@ const resources = {
           seePricing: "Ver precios",
           freeTrial: "Trial gratuito de 14 días",
         },
+      },
+      paymentRequiredModal: {
+        title: "Actualización de plan requerida",
+        description: "Tu plan actual no incluye acceso a {{featureName}}",
+        upgradeNow: "Actualizar ahora",
+        cancel: "Cancelar",
+        upgradeNowDescription:
+          "Actualiza ahora para acceder a todas las funciones premium y mejorar tu experiencia.",
       },
       jobs: {
         title: "Ofertas de trabajo",
@@ -4356,6 +4390,9 @@ const resources = {
           loadingCompanies: "Cargando empresas...",
           noCompaniesFound: "No se encontraron empresas",
           maxFilesError: "Solo puede subir un máximo de 5 archivos.",
+          featureName: "Generador de oferta de trabajo",
+          featureDescription:
+            "Actualice su plan para desbloquear esta poderosa herramienta y crear ofertas de trabajo profesionales.",
         },
       },
       screening: {
@@ -5570,6 +5607,7 @@ const resources = {
         feedbackSupport: "Feedback & Support",
         adminDashboard: "Admin-Dashboard",
         aiSearch: "AI-Job-Suche",
+        signIn: "Anmelden",
       },
       dashboard: {
         welcome: "Willkommen zu Ihrem Dashboard",
@@ -5596,6 +5634,15 @@ const resources = {
           seePricing: "Preise ansehen",
           freeTrial: "14-Tage-Testphase",
         },
+      },
+      paymentRequiredModal: {
+        title: "Plan-Upgrade erforderlich",
+        description:
+          "Ihr aktueller Plan beinhaltet keinen Zugriff auf {{featureName}}",
+        upgradeNow: "Jetzt upgraden",
+        cancel: "Abbrechen",
+        upgradeNowDescription:
+          "Jetzt upgraden, um Zugriff auf alle Premium-Funktionen zu erhalten und Ihr Erlebnis zu verbessern.",
       },
       jobs: {
         title: "Stellenausschreibungen",
@@ -5913,6 +5960,9 @@ const resources = {
           loadingCompanies: "Unternehmen werden geladen...",
           noCompaniesFound: "Keine Unternehmen gefunden",
           maxFilesError: "Sie können maximal 5 Dateien hochladen.",
+          featureName: "Stellenausschreibung Generator",
+          featureDescription:
+            "Upgrade your plan to unlock this powerful tool and create professional job posts.",
         },
       },
       coverLetterTools: {
@@ -7403,6 +7453,7 @@ const resources = {
         feedbackSupport: "الملاحظات والدعم",
         adminDashboard: "لوحة تحكم المشرف",
         aiSearch: "بحث بالذكاء الاصطناعي للوظائف",
+        signIn: "تسجيل الدخول",
       },
       dashboard: {
         welcome: "مرحباً بك في لوحة التحكم",
@@ -7428,6 +7479,14 @@ const resources = {
           seePricing: "اعرف المزيد",
           freeTrial: "فترة تجربة مجانية لمدة 14 يوم",
         },
+      },
+      paymentRequiredModal: {
+        title: "مطلوب ترقية الخطة",
+        description: "خطتك الحالية لا تتضمن الوصول إلى {{featureName}}",
+        upgradeNow: "الترقية الآن",
+        cancel: "إلغاء",
+        upgradeNowDescription:
+          "قم بالترقية الآن للوصول إلى جميع الميزات المميزة وتحسين تجربتك.",
       },
       jobs: {
         title: "عروض العمل",
@@ -7735,6 +7794,9 @@ const resources = {
           loadingCompanies: "جاري تحميل الشركات...",
           noCompaniesFound: "لم يتم العثور على شركات",
           maxFilesError: "يمكنك رفع 5 ملفات كحد أقصى.",
+          featureName: "مولد إعلان الوظيفة",
+          featureDescription:
+            "ترقية خطتك لتفعيل هذه الأداة القوية وإنشاء إعلانات وظيفية مهنية.",
         },
       },
       coverLetterTools: {
@@ -9187,6 +9249,7 @@ const resources = {
         feedbackSupport: "Feedback e suporte",
         adminDashboard: "Painel de administração",
         aiSearch: "Pesquisa de emprego com IA",
+        signIn: "Entrar",
       },
       dashboard: {
         welcome: "Bem-vindo ao seu painel",
@@ -9213,6 +9276,14 @@ const resources = {
           seePricing: "Ver preços",
           freeTrial: "Trial gratuito de 14 dias",
         },
+      },
+      paymentRequiredModal: {
+        title: "Atualização de plano necessária",
+        description: "Seu plano atual não inclui acesso ao {{featureName}}",
+        upgradeNow: "Atualizar agora",
+        cancel: "Cancelar",
+        upgradeNowDescription:
+          "Atualize agora para acessar todos os recursos premium e melhorar sua experiência.",
       },
       jobs: {
         title: "Vagas de emprego",
@@ -9527,6 +9598,9 @@ const resources = {
           loadingCompanies: "Carregando empresas...",
           noCompaniesFound: "Nenhuma empresa encontrada",
           maxFilesError: "Você pode fazer upload de no máximo 5 arquivos.",
+          featureName: "Gerador de Anúncio de Emprego",
+          featureDescription:
+            "Atualize seu plano para desbloquear esta poderosa ferramenta e criar anúncios de emprego profissionais.",
         },
       },
       coverLetterTools: {
@@ -11017,6 +11091,7 @@ const resources = {
         feedbackSupport: "反馈和支持",
         adminDashboard: "管理员仪表板",
         aiSearch: "AI工作搜索",
+        signIn: "登录",
       },
       dashboard: {
         welcome: "欢迎来到您的仪表板",
@@ -11042,6 +11117,13 @@ const resources = {
           seePricing: "查看定价",
           freeTrial: "14天免费试用",
         },
+      },
+      paymentRequiredModal: {
+        title: "需要升级计划",
+        description: "您当前的计划不包含对 {{featureName}} 的访问权限",
+        upgradeNow: "立即升级",
+        cancel: "取消",
+        upgradeNowDescription: "立即升级以访问所有高级功能并提升您的体验。",
       },
       jobs: {
         title: "职位发布",
@@ -11338,6 +11420,9 @@ const resources = {
           loadingCompanies: "正在加载公司...",
           noCompaniesFound: "未找到公司",
           maxFilesError: "您最多只能上传5个文件。",
+          featureName: "职位发布生成器",
+          featureDescription:
+            "升级您的计划以解锁此强大工具并创建专业职位发布。",
         },
       },
       coverLetterTools: {

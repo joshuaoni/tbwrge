@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import ArticleFileGroup from "@/components/dashboard/submit-article/article-file-group";
 import ArticlePreviewModal from "@/components/dashboard/submit-article/article-preview-modal";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -62,6 +63,7 @@ const DashboardSubmitArticlePage = () => {
   const [tc, setTc] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const profileImageInputRef = useRef<HTMLInputElement>(null);
 
@@ -95,7 +97,9 @@ const DashboardSubmitArticlePage = () => {
     mutationFn: async (data: SubmitAnArticleRequestData) =>
       await submitArticle(userData?.token ?? "", data),
     onError: (error: any) => {
-      if (error.response?.data?.detail) {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else if (error.response?.data?.detail) {
         error.response.data.detail.forEach((err: any) => {
           toast.error(`${err.loc.join(" ")} ${err.msg}`);
         });
@@ -359,6 +363,14 @@ const DashboardSubmitArticlePage = () => {
         onPublish={() => submitArticleMutation.mutate(formData)}
         formData={formData}
         isSubmitting={submitArticleMutation.isPending}
+      />
+
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("submitArticle.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and submit articles to the community with AI-powered insights and reach."
       />
     </DashboardWrapper>
   );

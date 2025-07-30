@@ -13,7 +13,7 @@ export interface Tag {
 export interface GetTagsResponse extends Tag {}
 
 export const getTags = async (
-  token: string,
+  // token: string,
   page: number = 0
 ): Promise<Tag[]> => {
   try {
@@ -21,7 +21,7 @@ export const getTags = async (
       method: "GET",
       url: API_CONFIG.GET_TAGS(page),
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
     };
     const response = await axios<any, AxiosResponse<GetTagsResponse[]>>(

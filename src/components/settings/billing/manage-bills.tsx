@@ -37,7 +37,7 @@ function BillingManageView() {
   const { t } = useTranslation();
   const userData = useUserStore();
 
-  console.log(userData?.userData?.user?.plan);
+  console.log("user plan: ", userData?.userData?.user);
 
   return (
     <div className={`${outfit.className}`}>

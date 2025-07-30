@@ -22,6 +22,7 @@ import { useUserStore } from "@/hooks/use-user-store";
 import { CVGeneratorResponse } from "@/interfaces/cv-generator.interface";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const Generator = () => {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ const Generator = () => {
   const [summary, setSummary] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   // Format duration to MM:SS
   const formatDuration = (seconds: number) => {
@@ -129,6 +131,15 @@ const Generator = () => {
         audioBlob
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while generating the CV"
+        );
+      }
     },
   });
 
@@ -708,6 +719,13 @@ const Generator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.generator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and generate professional CVs with AI-powered templates and insights."
+      />
     </DashboardWrapper>
   );
 };

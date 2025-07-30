@@ -12,6 +12,8 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 interface UploadedFile {
   file: File;
@@ -25,6 +27,7 @@ const Summarizer: React.FC = () => {
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [prompts, setPrompts] = useState<string[]>([]);
   const [jobDescription, setJobDescription] = useState("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +78,15 @@ const Summarizer: React.FC = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while summarizing the CV"
+        );
+      }
     },
   });
   const removeFile = (index: number) => {
@@ -288,6 +300,13 @@ const Summarizer: React.FC = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.summarizer.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and summarize CVs with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

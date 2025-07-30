@@ -22,17 +22,17 @@ export interface Post {
 export interface GetPostsResponse extends Post {}
 
 export const getPosts = async (
-  token: string,
+  // token: string,
   page: number = 0
 ): Promise<Post[]> => {
   try {
-    console.log({ token });
+    // console.log({ token });
     const options = {
       method: "POST",
       url: API_CONFIG.GET_POSTS(page),
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token}`,
+      // },
     };
     const response = await axios<any, AxiosResponse<GetPostsResponse[]>>(
       options

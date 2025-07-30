@@ -21,15 +21,24 @@ import { useForm } from "@/hooks/form";
 import { useUserStore } from "@/hooks/use-user-store";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const DashboardSupportPage = () => {
   const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   const supportMutation = useMutation({
     mutationFn: async (data: FeedbackSupportRequestData) =>
       await feedbackSupport(userData?.token ?? "", data),
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(error.message || "Failed to submit support request");
+      }
+    },
     onSuccess: () => {
       toast.success("Support request submitted successfully");
       form.resetForm();
@@ -163,6 +172,13 @@ const DashboardSupportPage = () => {
           </p>
         </section>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("support.title")}
+        featureDescription="Upgrade your plan to unlock priority support and get faster response times for your inquiries."
+      />
     </DashboardFeedbackSupportLayout>
   );
 };

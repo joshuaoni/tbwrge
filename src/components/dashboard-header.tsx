@@ -110,35 +110,45 @@ const DashboardHeader = ({
             )}
           </div>
 
-          {/* User Profile Section */}
-          <div className="flex items-center gap-3 border-l px-4 min-w-0 max-w-xs overflow-hidden">
-            {userData?.user?.profile_picture ? (
-              <Image
-                src={userData?.user?.profile_picture}
-                alt={`${userData?.user?.name}`}
-                width={30}
-                height={30}
-                className="rounded-full md:w-[30px] md:h-[30px] object-cover"
-              />
-            ) : (
-              <UserCircle size={32} className="text-gray-600" />
-            )}
-            <div className="flex flex-col min-w-0">
-              <p className="font-medium text-sm truncate overflow-ellipsis">
-                {userData?.user?.name || t("common.notSet")}
-              </p>
-              {/* <p className="text-xs text-gray-500 truncate overflow-ellipsis"> */}
-              <p className="text-sm text-gray-500 truncate overflow-ellipsis">
-                {userData?.user?.role === "root"
-                  ? "Admin"
-                  : userData?.user?.role === "recruiter"
-                  ? "Recruiter"
-                  : userData?.user?.role === "job_seeker"
-                  ? "Job Seeker"
-                  : "Not Set"}
-              </p>
+          {/* User Profile Section or Login */}
+          {userData?.token ? (
+            <div className="flex items-center gap-3 border-l px-4 min-w-0 max-w-xs overflow-hidden">
+              {userData?.user?.profile_picture ? (
+                <Image
+                  src={userData?.user?.profile_picture}
+                  alt={`${userData?.user?.name}`}
+                  width={30}
+                  height={30}
+                  className="rounded-full md:w-[30px] md:h-[30px] object-cover"
+                />
+              ) : (
+                <UserCircle size={32} className="text-gray-600" />
+              )}
+              <div className="flex flex-col min-w-0">
+                <p className="font-medium text-sm truncate overflow-ellipsis">
+                  {userData?.user?.name || t("common.notSet")}
+                </p>
+                <p className="text-sm text-gray-500 truncate overflow-ellipsis">
+                  {userData?.user?.role === "root"
+                    ? "Admin"
+                    : userData?.user?.role === "recruiter"
+                    ? "Recruiter"
+                    : userData?.user?.role === "job_seeker"
+                    ? "Job Seeker"
+                    : "Not Set"}
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center border-l px-4">
+              <button
+                onClick={() => router.push("/sign-in")}
+                className="bg-transparent border border-primary text-primary hover:bg-primary hover:text-white transition-colors transform duration-300 flex items-center py-2 px-4 rounded-lg font-medium text-sm"
+              >
+                {t("nav.signIn")}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

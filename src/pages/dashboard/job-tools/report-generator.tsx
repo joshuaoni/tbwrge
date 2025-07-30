@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { getJobDetail } from "@/actions/get-job-detail";
 import { getApplicationItem } from "@/actions/get-application-item";
 import { toast } from "react-hot-toast";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 export type JobReportGeneratorResponse = JobReportGenerator[];
 
@@ -51,6 +52,7 @@ const Generator = () => {
   const [value, setValue] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const {
     mutate: generateReportMutation,
@@ -83,6 +85,16 @@ const Generator = () => {
         userData?.token as string
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while generating the candidate report"
+        );
+      }
     },
   });
 
@@ -680,6 +692,13 @@ const Generator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.reportGenerator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and generate comprehensive candidate reports with AI-powered insights."
+      />
     </DashboardWrapper>
   );
 };

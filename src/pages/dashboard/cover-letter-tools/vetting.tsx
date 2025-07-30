@@ -16,6 +16,8 @@ import VettingWrapper from "../../../components/dashboard/vetting/vetting-wrappe
 import { VettingResponse } from "../../../interfaces/vetting.interface";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 const Vetting = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -23,6 +25,7 @@ const Vetting = () => {
   const [value, setValue] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const [summary, setSummary] = useState("");
   const { t } = useTranslation();
@@ -71,6 +74,15 @@ const Vetting = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while vetting the cover letter"
+        );
+      }
     },
   });
   const removeFile = (index: number) => {
@@ -276,6 +288,13 @@ const Vetting = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("coverLetterTools.vetting.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and vet cover letters with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

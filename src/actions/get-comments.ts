@@ -15,15 +15,15 @@ export interface Comment {
 }
 
 export const getComments = async (
-  postId: string,
-  token: string
+  postId: string
+  // token: string
 ): Promise<Comment[]> => {
   try {
     const options = {
       method: "GET",
       url: API_CONFIG.GET_COMMENTS(postId),
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
         // "Content-Type": "application/json",
         // Accept: "application/json",
       },

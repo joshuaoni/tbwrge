@@ -20,6 +20,7 @@ import uploadIcon from "../../../../public/images/icons/upload.png";
 import { Input } from "@/components/ui/input";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const ReWriter = () => {
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ const ReWriter = () => {
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   // Add template refs
@@ -76,6 +78,15 @@ const ReWriter = () => {
         userData?.token
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while rewriting the cover letter"
+        );
+      }
     },
   });
 
@@ -505,6 +516,13 @@ const ReWriter = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("coverLetterTools.rewriter.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and rewrite cover letters with AI-powered improvements and enhancements."
+      />
     </DashboardWrapper>
   );
 };

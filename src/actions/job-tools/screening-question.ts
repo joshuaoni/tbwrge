@@ -45,6 +45,11 @@ export const screenInterviewQuestions = async (
     return response.data;
   } catch (error: any) {
     if (error.response) {
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
       // Server responded with an error
       const errorMessage =
         error.response.data?.message || "Server error occurred";

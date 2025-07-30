@@ -86,7 +86,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
           plan_expires:
             userData.user.plan_expires ||
             new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-          plan: "premium",
+          plan: userData.user.plan,
         });
         trialStateUpdatedRef.current = true;
       }
@@ -111,7 +111,7 @@ const Dashboard = ({ children, searchTerm, setSearchTerm }: DashboardProps) => {
           plan_expires:
             userData.user.plan_expires ||
             new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-          plan: "premium",
+          plan: userData.user.plan,
         });
 
         // Invalidate the premium query to prevent it from running again

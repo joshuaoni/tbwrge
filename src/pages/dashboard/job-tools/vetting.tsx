@@ -17,6 +17,8 @@ import { VettingResponse } from "../../../interfaces/vetting.interface";
 import "react-quill/dist/quill.snow.css";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 // Dynamic import for React Quill to avoid SSR issues
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -31,6 +33,7 @@ const Vetting = () => {
   const [value, setValue] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   // Quill modules configuration
@@ -89,6 +92,15 @@ const Vetting = () => {
         prompts
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while vetting the job post"
+        );
+      }
     },
   });
 
@@ -307,6 +319,13 @@ const Vetting = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.vetting.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and vet job posts with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

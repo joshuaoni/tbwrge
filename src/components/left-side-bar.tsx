@@ -146,32 +146,40 @@ const LeftSideBar = () => {
     },
   ]);
 
-  const [userLeftSideItems, setUserLeftSideItems] = React.useState(() => [
-    {
-      title: t("nav.billingSubscription"),
-      icon: <CreditCard size={20} />,
-      link: "/dashboard/billing",
-      active: false,
-    },
-    {
-      title: t("nav.settings"),
-      icon: <Settings size={20} />,
-      link: "/dashboard/settings/profile",
-      active: false,
-    },
-    {
-      title: t("nav.feedbackSupport"),
-      icon: <MessageSquare size={20} />,
-      link: "/dashboard/feedback",
-      active: false,
-    },
-    {
-      title: t("nav.logout"),
-      icon: <LogOut size={20} />,
-      link: "/dashboard/logout",
-      active: false,
-    },
-  ]);
+  const [userLeftSideItems, setUserLeftSideItems] = React.useState(() => {
+    const baseItems = [
+      {
+        title: t("nav.billingSubscription"),
+        icon: <CreditCard size={20} />,
+        link: "/dashboard/billing",
+        active: false,
+      },
+      {
+        title: t("nav.settings"),
+        icon: <Settings size={20} />,
+        link: "/dashboard/settings/profile",
+        active: false,
+      },
+      {
+        title: t("nav.feedbackSupport"),
+        icon: <MessageSquare size={20} />,
+        link: "/dashboard/feedback",
+        active: false,
+      },
+    ];
+
+    // Only add logout if user is authenticated
+    if (userData?.token) {
+      baseItems.push({
+        title: t("nav.logout"),
+        icon: <LogOut size={20} />,
+        link: "/dashboard/logout",
+        active: false,
+      });
+    }
+
+    return baseItems;
+  });
 
   // Update extras when language changes
   React.useEffect(() => {
@@ -213,13 +221,17 @@ const LeftSideBar = () => {
           link: "/dashboard/feedback",
           active: false,
         },
-        {
+      ];
+
+      // Only add logout if user is authenticated
+      if (userData?.token) {
+        baseItems.push({
           title: t("nav.logout"),
           icon: <LogOut size={20} />,
           link: "/dashboard/logout",
           active: false,
-        },
-      ];
+        });
+      }
 
       if (userData?.user?.role === "root") {
         // Find the index of 'Logout'
@@ -227,16 +239,18 @@ const LeftSideBar = () => {
           (item) => item.title === t("nav.logout")
         );
         // Insert 'Admin Dashboard' just above 'Logout'
-        baseItems.splice(logoutIdx, 0, {
-          title: t("nav.adminDashboard"),
-          icon: <Crown size={20} />,
-          link: "/admin",
-          active: false,
-        });
+        if (logoutIdx !== -1) {
+          baseItems.splice(logoutIdx, 0, {
+            title: t("nav.adminDashboard"),
+            icon: <Crown size={20} />,
+            link: "/admin",
+            active: false,
+          });
+        }
       }
       return baseItems;
     });
-  }, [userData?.user?.role, t]);
+  }, [userData?.user?.role, userData?.token, t]);
 
   return (
     <div

@@ -18,6 +18,7 @@ import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const Translator = () => {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ const Translator = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   // Add template refs
@@ -82,6 +84,16 @@ const Translator = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while translating the cover letter"
+        );
+      }
     },
   });
 
@@ -505,6 +517,13 @@ const Translator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("coverLetterTools.translator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and translate cover letters into multiple languages with AI-powered accuracy."
+      />
     </DashboardWrapper>
   );
 };

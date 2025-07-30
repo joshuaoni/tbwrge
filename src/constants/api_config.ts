@@ -135,9 +135,10 @@ export const API_CONFIG = {
   JOB_AI_SEARCH: (page: number = 0) => `${MAIN_URL}/job/ai-search/${page}/`,
   GET_PROFILE_STATS: `${MAIN_URL}/talent/get-profile-stats/`,
 
-  GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
+  GET_POSTS: (page: number = 0) =>
+    `${MAIN_URL}/community/get-posts-pub/${page}/`,
   GET_COMMENTS: (post_id: string) =>
-    `${MAIN_URL}/community/get-comments/${post_id}/`,
+    `${MAIN_URL}/community/get-comments-pub/${post_id}/`,
   CREATE_COMMENT: (post_id: string) =>
     `${MAIN_URL}/community/create-comment/${post_id}/`,
   CREATE_POST: `${MAIN_URL}/community/create-post/`,
