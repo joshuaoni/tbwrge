@@ -186,38 +186,29 @@ const CandidateDetails = ({
                     {t("jobPostings.candidateDetails.fitScore")}
                   </h2>
                   <div className="flex items-center justify-center">
-                    {candidate.fit_score > 0 ? (
-                      <div className="relative w-16 h-16">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm font-bold text-[#009379]">
-                            {candidate.fit_score}%
-                          </span>
-                        </div>
-                        <svg className="w-full h-full" viewBox="0 0 36 36">
-                          <path
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            fill="none"
-                            stroke="#E5E7EB"
-                            strokeWidth="3"
-                          />
-                          <path
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            fill="none"
-                            stroke="#009379"
-                            strokeWidth="3"
-                            strokeDasharray={`${candidate.fit_score}, 100`}
-                            strokeLinecap="round"
-                          />
-                        </svg>
+                    <div className="relative w-16 h-16">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm font-bold text-[#009379]">
+                          {candidate.fit_score}%
+                        </span>
                       </div>
-                    ) : (
-                      <div className="text-center">
-                        <p className="text-xs text-gray-500 font-medium">
-                          Not Available
-                        </p>
-                        <p className="text-xs text-gray-400">Yet</p>
-                      </div>
-                    )}
+                      <svg className="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#E5E7EB"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#009379"
+                          strokeWidth="3"
+                          strokeDasharray={`${candidate.fit_score}, 100`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -388,7 +379,10 @@ const CandidateDetails = ({
                   <h3 className="text-sm font-medium mb-2">
                     {t("jobPostings.candidateDetails.languages")}
                   </h3>
-                  <p className="text-sm text-gray-600">{candidate.languages}</p>
+                  <p className="text-sm text-gray-600">
+                    {candidate.languages ||
+                      t("jobPostings.candidateDetails.notProvided")}
+                  </p>
                 </div>
               </div>
             </div>
