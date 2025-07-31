@@ -445,7 +445,7 @@ const JobDetails = ({
                   <span
                     className={selectedTab === "rejected" ? "opacity-40" : ""}
                   >
-                    {candidate.years_of_experience}
+                    {candidate.applicant.years_of_experience}
                   </span>
                 </TableCell>
                 <TableCell className="max-w-[200px] truncate">
