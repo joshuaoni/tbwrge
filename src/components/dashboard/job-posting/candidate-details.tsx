@@ -218,7 +218,10 @@ const CandidateDetails = ({
                     <p className="text-sm text-black w-[120px]">
                       {t("jobPostings.candidateDetails.email")}
                     </p>
-                    <p className="text-sm text-gray-500">{applicant.email}</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.email ||
+                        t("jobPostings.candidateDetails.notProvided")}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -227,7 +230,10 @@ const CandidateDetails = ({
                     <p className="text-sm text-black w-[120px]">
                       {t("jobPostings.candidateDetails.phone")}
                     </p>
-                    <p className="text-sm text-gray-500">{applicant.phone}</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.phone ||
+                        t("jobPostings.candidateDetails.notProvided")}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -270,7 +276,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.currentPosition")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.current_position}
+                      {applicant.current_position ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -281,7 +288,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.company")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.current_company}
+                      {applicant.current_company ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -292,7 +300,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.nationality")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.nationality}
+                      {applicant.nationality ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -303,7 +312,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.location")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.country_of_residence}
+                      {applicant.country_of_residence ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
