@@ -34,12 +34,24 @@ const DashboardHeader = ({
   // Trial badge logic
   let trialBadge = null;
   if (userData?.user?.on_freetrial && userData?.user?.plan_expires) {
+    // Use UTC time to avoid timezone differences
     const today = new Date();
+    const todayUTC = new Date(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate()
+    );
     const expires = new Date(userData.user.plan_expires);
+    const expiresUTC = new Date(
+      expires.getUTCFullYear(),
+      expires.getUTCMonth(),
+      expires.getUTCDate()
+    );
+
     const msPerDay = 1000 * 60 * 60 * 24;
     const daysLeft = Math.max(
       0,
-      Math.ceil((expires.getTime() - today.getTime()) / msPerDay)
+      Math.ceil((expiresUTC.getTime() - todayUTC.getTime()) / msPerDay)
     );
     let badgeColor = "bg-green-500 text-white";
     if (daysLeft <= 7 && daysLeft > 3)
