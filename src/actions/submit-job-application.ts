@@ -51,7 +51,7 @@ export interface JobApplicationFormData {
   linkedin?: string;
   current_company?: string;
   professional_summary?: string;
-  years_of_experience?: number;
+  years_of_experience?: string;
   current_position?: string;
   experience: string;
   skills: string;

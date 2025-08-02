@@ -281,7 +281,10 @@ const JobOpportunities = () => {
                                   >
                                     {job.company_name || "Unknown Company"}
                                   </span>
-                                  <span className="text-xs text-gray-400">
+                                  <span
+                                    className="text-xs text-gray-400 truncate block max-w-[120px]"
+                                    title={job.job_location_name || "Remote"}
+                                  >
                                     {job.job_location_name || "Remote"}
                                   </span>
                                 </div>
@@ -290,7 +293,7 @@ const JobOpportunities = () => {
                                 <span
                                   className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
                                 >
-                                  N/A Applicants
+                                  {job.total_applicants || "N/A"} Applicants
                                 </span>
                               </div>
                             </div>
@@ -402,7 +405,10 @@ const JobOpportunities = () => {
                                   >
                                     {job.company_name || "Unknown Company"}
                                   </span>
-                                  <span className="text-xs text-gray-400">
+                                  <span
+                                    className="text-xs text-gray-400 truncate block max-w-[120px]"
+                                    title={job.job_location_name || "Remote"}
+                                  >
                                     {job.job_location_name || "Remote"}
                                   </span>
                                 </div>
@@ -411,7 +417,7 @@ const JobOpportunities = () => {
                                 <span
                                   className={`mt-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-cyan-200 text-cyan-800`}
                                 >
-                                  N/A Applicants
+                                  {job.total_applicants || "No"} Applicants
                                 </span>
                               </div>
                             </div>

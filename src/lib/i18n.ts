@@ -115,6 +115,7 @@ const resources = {
           "Please provide the job description here\n\nFor more accurate results, please include the following in your write-up: Title, Years of Experience (YOE), Location, Job Type, Skills, Education, Salary Range and Language Requirements.",
       },
       jobApplication: {
+        yearsOfExperience: "Years of Relevant Experience",
         title: "Job Application",
         applicationSubmitted: "Application Submitted",
         alreadyApplied: "You have already applied for this position.",
@@ -1964,6 +1965,7 @@ const resources = {
           "Veuillez fournir la description du poste ici\n\nPour des résultats plus précis, veuillez inclure les éléments suivants dans votre description : Titre, Années d'expérience (YOE), Localisation, Type d'emploi, Compétences, Éducation, Fourchette salariale et Exigences linguistiques.",
       },
       jobApplication: {
+        yearsOfExperience: "Années d'expérience",
         title: "Candidature d'emploi",
         applicationSubmitted: "Candidature soumise",
         alreadyApplied: "Vous avez déjà postulé pour ce poste.",
@@ -3852,6 +3854,7 @@ const resources = {
           "Por favor proporciona la descripción del trabajo aquí\n\nPara obtener resultados más precisos, incluye lo siguiente en tu descripción: Título, Años de Experiencia (YOE), Ubicación, Tipo de Trabajo, Habilidades, Educación, Rango Salarial y Requisitos de Idioma.",
       },
       jobApplication: {
+        yearsOfExperience: "Años de experiencia",
         title: "Solicitud de trabajo",
         applicationSubmitted: "Solicitud enviada",
         alreadyApplied: "Ya has aplicado para esta posición.",
@@ -5697,6 +5700,7 @@ const resources = {
           "Bitte geben Sie hier die Stellenbeschreibung an\n\nFür genauere Ergebnisse fügen Sie bitte Folgendes in Ihre Beschreibung ein: Titel, Berufserfahrung (YOE), Standort, Stellentyp, Fähigkeiten, Bildung, Gehaltsbereich und Sprachanforderungen.",
       },
       jobApplication: {
+        yearsOfExperience: "Jahre relevante Erfahrung",
         title: "Stellenbewerbung",
         applicationSubmitted: "Bewerbung eingereicht",
         alreadyApplied: "Sie haben sich bereits für diese Position beworben.",
@@ -7541,6 +7545,7 @@ const resources = {
           "يرجى تقديم وصف الوظيفة هنا\n\nللحصول على نتائج أكثر دقة، يرجى تضمين ما يلي في وصفك: العنوان، سنوات الخبرة (YOE)، الموقع، نوع الوظيفة، المهارات، التعليم، نطاق الراتب ومتطلبات اللغة.",
       },
       jobApplication: {
+        yearsOfExperience: "سنوات الخبرة",
         title: "طلب التوظيف",
         applicationSubmitted: "تم تقديم الطلب",
         alreadyApplied: "لقد تقدمت بالفعل لهذا المنصب.",
@@ -9339,6 +9344,7 @@ const resources = {
           "Por favor, forneça a descrição do trabalho aqui\n\nPara resultados mais precisos, inclua o seguinte na sua descrição: Título, Anos de Experiência (YOE), Localização, Tipo de Trabalho, Habilidades, Educação, Faixa Salarial e Requisitos de Idioma.",
       },
       jobApplication: {
+        yearsOfExperience: "Anos de experiência",
         title: "Candidatura de emprego",
         applicationSubmitted: "Candidatura enviada",
         alreadyApplied: "Você já se candidatou para esta posição.",
@@ -11178,6 +11184,7 @@ const resources = {
           "请在此提供职位描述\n\n为了获得更准确的结果，请在您的描述中包含以下内容：职位、工作经验年限（YOE）、地点、工作类型、技能、教育背景、薪资范围和语言要求。",
       },
       jobApplication: {
+        yearsOfExperience: "年份",
         title: "职位申请",
         applicationSubmitted: "申请已提交",
         alreadyApplied: "已申请",
