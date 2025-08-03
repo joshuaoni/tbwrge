@@ -63,7 +63,7 @@ const PricingPlans = () => {
     },
     {
       plan: "Basic",
-      price: "9.99",
+      price: "119.99",
       title: "- For Job Seekers",
       description: "Individuals testing the platform",
       features: [
@@ -74,18 +74,18 @@ const PricingPlans = () => {
     },
     {
       plan: "Pro",
-      price: "99",
+      price: "1199",
       title: "- For Recruiters",
       description: "Small & growing businesses",
       features: [
-        "1,000 Candidates / month €0.10 per extra candidate ",
+        "12,000 Candidates / year €0.10 per extra candidate ",
         "AI-Powered Automation",
         "Advanced Job Board",
       ],
     },
     {
       plan: "Enterprise",
-      price: "500+",
+      price: "5000+",
       title: "",
       description: "High-volume hiring companies",
       features: [
@@ -139,9 +139,7 @@ const PricingPlans = () => {
                         <span className="text-[50px] font-extrabold">
                           €{plan.price}
                           {plan.plan === "Enterprise" ? null : (
-                            <span className="text-sm font-semibold">
-                              /month
-                            </span>
+                            <span className="text-sm font-semibold">/year</span>
                           )}
                         </span>
                       </div>
@@ -214,7 +212,7 @@ const PricingPlans = () => {
                   <span className="text-[50px] font-extrabold">
                     €{plan.price}
                     {plan.plan === "Enterprise" ? null : (
-                      <span className="text-sm font-semibold">/month</span>
+                      <span className="text-sm font-semibold">/year</span>
                     )}
                   </span>
                 </div>

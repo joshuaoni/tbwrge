@@ -73,7 +73,13 @@ export const generateJob = async (
   } catch (error: any) {
     if (error.response) {
       console.error("Server error:", error.response.data);
-      throw new Error(error.response.data.message || "Server error occurred");
+
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
+      throw new Error(error.response.data.detail || "Server error occurred");
     } else if (error.request) {
       throw new Error("No response from server. Please try again.");
     } else {

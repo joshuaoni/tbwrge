@@ -26,7 +26,7 @@ const PostCard = ({
     if (isBlog) {
       router.push(`/blog/${post.id}`);
     } else {
-      router.push(`/community?postId=${post.id}`);
+      router.push(`/dashboard/community?postId=${post.id}`);
     }
   };
   return (
@@ -130,10 +130,9 @@ const ArticlesCommunity = () => {
   } = useQuery({
     queryKey: ["posts", 0],
     queryFn: async () => {
-      if (!userData?.token) throw new Error("No authentication token found");
-      return getPosts(userData.token, 0);
+      return getPosts(0);
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const {
@@ -145,72 +144,76 @@ const ArticlesCommunity = () => {
     queryFn: async () => {
       return await getBlogs({ approved: true, page: 0 });
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
+
+  // Helper to adapt blog to post-like structure
+  const topBlogAdapter = (blog: BlogItem) => ({
+    ...blog,
+    user: blog.user || { name: t("articlesCommunity.anonymous") },
+    created_at: blog.created_at || blog.updated_at || new Date().toISOString(),
+    isBlog: true,
+  });
+
+  // Helper to get date for sorting
+  const getItemDate = (item: Post | ReturnType<typeof topBlogAdapter>) =>
+    item.created_at;
+
+  // Combine and sort logic
+  const sortedPosts = [...posts].sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  const sortedBlogs = [...blogs].sort(
+    (a, b) =>
+      new Date(b.created_at || b.updated_at).getTime() -
+      new Date(a.created_at || a.updated_at).getTime()
+  );
+
+  const topPosts = sortedPosts.slice(0, 3);
+  const topBlog = sortedBlogs[0] ? [topBlogAdapter(sortedBlogs[0])] : [];
+
+  const combinedItems = [...topPosts, ...topBlog].sort(
+    (a, b) =>
+      new Date(getItemDate(b)).getTime() - new Date(getItemDate(a)).getTime()
+  );
+
+  if (postsLoading || blogsLoading) {
+    return <div className="text-sm">{t("articlesCommunity.loadingPosts")}</div>;
+  }
+
+  if (postsError || blogsError) {
+    return (
+      <div className="text-sm text-red-500">
+        {t("articlesCommunity.errorLoadingArticles")}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F9F9F9] rounded-lg p-4">
       <div className="flex justify-between items-center mb-6">
-        {/* <h2 className="text-lg font-semibold"> */}
         <h2 className="text-sm font-semibold">
           {t("articlesCommunity.title")}
         </h2>
       </div>
       <div className="space-y-4">
-        {postsLoading ? (
-          // <div>{t("articlesCommunity.loadingPosts")}</div>
-          <div className="text-sm">{t("articlesCommunity.loadingPosts")}</div>
-        ) : postsError ? (
-          // <div className="text-red-500">
-          <div className="text-sm text-red-500">
-            {t("articlesCommunity.errorLoadingArticles")}
-          </div>
-        ) : (
-          posts
-            .slice(0, 3)
-            .map((post: Post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                userData={userData}
-                setSelectedPost={() => {}}
-                setEditingPost={() => {}}
-                setIsCreatingPost={() => {}}
-                deletePostMutation={{ mutate: () => {}, isPending: false }}
-                upvoteMutation={{ mutate: () => {}, isPending: false }}
-              />
-            ))
-        )}
-        {blogsLoading ? (
-          // <div>{t("articlesCommunity.loadingBlogs")}</div>
-          <div className="text-sm">{t("articlesCommunity.loadingBlogs")}</div>
-        ) : blogsError ? (
-          // <div className="text-red-500">
-          <div className="text-sm text-red-500">
-            {t("articlesCommunity.errorLoadingBlogs")}
-          </div>
-        ) : (
-          blogs.slice(0, 1).map((blog: BlogItem) => (
+        {combinedItems.map((item) => {
+          const isBlogItem = "isBlog" in item && item.isBlog;
+          return (
             <PostCard
-              key={blog.id}
-              post={{
-                ...blog,
-                user: blog.user || { name: t("articlesCommunity.anonymous") },
-                created_at:
-                  blog.created_at ||
-                  blog.updated_at ||
-                  new Date().toISOString(),
-              }}
+              key={item.id}
+              post={item}
               userData={userData}
-              isBlog={true}
               setSelectedPost={() => {}}
               setEditingPost={() => {}}
               setIsCreatingPost={() => {}}
               deletePostMutation={{ mutate: () => {}, isPending: false }}
               upvoteMutation={{ mutate: () => {}, isPending: false }}
+              isBlog={isBlogItem}
             />
-          ))
-        )}
+          );
+        })}
       </div>
     </div>
   );

@@ -183,6 +183,9 @@ function CreateJobJobDetails() {
       maxSalary > 0 &&
       minSalary < maxSalary;
 
+    // Check if job description exceeds character limit
+    const isJobDescriptionValid = ctx.formData.job_description.length <= 1000;
+
     const requiredFields = {
       job_description: ctx.formData.job_description?.trim(),
       required_skills: ctx.formData.required_skills?.trim(),
@@ -204,7 +207,9 @@ function CreateJobJobDetails() {
     return (
       Object.values(requiredFields).every(
         (value) => value !== undefined && value !== null && value !== ""
-      ) && isSalaryValid
+      ) &&
+      isSalaryValid &&
+      isJobDescriptionValid
     );
   };
 
@@ -310,7 +315,7 @@ function CreateJobJobDetails() {
             <div className="flex justify-between items-center mb-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("createJob.jobDetails.jobDescriptionRequirements")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </label>
@@ -324,9 +329,8 @@ function CreateJobJobDetails() {
                   theme="snow"
                   value={ctx.formData.job_description}
                   onChange={(value: string) => {
-                    if (value.length <= 1000) {
-                      ctx.setFormData("job_description", value);
-                    }
+                    // Always update the form data to show actual character count
+                    ctx.setFormData("job_description", value);
                   }}
                   modules={modules}
                   formats={formats}
@@ -334,16 +338,63 @@ function CreateJobJobDetails() {
                   style={{ height: "100%" }}
                   placeholder="Write a detailed job description including requirements, and what makes this role unique..."
                 />
+                {/* Character Counter */}
+                <div className="flex justify-between items-center mt-2 px-2">
+                  <div className="flex items-center gap-2">
+                    {ctx.formData.job_description.length > 1000 && (
+                      <span className="text-red text-sm font-medium flex items-center gap-1">
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Character limit exceeded
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm font-medium ${
+                      ctx.formData.job_description.length > 1000
+                        ? "text-red"
+                        : ctx.formData.job_description.length > 800
+                        ? "text-yellow-600"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {ctx.formData.job_description.length}/1000
+                  </span>
+                </div>
               </div>
             </div>
+            {/* Error message below the text editor */}
+            {ctx.formData.job_description.length > 1000 && (
+              <div className="flex items-center gap-2 mt-2 text-red text-sm">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Job description must be 1000 characters or less
+              </div>
+            )}
           </div>
 
           <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.requiredSkills")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.required_skills
@@ -362,7 +413,7 @@ function CreateJobJobDetails() {
                           .filter((_, i) => i !== index);
                         ctx.setFormData("required_skills", skills.join(","));
                       }}
-                      className="text-gray-500 hover:text-red-500"
+                      className="text-gray-500 hover:text-red"
                     >
                       ×
                     </button>
@@ -396,9 +447,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.educationalRequirements")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -413,9 +462,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.requiredYearsExperience")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -430,9 +477,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.jobType")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <select
               value={ctx.formData.job_type}
@@ -463,9 +508,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.jobLocation")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -478,9 +521,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.languages")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -493,9 +534,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.additionalBenefits")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -515,9 +554,7 @@ function CreateJobJobDetails() {
           <div className="w-full space-y-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.jobTags")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <div className="flex flex-wrap gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-[48px]">
               {ctx.formData.job_tags
@@ -536,7 +573,7 @@ function CreateJobJobDetails() {
                           .filter((_, i) => i !== index);
                         ctx.setFormData("job_tags", tags.join(","));
                       }}
-                      className="text-gray-500 hover:text-red-500"
+                      className="text-gray-500 hover:text-red"
                     >
                       ×
                     </button>
@@ -571,7 +608,7 @@ function CreateJobJobDetails() {
             <div className="flex justify-between items-end">
               <span className="text-sm font-medium text-gray-700">
                 {t("createJob.jobDetails.assignRecruiter")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </span>
@@ -645,7 +682,7 @@ function CreateJobJobDetails() {
                               deleteTeamMemberMutation.mutate(member.id);
                             }
                           }}
-                          className="ml-2 text-gray-400 hover:text-red-500 p-1"
+                          className="ml-2 text-gray-400 hover:text-red p-1"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -660,9 +697,7 @@ function CreateJobJobDetails() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("createJob.jobDetails.recruiterCalendarLink")}{" "}
-              <span className="text-red-500">
-                {t("createJob.common.required")}
-              </span>
+              <span className="text-red">{t("createJob.common.required")}</span>
             </label>
             <input
               type="text"
@@ -681,7 +716,7 @@ function CreateJobJobDetails() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("createJob.jobDetails.startDate")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </label>
@@ -696,7 +731,7 @@ function CreateJobJobDetails() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("createJob.jobDetails.endDate")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </label>
@@ -714,7 +749,7 @@ function CreateJobJobDetails() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("createJob.jobDetails.salaryRangeMin")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </label>
@@ -731,12 +766,12 @@ function CreateJobJobDetails() {
                   );
                 }}
                 className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
-                  ctx.formData.salary_range_min <= 0 ? "border-red-500" : ""
+                  ctx.formData.salary_range_min <= 0 ? "border-red" : ""
                 }`}
                 placeholder={t("createJob.jobDetails.enterMinimumSalary")}
               />
               {ctx.formData.salary_range_min <= 0 && (
-                <p className="mt-1 text-xs text-red-500">
+                <p className="mt-1 text-xs text-red">
                   {t("createJob.jobDetails.minimumSalaryError")}
                 </p>
               )}
@@ -744,7 +779,7 @@ function CreateJobJobDetails() {
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {t("createJob.jobDetails.salaryRangeMax")}{" "}
-                <span className="text-red-500">
+                <span className="text-red">
                   {t("createJob.common.required")}
                 </span>
               </label>
@@ -762,14 +797,14 @@ function CreateJobJobDetails() {
                 }}
                 className={`text-sm w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] ${
                   ctx.formData.salary_range_max <= ctx.formData.salary_range_min
-                    ? "border-red-500"
+                    ? "border-red"
                     : ""
                 }`}
                 placeholder={t("createJob.jobDetails.enterMaximumSalary")}
               />
               {ctx.formData.salary_range_max <= ctx.formData.salary_range_min &&
                 ctx.formData.salary_range_max > 0 && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-xs text-red">
                     {t("createJob.jobDetails.maximumSalaryError")}
                   </p>
                 )}
@@ -924,8 +959,9 @@ function CreateJobJobDetails() {
             t("createJob.jobDetails.next")
           )}
         </button>
+        {/* Error Messages */}
         {/* {!isFormValid() && (
-          <span className="text-sm text-red-500">
+          <span className="text-sm text-red">
             Please fill in all required fields
           </span>
         )} */}

@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { getJobDetail } from "@/actions/get-job-detail";
 import { getApplicationItem } from "@/actions/get-application-item";
 import { toast } from "react-hot-toast";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 export type JobReportGeneratorResponse = JobReportGenerator[];
 
@@ -51,6 +52,7 @@ const Generator = () => {
   const [value, setValue] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const {
     mutate: generateReportMutation,
@@ -84,7 +86,35 @@ const Generator = () => {
       );
       return response;
     },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while generating the candidate report"
+        );
+      }
+    },
   });
+
+  // Function to strip HTML tags from text
+  const stripHtmlTags = (html: string): string => {
+    // Create a temporary div element to parse HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Get the text content without HTML tags
+    let textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+    // Clean up extra whitespace and line breaks
+    textContent = textContent
+      .replace(/\s+/g, " ") // Replace multiple spaces with single space
+      .replace(/\n\s*\n/g, "\n") // Replace multiple line breaks with single line break
+      .trim(); // Remove leading/trailing whitespace
+
+    return textContent;
+  };
 
   // Check for query parameters and pre-populate form
   useEffect(() => {
@@ -118,7 +148,9 @@ const Generator = () => {
           token: userData.token,
         });
         if (jobDetails.job_description) {
-          setJobDescription(jobDetails.job_description);
+          // Strip HTML tags from job description before setting it
+          const cleanJobDescription = stripHtmlTags(jobDetails.job_description);
+          setJobDescription(cleanJobDescription);
           hasData = true;
         }
       }
@@ -660,6 +692,13 @@ const Generator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.reportGenerator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and generate comprehensive candidate reports with AI-powered insights."
+      />
     </DashboardWrapper>
   );
 };

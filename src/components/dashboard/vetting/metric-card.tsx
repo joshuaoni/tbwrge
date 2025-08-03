@@ -37,8 +37,8 @@ const MetricCard = (props: MetricCardProps) => {
     <div className="flex items-center gap-6 rounded-lg shadow-sm">
       <MetricScore {...props} />
       <div className="text-[#747474] space-y-4 flex-1 h-full flex flex-col justify-center">
-        <h6 className="text-xl font-semibold capitalize">{props.Metric}</h6>
-        <p>{props.Recommendation}</p>
+        <h6 className="text-sm font-semibold capitalize">{props.Metric}</h6>
+        <p text-sm>{props.Recommendation}</p>
       </div>
     </div>
   );
@@ -85,13 +85,13 @@ export const MetricScore = (
       </span>
       <h6
         className={twMerge(
-          "text-xl capitalize w-full px-2 flex justify-center",
+          "text-sm capitalize w-full px-2 flex justify-center",
           props.size?.metricClass
         )}
       >
         {props.Metric === "culture_fit" ? "Culture Fit" : props.Metric}
       </h6>
-      <p className={twMerge("font-bold text-4xl", props.size?.scoreClass)}>
+      <p className={twMerge("font-bold text-3xl", props.size?.scoreClass)}>
         {props.Score}%
       </p>
     </div>

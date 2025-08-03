@@ -29,6 +29,7 @@ import pdfIcon from "../../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../../public/images/icons/upload.png";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const Generator = () => {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ const Generator = () => {
   const animationFrameRef = useRef<number | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [jobDescription, setJobDescription] = useState("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const [files, setFiles] = useState<any>([]);
   const [prompts, setPrompts] = useState<any>([]);
@@ -144,6 +146,15 @@ const Generator = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while generating the cover letter"
+        );
+      }
     },
   });
 
@@ -875,6 +886,13 @@ const Generator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("coverLetterTools.generator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and generate professional cover letters with AI-powered templates."
+      />
     </DashboardWrapper>
   );
 };

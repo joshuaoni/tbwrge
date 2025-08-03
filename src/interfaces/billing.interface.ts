@@ -20,4 +20,6 @@ export interface BillingInputGroupProps {
   label: string;
   placeholder: string;
   icon?: ElementType<{ className: string }>;
+  value?: string;
+  onChange?: (value: string) => void;
 }

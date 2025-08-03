@@ -19,6 +19,7 @@ import { CVRewriterResponse } from "@/interfaces/rewriter.interface";
 import { fileSizeToMb } from "@/lib/common";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const langSelector: Record<string, string> = {
   English: "en",
@@ -37,6 +38,7 @@ const Translator = () => {
   const [selectedLanguage, setSelectedValue] = useState("English");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const rewriterMutation = useMutation<CVRewriterResponse>({
     mutationKey: ["rewriteCV"],
@@ -48,6 +50,15 @@ const Translator = () => {
         userData?.token
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while rewriting the CV"
+        );
+      }
     },
   });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -486,6 +497,13 @@ const Translator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.rewriter.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and rewrite CVs with AI-powered improvements and enhancements."
+      />
     </DashboardWrapper>
   );
 };

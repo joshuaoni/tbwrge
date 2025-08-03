@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import classNames from "classnames";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 
@@ -22,7 +22,9 @@ import { outfit, urbanist } from "@/constants/app";
 import { useUserStore } from "@/hooks/use-user-store";
 import toast from "react-hot-toast";
 import ArticleFileGroup from "@/components/dashboard/submit-article/article-file-group";
+import ArticlePreviewModal from "@/components/dashboard/submit-article/article-preview-modal";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -59,10 +61,15 @@ const DashboardSubmitArticlePage = () => {
   );
   const { userData } = useUserStore();
   const [tc, setTc] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
 
   function handleSetFormData(
     key: keyof SubmitAnArticleRequestData,
-    value: string | File | Blob
+    value: string | File | Blob | null
   ) {
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
@@ -90,7 +97,9 @@ const DashboardSubmitArticlePage = () => {
     mutationFn: async (data: SubmitAnArticleRequestData) =>
       await submitArticle(userData?.token ?? "", data),
     onError: (error: any) => {
-      if (error.response?.data?.detail) {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else if (error.response?.data?.detail) {
         error.response.data.detail.forEach((err: any) => {
           toast.error(`${err.loc.join(" ")} ${err.msg}`);
         });
@@ -102,6 +111,19 @@ const DashboardSubmitArticlePage = () => {
       toast.success("Article submitted successfully");
       setFormData(INITIAL_SUBMIT_ARTICLE_REQUEST_DATA);
       setTc(false);
+      setShowPreviewModal(false);
+      // Clear file inputs
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
+      }
+      if (profileImageInputRef.current) {
+        profileImageInputRef.current.value = "";
+      }
+      // Clear image preview
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+        setImagePreview(null);
+      }
     },
   });
 
@@ -167,6 +189,59 @@ const DashboardSubmitArticlePage = () => {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("submitArticle.uploadArticleImage")}
+                </label>
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      const file = e.target.files[0];
+                      handleSetFormData("image", file);
+
+                      // Create preview URL
+                      if (imagePreview) {
+                        URL.revokeObjectURL(imagePreview);
+                      }
+                      const previewUrl = URL.createObjectURL(file);
+                      setImagePreview(previewUrl);
+                    }
+                  }}
+                  accept="image/*"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200 text-sm"
+                />
+                {imagePreview && (
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600 mb-2">Image Preview:</p>
+                    <div className="relative inline-block">
+                      <img
+                        src={imagePreview}
+                        alt="Article image preview"
+                        className="max-w-full max-h-48 rounded-lg border border-gray-200 object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (imagePreview) {
+                            URL.revokeObjectURL(imagePreview);
+                            setImagePreview(null);
+                          }
+                          handleSetFormData("image", null);
+                          if (imageInputRef.current) {
+                            imageInputRef.current.value = "";
+                          }
+                        }}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <ArticleFileGroup
                 label={t("submitArticle.uploadArticle")}
                 onChange={(file) => handleSetFormData("article_upload", file)}
@@ -228,6 +303,7 @@ const DashboardSubmitArticlePage = () => {
                   {t("submitArticle.uploadProfileImage")}
                 </label>
                 <input
+                  ref={profileImageInputRef}
                   type="file"
                   onChange={(e) => {
                     if (e.target.files?.[0]) {
@@ -268,43 +344,34 @@ const DashboardSubmitArticlePage = () => {
 
               <div className="flex justify-center">
                 <button
-                  disabled={!isFormValid() || submitArticleMutation.isPending}
+                  disabled={!isFormValid()}
                   className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => submitArticleMutation.mutate(formData)}
+                  onClick={() => setShowPreviewModal(true)}
                 >
-                  {submitArticleMutation.isPending ? (
-                    <span className="flex items-center justify-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {t("submitArticle.submitting")}
-                    </span>
-                  ) : (
-                    t("submitArticle.submitArticle")
-                  )}
+                  {t("submitArticle.previewSubmitArticle")}
                 </button>
               </div>
             </div>
           </section>
         </div>
       </div>
+
+      {/* Article Preview Modal */}
+      <ArticlePreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        onPublish={() => submitArticleMutation.mutate(formData)}
+        formData={formData}
+        isSubmitting={submitArticleMutation.isPending}
+      />
+
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("submitArticle.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and submit articles to the community with AI-powered insights and reach."
+      />
     </DashboardWrapper>
   );
 };

@@ -55,6 +55,11 @@ function AdminDashboardSidebar() {
           { icon: DiagramIcon, title: "Feedback", path: "/admin/feedback" },
           { icon: HealthIcon, title: "Chat", path: "/admin/chat" },
           {
+            icon: MenuBoardIcon,
+            title: "Enterprise",
+            path: "/admin/enterprise",
+          },
+          {
             icon: ClipboardTextIcon,
             title: "Post a Blog",
             path: "/admin/post",

@@ -9,6 +9,7 @@ export interface SubmitAnArticleRequestData {
   job_title?: string;
   company?: string;
   profile_image: File | null;
+  image: File | null;
   title: string;
   content: string;
   article_upload?: File | null;
@@ -19,6 +20,7 @@ export const INITIAL_SUBMIT_ARTICLE_REQUEST_DATA: SubmitAnArticleRequestData = {
   name: "",
   email: "",
   profile_image: null,
+  image: null,
   title: "",
   content: "",
 };
@@ -34,6 +36,7 @@ export const submitArticle = async (
   formData.append("title", data.title);
   formData.append("content", data.content);
   if (data.profile_image) formData.append("profile_image", data.profile_image);
+  if (data.image) formData.append("image", data.image);
 
   if (data.job_title) formData.append("job_title", data.job_title);
 
@@ -44,14 +47,29 @@ export const submitArticle = async (
 
   // if (data.voicenote) formData.append("voicenote", data.voicenote);
 
-  const response = await axios({
-    method: "POST",
-    url: API_CONFIG.SUBMIT_ARTICLE,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    data: formData,
-  });
-  console.log({ response });
-  return response.data;
+  try {
+    const response = await axios({
+      method: "POST",
+      url: API_CONFIG.SUBMIT_ARTICLE,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: formData,
+    });
+    console.log({ response });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
+      throw new Error(error.response.data.detail || "Server error occurred");
+    } else if (error.request) {
+      throw new Error("No response from server. Please try again.");
+    } else {
+      throw new Error(error.message || "Unexpected error occurred");
+    }
+  }
 };

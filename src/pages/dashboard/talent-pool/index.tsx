@@ -504,7 +504,7 @@ export default function TalentPool() {
                 <div className="relative w-[200px]">
                   <input
                     type="text"
-                    placeholder={t("talentPool.search.location")}
+                    placeholder={t("talentPool.table.country")}
                     className="w-full py-3 px-4 rounded-lg bg-[#F2F2F2] focus:outline-none text-[#333] placeholder-[#333] text-sm"
                     value={type === "location" ? searchVal : ""}
                     onChange={(e) => {
@@ -683,7 +683,7 @@ export default function TalentPool() {
                       {t("talentPool.table.candidateName")}
                     </TableHead>
                     <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
-                      {t("talentPool.table.location")}
+                      {t("talentPool.table.country")}
                     </TableHead>
                     <TableHead className="w-[15%] text-[#898989] h-[39.292px]">
                       {t("talentPool.table.skills")}

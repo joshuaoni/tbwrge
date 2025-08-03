@@ -18,6 +18,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const Translator = () => {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ const Translator = () => {
   const { userData } = useUserStore();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [activeTemplate, setActiveTemplate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const {
@@ -52,6 +54,15 @@ const Translator = () => {
       }
       const response = await translateCV(files, language, userData?.token);
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while translating the CV"
+        );
+      }
     },
   });
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -478,6 +489,13 @@ const Translator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.translator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and translate CVs into multiple languages with AI-powered accuracy."
+      />
     </DashboardWrapper>
   );
 };

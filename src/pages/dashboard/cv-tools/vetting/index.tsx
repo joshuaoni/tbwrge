@@ -17,6 +17,8 @@ import VettingWrapper from "../../../../components/dashboard/vetting/vetting-wra
 import { VettingResponse } from "../../../../interfaces/vetting.interface";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 const Vetting = () => {
   const { t } = useTranslation();
@@ -26,6 +28,7 @@ const Vetting = () => {
   const [value, setValue] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const { userData } = useUserStore();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +74,13 @@ const Vetting = () => {
       );
 
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(error.message || "An error occurred while vetting the CV");
+      }
     },
   });
   const removeFile = (index: number) => {
@@ -271,6 +281,13 @@ const Vetting = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.vetting.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and vet CVs with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

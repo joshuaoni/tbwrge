@@ -16,12 +16,28 @@ import InvoiceTemplate from "./invoice-template";
 import { useDownloadPDF } from "@/hooks/download-pdf";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { useUserStore } from "@/hooks/use-user-store";
+
+const planDetails = {
+  free: {
+    price: "€0",
+  },
+  basic: {
+    price: "€11.99",
+  },
+  pro: {
+    price: "€1199",
+  },
+};
 
 function BillingManageView() {
   const ctx = useContext(BillingContext);
   const invoiceRef = useRef<HTMLDivElement>(null);
   const { downloadPDF } = useDownloadPDF(invoiceRef, "invoice");
   const { t } = useTranslation();
+  const userData = useUserStore();
+
+  console.log("user plan: ", userData?.userData?.user);
 
   return (
     <div className={`${outfit.className}`}>
@@ -30,25 +46,33 @@ function BillingManageView() {
         <div className="w-full border border-lightgreen p-4 space-y-8 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
             <div>
-              <span className="block font-medium">
-                {t("settings.billing.freePlan")}
+              <span className="block font-medium capitalize">
+                {userData?.userData?.user?.plan || "free"}
               </span>
               <p className="text-sm text-textgray mt-2">
                 {t("settings.billing.freeForIndividual")}
               </p>
             </div>
-            <span className="font-medium">$0/month</span>
+            <span className="font-medium">
+              {planDetails[
+                (userData?.userData?.user?.plan as keyof typeof planDetails) ||
+                  "free"
+              ]?.price || "€0"}
+              {t("settings.billing.planDetails.month")}
+            </span>
           </div>
 
           <button
             onClick={() => ctx.goTo("choose")}
             className="bg-lightgreen text-white w-fit px-4 py-2 rounded-lg"
           >
-            {t("settings.billing.upgrade")}
+            {(userData?.userData?.user?.plan || "free") === "free"
+              ? t("settings.billing.upgrade")
+              : t("settings.billing.subscribed")}
           </button>
         </div>
 
-        <div className="w-full border border-lightgreen p-4 space-y-4 rounded-2xl max-w-xs">
+        {/* <div className="w-full border border-lightgreen p-4 space-y-4 rounded-2xl max-w-xs">
           <div className="w-full flex items-start justify-between">
             <div>
               <span className="block font-medium">
@@ -76,14 +100,14 @@ function BillingManageView() {
               <p className="text-xs">Expiry 02/25</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </section>
 
       <section className="mt-6">
         <h3 className="font-medium text-sm">
           {t("settings.billing.invoices")}
         </h3>
-        <span className="text-textgray">
+        <span className="text-textgray text-sm">
           {t("settings.billing.manageInvoices")}
         </span>
 
@@ -108,13 +132,13 @@ function BillingManageView() {
             {[
               {
                 date: "2023-01-01",
-                amount: "$10.00",
+                amount: "€10.00",
                 plan: "Basic",
                 receipt: "12345",
               },
               {
                 date: "2023-02-01",
-                amount: "$20.00",
+                amount: "€20.00",
                 plan: "Pro",
                 receipt: "67890",
               },

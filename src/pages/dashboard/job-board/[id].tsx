@@ -175,6 +175,7 @@ const ApplicationForm = ({
     currentPosition: "",
     nationality: "",
     countryOfResidence: "",
+    yearsOfExperience: "",
     relevantExperience: "",
     skillsSummary: "",
     cv: null as File | null,
@@ -209,6 +210,7 @@ const ApplicationForm = ({
           currentPosition: profile.current_position || "",
           nationality: profile.nationality || "",
           countryOfResidence: profile.country_of_residence || "",
+          yearsOfExperience: profile.years_of_experience?.toString() || "",
           relevantExperience: profile.experience_summary || "",
           skillsSummary: profile.skills_summary || "",
         }));
@@ -272,6 +274,7 @@ const ApplicationForm = ({
           current_position: formData.currentPosition || undefined,
           nationality: formData.nationality || undefined,
           country_of_residence: formData.countryOfResidence || undefined,
+          years_of_experience: formData.yearsOfExperience || undefined,
           experience: formData.relevantExperience,
           skills: formData.skillsSummary,
           cv: formData.cv || undefined,
@@ -454,6 +457,20 @@ const ApplicationForm = ({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t("jobApplication.yearsOfExperience")}
+            </label>
+            <input
+              type="number"
+              name="yearsOfExperience"
+              value={formData.yearsOfExperience}
+              onChange={handleInputChange}
+              placeholder={t("jobApplication.enterYearsOfExperience")}
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280] text-sm"
+            />
           </div>
 
           <div>

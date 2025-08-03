@@ -218,7 +218,10 @@ const CandidateDetails = ({
                     <p className="text-sm text-black w-[120px]">
                       {t("jobPostings.candidateDetails.email")}
                     </p>
-                    <p className="text-sm text-gray-500">{applicant.email}</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.email ||
+                        t("jobPostings.candidateDetails.notProvided")}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -227,7 +230,10 @@ const CandidateDetails = ({
                     <p className="text-sm text-black w-[120px]">
                       {t("jobPostings.candidateDetails.phone")}
                     </p>
-                    <p className="text-sm text-gray-500">{applicant.phone}</p>
+                    <p className="text-sm text-gray-500">
+                      {applicant.phone ||
+                        t("jobPostings.candidateDetails.notProvided")}
+                    </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
                 </div>
@@ -270,7 +276,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.currentPosition")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.current_position}
+                      {applicant.current_position ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -281,7 +288,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.company")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.current_company}
+                      {applicant.current_company ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -292,7 +300,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.nationality")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.nationality}
+                      {applicant.nationality ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -303,7 +312,8 @@ const CandidateDetails = ({
                       {t("jobPostings.candidateDetails.location")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {applicant.country_of_residence}
+                      {applicant.country_of_residence ||
+                        t("jobPostings.candidateDetails.notProvided")}
                     </p>
                   </div>
                   <div className="h-[1px] bg-[#009379]/20 mt-2"></div>
@@ -328,7 +338,8 @@ const CandidateDetails = ({
                 {t("jobPostings.candidateDetails.profileSummary")}
               </h2>
               <p className="text-sm text-gray-600 leading-relaxed">
-                {applicant.professional_summary}
+                {applicant.professional_summary ||
+                  t("jobPostings.candidateDetails.notProvided")}
               </p>
             </div>
 
@@ -343,21 +354,26 @@ const CandidateDetails = ({
                     {t("jobPostings.candidateDetails.keySkills")}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {candidate.skills_summary}
+                    {candidate.skills_summary ||
+                      t("jobPostings.candidateDetails.notProvided")}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-xs font-medium mb-2">
                     {t("jobPostings.candidateDetails.strengths")}
                   </h3>
-                  <p className="text-sm text-gray-600">{candidate.strength}</p>
+                  <p className="text-sm text-gray-600">
+                    {candidate.strength ||
+                      t("jobPostings.candidateDetails.notProvided")}
+                  </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">
                     {t("jobPostings.candidateDetails.areasForDevelopment")}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {candidate.areas_for_development}
+                    {candidate.areas_for_development ||
+                      t("jobPostings.candidateDetails.notProvided")}
                   </p>
                 </div>
                 <div>
@@ -365,14 +381,18 @@ const CandidateDetails = ({
                     {t("jobPostings.candidateDetails.cultureFitIndicators")}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {candidate.culture_fit}
+                    {candidate.culture_fit ||
+                      t("jobPostings.candidateDetails.notProvided")}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium mb-2">
                     {t("jobPostings.candidateDetails.languages")}
                   </h3>
-                  <p className="text-sm text-gray-600">{candidate.languages}</p>
+                  <p className="text-sm text-gray-600">
+                    {candidate.languages ||
+                      t("jobPostings.candidateDetails.notProvided")}
+                  </p>
                 </div>
               </div>
             </div>
@@ -405,22 +425,26 @@ const CandidateDetails = ({
                   <div className="space-y-6">
                     {candidate.application_answers &&
                     candidate.application_answers.length > 0 ? (
-                      candidate.application_answers.map((answer, index) => (
-                        <div key={index}>
-                          <p className="text-sm font-medium mb-2">
-                            {answer.question?.text ||
-                              t(
-                                "jobPostings.candidateDetails.questionNotAvailable"
-                              )}
-                          </p>
-                          <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
-                            {answer.text ||
-                              t(
-                                "jobPostings.candidateDetails.noAnswerProvided"
-                              )}
-                          </p>
-                        </div>
-                      ))
+                      candidate.application_answers
+                        .filter(
+                          (answer) => answer.question?.is_screening === false
+                        )
+                        .map((answer, index) => (
+                          <div key={index}>
+                            <p className="text-sm font-medium mb-2">
+                              {answer.question?.text ||
+                                t(
+                                  "jobPostings.candidateDetails.questionNotAvailable"
+                                )}
+                            </p>
+                            <p className="text-sm text-gray-600 bg-gray-100 rounded-xl p-3">
+                              {answer.text ||
+                                t(
+                                  "jobPostings.candidateDetails.noAnswerProvided"
+                                )}
+                            </p>
+                          </div>
+                        ))
                     ) : (
                       <p className="text-sm text-gray-500">
                         {t("jobPostings.candidateDetails.noQuestionsAnswered")}
@@ -686,48 +710,59 @@ const CandidateDetails = ({
                   {t("jobPostings.candidateDetails.screeningFitScore")}
                 </h2>
                 <div className="flex items-center justify-center">
-                  <div className="relative w-24 h-24">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm font-bold text-[#009379]">
-                        {candidate.screening_fit_score}%
-                      </span>
+                  {candidate.screening_fit_score > 0 ? (
+                    <div className="relative w-24 h-24">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm font-bold text-[#009379]">
+                          {candidate.screening_fit_score}%
+                        </span>
+                      </div>
+                      <svg className="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#E5E7EB"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#009379"
+                          strokeWidth="3"
+                          strokeDasharray={`${candidate.screening_fit_score}, 100`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
                     </div>
-                    <svg className="w-full h-full" viewBox="0 0 36 36">
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#E5E7EB"
-                        strokeWidth="3"
-                      />
-                      <path
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                        fill="none"
-                        stroke="#009379"
-                        strokeWidth="3"
-                        strokeDasharray={`${candidate.screening_fit_score}, 100`}
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
+                  ) : (
+                    <div className="text-center">
+                      <p className="text-sm text-gray-500 font-medium">
+                        Not Available
+                      </p>
+                      <p className="text-xs text-gray-400">Yet</p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="space-y-6">
                 {candidate.application_answers &&
                 candidate.application_answers.length > 0 ? (
-                  candidate.application_answers.map((answer, index) => (
-                    <div key={index}>
-                      <p className="text-sm font-medium mb-2">
-                        {answer.question?.text ||
-                          t(
-                            "jobPostings.candidateDetails.questionNotAvailable"
-                          )}
-                      </p>
-                      <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
-                        {answer.text ||
-                          t("jobPostings.candidateDetails.noAnswerProvided")}
-                      </p>
-                    </div>
-                  ))
+                  candidate.application_answers
+                    .filter((answer) => answer.question?.is_screening === true)
+                    .map((answer, index) => (
+                      <div key={index}>
+                        <p className="text-sm font-medium mb-2">
+                          {answer.question?.text ||
+                            t(
+                              "jobPostings.candidateDetails.questionNotAvailable"
+                            )}
+                        </p>
+                        <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3">
+                          {answer.text ||
+                            t("jobPostings.candidateDetails.noAnswerProvided")}
+                        </p>
+                      </div>
+                    ))
                 ) : (
                   <p className="text-sm text-gray-500">
                     {t(

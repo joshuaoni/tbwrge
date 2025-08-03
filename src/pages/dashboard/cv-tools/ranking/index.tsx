@@ -14,6 +14,8 @@ import { rankFilters } from "../../../../interfaces/ranking.constant";
 import { Candidate } from "../../../../interfaces/ranking.interface";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 const Ranking = () => {
   const { t } = useTranslation();
@@ -23,6 +25,7 @@ const Ranking = () => {
   const [prompts, setPrompts] = useState<string[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const [ranking, setRanking] = useState(rankFilters[0].label);
   const [rankFilter, setRankFilter] = useState(rankFilters[0].value);
@@ -59,6 +62,13 @@ const Ranking = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(error.message || "An error occurred while ranking the CVs");
+      }
     },
   });
 
@@ -337,6 +347,13 @@ const Ranking = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.ranking.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and rank CVs with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

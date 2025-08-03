@@ -4,7 +4,6 @@ import {
   Plus,
   StopCircleIcon,
   Trash,
-  X,
   Mic,
   PlusCircle,
   Download,
@@ -21,6 +20,7 @@ import DashboardWrapper from "@/components/dashboard-wrapper";
 import JobPost from "@/components/dashboard/job-tools/job-post";
 import LanguageSelectorDropDown from "@/components/language-selector-dropdown";
 import { Button } from "@/components/ui/button";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 import { useUserStore } from "@/hooks/use-user-store";
 import RecordIcon from "../../../../../public/images/icons/microphone.png";
 import { JobPostGeneratorResponse } from "../../../../interfaces/job-tools-generator.interface";
@@ -28,9 +28,11 @@ import { outfit } from "@/constants/app";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 const Generator = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -50,6 +52,7 @@ const Generator = () => {
   const [summary, setSummary] = useState("");
   const { userData } = useUserStore();
   const [currentTime, setCurrentTime] = useState(0);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   // Company selection state
   const [showNewCompanyForm, setShowNewCompanyForm] = useState(false);
@@ -385,6 +388,7 @@ const Generator = () => {
     isPending,
     isSuccess: mutationIsSuccess,
     reset: resetMutation,
+    error: mutationError,
   } = useMutation<JobPostGeneratorResponse>({
     mutationKey: ["generateCV"],
     mutationFn: async () => {
@@ -428,6 +432,15 @@ const Generator = () => {
         language
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while generating the job post"
+        );
+      }
     },
   });
 
@@ -935,6 +948,14 @@ const Generator = () => {
           </div>
         </div>
       </section>
+
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.generator.featureName")}
+        featureDescription={t("jobTools.generator.featureDescription")}
+      />
     </DashboardWrapper>
   );
 };

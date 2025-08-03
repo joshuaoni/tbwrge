@@ -16,6 +16,7 @@ import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const Translator = () => {
   const { t } = useTranslation();
@@ -24,6 +25,7 @@ const Translator = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [value, setValue] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const translatedContentRef = useRef<HTMLDivElement>(null);
   const { userData } = useUserStore();
   const {
@@ -54,6 +56,16 @@ const Translator = () => {
         userData?.token
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while translating the job description"
+        );
+      }
     },
   });
 
@@ -374,6 +386,13 @@ const Translator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.translator.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and translate job descriptions into multiple languages."
+      />
     </DashboardWrapper>
   );
 };

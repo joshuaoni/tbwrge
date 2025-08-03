@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 import {
   feedbackSupport,
@@ -18,14 +19,23 @@ import { useForm } from "@/hooks/form";
 import { useUserStore } from "@/hooks/use-user-store";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 const FeedbackPage = () => {
   const { t } = useTranslation();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
 
   const feedbackMutation = useMutation({
     mutationFn: async (data: FeedbackSupportRequestData) =>
       await feedbackSupport(userData?.token ?? "", data),
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(error.message || "Failed to submit feedback");
+      }
+    },
     onSuccess: () => {
       toast.success(t("feedback.feedbackSubmitted"));
       form.resetForm();
@@ -89,6 +99,14 @@ const FeedbackPage = () => {
           <FeedbackSupportButton isLoading={feedbackMutation.isPending} />
         </div>
       </form>
+
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("feedback.title")}
+        featureDescription="Upgrade your plan to unlock priority feedback submission and get faster responses to your suggestions."
+      />
     </DashboardFeedbackSupportLayout>
   );
 };

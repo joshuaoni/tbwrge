@@ -16,18 +16,19 @@ import VettingWrapper from "../../../components/dashboard/vetting/vetting-wrappe
 import { VettingResponse } from "../../../interfaces/vetting.interface";
 import { outfit } from "@/constants/app";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 const Vetting = () => {
-  const { t } = useTranslation();
   const [files, setFiles] = useState<File[]>([]);
   const [prompts, setPrompts] = useState<string[]>([]);
   const [value, setValue] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const [summary, setSummary] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [vettingResults, setVettingResults] = useState<Array<any>>();
+  const { t } = useTranslation();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -74,6 +75,15 @@ const Vetting = () => {
       );
       return response;
     },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message || "An error occurred while vetting the cover letter"
+        );
+      }
+    },
   });
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -84,10 +94,10 @@ const Vetting = () => {
       <span className={`${outfit.className} font-bold text-sm`}>
         {t("coverLetterTools.vetting.title")}
       </span>
-      <section className={`${outfit.className} flex space-x-4 text-sm`}>
+      <section className={`${outfit.className} flex space-x-4`}>
         <div className="w-[50%] flex flex-col">
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <span className="font-bold">
+            <span className="font-bold text-sm">
               {t("coverLetterTools.vetting.upload.title")}
             </span>
             <span className="font-light text-sm">
@@ -100,7 +110,7 @@ const Vetting = () => {
                 type="file"
                 multiple
                 accept=".pdf, .doc, .docx, .txt"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 text-sm"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
               <div
                 className="relative flex flex-col space-y-3 cursor-pointer items-center justify-center w-full rounded-xl mt-4 h-[200px] z-0"
@@ -170,51 +180,28 @@ const Vetting = () => {
             )}
           </div>
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit flex flex-col mt-4 p-6">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-sm">
-                {t("coverLetterTools.vetting.jobDescription.title")}
-                <span className="text-sm font-medium">
-                  {" "}
-                  {t("coverLetterTools.vetting.jobDescription.subTitle")}
-                </span>
-              </span>
-            </div>
-            <div className="mt-4 border border-gray-100 rounded-lg">
+            <span className="font-bold text-sm">
+              {t("coverLetterTools.vetting.jobDescription.title")}
+            </span>
+            <div className="mt-5 bg-white">
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
-                rows={4}
-                className="w-full p-3 border-none outline-none rounded-lg resize-none"
                 placeholder={t(
-                  "coverLetterTools.vetting.jobDescriptionPlaceholder"
+                  "coverLetterTools.generator.jobDescriptionPlaceholder"
                 )}
+                className="h-32 w-full bg-[#F8F9FF] border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#009379] resize-none placeholder:text-sm"
               />
             </div>
-            <Button
-              className="w-full mt-4"
-              onClick={() => {
-                vetClMutation();
-              }}
-              disabled={files.length === 0 || jobDescription === ""}
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="animate-spin" />
-                  {t("coverLetterTools.vetting.analyzing")}
-                </>
-              ) : (
-                t("coverLetterTools.vetting.vetCoverLetter")
-              )}
-            </Button>
           </div>
 
           {/* Prompts Section */}
           <div className="rounded-xl border border-gray-100 shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] h-fit mt-4 p-6">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-sm">
+              <span className="font-bold">
                 {t("coverLetterTools.vetting.customizeResults")}{" "}
                 <span className="text-sm font-medium">
-                  {t("coverLetterTools.vetting.addPrompts")}
+                  {t("coverLetterTools.vetting.addPrompts")}&#41;
                 </span>
               </span>
               <Plus
@@ -228,7 +215,7 @@ const Vetting = () => {
               />
             </div>
             <Input
-              placeholder={t("coverLetterTools.vetting.inputPrompt")}
+              placeholder="Input Prompt"
               value={value}
               className="my-3 bg-[#F8F9FF]"
               onChange={(e) => setValue(e.target.value)}
@@ -264,6 +251,22 @@ const Vetting = () => {
                 setValue={setSelectedValue}
               />
             </div>
+            <div className="flex flex-col">
+              <Button
+                disabled={files.length === 0 || jobDescription === ""}
+                variant="default"
+                onClick={() => {
+                  vetClMutation();
+                }}
+                className="self-center bg-primary min-w-[100px]  text-white"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  t("coverLetterTools.vetting.vetCoverLetter")
+                )}
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -274,88 +277,24 @@ const Vetting = () => {
                 {t("coverLetterTools.vetting.vettingResults")}
               </span>
             </div>
-            {vettingResults === undefined ? (
-              <div className="my-4 text-center">
-                {t("coverLetterTools.vetting.resultsPlaceholder")}
-              </div>
-            ) : (
-              <div className="my-4">
-                {loading ? (
-                  <div className="space-y-2">
-                    <div className="flex justify-center">
-                      <Loader2 className="animate-spin" />
-                    </div>
-                  </div>
-                ) : vettingResults === undefined ? (
-                  <div>{t("coverLetterTools.vetting.resultsPlaceholder")}</div>
-                ) : (
-                  vettingResults?.map(
-                    (
-                      result: {
-                        file_name: string;
-                        analysis: string;
-                        score: number;
-                        recommendations: string[];
-                      },
-                      index: number
-                    ) => (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-semibold text-sm">
-                            {result.file_name}
-                          </span>
-                          <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${
-                              result.score >= 80
-                                ? "bg-green-100 text-green-800"
-                                : result.score >= 60
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {t("coverLetterTools.vetting.score")}:{" "}
-                            {result.score}/100
-                          </span>
-                        </div>
-                        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                          <div className="mb-3">
-                            <h4 className="font-medium text-sm mb-2">
-                              {t("coverLetterTools.vetting.analysis")}
-                            </h4>
-                            <p className="text-sm text-gray-700">
-                              {result.analysis}
-                            </p>
-                          </div>
-                          {result.recommendations &&
-                            result.recommendations.length > 0 && (
-                              <div>
-                                <h4 className="font-medium text-sm mb-2">
-                                  {t(
-                                    "coverLetterTools.vetting.recommendations"
-                                  )}
-                                </h4>
-                                <ul className="list-disc list-inside space-y-1">
-                                  {result.recommendations.map((rec, i) => (
-                                    <li
-                                      key={i}
-                                      className="text-sm text-gray-700"
-                                    >
-                                      {rec}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    )
-                  )
-                )}
-              </div>
-            )}
+
+            <div className="grid gap-6">
+              {isPending && <MetricCardsLoading />}
+              {isSuccess && <VettingWrapper files={files} vets={vets} />}
+              {isError && (
+                <p>an error occured while vetting your cover letter</p>
+              )}
+            </div>
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("coverLetterTools.vetting.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and vet cover letters with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };

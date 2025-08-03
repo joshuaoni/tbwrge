@@ -8,6 +8,7 @@ import { outfit } from "@/constants/app";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { BlogCard } from "../blog-posts";
 
 const BLOGS_PER_PAGE = 8;
 
@@ -28,64 +29,6 @@ const BlogCardSkeleton = () => (
     </div>
   </div>
 );
-
-const BlogCard = ({ blog }: { blog: BlogItem }) => {
-  const router = useRouter();
-
-  return (
-    <div
-      onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
-    >
-      <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
-        <Image
-          src={blog.image || "/unsplash_Tyg0rVhOTrE.png"}
-          alt={blog.title}
-          width={825}
-          height={160}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3 h-[84px]">
-        {blog.title}
-      </div>
-      <div className="flex-grow"></div>
-      {/* Author Section */}
-      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 border-t border-gray-100 bg-white">
-        <div>
-          <p className="toppy font-semibold text-gray-900 text-[15px] leading-none m-0">
-            {blog.user?.name || "Anonymous"}
-          </p>
-          <p className="downy capitalize text-[8px] text-gray-500 mt-0 pb-[2px]">
-            {blog.user?.job_title || "Employee"}
-            {", "}
-            <span className="uppercase">
-              {blog.user?.company_name || "Anonymous"}
-            </span>
-          </p>
-          <p className="text-xs pt-[2px] border-t border-primary text-gray-500">
-            {new Date(blog.created_at).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-        {blog.user?.profile_photo ? (
-          <Image
-            src={blog.user.profile_photo}
-            alt={blog.user.name || "User"}
-            width={48}
-            height={48}
-            className="rounded-full object-cover w-12 h-12"
-          />
-        ) : (
-          <FaUserCircle className="w-12 h-12 text-gray-400" />
-        )}
-      </div>
-    </div>
-  );
-};
 
 const Blogs = () => {
   const { userData } = useUserStore();
@@ -319,7 +262,7 @@ const Blogs = () => {
             custom={2}
             className="w-full overflow-hidden hidden md:block md:mt-4"
           >
-            <div className="w-full flex flex-wrap gap-4 md:gap-6 lg:gap-8 justify-center items-center">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {isLoading || !blogs || blogs.length === 0
                 ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
                 : blogs.map((blog: BlogItem, idx: number) => (

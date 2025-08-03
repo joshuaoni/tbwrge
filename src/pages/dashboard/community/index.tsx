@@ -1,9 +1,7 @@
-// import { CommunityDashHeader } from "@/components/community-dash-header";
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import CommunityDashHeader from "@/components/community-dash-header";
 import { outfit } from "@/constants/app";
 import PostDetails from "@/components/post-details";
 import CreatePost from "@/components/create-post";
@@ -19,12 +17,14 @@ import {
 import { getTags } from "@/actions/get-tags";
 import { Tag } from "@/actions/get-tags";
 import { useRouter } from "next/router";
+import DashboardWrapper from "@/components/dashboard-wrapper";
 
 const CommunityPage = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
   const { userData } = useUserStore();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -37,21 +37,24 @@ const CommunityPage = () => {
   } = useQuery({
     queryKey: ["posts", currentPage],
     queryFn: async () => {
-      if (!userData?.token) {
-        throw new Error("No authentication token found");
-      }
-      return getPosts(userData.token, currentPage);
+      // if (!userData?.token) {
+      //   throw new Error("No authentication token found");
+      // }
+      return getPosts(currentPage);
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const { data: tags = [], isLoading: tagsLoading } = useQuery({
     queryKey: ["tags", currentPage],
     queryFn: () => {
-      if (!userData?.token) throw new Error("No authentication token found");
-      return getTags(userData.token, currentPage);
+      // if (!userData?.token) throw new Error("No authentication token found");
+      return getTags(
+        // userData.token,
+        currentPage
+      );
     },
-    enabled: !!userData?.token,
+    // enabled: !!userData?.token,
   });
 
   const formattedTags = useMemo(() => {
@@ -70,24 +73,59 @@ const CommunityPage = () => {
   const upvoteMutation = useMutation({
     mutationFn: async (postId: string) => {
       if (!userData?.token) {
-        throw new Error("Please sign in to vote on posts");
+        // Redirect to sign-in instead of throwing error
+        router.push(
+          `/sign-in?redirect=${encodeURIComponent("/dashboard/community")}`
+        );
+        return;
       }
       return togglePostVote(postId, userData.token);
     },
-    onSuccess: (_, postId) => {
-      const post = posts.find((p) => p.id.toString() === postId);
-      toast.success(
-        post?.reacted
-          ? "Post downvoted successfully"
-          : "Post upvoted successfully"
-      );
-      // Invalidate and refetch posts with current page
-      queryClient.invalidateQueries({
-        queryKey: ["posts", currentPage],
-        exact: true,
+    onMutate: async (postId) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["posts", currentPage] });
+
+      // Snapshot the previous value
+      const previousPosts = queryClient.getQueryData(["posts", currentPage]);
+
+      // Get the current post state before optimistic update
+      const currentPost = Array.isArray(previousPosts)
+        ? previousPosts.find((p: Post) => p.id.toString() === postId)
+        : null;
+      const wasReacted = currentPost?.reacted || false;
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["posts", currentPage], (old: any) => {
+        if (!old) return old;
+        return old.map((post: Post) => {
+          if (post.id.toString() === postId) {
+            return {
+              ...post,
+              reacted: !post.reacted,
+              upvotes: post.reacted ? post.upvotes - 1 : post.upvotes + 1,
+            };
+          }
+          return post;
+        });
       });
+
+      // Return a context object with the snapshotted value and the previous reacted state
+      return { previousPosts, wasReacted };
     },
-    onError: (error: Error) => {
+    onSuccess: (_, postId, context) => {
+      // Use the context to determine the correct toast message
+      const wasReacted = context?.wasReacted || false;
+      toast.success(
+        wasReacted ? "Post downvoted successfully" : "Post upvoted successfully"
+      );
+      // Don't immediately invalidate to prevent flash - let optimistic update persist
+      // The data will be fresh on next page load or manual refresh
+    },
+    onError: (error: Error, postId, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["posts", currentPage], context.previousPosts);
+      }
       toast.error(error.message || "Failed to vote on post");
     },
   });
@@ -196,12 +234,15 @@ const CommunityPage = () => {
         <button
           onClick={(e) => {
             e.stopPropagation();
+            if (!userData?.token) {
+              return; // Just return without redirecting
+            }
             upvoteMutation.mutate(post.id.toString());
           }}
-          disabled={upvoteMutation.isPending}
+          disabled={upvoteMutation.isPending || !userData?.token}
           className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
             post.reacted ? "bg-green-50 border-green-300" : ""
-          }`}
+          } ${!userData?.token ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           <Image
             src="/like.png"
@@ -216,7 +257,16 @@ const CommunityPage = () => {
             {post.reacted ? "Upvoted" : "Upvote"}
           </span>
         </button>
-        <button className="flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700">
+        <button
+          onClick={(e) => {
+            // Always open the post for both authenticated and non-authenticated users
+            // The comment functionality will be handled in the PostDetails component
+          }}
+          disabled={!userData?.token}
+          className={`flex justify-between rounded-[8px] border border-gray-300 p-[4px_6px] md:p-[4px_8px] items-center gap-1.5 md:gap-2 text-black hover:text-gray-700 ${
+            !userData?.token ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
           <Image
             src="/brush.png"
             alt="Comment"
@@ -231,71 +281,15 @@ const CommunityPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommunityDashHeader />
+    <DashboardWrapper searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
+      <div className={`${outfit.className} flex flex-col pb-12`}>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">Community</h1>
+        </div>
 
-      <div className="mx-auto pt-16 md:pt-[90px] px-4 md:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-          {/* Left Sidebar - Popular Tags */}
-          <div className="hidden md:block md:col-span-3">
-            <div className="bg-white rounded-xl p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)]">
-              <h2 className="text-lg font-semibold pl-2 mb-4">Popular Tags</h2>
-              <div className="space-y-2">
-                {formattedTags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
-                  >
-                    <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center`}
-                      style={{ backgroundColor: tag.bg }}
-                    >
-                      {tag.icon}
-                    </div>
-                    <div className="flex flex-col">
-                      <h3 className="text-[14px] font-semibold leading-tight">
-                        {tag.name}
-                      </h3>
-                      <span className="text-[12px] text-gray-700 mt-0.5">
-                        {tag.posts} Posted • {tag.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - Posts Feed */}
-          <div className={`${outfit.className} col-span-1 md:col-span-6`}>
-            {/* Mobile Popular Tags Grid */}
-            <div className="md:hidden pt-[20px] mb-4">
-              <h2 className="text-base font-semibold mb-3">Popular Tags</h2>
-              <div className="grid grid-cols-2 gap-2">
-                {formattedTags.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className="flex items-center gap-2 bg-white p-2.5 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer"
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0`}
-                      style={{ backgroundColor: tag.bg }}
-                    >
-                      {tag.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-[13px] font-semibold truncate">
-                        {tag.name}
-                      </h3>
-                      <p className="text-[11px] text-gray-600 truncate">
-                        {tag.posts} • {tag.status}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
+          <div className="lg:col-span-8">
             {isCreatingPost ? (
               <CreatePost
                 onClose={() => {
@@ -309,8 +303,15 @@ const CommunityPage = () => {
                 {/* Create Post Card */}
                 {!selectedPost && (
                   <div
-                    className="bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all"
-                    onClick={() => setIsCreatingPost(true)}
+                    className={`bg-white rounded-xl p-3 md:p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)] mb-4 cursor-pointer hover:shadow-lg transition-all ${
+                      !userData?.token ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={() => {
+                      if (!userData?.token) {
+                        return; // Just return without redirecting
+                      }
+                      setIsCreatingPost(true);
+                    }}
                   >
                     <div className="flex items-center gap-2 md:gap-3">
                       {userData?.user?.profile_picture ? (
@@ -362,48 +363,79 @@ const CommunityPage = () => {
                 )}
               </>
             )}
+
+            {/* Pagination controls */}
+            {!selectedPost && !isCreatingPost && (
+              <div className="flex justify-center items-center gap-4 mt-6">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(0, prev - 1))
+                  }
+                  disabled={currentPage === 0 || isLoading}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <span className="text-sm text-gray-600">
+                  Page {currentPage + 1}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  disabled={posts.length === 0 || isLoading}
+                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Right Sidebar - Advertisement */}
-          <div className="hidden md:block md:col-span-3 space-y-[14px]">
-            {[1, 2].map((post) => (
-              <div
-                key={post}
-                className="h-[300px] bg-[#1E2937] rounded-xl p-4 text-white"
-              >
-                <h2 className="text-lg font-semibold mb-4"></h2>
+          {/* Right Sidebar */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Popular Tags */}
+            <div className="bg-white rounded-xl p-4 shadow-[0px_4px_50px_0px_rgba(0,0,0,0.25)]">
+              <h2 className="text-lg font-semibold mb-4">Popular Tags</h2>
+              <div className="space-y-2">
+                {formattedTags.map((tag) => (
+                  <div
+                    key={tag.id}
+                    className="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg"
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center`}
+                      style={{ backgroundColor: tag.bg }}
+                    >
+                      {tag.icon}
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="text-[14px] font-semibold leading-tight">
+                        {tag.name}
+                      </h3>
+                      <span className="text-[12px] text-gray-700 mt-0.5">
+                        {tag.posts} Posted • {tag.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-            <h1 className="text-lg text-center font-semibold mb-4">
-              Advertisement
-            </h1>
+            </div>
+
+            {/* Advertisement */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Advertisement</h2>
+              {[1, 2].map((post) => (
+                <div
+                  key={post}
+                  className="h-[300px] bg-[#1E2937] rounded-xl p-4 text-white"
+                >
+                  <h2 className="text-lg font-semibold mb-4"></h2>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Add pagination controls at the bottom of the posts list */}
-        {!selectedPost && !isCreatingPost && (
-          <div className="flex justify-center items-center gap-4 mt-6 mb-8">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-              disabled={currentPage === 0 || isLoading}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <span className="text-sm text-gray-600">
-              Page {currentPage + 1}
-            </span>
-            <button
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              disabled={posts.length === 0 || isLoading}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
-    </div>
+    </DashboardWrapper>
   );
 };
 

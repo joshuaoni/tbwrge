@@ -5,6 +5,11 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const userRole = request.cookies.get("userRole")?.value;
 
+  // Allow public access to community page
+  if (pathname === "/dashboard/community") {
+    return NextResponse.next();
+  }
+
   // Protect dashboard and admin routes
   if (pathname.startsWith("/dashboard") || pathname.startsWith("/admin")) {
     // If no user role, redirect to login

@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 import { outfit } from "@/constants/app";
 import classNames from "classnames";
+import AdminArticlePreviewModal from "@/components/admin/article-preview-modal";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -90,10 +91,29 @@ const PostABlogPage = () => {
   const [blogToApprove, setBlogToApprove] = useState<BlogItem | null>(null);
   const [blogToView, setBlogToView] = useState<BlogItem | null>(null);
   const [blogToDelete, setBlogToDelete] = useState<BlogItem | null>(null);
+  const [blogToEdit, setBlogToEdit] = useState<BlogItem | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
+  const [editImage, setEditImage] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState("Pending Approval");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const approvedFilter =
-    activeTab === "Approved" ? { approved: true } : { approved: false };
+    activeTab === "Approved"
+      ? {
+          approved: true,
+          page: currentPage,
+          limit: 10,
+          ...(searchTerm && { text: searchTerm }),
+        }
+      : {
+          approved: false,
+          page: currentPage,
+          limit: 10,
+          ...(searchTerm && { text: searchTerm }),
+        };
 
   const { data: blogs, isLoading } = useQuery<BlogItem[]>({
     queryKey: ["blogs", approvedFilter],
@@ -114,6 +134,7 @@ const PostABlogPage = () => {
       setTitle("");
       setContent("");
       setImage(null);
+      setShowPreviewModal(false);
       toast.success("Blog post created successfully");
     },
   });
@@ -150,8 +171,34 @@ const PostABlogPage = () => {
     },
   });
 
+  const editBlogMutation = useMutation({
+    mutationFn: async (data: { blogId: string; formData: FormData }) => {
+      if (!userData?.token) throw new Error("No token available");
+      return await updateBlog(userData.token, data.blogId, {
+        title: data.formData.get("title") as string,
+        content: data.formData.get("content") as string,
+        image: data.formData.get("image") as File,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      setBlogToEdit(null);
+      setEditTitle("");
+      setEditContent("");
+      setEditImage(null);
+      toast.success("Blog post updated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to update blog post");
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPreviewModal(true);
+  };
+
+  const handlePublish = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -162,6 +209,16 @@ const PostABlogPage = () => {
   };
 
   const blogsSafe = blogs ?? [];
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(0); // Reset to first page when changing tabs
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(0); // Reset to first page when searching
+  };
 
   return (
     <AdminDashboardLayout>
@@ -211,26 +268,61 @@ const PostABlogPage = () => {
             <input
               type="file"
               onChange={(e) => setImage(e.target.files?.[0] || null)}
-              accept=".pdf,.doc,.docx"
+              accept="image/*"
               className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
             />
           </div>
           <button
             type="submit"
-            disabled={createBlogMutation.isPending || !title || !content}
+            disabled={!title || !content}
             className="bg-[#145959] text-white py-3 px-8 font-bold rounded-lg w-fit flex items-center gap-2 disabled:bg-opacity-70 disabled:cursor-not-allowed"
           >
-            {createBlogMutation.isPending ? "Posting..." : "Post Article"}
+            Preview Article
           </button>
         </div>
       </form>
 
       <div className={`${outfit.className} mt-10 space-y-4`}>
+        {/* Search Bar */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="relative flex-1 max-w-md">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Search blogs by title or content..."
+              className="w-full px-4 py-2 pl-10 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+            />
+            <svg
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          {searchTerm && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Tabs */}
         <div className="flex items-center gap-6">
           {["Pending Approval", "Approved"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={classNames("font-medium", {
                 "text-primary": activeTab === tab,
               })}
@@ -248,7 +340,7 @@ const PostABlogPage = () => {
                   User
                 </th>
                 <th className="py-3 px-6 text-left w-1/5">Author & Email</th>
-                <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl w-2/5">
+                <th className="py-3 px-6 text-left rounded-tr-xl rounded-br-xl w-1/2 min-w-[340px]">
                   Actions
                 </th>
               </tr>
@@ -271,9 +363,16 @@ const PostABlogPage = () => {
                   <tr key={blog.id} className="hover:bg-gray-100">
                     <td className="py-3 px-6 text-left flex items-center space-x-2 flex-1">
                       <div>
-                        <p className="font-medium text-sm text-[#333]">
+                        <p className="font-medium text-sm text-[#333] truncate max-w-xs">
                           {blog.title}
                         </p>
+                        {blog.content && (
+                          <p className="text-xs text-gray-500 truncate max-w-xs">
+                            {blog.content
+                              .replace(/<[^>]+>/g, "")
+                              .replace(/\n/g, " ")}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500">
                           Submitted: {formatTimeAgo(blog.created_at)}
                         </p>
@@ -282,12 +381,23 @@ const PostABlogPage = () => {
                     <td className="py-3 px-6 text-left w-1/5">
                       {blog.user?.name}
                     </td>
-                    <td className="py-3 px-6 space-x-6 w-2/5">
+                    <td className="py-3 px-6 space-x-3 w-1/2 min-w-[340px]">
                       <button
                         className="bg-primary text-white px-10 py-2 rounded-3xl text-sm font-semibold"
                         onClick={() => setBlogToView(blog)}
                       >
                         View
+                      </button>
+                      <button
+                        className="bg-primary text-white px-6 py-2 rounded-3xl text-sm font-semibold"
+                        onClick={() => {
+                          setBlogToEdit(blog);
+                          setEditTitle(blog.title);
+                          setEditContent(blog.content || "");
+                          setEditImage(null);
+                        }}
+                      >
+                        Edit
                       </button>
                       {!blog.approved && (
                         <button
@@ -309,6 +419,29 @@ const PostABlogPage = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+              disabled={currentPage === 0}
+              className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <span className="px-3 py-1 text-sm text-gray-600">
+              Page {currentPage + 1}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              disabled={blogsSafe.length < 10}
+              className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
 
@@ -453,6 +586,140 @@ const PostABlogPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Edit Blog Dialog */}
+      <Dialog open={!!blogToEdit} onOpenChange={() => setBlogToEdit(null)}>
+        <DialogContent className="bg-white text-[#333] shadow-xl border border-gray-200 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Blog Post</DialogTitle>
+            <DialogDescription>
+              Update the blog post details below.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData();
+              formData.append("title", editTitle);
+              formData.append("content", editContent);
+              if (editImage) {
+                formData.append("image", editImage);
+              }
+              if (blogToEdit) {
+                editBlogMutation.mutate({ blogId: blogToEdit.id, formData });
+              }
+            }}
+            className="space-y-6"
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Article Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-[#6B7280]"
+                placeholder="Enter article title"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Article Content <span className="text-red-500">*</span>
+              </label>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <ReactQuill
+                  theme="snow"
+                  value={editContent}
+                  onChange={setEditContent}
+                  modules={modules}
+                  formats={formats}
+                  className="bg-gray-50"
+                  placeholder="Write your article content here..."
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Article Image
+              </label>
+
+              {/* Current Image Preview */}
+              {blogToEdit?.image && (
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600 mb-2">Current Image:</p>
+                  <div className="relative inline-block">
+                    <img
+                      src={blogToEdit.image}
+                      alt="Current blog image"
+                      className="w-32 h-32 object-cover rounded-lg border border-gray-200"
+                    />
+                    <div className="absolute top-0 right-0 bg-gray-800 bg-opacity-75 text-white text-xs px-2 py-1 rounded-bl-lg">
+                      Current
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <input
+                type="file"
+                onChange={(e) => setEditImage(e.target.files?.[0] || null)}
+                accept="image/*"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#6B7280] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-gray-100 file:text-[#6B7280] hover:file:bg-gray-200"
+              />
+
+              {/* New Image Preview */}
+              {editImage && (
+                <div className="mt-4">
+                  <p className="text-sm text-gray-600 mb-2">
+                    New Image Preview:
+                  </p>
+                  <div className="relative inline-block">
+                    <img
+                      src={URL.createObjectURL(editImage)}
+                      alt="New image preview"
+                      className="w-32 h-32 object-cover rounded-lg border border-gray-200"
+                    />
+                    <div className="absolute top-0 right-0 bg-blue-600 bg-opacity-75 text-white text-xs px-2 py-1 rounded-bl-lg">
+                      New
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                className="bg-white text-[#2563EB] border border-[#2563EB] hover:bg-[#2563EB] hover:text-white"
+                onClick={() => setBlogToEdit(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  editBlogMutation.isPending || !editTitle || !editContent
+                }
+              >
+                {editBlogMutation.isPending ? "Updating..." : "Update Blog"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Article Preview Modal */}
+      <AdminArticlePreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        onPublish={handlePublish}
+        title={title}
+        content={content}
+        image={image}
+        isSubmitting={createBlogMutation.isPending}
+      />
     </AdminDashboardLayout>
   );
 };

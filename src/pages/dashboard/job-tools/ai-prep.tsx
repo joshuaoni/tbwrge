@@ -18,6 +18,8 @@ import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import { useRouter } from "next/router";
 
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -59,10 +61,12 @@ interface InterviewPrepResponse {
 
 const AiInterviewPrep = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const { userData } = useUserStore();
 
@@ -313,6 +317,16 @@ const AiInterviewPrep = () => {
         userData?.token as string,
         jobDescription
       );
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while generating interview preparation"
+        );
+      }
     },
   });
 
@@ -575,8 +589,7 @@ const AiInterviewPrep = () => {
                         (q: InterviewQuestion, qIndex: number) => (
                           <div key={qIndex} className="space-y-2">
                             <p className="font-medium text-base">
-                              {t("jobTools.interviewPrep.q")}
-                              {qIndex + 1}. "{q.question}"
+                              Q{qIndex + 1}. "{q.question}"
                             </p>
 
                             <div className="ml-2 pl-4 border-l-2 border-green-500">
@@ -622,6 +635,14 @@ const AiInterviewPrep = () => {
           </div>
         </div>
       </section>
+
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.interviewPrep.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and prepare for interviews with AI-generated questions and answers."
+      />
     </DashboardWrapper>
   );
 };

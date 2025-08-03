@@ -97,7 +97,7 @@ const LandingHeader = ({
     {
       ref: CommunitySectionRef,
       title: "Community",
-      link: "/community",
+      link: "/dashboard/community",
     },
     {
       title: "Apply for a job",
@@ -129,7 +129,7 @@ const LandingHeader = ({
           } ${outfit.className}`}
         >
           <div
-            className={`w-full max-w-[1600px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
+            className={`w-full max-w-[1920px] mx-auto px-4 md:px-16 flex items-center justify-between py-4 ${textColor}`}
           >
             <div className="flex items-center gap-8">
               <div
@@ -459,7 +459,7 @@ const NavigationHeader = ({
     {
       ref: CommunitySectionRef,
       title: "Community",
-      link: "/community",
+      link: "/dashboard/community",
     },
     {
       title: "Apply for a job",
@@ -561,7 +561,14 @@ const NavigationHeader = ({
     </div>
   );
 };
-const NavItem = ({ title, link, textColor, protected: isProtected }: any) => {
+const NavItem = ({
+  title,
+  link,
+  textColor,
+  protected: isProtected,
+  ref,
+  scrollToSection,
+}: any) => {
   const router = useRouter();
   const pathName = usePathname();
   const { userData } = useUserStore();
@@ -570,23 +577,32 @@ const NavItem = ({ title, link, textColor, protected: isProtected }: any) => {
   ];
   const isActive = path === link.split("/")[link.split("/").length - 1];
   const onClick = () => {
-    if (isProtected) {
-      // Special case for 'Post a job'
-      if (title === "Post a job") {
-        if (!userData?.token) {
-          router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
-          return;
-        }
-        if (userData?.user?.role === "job_seeker") {
-          router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
-          return;
-        }
-      } else if (!userData?.token) {
-        router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
-        return;
-      }
+    // If item has a ref, scroll to section
+    if (ref && scrollToSection) {
+      scrollToSection(ref);
+      return;
     }
-    router.push(link);
+
+    // If item has a link, navigate to page
+    if (link) {
+      if (isProtected) {
+        // Special case for 'Post a job'
+        if (title === "Post a job") {
+          if (!userData?.token) {
+            router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
+            return;
+          }
+          if (userData?.user?.role === "job_seeker") {
+            router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
+            return;
+          }
+        } else if (!userData?.token) {
+          router.push(`/sign-in?redirect=${encodeURIComponent(link)}`);
+          return;
+        }
+      }
+      router.push(link);
+    }
   };
   return (
     <span

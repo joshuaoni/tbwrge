@@ -18,6 +18,7 @@ import jsPDF from "jspdf";
 import toast from "react-hot-toast";
 import DocumentDownloadIcon from "@/components/icons/document-download";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
 
 // Dynamic import for React Quill
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -66,6 +67,7 @@ const InterviewScreeningGenerator = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const { userData } = useUserStore();
   const { t } = useTranslation();
@@ -307,6 +309,16 @@ const InterviewScreeningGenerator = () => {
         userData?.token as string,
         jobDescription
       );
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while generating interview questions"
+        );
+      }
     },
   });
 
@@ -595,6 +607,13 @@ const InterviewScreeningGenerator = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("jobTools.interviewQuestions.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and generate structured interview questions by competency."
+      />
     </DashboardWrapper>
   );
 };

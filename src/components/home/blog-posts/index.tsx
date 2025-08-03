@@ -14,7 +14,7 @@ import { motion, useInView } from "framer-motion";
 
 // BlogCardSkeleton for loading state
 const BlogCardSkeleton = () => (
-  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[350px] overflow-hidden animate-pulse">
+  <div className="bg-white rounded-2xl w-72 flex flex-col items-start shadow-md h-[420px] overflow-hidden animate-pulse">
     <div className="mb-6 w-full h-40 bg-gray-200" />
     <div className="px-6 w-full flex-1 flex flex-col justify-between">
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 mt-2" />
@@ -99,19 +99,23 @@ const BlogPosts = () => {
       </div>
 
       {/* Desktop/Tablet Grid View */}
-      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs
-              ?.slice(0, 4)
-              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+      <div className="hidden sm:flex w-full justify-center mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs
+                ?.slice(0, 4)
+                .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+        </div>
       </div>
-      <div className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs
-              ?.slice(4, 8)
-              .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+      <div className="hidden sm:flex w-full justify-center mt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs
+                ?.slice(4, 8)
+                .map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+        </div>
       </div>
 
       <Button className="text-[12px] self-center mt-8 bg-[#009379] py-4 text-white">
@@ -194,6 +198,7 @@ export const BlogPostsWithPagination = () => {
 
   // Check if there are more items to load
   const hasMore = blogs ? blogs.length === postsPerPage : false;
+  console.log({ blogs });
 
   return (
     <motion.div
@@ -259,19 +264,21 @@ export const BlogPostsWithPagination = () => {
       <motion.div
         variants={itemVariants}
         custom={2}
-        className="hidden sm:grid w-full grid-cols-2 lg:grid-cols-4 gap-6 mt-8"
+        className="hidden sm:flex w-full justify-center mt-8"
       >
-        {isLoading || !blogs || blogs.length === 0
-          ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
-          : blogs?.map((blog, idx) => (
-              <motion.div
-                key={blog.id}
-                custom={getAnimationOrder(idx, blogs.length)}
-                variants={itemVariants}
-              >
-                <BlogCard blog={blog} />
-              </motion.div>
-            ))}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1200px] w-full">
+          {isLoading || !blogs || blogs.length === 0
+            ? [...Array(4)].map((_, i) => <BlogCardSkeleton key={i} />)
+            : blogs?.map((blog, idx) => (
+                <motion.div
+                  key={blog.id}
+                  custom={getAnimationOrder(idx, blogs.length)}
+                  variants={itemVariants}
+                >
+                  <BlogCard blog={blog} />
+                </motion.div>
+              ))}
+        </div>
       </motion.div>
 
       {/* Pagination */}
@@ -290,13 +297,13 @@ export const BlogPostsWithPagination = () => {
   );
 };
 
-const BlogCard = ({ blog }: { blog: BlogItem }) => {
+export const BlogCard = ({ blog }: { blog: BlogItem }) => {
   const router = useRouter();
 
   return (
     <div
       onClick={() => router.push(`/blog/${blog.id}`)}
-      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col items-start shadow-md h-[350px] overflow-hidden pb-4"
+      className="cursor-pointer bg-white rounded-2xl w-full max-w-80 flex flex-col shadow-md h-[444px]"
     >
       <div className="mb-6 w-full h-40 overflow-hidden rounded-t-2xl">
         <Image
@@ -307,12 +314,36 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="text-primary px-6 font-semibold text-xl leading-snug mb-4 line-clamp-3 h-[84px]">
-        {blog.title}
+      <div className="flex-1 flex flex-col px-6 min-h-0">
+        {/* Article Pill */}
+        <div className="mb-2">
+          <span className="inline-block bg-purple-100 text-purple-700 text-xs font-medium px-3 py-1 rounded-full">
+            Article
+          </span>
+        </div>
+        <div className="text-primary font-semibold text-xl leading-normal mb-2 line-clamp-2">
+          {blog.title}
+        </div>
+        <div
+          className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 h-[70px] overflow-hidden"
+          dangerouslySetInnerHTML={{
+            __html: blog.content || "No content available",
+          }}
+        />
       </div>
-      <div className="flex-grow"></div>
       {/* Author Section */}
-      <div className="flex items-center justify-end w-full gap-4 px-2 pt-3 border-t border-gray-100 bg-white">
+      <div className="flex items-center justify-start w-full gap-2 px-6 pt-3 pb-4 border-t border-gray-100">
+        {blog.user?.profile_picture ? (
+          <Image
+            src={blog.user.profile_picture}
+            alt={blog.user.name || "User"}
+            width={48}
+            height={48}
+            className="rounded-full object-cover w-12 h-12"
+          />
+        ) : (
+          <FaUserCircle className="w-12 h-12 text-gray-400" />
+        )}
         <div>
           <p className="toppy font-semibold text-gray-900 text-[15px] leading-none m-0">
             {blog.user?.name || "Anonymous"}
@@ -332,17 +363,6 @@ const BlogCard = ({ blog }: { blog: BlogItem }) => {
             })}
           </p>
         </div>
-        {blog.user?.profile_photo ? (
-          <Image
-            src={blog.user.profile_photo}
-            alt={blog.user.name || "User"}
-            width={48}
-            height={48}
-            className="rounded-full object-cover w-12 h-12"
-          />
-        ) : (
-          <FaUserCircle className="w-12 h-12 text-gray-400" />
-        )}
       </div>
     </div>
   );

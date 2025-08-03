@@ -13,6 +13,7 @@ export default function Document() {
         <link rel="icon" href="/seo-logo.png" />
         <link rel="apple-touch-icon" href="/header-final.png" />
         <meta name="theme-color" content="#065844" />
+        <link rel="canonical" href="https://candivet.com/" />
 
         {/* Google Analytics */}
         <script

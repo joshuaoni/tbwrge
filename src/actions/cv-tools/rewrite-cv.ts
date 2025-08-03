@@ -35,6 +35,11 @@ export const rewriteCV = async (
   } catch (error: any) {
     // Handle errors and return meaningful information
     if (error.response) {
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
       // Server responded with a status code outside the 2xx range
       console.error("Error Response:", error.response.data);
       throw new Error(error.response.data.message || "Server error occurred");

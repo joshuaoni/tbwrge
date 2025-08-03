@@ -34,13 +34,28 @@ export const feedbackSupport = async (
     formData.append("preferred_contact", data.preferred_contact);
   if (data.image) formData.append("image", data.image);
 
-  const response = await axios({
-    method: "POST",
-    url: API_CONFIG.FEEDBACK_SUPPORT,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    data: formData,
-  });
-  return response.data;
+  try {
+    const response = await axios({
+      method: "POST",
+      url: API_CONFIG.FEEDBACK_SUPPORT,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: formData,
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
+      throw new Error(error.response.data.detail || "Server error occurred");
+    } else if (error.request) {
+      throw new Error("No response from server. Please try again.");
+    } else {
+      throw new Error(error.message || "Unexpected error occurred");
+    }
+  }
 };

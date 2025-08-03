@@ -14,6 +14,9 @@ export const API_CONFIG = {
     `${MAIN_URL}/admin/close-ticket/${ticket_id}/`,
   DELETE_TICKET: (ticket_id: string) =>
     `${MAIN_URL}/admin/delete-ticket/${ticket_id}/`,
+  GET_ENTERPRISE_REQUESTS: `${MAIN_URL}/admin/get-enterprise-requests/`,
+  UPDATE_ENTERPRISE_REQUEST: (request_id: string) =>
+    `${MAIN_URL}/admin/update-enterprise-requests/${request_id}/`,
 
   REGISTER_USER: `${MAIN_URL}/auth/user-register/`,
   VERIFY_EMAIL: `${MAIN_URL}/auth/verify-account/`,
@@ -44,7 +47,8 @@ export const API_CONFIG = {
   INTERVIEW_QUESTION_GEN: `${MAIN_URL}/job/interview-questions-gen/`,
   SCREEN_INTERVIEW_QUESTION: `${MAIN_URL}/job/screen-interview-questions/`,
   GET_CANDIDATE_REPORT: `${MAIN_URL}/job/get-candidate-report/`,
-  GET_JOB_OPENINGS: `${MAIN_URL}/job/get-jobs/`,
+  GET_JOB_OPENINGS: (status: string) =>
+    `${MAIN_URL}/job/get-jobs/?status=${status}`,
   INTERVIEW_PREP: `${MAIN_URL}/job/interview-prep/`,
   GET_COMPANIES: `${MAIN_URL}/job/get-companies/`,
   GET_APPLICATION_ITEM: (application_id: string) =>
@@ -79,9 +83,13 @@ export const API_CONFIG = {
   FEEDBACK_SUPPORT: `${MAIN_URL}/profile/submit-feedback/`,
   DELETE_ACCOUNT: `${MAIN_URL}/profile/delete-account/`,
   GET_ACTIVITIES: `${MAIN_URL}/profile/get-activities/`,
+  REQUEST_ENTERPRISE: `${MAIN_URL}/profile/request-enterprise/`,
+  GET_PREMIUM: (freetrial: boolean) =>
+    `${MAIN_URL}/profile/get-premium/?freetrial=${freetrial}`,
   GET_APPLIED_JOB_IDS: `${MAIN_URL}/job/get-applied-jobs-ids/`,
   GET_APPLIED_JOBS: (page: number = 0) =>
     `${MAIN_URL}/job/get-user-applications/${page}/`,
+  AI_SEARCH_JOBS: `${MAIN_URL}/job/source-jobs/`,
 
   CREATE_BLOG: `${MAIN_URL}/blog/create-post/`,
   GET_BLOGS: `${MAIN_URL}/blog/get-posts/`,
@@ -105,6 +113,7 @@ export const API_CONFIG = {
   TALENT_DELETE_CHAT: (channel_id: string) =>
     `${MAIN_URL}/talent/delete-chat/${channel_id}/`,
   TALENT_GET_CHATS: `${MAIN_URL}/talent/get-chats/`,
+  GET_UNREAD_MESSAGES: `${MAIN_URL}/talent/get-unread-chats-count/ `,
 
   MANAGE_CHAT: (feedback_id: string) =>
     `${CHAT_URL}/chat/manage-chat/${feedback_id}/`,
@@ -126,9 +135,10 @@ export const API_CONFIG = {
   JOB_AI_SEARCH: (page: number = 0) => `${MAIN_URL}/job/ai-search/${page}/`,
   GET_PROFILE_STATS: `${MAIN_URL}/talent/get-profile-stats/`,
 
-  GET_POSTS: (page: number = 0) => `${MAIN_URL}/community/get-posts/${page}/`,
+  GET_POSTS: (page: number = 0) =>
+    `${MAIN_URL}/community/get-posts-pub/${page}/`,
   GET_COMMENTS: (post_id: string) =>
-    `${MAIN_URL}/community/get-comments/${post_id}/`,
+    `${MAIN_URL}/community/get-comments-pub/${post_id}/`,
   CREATE_COMMENT: (post_id: string) =>
     `${MAIN_URL}/community/create-comment/${post_id}/`,
   CREATE_POST: `${MAIN_URL}/community/create-post/`,

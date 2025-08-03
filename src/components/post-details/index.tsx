@@ -28,10 +28,13 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
   const commentsMutation = useMutation<Comment[], Error>({
     mutationKey: ["get-comments", post.id],
     mutationFn: async () => {
-      if (!userData?.token) {
-        throw new Error("No authentication token found");
-      }
-      return getComments(post.id.toString(), userData.token);
+      // if (!userData?.token) {
+      //   throw new Error("No authentication token found");
+      // }
+      return getComments(
+        post.id.toString()
+        //  userData.token
+      );
     },
     onSuccess: (data) => {
       setComments(data);
@@ -97,10 +100,8 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
   });
 
   React.useEffect(() => {
-    if (userData?.token) {
-      commentsMutation.mutate();
-    }
-  }, [userData?.token, post.id]);
+    commentsMutation.mutate();
+  }, [post.id]);
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,18 +200,35 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
             <div className="flex-1">
               <input
                 type="text"
-                placeholder="Add a comment..."
+                placeholder={
+                  userData?.token ? "Add a comment..." : "Sign in to comment..."
+                }
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-300"
+                disabled={!userData?.token}
+                className={`w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-gray-300 ${
+                  !userData?.token ? "bg-gray-100 cursor-not-allowed" : ""
+                }`}
               />
             </div>
             <button
               type="submit"
-              disabled={createCommentMutation.isPending || !newComment.trim()}
-              className="px-4 py-2.5 bg-[#065844] text-white rounded-lg text-sm font-medium hover:bg-[#054e3a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={
+                createCommentMutation.isPending ||
+                !newComment.trim() ||
+                !userData?.token
+              }
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                userData?.token
+                  ? "bg-[#065844] text-white hover:bg-[#054e3a] disabled:opacity-50 disabled:cursor-not-allowed"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
             >
-              {createCommentMutation.isPending ? "Posting..." : "Post"}
+              {!userData?.token
+                ? "Sign In to Comment"
+                : createCommentMutation.isPending
+                ? "Posting..."
+                : "Post"}
             </button>
           </div>
         </form>
@@ -228,15 +246,18 @@ const PostDetails = ({ post: initialPost, onClose }: PostDetailsProps) => {
               <div key={comment.id} className="bg-[#F8F9FF] rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#FFF1E8] border border-[#EA942C] flex items-center justify-center">
+                    {comment.user.profile_picture ? (
                       <Image
-                        src={comment.user.profile_picture || "/Mask.png"}
+                        src={comment.user.profile_picture}
                         alt={`${comment.user.name} ${comment.user.last_name}`}
                         width={30}
                         height={30}
                         className="rounded-full"
                       />
-                    </div>
+                    ) : (
+                      <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                    )}
+
                     <div>
                       <h4 className="text-sm font-medium">
                         {comment.user.name} {comment.user.last_name}

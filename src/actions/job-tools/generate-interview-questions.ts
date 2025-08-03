@@ -35,7 +35,12 @@ export const generateInterviewQuestions = async (
     return response.data;
   } catch (error: any) {
     if (error.response) {
-      throw new Error(error.response.data.message || "Servzer error occurred");
+      // Handle 402 Payment Required specifically
+      if (error.response.status === 402) {
+        throw new Error("PAYMENT_REQUIRED");
+      }
+
+      throw new Error(error.response.data.message || "Server error occurred");
     } else if (error.request) {
       throw new Error("No response from server. Please try again.");
     } else {

@@ -16,6 +16,8 @@ import { TbCircles } from "react-icons/tb";
 import pdfIcon from "../../../../public/images/icons/pdf-icon.png";
 import uploadIcon from "../../../../public/images/icons/upload.png";
 import { useTranslation } from "react-i18next";
+import { PaymentRequiredModal } from "@/components/ui/payment-required-modal";
+import toast from "react-hot-toast";
 
 interface CandidateInfo {
   relevance_of_experience: number;
@@ -46,6 +48,7 @@ const HeadToHead = () => {
   const [value, setValue] = useState("");
   const [selectedLanguage, setSelectedValue] = useState<string>("English");
   const [jobDescription, setJobDescription] = useState("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { userData } = useUserStore();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
@@ -86,6 +89,16 @@ const HeadToHead = () => {
         jobDescription
       );
       return response;
+    },
+    onError: (error: any) => {
+      if (error.message === "PAYMENT_REQUIRED") {
+        setShowPaymentModal(true);
+      } else {
+        toast.error(
+          error.message ||
+            "An error occurred while generating the head-to-head comparison"
+        );
+      }
     },
   });
   const removeFile = (index: number) => {
@@ -294,7 +307,7 @@ const HeadToHead = () => {
                   <div
                     key={i}
                     className={classNames(
-                      "flex items-center gap-6 px-5 py-4 min-w-96 bg-[#065844] text-white rounded-xl",
+                      "flex items-center gap-6 px-6 py-6 min-w-96 bg-[#065844] text-white rounded-xl min-h-[140px]",
                       outfit.className,
                       item === "overall_score" ? "bg-[#009379]" : "bg-[#065844]"
                     )}
@@ -309,17 +322,17 @@ const HeadToHead = () => {
                       </span>
                     </div>
 
-                    <div className="flex flex-col gap-2 flex-1">
-                      <span className={`${inter.className} text-xl capitalize`}>
+                    <div className="flex flex-col gap-4 flex-1">
+                      <span className={`${inter.className} text-sm capitalize`}>
                         {item.replaceAll("_", " ")}
                       </span>
-                      <div className="flex gap-6">
+                      <div className="flex gap-8">
                         {H2H.candidates_info.map((cand, i) => (
-                          <div key={i} className="">
-                            <p className="text-[#747474]">
+                          <div key={i} className="flex flex-col gap-2">
+                            <p className="text-[#747474] text-sm">
                               {cand.candidate_name}
                             </p>
-                            <p className="font-bold text-[50px]">
+                            <p className="font-bold text-3xl leading-none">
                               {cand[item as keyof CandidateInfo]}%
                             </p>
                           </div>
@@ -332,6 +345,13 @@ const HeadToHead = () => {
           </div>
         </div>
       </section>
+      {/* Payment Required Modal */}
+      <PaymentRequiredModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        featureName={t("cvTools.headToHead.title")}
+        featureDescription="Upgrade your plan to unlock this powerful tool and compare CVs side-by-side with AI-powered analysis and insights."
+      />
     </DashboardWrapper>
   );
 };
